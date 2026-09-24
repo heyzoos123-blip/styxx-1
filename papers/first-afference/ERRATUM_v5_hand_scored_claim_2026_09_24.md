@@ -13,8 +13,8 @@ here.
 both refuse do so "because their preregs predate the gates-block format".
 
 **Then, adopted from red-team round 1**: six of those 53 refused results "have gates blocks and are hand-scored
-verdicts the protocol cannot reproduce". That sentence went into three places we will not edit in
-place: the round-1 entry of `protocol_v5_redteam_audit.json`, the frozen
+verdicts the protocol cannot reproduce". Those words went into three places we will not edit in
+place (verbatim in the last two; the audit entry says the same in longer words): the round-1 entry of `protocol_v5_redteam_audit.json`, the frozen
 `PREREG_protocol_v5c_repair_2026_09_24.md`, and the message of commit `adbda648`. The v5c prereg
 promised the correction "in the RESULT". No RESULT for protocol v5 exists yet, so it is made here.
 
@@ -27,7 +27,7 @@ is absent from the receipt. The first gates-block prereg in the corpus was added
 - **`13ae3fed`'s predate sentence is false for 14 of the 53 refused results.** The 6 that reach
   score have gates blocks,
   and 8 of the 47 without one were written after the format existed: seven closed-model-frontier
-  batteries and `open_set_read`.
+  results and `open_set_read`.
 - **27 of the 47 no-gates-block results carry a committed verdict.** No version of the protocol can
   reproduce those; their gates are in prose. They were not audited here.
 
@@ -40,7 +40,8 @@ are not independent of the lab.
 
 **"Hand-scored" was wrong.** The committed code of all six runners builds a flat `metrics` dict,
 scores it with `Experiment(...).score`, and writes it into the receipt nested under the key
-`metrics`. Each receipt is byte-consistent with that code; no execution log exists. Scored on its
+`metrics`. Each receipt is structurally consistent with that code (key order, rows the auditors
+rebuilt); one was checked byte for byte; no execution log exists. Scored on its
 nested dict, each reproduces its committed verdict exactly: 6 of the 7 audited results do, and the
 pinned v4 agrees with v5 on all 6 nested dicts.
 
@@ -80,13 +81,14 @@ identically. v5's gate evaluation never ran on them, and none of them declares `
 their nested dicts would exercise only the gate evaluation v5 shares with v4. The differential's
 effective population was 33 results; the effective population with nested metrics dicts is 39,
 and on those six the pinned v4 and v5 agree, so no v5b/v5c/v5d verdict changes. G4's bar of 33 in
-those preregs was set on an undercounted population. The next frozen v5 prereg states a mechanical
+the v5c and v5d preregs was set on an undercounted population. Attempt A also had no v4 arm. The next frozen v5 prereg states a mechanical
 rule for when a nested dict may stand in for a receipt; this erratum does not.
 
 ## The habit
 
 DECIDE-1 named it on 2026-09-17: "treating our machinery's output as ground truth about the world".
 Here the machinery was our red team. Its refusal count came from a committed script; its
-characterisation, "hand-scored", came from nothing, went into a frozen prereg, and stood for a day.
+characterisation, "hand-scored", came from nothing and went into a frozen prereg, where it still
+stands.
 This erratum also rests on the lab's own scorer and the lab's own agents. The receipts are
 committed so that someone who trusts neither can check it.

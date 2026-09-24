@@ -1864,3 +1864,20 @@ is the operator-gated giant step.*
   receipt) would close it honestly.
 - **No derived-arithmetic class beyond v0.5's derived-percent (class E).** A difference or ratio of
   two verified operands is currently uncheckable; restating the operands is the honest workaround.
+- **`styxx.protocol._committed_at` follows content similarity (named 2026-09-24).** It resolves a
+  prereg's freeze commit with `git log --diff-filter=A --follow`, which follows similar content
+  across files: for `handedness_v3` it returns the v2 prereg's commit (`43e427d7`) instead of v3's
+  (`c74682ac`). 1 of 86 pairable results; no verdict string changes. The fix (resolve by path, not
+  by similarity) changes the `prereg_commit` every verdict reports, so it needs its own prereg and a
+  corpus differential on that field. Receipt: `first-afference/corpus_provenance_rescore.json`
+  (`census.follow_mismatches`); erratum: `first-afference/ERRATUM_v5_hand_scored_claim_2026_09_24.md`.
+- **Receipts that do not let the protocol re-score them (named 2026-09-24).** Six runners scored a
+  flat `metrics` dict and nested it under `metrics`, so the whole receipt raises; of the 33 results
+  the protocol scores whole, 1 stores `gates_sha256`, so the tamper check in `styxx.protocol`'s
+  docstring cannot run on the rest. `styxx.protocol` should either write the receipt fields itself
+  or refuse a result dict that will not round-trip. Same receipts as above.
+- **`open_set_read` is UNCHECKABLE against its frozen G-O2 (named 2026-09-24).** Its VOID was scored
+  on a pairing-shuffled MLP null, not the prereg's random-orthogonal mapper, and the bar has a
+  false-alarm rate near 0.24 per target. A successor needs a fresh split, a named null construction,
+  a combining rule and a bar derived from the null's distribution, all frozen in a gates block.
+  `disjoint-worlds/CORRECTION_open_set_read_null_2026_09_24.md`.

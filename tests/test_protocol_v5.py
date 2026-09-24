@@ -273,3 +273,173 @@ def test_p1_g4_refuses_against_its_own_harness(tmp_path, monkeypatch):
         {"styxx.power:reachable": 12}
     with pytest.raises(GateSpecError, match=r"COVERAGE VIOLATION .*order_stat_bar"):
         exp.score(res)
+
+
+# -- red team round 1: each break pinned by its reason code -----------------------------------
+
+RT_FIX = '''
+import dataclasses
+import functools
+def _nowraps(f):
+    def inner(*a, **k): return f(*a, **k)
+    return inner
+@_nowraps
+def entry_a(): return 1
+@_nowraps
+def entry_b(): return 2
+def _make(k):
+    def check(x): return x > k
+    return check
+check_low, check_high = _make(1), _make(2)
+def score_null(x): return x + 1
+class Base:
+    def fit(self): return 1
+class Sub(Base): pass
+class Other(Base): pass
+@dataclasses.dataclass
+class NullModel:
+    k: int = 0
+@dataclasses.dataclass
+class AltModel:
+    k: int = 0
+'''
+
+
+@pytest.fixture()
+def rt(tmp_path, monkeypatch):
+    d = tmp_path / "rtmod"
+    d.mkdir()
+    (d / "_v5_rtfix.py").write_text(RT_FIX, encoding="utf-8")
+    # same line number as in RT_FIX, so the two code objects compare EQUAL and differ only in
+    # identity -- the round-1 B2 case
+    line = RT_FIX.split("\n").index("def score_null(x): return x + 1")
+    (d / "_v5_rtcopy.py").write_text("\n" * line + "def score_null(x): return x + 1\n",
+                                     encoding="utf-8")
+    monkeypatch.syspath_prepend(str(d))
+    for m in ("_v5_rtfix", "_v5_rtcopy"):
+        sys.modules.pop(m, None)
+    yield __import__("_v5_rtfix"), __import__("_v5_rtcopy")
+    for m in ("_v5_rtfix", "_v5_rtcopy"):
+        sys.modules.pop(m, None)
+
+
+@pytest.mark.parametrize("target", ["_v5_rtfix:check_low", "_v5_rtfix:entry_a"])
+def test_shared_code_objects_cannot_be_declared(mk, rt, target):
+    with pytest.raises(GateSpecError, match=r"^\[V5:SHARED_CODE\]"):
+        coverage_trace(mk(G={"exercises": [target]}))
+
+
+def test_an_equal_copy_of_the_code_does_not_count(mk, rt):
+    fix, copy = rt
+    exp = mk(G={"exercises": ["_v5_rtfix:score_null"]})
+    assert copy.score_null.__code__ == fix.score_null.__code__   # equal, not identical
+    with pytest.raises(GateSpecError, match=r"^\[V5:NOT_EXERCISED\]"):
+        exp.score(_traced(exp, "G", lambda: copy.score_null(1)))
+
+
+def test_dataclass_generated_init_is_its_own(mk, rt):
+    fix, _ = rt
+    exp = mk(G={"exercises": ["_v5_rtfix:NullModel.__init__"]})
+    with pytest.raises(GateSpecError, match=r"^\[V5:NOT_EXERCISED\]"):
+        exp.score(_traced(exp, "G", lambda: fix.AltModel(3)))
+
+
+def test_inherited_method_must_be_declared_on_its_definer(mk, rt):
+    with pytest.raises(GateSpecError, match=r"^\[V5:INHERITED\]"):
+        coverage_trace(mk(G={"exercises": ["_v5_rtfix:Sub.fit"]}))
+
+
+def test_thread_outliving_its_section_refuses(mk, fx):
+    import time
+    exp = mk(G={"exercises": [T]})
+    th = threading.Thread(target=lambda: (time.sleep(0.3), fx.target()))
+    try:
+        with pytest.raises(GateSpecError, match=r"^\[V5:THREAD_OUTLIVES\]"):
+            with coverage_trace(exp) as cov:
+                with cov.section("G"):
+                    th.start()
+    finally:
+        th.join()
+
+
+def test_thread_started_outside_sections_does_not_credit_one(mk, fx):
+    import time
+    exp = mk(G={"exercises": [T]})
+    th = threading.Thread(target=lambda: (time.sleep(0.2), fx.target()))
+    with coverage_trace(exp) as cov:
+        th.start()
+        with cov.section("G"):
+            th.join()
+    rec = cov.record()
+    assert rec["unsectioned"] == {T: 1}
+    with pytest.raises(GateSpecError, match=r"^\[V5:NOT_EXERCISED\]"):
+        exp.score({"m": 1.0, "coverage_trace": rec})
+
+
+def test_asyncio_task_keeps_the_section_it_was_created_in(mk, fx):
+    import asyncio
+    exp = mk(A={"exercises": [O]}, B={"exercises": [T]})
+
+    async def work():
+        await asyncio.sleep(0)
+        fx.target()
+
+    async def main(cov):
+        with cov.section("A"):
+            fx.other()
+            task = asyncio.ensure_future(work())
+        with cov.section("B"):
+            await task
+    with coverage_trace(exp) as cov:
+        asyncio.run(main(cov))
+    rec = cov.record()
+    assert rec["after_close"] == {"A": {T: 1}}
+    with pytest.raises(GateSpecError, match=r"gate 'B': COVERAGE VIOLATION"):
+        exp.score({"m": 1.0, "coverage_trace": rec})
+
+
+def test_c_profiler_refuses_and_survives(mk, fx):
+    import cProfile
+    pr = cProfile.Profile()
+    before = sys.getprofile()
+    pr.enable()
+    try:
+        with pytest.raises(GateSpecError, match=r"^\[V5:FOREIGN_PROFILER\]"):
+            with coverage_trace(mk(G={"exercises": [T]})):
+                pass
+        assert isinstance(sys.getprofile(), cProfile.Profile)   # not destroyed
+    finally:
+        pr.disable()
+        sys.setprofile(before)
+
+
+def test_reentry_and_out_of_order_exit_refuse_without_leaking(mk, fx):
+    before = sys.getprofile()
+    cov = coverage_trace(mk(G={"exercises": [T]}))
+    with pytest.raises(GateSpecError, match=r"^\[V5:REENTRY\]"):
+        with cov:
+            with cov:
+                pass
+    assert sys.getprofile() is before
+    t1, t2 = coverage_trace(mk(G={"exercises": [T]})), coverage_trace(mk(H={"exercises": [O]}))
+    t1.__enter__()
+    t2.__enter__()
+    with pytest.raises(GateSpecError, match=r"^\[V5:EXIT_ORDER\]"):
+        t1.__exit__(None, None, None)
+    t2.__exit__(None, None, None)
+    assert sys.getprofile() is before
+
+
+def test_non_string_trace_keys_refuse_and_check_metrics_reports(mk, fx):
+    exp = mk(G={"exercises": [T]})
+    res = _traced(exp, "G", fx.target)
+    res["coverage_trace"]["targets"][1] = "x"
+    with pytest.raises(GateSpecError, match=r"^\[V5:BAD_TRACE\]"):
+        exp.score(res)
+    entry = exp.check_metrics(res)["G:exercises"]
+    assert entry["usable"] is False and entry["note"].startswith("[V5:BAD_TRACE]")
+
+
+def test_trailing_newline_target_refuses(mk):
+    with pytest.raises(GateSpecError, match=r"^\[V5:DECL\]"):
+        mk(G={"exercises": [T + "\n"]})

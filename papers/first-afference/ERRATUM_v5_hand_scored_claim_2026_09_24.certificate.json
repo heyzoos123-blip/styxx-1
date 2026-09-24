@@ -1,0 +1,593 @@
+{
+  "oath": "styxx OATH v0 (numeric-claim certificate)",
+  "prereg": "papers/closed-model-frontier/PREREG_oath_v0_certify_doc_2026_06_09.md",
+  "document": "ERRATUM_v5_hand_scored_claim_2026_09_24.md",
+  "document_sha256": "dc8e43604592298f7f0870db3abac47eb9cff6aebfb62e87a4a8b470e213503b",
+  "receipts_sha256": {
+    "corpus_provenance_rescore.json": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118",
+    "corpus_provenance_audit.json": "bff3ebf0e6a73ab52bcc9d7e1afe42d83aa965bec09c702abf225b253d4931e0"
+  },
+  "receipt_binding": {
+    "schema": "styxx-oath/receipt-binding/v1",
+    "content_rule": "sha256 over bytes with CRLF normalised to LF",
+    "head": "598a59acb2f622268e7aa60ba13bbab711e11541",
+    "all_receipts_committed": true,
+    "receipts": [
+      {
+        "name": "corpus_provenance_rescore.json",
+        "path": "papers/first-afference/corpus_provenance_rescore.json",
+        "raw_sha256": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118",
+        "content_sha256": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118",
+        "blob": "96eb99dee335275cc82493b612d09f1a012e1988",
+        "committed": true
+      },
+      {
+        "name": "corpus_provenance_audit.json",
+        "path": "papers/first-afference/corpus_provenance_audit.json",
+        "raw_sha256": "bff3ebf0e6a73ab52bcc9d7e1afe42d83aa965bec09c702abf225b253d4931e0",
+        "content_sha256": "bff3ebf0e6a73ab52bcc9d7e1afe42d83aa965bec09c702abf225b253d4931e0",
+        "blob": "a7055d2ac22f531ec74d01355572df3466667478",
+        "committed": true
+      }
+    ]
+  },
+  "verifier_sha256": "c448ded108df0f54de7a68cb0755fd31f574e21d4ace8c6b6b4b427cd8e9ea59",
+  "counts": {
+    "VERIFIED": 25,
+    "ABSTAIN": 5,
+    "UNGROUNDED": 0
+  },
+  "epistemics_summary": {
+    "schema": "styxx-oath/epistemics-summary/v1",
+    "note": "attestation composition folded from this certificate's own ledger; counts which door each token came through; says nothing about whether any token is a true claim or a good one",
+    "by_branch": {
+      "row-ordinal-label": 0,
+      "formula-constant": 0,
+      "spec-or-historical": 1,
+      "notation": 0,
+      "derived": 0,
+      "unbound-field": 0,
+      "value-match": 25,
+      "ulp-neighbour": 0,
+      "obligated-accusation": 0,
+      "silent": 4
+    },
+    "verified": {
+      "total": 25,
+      "derived": {
+        "obligated": 0,
+        "unobligated": 0
+      },
+      "value_match": {
+        "obligated_integer_filter_ran": 10,
+        "obligated_integer_filter_na": 0,
+        "unobligated_integer_filter_ran": 15,
+        "unobligated_integer_filter_na": 0
+      }
+    },
+    "obligated_total": 10,
+    "obligation_sources": {
+      "vocabulary": 10,
+      "n-glued": 0,
+      "range-correlation": 0,
+      "precision": 0,
+      "range-sanity": 0
+    }
+  },
+  "uncovered": 0,
+  "uncovered_items": [],
+  "uncovered_excluded_by_rule": [],
+  "uncovered_policy": {
+    "schema": "styxx-oath/uncovered-band/v1",
+    "note": "numeric spans present in the document text that the extractor never examined \u2014 neither VERIFIED nor ABSTAIN nor UNGROUNDED. Reporting only: _NUM is unchanged and no token's status moves.",
+    "counted_reasons": [
+      "partial-extraction",
+      "trailing-period",
+      "unexplained"
+    ],
+    "excluded_reasons_note": "spans a NAMED rule already decided about (year, md-structure, formula-notation, range-second-half, compound-identifier, unparseable, ordered-list-marker, heading-ordinal); listed in uncovered_excluded_by_rule, not in the band",
+    "excluded_by_rule": 0,
+    "scope_limit": "this band detects ONE extractor blind spot \u2014 a numeric span followed by a period, which _NUM's right guard (?![\\w.]) rejects. It does NOT detect scientific notation, letter-glued numbers, non-ASCII digits, numerals in fenced code, or spans blanked by the sha/date/version scrub. uncovered=0 does NOT mean fully covered."
+  },
+  "verdict": "OATH-HELD",
+  "ungrounded": [],
+  "abstained": [
+    {
+      "line": 27,
+      "token": "6"
+    },
+    {
+      "line": 29,
+      "token": "8"
+    },
+    {
+      "line": 29,
+      "token": "47"
+    },
+    {
+      "line": 67,
+      "token": "86"
+    },
+    {
+      "line": 83,
+      "token": "33"
+    }
+  ],
+  "ledger": [
+    {
+      "line": 1,
+      "token": "53",
+      "value": 53.0,
+      "decimals": 0,
+      "context": "# ERRATUM \u2014 the 53 results the v5 corpus differential could not score, described correctly",
+      "col": 16,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_committed_results_both_versions_refuse",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 12,
+      "token": "53",
+      "value": 53.0,
+      "decimals": 0,
+      "context": "**First, in commit `13ae3fed`** (protocol v5 attempt B): the 53 committed results that v4 and v5",
+      "col": 61,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_committed_results_both_versions_refuse",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 15,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "**Then, adopted from red-team round 1**: six of those 53 refused results \"have gates blocks and are hand-scored",
+      "col": 36,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_scored_storing_gates_sha256",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 15,
+      "token": "53",
+      "value": 53.0,
+      "decimals": 0,
+      "context": "**Then, adopted from red-team round 1**: six of those 53 refused results \"have gates blocks and are hand-scored",
+      "col": 54,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_committed_results_both_versions_refuse",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 23,
+      "token": "86",
+      "value": 86.0,
+      "decimals": 0,
+      "context": "The differential ranged over 86 pairable results. It scored 33 to a verdict and 53 raised: 47 at",
+      "col": 29,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_pairable",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 23,
+      "token": "33",
+      "value": 33.0,
+      "decimals": 0,
+      "context": "The differential ranged over 86 pairable results. It scored 33 to a verdict and 53 raised: 47 at",
+      "col": 60,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_effective_population_results_scored",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 23,
+      "token": "53",
+      "value": 53.0,
+      "decimals": 0,
+      "context": "The differential ranged over 86 pairable results. It scored 33 to a verdict and 53 raised: 47 at",
+      "col": 80,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_committed_results_both_versions_refuse",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 23,
+      "token": "47",
+      "value": 47.0,
+      "decimals": 0,
+      "context": "The differential ranged over 86 pairable results. It scored 33 to a verdict and 53 raised: 47 at",
+      "col": 91,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_raised_at_construction_no_gates_block",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 24,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "construction because their prereg has no gates block, and 6 at score because a gate's metric path",
+      "col": 58,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_raised_at_score",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 27,
+      "token": "14",
+      "value": 14.0,
+      "decimals": 0,
+      "context": "- **`13ae3fed`'s predate sentence is false for 14 of the 53 refused results.** The 6 that reach",
+      "col": 47,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.predate_sentence_false_for_n_refused",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 27,
+      "token": "53",
+      "value": 53.0,
+      "decimals": 0,
+      "context": "- **`13ae3fed`'s predate sentence is false for 14 of the 53 refused results.** The 6 that reach",
+      "col": 57,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_committed_results_both_versions_refuse",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 27,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "- **`13ae3fed`'s predate sentence is false for 14 of the 53 refused results.** The 6 that reach",
+      "col": 83,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 29,
+      "token": "8",
+      "value": 8.0,
+      "decimals": 0,
+      "context": "and 8 of the 47 without one were written after the format existed: seven closed-model-frontier",
+      "col": 6,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 29,
+      "token": "47",
+      "value": 47.0,
+      "decimals": 0,
+      "context": "and 8 of the 47 without one were written after the format existed: seven closed-model-frontier",
+      "col": 15,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 31,
+      "token": "27",
+      "value": 27.0,
+      "decimals": 0,
+      "context": "- **27 of the 47 no-gates-block results carry a committed verdict.** No version of the protocol can",
+      "col": 4,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_no_gates_block_with_committed_verdict",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 31,
+      "token": "47",
+      "value": 47.0,
+      "decimals": 0,
+      "context": "- **27 of the 47 no-gates-block results carry a committed verdict.** No version of the protocol can",
+      "col": 14,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_raised_at_construction_no_gates_block",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 36,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "Selection: the 6 results that have a gates block yet raise, plus `open_set_read`, audited because",
+      "col": 15,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_raised_at_score",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 38,
+      "token": "7",
+      "value": 7.0,
+      "decimals": 0,
+      "context": "refute it: 7 audits, 7 upheld. All come from one workflow run in the lab's own session, so they",
+      "col": 11,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:n_items_audited",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 38,
+      "token": "7",
+      "value": 7.0,
+      "decimals": 0,
+      "context": "refute it: 7 audits, 7 upheld. All come from one workflow run in the lab's own session, so they",
+      "col": 21,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:n_items_audited",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 45,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "nested dict, each reproduces its committed verdict exactly: 6 of the 7 audited results do, and the",
+      "col": 60,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:n_nested_dicts_where_pinned_v4_agrees_with_v5",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 45,
+      "token": "7",
+      "value": 7.0,
+      "decimals": 0,
+      "context": "nested dict, each reproduces its committed verdict exactly: 6 of the 7 audited results do, and the",
+      "col": 69,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:n_items_audited",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 46,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "pinned v4 agrees with v5 on all 6 nested dicts.",
+      "col": 32,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:n_nested_dicts_where_pinned_v4_agrees_with_v5",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 61,
+      "token": "33",
+      "value": 33.0,
+      "decimals": 0,
+      "context": "- **Missing provenance fields.** The six keep no `prereg_commit`. Across the 33 results the",
+      "col": 77,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_effective_population_results_scored",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 62,
+      "token": "33",
+      "value": 33.0,
+      "decimals": 0,
+      "context": "protocol scores whole, 33 store `prereg_commit` and 1 stores `gates_sha256`, so the tamper check",
+      "col": 25,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_effective_population_results_scored",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 62,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "protocol scores whole, 33 store `prereg_commit` and 1 stores `gates_sha256`, so the tamper check",
+      "col": 54,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_scored_storing_gates_sha256",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 67,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "returns the v2 prereg's commit instead of v3's. It is 1 case in the 86, it changes no verdict",
+      "col": 56,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:census.n_follow_resolves_a_different_prereg_commit",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 67,
+      "token": "86",
+      "value": 86.0,
+      "decimals": 0,
+      "context": "returns the v2 prereg's commit instead of v3's. It is 1 case in the 86, it changes no verdict",
+      "col": 70,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 82,
+      "token": "33",
+      "value": 33.0,
+      "decimals": 0,
+      "context": "effective population was 33 results; the effective population with nested metrics dicts is 39,",
+      "col": 25,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:v5d_effective_population_results_scored",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 82,
+      "token": "39",
+      "value": 39.0,
+      "decimals": 0,
+      "context": "effective population was 33 results; the effective population with nested metrics dicts is 39,",
+      "col": 91,
+      "status": "VERIFIED",
+      "receipt_ref": "corpus_provenance_rescore.json:effective_population_with_nested_metrics_dicts",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 83,
+      "token": "33",
+      "value": 33.0,
+      "decimals": 0,
+      "context": "and on those six the pinned v4 and v5 agree, so no v5b/v5c/v5d verdict changes. G4's bar of 33 in",
+      "col": 92,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": false,
+        "obligation_source": null
+      }
+    }
+  ]
+}

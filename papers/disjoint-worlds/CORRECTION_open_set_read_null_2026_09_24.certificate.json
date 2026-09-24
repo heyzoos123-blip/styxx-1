@@ -1,0 +1,517 @@
+{
+  "oath": "styxx OATH v0 (numeric-claim certificate)",
+  "prereg": "papers/closed-model-frontier/PREREG_oath_v0_certify_doc_2026_06_09.md",
+  "document": "CORRECTION_open_set_read_null_2026_09_24.md",
+  "document_sha256": "502a87dd041c5611751725dfbef72a4ace6308de4ec7ceac5f09751639bd31d7",
+  "receipts_sha256": {
+    "open_set_read_result.json": "9be1fe632ffc4b11da8b05ea951b869707c696c1627082ace01e774fe8414016",
+    "open_set_read_null_arithmetic.json": "c2821febe6bc62974c5fc33a870cc6ee241223190c7290e9d7dd36d85c501b96",
+    "corpus_provenance_audit.json": "bff3ebf0e6a73ab52bcc9d7e1afe42d83aa965bec09c702abf225b253d4931e0",
+    "corpus_provenance_rescore.json": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118"
+  },
+  "receipt_binding": {
+    "schema": "styxx-oath/receipt-binding/v1",
+    "content_rule": "sha256 over bytes with CRLF normalised to LF",
+    "head": "598a59acb2f622268e7aa60ba13bbab711e11541",
+    "all_receipts_committed": true,
+    "receipts": [
+      {
+        "name": "open_set_read_result.json",
+        "path": "papers/disjoint-worlds/open_set_read_result.json",
+        "raw_sha256": "9be1fe632ffc4b11da8b05ea951b869707c696c1627082ace01e774fe8414016",
+        "content_sha256": "9be1fe632ffc4b11da8b05ea951b869707c696c1627082ace01e774fe8414016",
+        "blob": "e672343baeaa5e9139d8b14dc27fcb5f9b972d24",
+        "committed": true
+      },
+      {
+        "name": "open_set_read_null_arithmetic.json",
+        "path": "papers/disjoint-worlds/open_set_read_null_arithmetic.json",
+        "raw_sha256": "c2821febe6bc62974c5fc33a870cc6ee241223190c7290e9d7dd36d85c501b96",
+        "content_sha256": "c2821febe6bc62974c5fc33a870cc6ee241223190c7290e9d7dd36d85c501b96",
+        "blob": "358971219b851af1f076a8b2607102e104d86edc",
+        "committed": true
+      },
+      {
+        "name": "corpus_provenance_audit.json",
+        "path": "papers/first-afference/corpus_provenance_audit.json",
+        "raw_sha256": "bff3ebf0e6a73ab52bcc9d7e1afe42d83aa965bec09c702abf225b253d4931e0",
+        "content_sha256": "bff3ebf0e6a73ab52bcc9d7e1afe42d83aa965bec09c702abf225b253d4931e0",
+        "blob": "a7055d2ac22f531ec74d01355572df3466667478",
+        "committed": true
+      },
+      {
+        "name": "corpus_provenance_rescore.json",
+        "path": "papers/first-afference/corpus_provenance_rescore.json",
+        "raw_sha256": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118",
+        "content_sha256": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118",
+        "blob": "96eb99dee335275cc82493b612d09f1a012e1988",
+        "committed": true
+      }
+    ]
+  },
+  "verifier_sha256": "c448ded108df0f54de7a68cb0755fd31f574e21d4ace8c6b6b4b427cd8e9ea59",
+  "counts": {
+    "VERIFIED": 12,
+    "ABSTAIN": 11,
+    "UNGROUNDED": 0
+  },
+  "epistemics_summary": {
+    "schema": "styxx-oath/epistemics-summary/v1",
+    "note": "attestation composition folded from this certificate's own ledger; counts which door each token came through; says nothing about whether any token is a true claim or a good one",
+    "by_branch": {
+      "row-ordinal-label": 0,
+      "formula-constant": 0,
+      "spec-or-historical": 5,
+      "notation": 0,
+      "derived": 0,
+      "unbound-field": 0,
+      "value-match": 12,
+      "ulp-neighbour": 0,
+      "obligated-accusation": 0,
+      "silent": 6
+    },
+    "verified": {
+      "total": 12,
+      "derived": {
+        "obligated": 0,
+        "unobligated": 0
+      },
+      "value_match": {
+        "obligated_integer_filter_ran": 3,
+        "obligated_integer_filter_na": 2,
+        "unobligated_integer_filter_ran": 4,
+        "unobligated_integer_filter_na": 3
+      }
+    },
+    "obligated_total": 10,
+    "obligation_sources": {
+      "vocabulary": 10,
+      "n-glued": 0,
+      "range-correlation": 0,
+      "precision": 0,
+      "range-sanity": 0
+    }
+  },
+  "uncovered": 0,
+  "uncovered_items": [],
+  "uncovered_excluded_by_rule": [],
+  "uncovered_policy": {
+    "schema": "styxx-oath/uncovered-band/v1",
+    "note": "numeric spans present in the document text that the extractor never examined \u2014 neither VERIFIED nor ABSTAIN nor UNGROUNDED. Reporting only: _NUM is unchanged and no token's status moves.",
+    "counted_reasons": [
+      "partial-extraction",
+      "trailing-period",
+      "unexplained"
+    ],
+    "excluded_reasons_note": "spans a NAMED rule already decided about (year, md-structure, formula-notation, range-second-half, compound-identifier, unparseable, ordered-list-marker, heading-ordinal); listed in uncovered_excluded_by_rule, not in the band",
+    "excluded_by_rule": 0,
+    "scope_limit": "this band detects ONE extractor blind spot \u2014 a numeric span followed by a period, which _NUM's right guard (?![\\w.]) rejects. It does NOT detect scientific notation, letter-glued numbers, non-ASCII digits, numerals in fenced code, or spans blanked by the sha/date/version scrub. uncovered=0 does NOT mean fully covered."
+  },
+  "verdict": "OATH-HELD",
+  "ungrounded": [],
+  "abstained": [
+    {
+      "line": 14,
+      "token": "0.55"
+    },
+    {
+      "line": 17,
+      "token": "96"
+    },
+    {
+      "line": 23,
+      "token": "154"
+    },
+    {
+      "line": 25,
+      "token": "147"
+    },
+    {
+      "line": 40,
+      "token": "462"
+    },
+    {
+      "line": 42,
+      "token": "188"
+    },
+    {
+      "line": 55,
+      "token": "0.5584"
+    },
+    {
+      "line": 55,
+      "token": "0.5012"
+    },
+    {
+      "line": 60,
+      "token": "211"
+    },
+    {
+      "line": 70,
+      "token": "0.55"
+    },
+    {
+      "line": 70,
+      "token": "0.7194"
+    }
+  ],
+  "ledger": [
+    {
+      "line": 14,
+      "token": "0.55",
+      "value": 0.55,
+      "decimals": 2,
+      "context": "through the identical pipeline. It must score `AUROC(m) <= 0.55`.\" The text is ambiguous. A random",
+      "col": 59,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": true,
+        "obligation_source": "vocabulary"
+      }
+    },
+    {
+      "line": 17,
+      "token": "96",
+      "value": 96.0,
+      "decimals": 0,
+      "context": "use of the phrase, in `run_causal_crossworld.py` lines 96-97, is a square QR matrix, which that",
+      "col": 55,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 23,
+      "token": "154",
+      "value": 154.0,
+      "decimals": 0,
+      "context": "the targets (`run_open_set_read.py` lines 154-155). It satisfies \"matched in shape\" and \"fit on",
+      "col": 42,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 25,
+      "token": "147",
+      "value": 147.0,
+      "decimals": 0,
+      "context": "real mapper is fit through `TransferMap.fit` and `assignment_from_map` (lines 147-151), and the",
+      "col": 78,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 30,
+      "token": "35",
+      "value": 35.0,
+      "decimals": 0,
+      "context": "`deviation_from_prereg` discloses the 70-concept partition and the 35/35 sizes; it does not",
+      "col": 67,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:n_candidates",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 30,
+      "token": "35",
+      "value": 35.0,
+      "decimals": 0,
+      "context": "`deviation_from_prereg` discloses the 70-concept partition and the 35/35 sizes; it does not",
+      "col": 70,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:n_candidates",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 39,
+      "token": "70",
+      "value": 70.0,
+      "decimals": 0,
+      "context": "runner's split of the 70 held-out concepts (35 candidates and 35 out-of-vocabulary), not the",
+      "col": 24,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:n_heldout",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 39,
+      "token": "35",
+      "value": 35.0,
+      "decimals": 0,
+      "context": "runner's split of the 70 held-out concepts (35 candidates and 35 out-of-vocabulary), not the",
+      "col": 46,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:n_candidates",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 39,
+      "token": "35",
+      "value": 35.0,
+      "decimals": 0,
+      "context": "runner's split of the 70 held-out concepts (35 candidates and 35 out-of-vocabulary), not the",
+      "col": 64,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:n_candidates",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 40,
+      "token": "462",
+      "value": 462.0,
+      "decimals": 0,
+      "context": "frozen partition of all 462 concepts. That one was disclosed.",
+      "col": 26,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 42,
+      "token": "188",
+      "value": 188.0,
+      "decimals": 0,
+      "context": "in its own code (lines 188-215) and adds a rule for combining targets the prereg does not have.",
+      "col": 25,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 55,
+      "token": "0.5861",
+      "value": 0.5861,
+      "decimals": 4,
+      "context": "does not state: llama 0.5861 and gemma 0.5584 exceed the bar and qwen 0.5012 does not. A mean over",
+      "col": 24,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:targets.llama_1b.auroc_margin_null_mapper",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": false
+      }
+    },
+    {
+      "line": 55,
+      "token": "0.5584",
+      "value": 0.5584,
+      "decimals": 4,
+      "context": "does not state: llama 0.5861 and gemma 0.5584 exceed the bar and qwen 0.5012 does not. A mean over",
+      "col": 41,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": true,
+        "obligation_source": "vocabulary"
+      }
+    },
+    {
+      "line": 55,
+      "token": "0.5012",
+      "value": 0.5012,
+      "decimals": 4,
+      "context": "does not state: llama 0.5861 and gemma 0.5584 exceed the bar and qwen 0.5012 does not. A mean over",
+      "col": 72,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": true,
+        "obligation_source": "vocabulary"
+      }
+    },
+    {
+      "line": 56,
+      "token": "0.5486",
+      "value": 0.5486,
+      "decimals": 4,
+      "context": "the three targets, 0.5486, would have passed. `VOID__null_mapper_separates` stands as the result",
+      "col": 21,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_null_arithmetic.json:substituted_null_mean_all_three_targets",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 60,
+      "token": "211",
+      "value": 211.0,
+      "decimals": 0,
+      "context": "- **Had the gate passed, the runner would have emitted a `MIXED__` verdict** (lines 211-215), because",
+      "col": 84,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 69,
+      "token": "35",
+      "value": 35.0,
+      "decimals": 0,
+      "context": "detectable from geometry alone\". The bar cannot carry that. With 35 candidates against 35 out-of-vocabulary concepts, an exchangeable",
+      "col": 65,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:n_candidates",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 69,
+      "token": "35",
+      "value": 35.0,
+      "decimals": 0,
+      "context": "detectable from geometry alone\". The bar cannot carry that. With 35 candidates against 35 out-of-vocabulary concepts, an exchangeable",
+      "col": 87,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_result.json:n_candidates",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 70,
+      "token": "0.0695",
+      "value": 0.0695,
+      "decimals": 4,
+      "context": "null has an AUROC standard deviation of 0.0695, the 0.55 bar sits 0.7194 of those above chance, and",
+      "col": 40,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_null_arithmetic.json:null_auroc_sd",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": false
+      }
+    },
+    {
+      "line": 70,
+      "token": "0.55",
+      "value": 0.55,
+      "decimals": 2,
+      "context": "null has an AUROC standard deviation of 0.0695, the 0.55 bar sits 0.7194 of those above chance, and",
+      "col": 52,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": true,
+        "obligation_source": "vocabulary"
+      }
+    },
+    {
+      "line": 70,
+      "token": "0.7194",
+      "value": 0.7194,
+      "decimals": 4,
+      "context": "null has an AUROC standard deviation of 0.0695, the 0.55 bar sits 0.7194 of those above chance, and",
+      "col": 66,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": true,
+        "obligation_source": "vocabulary"
+      }
+    },
+    {
+      "line": 71,
+      "token": "0.2359",
+      "value": 0.2359,
+      "decimals": 4,
+      "context": "an honest null breaches it on one target with probability 0.2359 per target. If the three targets",
+      "col": 58,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_null_arithmetic.json:false_alarm_rate_single_target",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 72,
+      "token": "0.5539",
+      "value": 0.5539,
+      "decimals": 4,
+      "context": "were independent, at least one would breach it with probability 0.5539 over three. They share one",
+      "col": 64,
+      "status": "VERIFIED",
+      "receipt_ref": "open_set_read_null_arithmetic.json:false_alarm_rate_any_of_three_if_independent",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    }
+  ]
+}

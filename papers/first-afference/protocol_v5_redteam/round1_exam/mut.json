@@ -1,0 +1,2314 @@
+{
+ "BASE": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_undeclared_section_check": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_section_type_check": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': section 5 is absent from the trace \u2014 the harness never opened it, so nothing it ran can be "
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_builtin_check": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['builtins:len'] in section 'G' (it did exe"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_list_type_check": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_nonempty_check": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: no gate in this prereg declares 'exercises' \u2014 a coverage trace with nothing declared would record not"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_no_unwrap": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_no_chain": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 1}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_no_thread_hook": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_count_check": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': True}}"
+  ],
+  "count_float": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1.0}}"
+  ],
+  "count_negative": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': -1}}"
+  ],
+  "count_zero": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 0}}"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_missing_check": {
+  "violations_CRASHED": [
+   null,
+   "KeyError: '_v5_fixture:target'"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_dup_check": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_tracer_id": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_stale_sha": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   false,
+   "scored PASS"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_section_wo_exercises": {
+  "violations_CRASHED": [
+   null,
+   "KeyError: 'exercises'"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_target_set": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_regex": {
+  "violations_CRASHED": [
+   null,
+   "AttributeError: 'int' object has no attribute 'split'"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_section_absent": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_no_trace_check": {
+  "violations_CRASHED": [
+   null,
+   "AttributeError: 'NoneType' object has no attribute 'get'"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ },
+ "M_attr_all_sections": {
+  "never_called": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "called_only_in_other_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "called_only_outside_sections": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "no_trace": [
+   true,
+   "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside sty"
+  ],
+  "section_absent": [
+   true,
+   "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can b"
+  ],
+  "stale_gates_sha": [
+   true,
+   "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026"
+  ],
+  "trace_target_set_differs": [
+   true,
+   "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declare"
+  ],
+  "trace_wrong_tracer_id": [
+   true,
+   "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trac"
+  ],
+  "target_unresolvable_attr": [
+   true,
+   "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming not"
+  ],
+  "target_unresolvable_module": [
+   true,
+   "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mo"
+  ],
+  "target_builtin": [
+   true,
+   "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code objec"
+  ],
+  "exercises_empty": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declara"
+  ],
+  "exercises_not_list": [
+   true,
+   "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'"
+  ],
+  "exercises_non_string": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_no_colon": [
+   true,
+   "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\");"
+  ],
+  "exercises_duplicate": [
+   true,
+   "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+  ],
+  "section_non_string": [
+   true,
+   "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+  ],
+  "section_without_exercises": [
+   true,
+   "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declarati"
+  ],
+  "undeclared_section_opened": [
+   true,
+   "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could ne"
+  ],
+  "count_bool": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with "
+  ],
+  "count_float": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with p"
+  ],
+  "count_negative": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with po"
+  ],
+  "count_zero": [
+   true,
+   "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with pos"
+  ],
+  "called_only_in_child_process": [
+   true,
+   "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it d"
+  ],
+  "direct_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "transitive_call": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "wraps_decorated": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+  ],
+  "method": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+  ],
+  "staticmethod": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+  ],
+  "thread_started_in_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "two_gates_share_section": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+  ],
+  "declaring_beside_undeclaring": [
+   false,
+   "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+  ],
+  "nested_tracers": [
+   false,
+   "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+  ]
+ }
+}

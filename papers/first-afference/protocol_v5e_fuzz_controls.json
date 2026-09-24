@@ -1,0 +1,110 @@
+{
+  "what": "PRE-FREEZE POSITIVE CONTROLS for fuzz_v5e.py, run against the design panel's scratch prototype (not the implementation that will be scored) through a scratch shim, each with one attribution or identity rule broken by a one-line source edit. A fuzzer that cannot see a broken rule proves nothing by finding no disagreements.",
+  "mutations": {
+    "C1_no_cut": "the hook's f_back walk no longer stops at asyncio.events.Handle._run",
+    "C2_credit_any_open": "a hit is credited to any open opening of the tracer, whether or not its anchor is on the frame's chain",
+    "C3_no_mint": "the tracer observes the function's ORIGINAL code object instead of a minted one"
+  },
+  "first_version": {
+    "note": "fuzzer v1 generated event loops only at the top of a program, so no section anchor ever sat below a dispatch frame: C1 went UNDETECTED. The 'loop' node (an event loop run inside a sync segment) was added because this control caught the blindness.",
+    "baseline": {
+      "fuzz_n_programs": 300,
+      "modes": {
+        "sync": 200,
+        "async": 52,
+        "async_in_section": 48
+      },
+      "fuzz_oracle_disagreements": 0,
+      "fuzz_leftovers": 0,
+      "seconds": 0.39,
+      "python": "3.11.15"
+    },
+    "C1_no_cut": {
+      "fuzz_n_programs": 300,
+      "modes": {
+        "sync": 200,
+        "async": 52,
+        "async_in_section": 48
+      },
+      "fuzz_oracle_disagreements": 0,
+      "fuzz_leftovers": 0,
+      "seconds": 0.57,
+      "python": "3.11.15"
+    },
+    "C2_credit_any_open": {
+      "fuzz_n_programs": 300,
+      "modes": {
+        "sync": 200,
+        "async": 52,
+        "async_in_section": 48
+      },
+      "fuzz_oracle_disagreements": 102,
+      "fuzz_leftovers": 0,
+      "seconds": 0.49,
+      "python": "3.11.15"
+    },
+    "C3_no_mint": {
+      "fuzz_n_programs": 300,
+      "modes": {
+        "sync": 200,
+        "async": 52,
+        "async_in_section": 48
+      },
+      "fuzz_oracle_disagreements": 300,
+      "fuzz_leftovers": 0,
+      "seconds": 3.8,
+      "python": "3.11.15"
+    }
+  },
+  "final_version": {
+    "baseline": {
+      "fuzz_n_programs": 600,
+      "modes": {
+        "sync": 400,
+        "async": 103,
+        "async_in_section": 97
+      },
+      "fuzz_oracle_disagreements": 0,
+      "fuzz_leftovers": 0,
+      "seconds": 1.05,
+      "python": "3.11.15"
+    },
+    "C1_no_cut": {
+      "fuzz_n_programs": 600,
+      "modes": {
+        "sync": 400,
+        "async": 103,
+        "async_in_section": 97
+      },
+      "fuzz_oracle_disagreements": 44,
+      "fuzz_leftovers": 0,
+      "seconds": 1.0,
+      "python": "3.11.15"
+    },
+    "C2_credit_any_open": {
+      "fuzz_n_programs": 600,
+      "modes": {
+        "sync": 400,
+        "async": 103,
+        "async_in_section": 97
+      },
+      "fuzz_oracle_disagreements": 245,
+      "fuzz_leftovers": 0,
+      "seconds": 1.12,
+      "python": "3.11.15"
+    },
+    "C3_no_mint": {
+      "fuzz_n_programs": 600,
+      "modes": {
+        "sync": 400,
+        "async": 103,
+        "async_in_section": 97
+      },
+      "fuzz_oracle_disagreements": 600,
+      "fuzz_leftovers": 0,
+      "seconds": 7.3,
+      "python": "3.11.15"
+    }
+  },
+  "generator_invariant": "no 'loop' node is generated on a thread whose event loop is running: checked on 5000 seeds"
+}

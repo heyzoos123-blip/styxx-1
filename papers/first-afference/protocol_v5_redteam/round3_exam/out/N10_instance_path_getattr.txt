@@ -1,0 +1,6 @@
+violations refused with their own code: 0.9848 of 66
+  MUTANT FAILED rt2_instance_path: expected INSTANCE_PATH, got refused: [V5:NO_CODE] declared target '_v5c_fix:default_model.fit' resolves to method, which has no Python code object to observe (builtins, C extens
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

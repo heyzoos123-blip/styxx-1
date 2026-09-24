@@ -1,0 +1,6 @@
+violations refused with their own code: 1.0 of 66
+valid scored with property: 0.9375 of 16
+  VALID FAILED parallel_sections_in_two_threads: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'] in section 'A' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

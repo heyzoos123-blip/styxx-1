@@ -1,0 +1,8 @@
+violations refused with their own code: 0.9545 of 66
+  MUTANT FAILED x2_check_metrics_reports_none_key: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised GateSpecError: [V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a dict with string keys
+  MUTANT FAILED x2_check_metrics_reports_list_section: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised GateSpecError: [V5:BAD_TRACE] gate 'G': section 'G' must be a dict with string keys
+  MUTANT FAILED x2_check_metrics_reports_non_dict_result: expected REPORTED, got crash: RuntimeError: check_metrics raised GateSpecError: [V5:NO_TRACE] gate 'G' declares 'exercises' but the result carries no 'coverage_trace' — r
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 3 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/papers/first-afference/run_protocol_v5d.py", line 942, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/papers/first-afference/run_protocol_v5d.py", line 863, in main
+    with cov.section("G1_valid_cases_score_with_their_property"):
+  File "/usr/lib/python3.11/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/styxx/protocol.py", line 977, in section
+    self._refuse_at_close(
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/styxx/protocol.py", line 931, in _refuse_at_close
+    raise GateSpecError(msg)
+styxx.protocol.GateSpecError: [V5:THREAD_OUTLIVES] section 'G1_valid_cases_score_with_their_property' closed with threads started inside it still running (['Thread-10 (worker)']) — their later work could not be told apart from this section's. Join them (or shut the pool down) before the section ends.

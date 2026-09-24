@@ -1,0 +1,6 @@
+violations refused with their own code: 1.0 of 66
+valid scored with property: 0.9375 of 16
+  VALID FAILED rt2_thread_hook_released_after_exit: crash coverage=None leaked=False RuntimeError: a thread started during the trace kept its hook after exit
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 1 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

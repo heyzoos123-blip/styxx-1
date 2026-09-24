@@ -1,0 +1,8 @@
+violations refused with their own code: 0.9545 of 66
+  MUTANT FAILED x2_non_string_key_inside_section: expected BAD_TRACE, got refused: [V5:BAD_COUNT] gate 'G': section 'G' holds 2: 1; the tracer writes only declared targets with positive integer call counts
+  MUTANT FAILED x2_list_valued_section: expected BAD_TRACE, got crash: AttributeError: 'list' object has no attribute 'items'
+  MUTANT FAILED x2_check_metrics_reports_list_section: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised AttributeError: 'list' object has no attribute 'items'
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 2 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

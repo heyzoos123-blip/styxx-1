@@ -1,0 +1,10 @@
+violations refused with their own code: 0.9394 of 66
+  MUTANT FAILED rt_background_thread_started_outside: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65ff9
+  MUTANT FAILED rt_asyncio_task_from_closed_section: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'A': {'_v5c_fix:other': 1}, 'B': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trac
+  MUTANT FAILED rt2_concurrent_sections_share_pool: expected NOT_EXERCISED, got refused: [V5:NESTED_SECTION] section 'B' opened inside section 'A' — nested sections would make one call count for two gates
+  MUTANT FAILED rt2_section_exited_in_other_context: expected SECTION_CONTEXT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65ff9
+valid scored with property: 0.9375 of 16
+  VALID FAILED parallel_sections_in_two_threads: refused coverage=None leaked=False [V5:NESTED_SECTION] section 'B' opened inside section 'A' — nested sections would make one call count for two gates
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

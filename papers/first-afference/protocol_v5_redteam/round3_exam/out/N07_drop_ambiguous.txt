@@ -1,0 +1,6 @@
+violations refused with their own code: 0.9848 of 66
+  MUTANT FAILED rt2_concurrent_sections_share_pool: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'A': {'_v5c_fix:target': 1}, 'B': {'_v5c_fix:other': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trac
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

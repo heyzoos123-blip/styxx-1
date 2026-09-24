@@ -1,0 +1,179 @@
+### R01_identity_to_equality: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_dataclass_equal_init: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:NullModel.__init__': 1}}, 'trace': {'tracer': 
+### R01b_drop_is_check_only: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### R02a_no_gc_referrers_check: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9545 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_factory_closure_sibling: expected SHARED_CODE, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:check
+     MUTANT FAILED rt_nowraps_decorator_sibling: expected SHARED_CODE, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:ent
+     MUTANT FAILED rt2_runtime_nowraps_kept_alive: expected SHARED_CODE, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:s
+### R02b_no_two_targets_one_code_check: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_alias_targets_one_function: expected SHARED_CODE, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:al
+### R03_inherited_follows_mro: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 0.9375 of 16']
+     MUTANT FAILED rt_inherited_method: expected INHERITED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:Sub.fit': 1}}, 'trace': {'tracer': 'styxx.protocol.cov
+     VALID FAILED classmethod: refused coverage=None leaked=False [V5:NO_CODE] declared target '_v5c_fix:K.cm' resolves to method, which has no Python code object to observe (
+### R03b_inherited_as_attributeerror: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_inherited_method: expected INHERITED, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:Sub.fit' does not resolve (AttributeError: Sub has no attrib
+### R04a_contextvar_to_process_slot: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9394 of 66', 'valid scored with property: 0.9375 of 16']
+     MUTANT FAILED rt_background_thread_started_outside: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer':
+     MUTANT FAILED rt_asyncio_task_from_closed_section: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'A': {'_v5c_fix:other': 1}, 'B': {'_v5c_fix:target
+     MUTANT FAILED rt2_concurrent_sections_share_pool: expected NOT_EXERCISED, got refused: [V5:NESTED_SECTION] section 'B' opened inside section 'A' — nested sections would m
+     MUTANT FAILED rt2_section_exited_in_other_context: expected SECTION_CONTEXT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer'
+     VALID FAILED parallel_sections_in_two_threads: refused coverage=None leaked=False [V5:NESTED_SECTION] section 'B' opened inside section 'A' — nested sections would make o
+### R04b_contextvar_to_threadlocal: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9697 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_asyncio_task_from_closed_section: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'A': {'_v5c_fix:other': 1}, 'B': {'_v5c_fix:target
+     MUTANT FAILED rt2_section_exited_in_other_context: expected SECTION_CONTEXT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer'
+### R05_no_thread_start_mapping: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 0.8125 of 16']
+     MUTANT FAILED rt_thread_outlives_section: expected THREAD_OUTLIVES, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:t
+     VALID FAILED thread_started_in_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'
+     VALID FAILED thread_pool_inside_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target
+     VALID FAILED x2_grandchild_thread_in_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:t
+### R05b_thread_start_uses_cv_only: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 0.9375 of 16']
+     VALID FAILED x2_grandchild_thread_in_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:t
+### R06_count_after_close: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_call_after_its_section_closed: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'st
+### R07_no_thread_outlives: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_thread_outlives_section: expected THREAD_OUTLIVES, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:t
+### R08_no_profiler_replaced: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_cprofile_inside_section: expected PROFILER_REPLACED, got refused: [V5:EXIT_ORDER] coverage_trace exited while another profiler is installed — tracers wer
+### R09_no_foreign_profiler: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9545 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_c_profiler_present: expected FOREIGN_PROFILER, got crash: TypeError: 'Profile' object is not callable
+     MUTANT FAILED x2_c_profiler_refused_and_kept: expected FOREIGN_PROFILER, got crash: TypeError: 'Profile' object is not callable
+     MUTANT FAILED x2_foreign_threading_profiler: expected FOREIGN_PROFILER, got scored: None
+### R10_no_reentry: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9697 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_reentry: expected REENTRY, got refused: [V5:EXIT_ORDER] coverage_trace exited while another profiler is installed — tracers were exited out of order, or 
+     MUTANT FAILED x2_reenter_exited_tracer: expected REENTRY, got refused: [V5:EXIT_ORDER] coverage_trace exited while another profiler is installed — tracers were exited out
+### R10b_reentry_only_active: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_reenter_exited_tracer: expected REENTRY, got refused: [V5:EXIT_ORDER] coverage_trace exited while another profiler is installed — tracers were exited out
+### R11_no_exit_order: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_out_of_order_exit: expected EXIT_ORDER, got scored: None
+### R11b_reinstall_exited_hooks: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_out_of_order_exit: expected EXIT_ORDER, got crash: RuntimeError: out-of-order exit leaked a hook
+### R12_unresolved_narrow_except: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9545 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_import_raises: expected UNRESOLVED, got crash: RuntimeError: optional backend not configured
+     MUTANT FAILED rt_import_syntax_error: expected UNRESOLVED, got crash: SyntaxError: invalid syntax (_v5c_syntax.py, line 1)
+     MUTANT FAILED rt_unwrap_loop: expected UNRESOLVED, got crash: ValueError: wrapper loop when unwrapping <function f at 0x7f4582dbf420>
+### R13a_no_bad_trace_top: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9394 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt_non_string_trace_key: expected BAD_TRACE, got crash: TypeError: '<' not supported between instances of 'int' and 'str'
+     MUTANT FAILED rt_check_metrics_non_string_key_reports: expected BAD_TRACE, got crash: TypeError: '<' not supported between instances of 'NoneType' and 'str'
+     MUTANT FAILED x2_non_string_key_under_sections: expected BAD_TRACE, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.
+     MUTANT FAILED x2_check_metrics_reports_none_key: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised TypeError: '<' not supported between instances of 'None
+### R13b_bad_trace_top_targets_only: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_non_string_key_under_sections: expected BAD_TRACE, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.
+### R13c_no_bad_trace_section: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9545 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_non_string_key_inside_section: expected BAD_TRACE, got refused: [V5:BAD_COUNT] gate 'G': section 'G' holds 2: 1; the tracer writes only declared targets 
+     MUTANT FAILED x2_list_valued_section: expected BAD_TRACE, got crash: AttributeError: 'list' object has no attribute 'items'
+     MUTANT FAILED x2_check_metrics_reports_list_section: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised AttributeError: 'list' object has no attribute 'ite
+### R13d_check_metrics_raises: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9545 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_check_metrics_reports_none_key: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised GateSpecError: [V5:BAD_TRACE] gate 'G': coverage_trace.
+     MUTANT FAILED x2_check_metrics_reports_list_section: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised GateSpecError: [V5:BAD_TRACE] gate 'G': section 'G'
+     MUTANT FAILED x2_check_metrics_reports_non_dict_result: expected REPORTED, got crash: RuntimeError: check_metrics raised GateSpecError: [V5:NO_TRACE] gate 'G' declares 'e
+### R14_regex_match_not_fullmatch: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9697 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED exercises_trailing_newline: expected DECL, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:target\n' does not resolve (AttributeError: target
+     MUTANT FAILED x2_non_ascii_target: expected DECL, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:tаrget' does not resolve (AttributeError: tаrget) — a declaration
+### R14b_regex_not_ascii: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_non_ascii_target: expected DECL, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:tаrget' does not resolve (AttributeError: tаrget) — a declaration
+### O_NO_TRACE_skip: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED no_trace: expected NO_TRACE, got scored: Verdict(verdict='PASS', gates={'G': True}, gates_sha256='65ff9937f36057091ab502beef93bd6d95fc09f21f238ee23d3c51d53e
+### O_WRONG_TRACER: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED trace_wrong_tracer_id: expected WRONG_TRACER, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'handwritten/1'
+### O_STALE_TRACE: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED stale_gates_sha: expected STALE_TRACE, got scored: Verdict(verdict='PASS', gates={'G': True}, gates_sha256='d2c45937c41d007220d22a55809b5c4d1ff544e1556d608f
+### O_TARGET_SET: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED trace_target_set_differs: expected TARGET_SET, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protoco
+### O_TARGET_SET_subset_ok: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### O_SECTION_ABSENT_passes: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED section_absent: expected SECTION_ABSENT, got scored: {'verdict': 'PASS', 'coverage': {'G': {}, 'H': {'_v5c_fix:other': 1}}, 'trace': {'tracer': 'styxx.proto
+### O_SECTION_ABSENT_removed: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED section_absent: expected SECTION_ABSENT, got refused: [V5:BAD_TRACE] gate 'G': section 'G' must be a dict with string keys
+### O_BAD_COUNT: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9242 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED count_bool: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': True}}, 'trace': {'tracer': 'styxx.protocol.coverage_t
+     MUTANT FAILED count_float: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1.0}}, 'trace': {'tracer': 'styxx.protocol.coverage_t
+     MUTANT FAILED count_negative: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': -1}}, 'trace': {'tracer': 'styxx.protocol.coverage
+     MUTANT FAILED count_zero: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 0}}, 'trace': {'tracer': 'styxx.protocol.coverage_trac
+     MUTANT FAILED x2_forged_undeclared_key_in_section: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'sty
+### O_BAD_COUNT_no_bool: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED count_bool: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': True}}, 'trace': {'tracer': 'styxx.protocol.coverage_t
+### O_BAD_COUNT_no_undeclared_key: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_forged_undeclared_key_in_section: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'sty
+### O_NO_CODE: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED target_builtin: expected NO_CODE, got refused: [V5:SHARED_CODE] declared target 'builtins:len': its code object is shared by 5233 live functions (['<lambda>
+### O_DECL_nonempty: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED exercises_empty_beside_declaring: expected DECL, got refused: [V5:SECTION_ABSENT] gate 'G': section 'G' is absent from the trace — the harness never opened 
+### O_DECL_list: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED exercises_not_list: expected DECL, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_t
+### O_DECL_string: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED exercises_non_string: expected DECL, got crash: AttributeError: 'int' object has no attribute 'split'
+### O_DECL_format: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9545 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED exercises_no_colon: expected DECL, got crash: ValueError: not enough values to unpack (expected 2, got 1)
+     MUTANT FAILED exercises_trailing_newline: expected DECL, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:target\n' does not resolve (AttributeError: target
+     MUTANT FAILED x2_non_ascii_target: expected DECL, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:tаrget' does not resolve (AttributeError: tаrget) — a declaration
+### O_DECL_dup: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED exercises_duplicate: expected DECL, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_
+### O_SECTION_DECL_type: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED section_non_string: expected SECTION_DECL, got refused: [V5:SECTION_ABSENT] gate 'G': section 5 is absent from the trace — the harness never opened it, so n
+### O_SECTION_DECL_half: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED section_without_exercises: expected SECTION_DECL, got scored: <styxx.protocol.Experiment object at 0x7fa1fe5f10d0>
+### O_UNDECLARED_SECTION: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED undeclared_section_opened: expected UNDECLARED_SECTION, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styx
+### O_NESTED_SECTION: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED nested_sections: expected NESTED_SECTION, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'] in s
+### O_NOTHING_DECLARED: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED nothing_declared: expected NOTHING_DECLARED, got scored: <styxx.protocol._CoverageTracer object at 0x7f6668bbbb90>
+### O_NOT_EXERCISED: DETECTED rc=1 retro_exact=False []
+    TAIL: ratchpad/rt6/repo/styxx/protocol.py", line 583, in _check_coverage |     return {t: sec[t] for t in c["exercises"]} |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ |   File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/styxx/protocol.py", line 583, in <dictcomp> |     return {t: sec[t] for t in c["exercises"]} |                ~~~^^^ | KeyError: 'styxx.power:effective_n' | 
+### S_no_chaining: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 0.875 of 16']
+     VALID FAILED nested_tracers_outer_sees_inner_calls: scored coverage={'G': {'_v5c_fix:target': 1}, 'H': {'_v5c_fix:other': 1}} leaked=False None
+     VALID FAILED preexisting_python_profiler_chained: crash coverage=None leaked=False RuntimeError: pre-existing profiler restored=True, saw 0 of 1 target calls while chaine
+### S_no_threading_setprofile: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 0.75 of 16']
+     MUTANT FAILED rt2_concurrent_sections_share_pool: expected NOT_EXERCISED, got refused: [V5:PROFILER_REPLACED] section 'B' closed with this tracer no longer installed — th
+     VALID FAILED thread_started_in_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'
+     VALID FAILED thread_pool_inside_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target
+     VALID FAILED parallel_sections_in_two_threads: refused coverage=None leaked=False [V5:PROFILER_REPLACED] section 'B' closed with this tracer no longer installed — the har
+     VALID FAILED x2_grandchild_thread_in_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:t
+### S_no_restore_on_exit: DETECTED rc=1 retro_exact=False []
+    TAIL: e 931, in _refuse_at_close |     raise GateSpecError(msg) | styxx.protocol.GateSpecError: [V5:PROFILER_REPLACED] section 'G2_p1_retro_refused_as_coverage_violation' closed with this tracer no longer installed — the harness replaced the profiler (sys.setprofile, cProfile), or a RecursionError raised while CPython was entering the hook made it drop the profiler; calls after that point were not observed | 
+### S_count_ignores_active: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### R09b_foreign_refused_but_destroyed: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_c_profiler_refused_and_kept: expected FOREIGN_PROFILER, got crash: RuntimeError: the user's C profiler was destroyed by the refusal
+### R09c_foreign_check_sys_only: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_foreign_threading_profiler: expected FOREIGN_PROFILER, got scored: None
+### O_NO_CODE_b_function_only: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N01_drop_globals_check: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_clone_with_other_globals: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.
+### N02_drop_freevar_check: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_runtime_nowraps_discarded: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:score_all': 1}}, 'trace': {'tracer': 'st
+### N02b_freevar_eq_not_is: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N02c_impostors_counted: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9697 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_runtime_nowraps_discarded: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:score_all': 1}}, 'trace': {'tracer': 'st
+     MUTANT FAILED rt2_clone_with_other_globals: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.
+### N03_drop_close_recount: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_runtime_nowraps_kept_alive: expected SHARED_CODE, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:s
+### N04_drop_close_gc: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N04b_drop_entry_gc: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N04c_drop_both_gc: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N05_wraps_check_not_at_entry: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N06_wraps_check_not_at_close: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N06b_wraps_check_nowhere: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_wraps_siblings_share_inner: expected SHARED_CODE, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:run_fast': 1}}, 'trace': {'tracer': 'styx
+### N07_drop_ambiguous: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_concurrent_sections_share_pool: expected NOT_EXERCISED, got scored: {'verdict': 'PASS', 'coverage': {'A': {'_v5c_fix:target': 1}, 'B': {'_v5c_fix:other'
+### N07b_ambiguous_ignores_via: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 0.9375 of 16']
+     VALID FAILED parallel_sections_in_two_threads: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:
+### N08_drop_hook_self_removal: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 0.9375 of 16']
+     VALID FAILED rt2_thread_hook_released_after_exit: crash coverage=None leaked=False RuntimeError: a thread started during the trace kept its hook after exit
+### N09_thr_clear_only_on_success: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N09b_thr_never_cleared_on_error_or_order: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N10_instance_path_getattr: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_instance_path: expected INSTANCE_PATH, got refused: [V5:NO_CODE] declared target '_v5c_fix:default_model.fit' resolves to method, which has no Python co
+### N11a_section_context_valueerror_escapes: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_section_exited_in_other_context: expected SECTION_CONTEXT, got crash: ValueError: <Token var=<ContextVar name='styxx_v5_section_140304709443024' default
+### N11b_section_context_swallowed: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED rt2_section_exited_in_other_context: expected SECTION_CONTEXT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer'
+### N12a_hook_failed_no_catch: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N12b_hook_failed_catch_no_flag: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N12c_hook_failed_no_refusal: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N13_check_metrics_non_dict_raises: DETECTED rc=0 retro_exact=True ['violations refused with their own code: 0.9848 of 66', 'valid scored with property: 1.0 of 16']
+     MUTANT FAILED x2_check_metrics_reports_non_dict_result: expected REPORTED, got crash: RuntimeError: check_metrics raised AttributeError: 'list' object has no attribute 'g
+### N14_thread_start_early_return: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N15_close_refusals_not_recorded: SURVIVES rc=0 retro_exact=True ['violations refused with their own code: 1.0 of 66', 'valid scored with property: 1.0 of 16']
+### N16_exited_before_ownership_read: DETECTED rc=1 retro_exact=False []
+    TAIL: cratchpad/rt6/repo/styxx/protocol.py", line 931, in _refuse_at_close |     raise GateSpecError(msg) | styxx.protocol.GateSpecError: [V5:THREAD_OUTLIVES] section 'G1_valid_cases_score_with_their_property' closed with threads started inside it still running (['Thread-10 (worker)']) — their later work could not be told apart from this section's. Join them (or shut the pool down) before the section ends. | 

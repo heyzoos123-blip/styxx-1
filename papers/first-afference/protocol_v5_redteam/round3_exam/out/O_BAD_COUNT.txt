@@ -1,0 +1,10 @@
+violations refused with their own code: 0.9242 of 66
+  MUTANT FAILED count_bool: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': True}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65
+  MUTANT FAILED count_float: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1.0}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65f
+  MUTANT FAILED count_negative: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': -1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65ff
+  MUTANT FAILED count_zero: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 0}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65ff9
+  MUTANT FAILED x2_forged_undeclared_key_in_section: expected BAD_COUNT, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65ff9
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

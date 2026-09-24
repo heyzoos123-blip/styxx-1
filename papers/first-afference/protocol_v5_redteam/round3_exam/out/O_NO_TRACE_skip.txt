@@ -1,0 +1,6 @@
+violations refused with their own code: 0.9848 of 66
+  MUTANT FAILED no_trace: expected NO_TRACE, got scored: Verdict(verdict='PASS', gates={'G': True}, gates_sha256='65ff9937f36057091ab502beef93bd6d95fc09f21f238ee23d3c51d53ef0604c', prereg_commit='9
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

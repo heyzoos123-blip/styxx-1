@@ -1,0 +1,7 @@
+violations refused with their own code: 1.0 of 66
+valid scored with property: 0.875 of 16
+  VALID FAILED nested_tracers_outer_sees_inner_calls: scored coverage={'G': {'_v5c_fix:target': 1}, 'H': {'_v5c_fix:other': 1}} leaked=False None
+  VALID FAILED preexisting_python_profiler_chained: crash coverage=None leaked=False RuntimeError: pre-existing profiler restored=True, saw 0 of 1 target calls while chained
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 1 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

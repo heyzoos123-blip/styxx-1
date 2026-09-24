@@ -1,0 +1,8 @@
+violations refused with their own code: 0.9545 of 66
+  MUTANT FAILED rt_import_raises: expected UNRESOLVED, got crash: RuntimeError: optional backend not configured
+  MUTANT FAILED rt_import_syntax_error: expected UNRESOLVED, got crash: SyntaxError: invalid syntax (_v5c_syntax.py, line 1)
+  MUTANT FAILED rt_unwrap_loop: expected UNRESOLVED, got crash: ValueError: wrapper loop when unwrapping <function f at 0x7f4582dbf420>
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 3 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

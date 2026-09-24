@@ -1,0 +1,6 @@
+violations refused with their own code: 0.9848 of 66
+  MUTANT FAILED rt2_section_exited_in_other_context: expected SECTION_CONTEXT, got crash: ValueError: <Token var=<ContextVar name='styxx_v5_section_140304709443024' default=None at 0x7f9b3c57e660> at 0x7f9b49f92ac0> was created in
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 1 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

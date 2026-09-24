@@ -1,0 +1,9 @@
+violations refused with their own code: 0.9848 of 66
+  MUTANT FAILED rt_thread_outlives_section: expected THREAD_OUTLIVES, got refused: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them
+valid scored with property: 0.8125 of 16
+  VALID FAILED thread_started_in_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d
+  VALID FAILED thread_pool_inside_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d
+  VALID FAILED x2_grandchild_thread_in_section: refused coverage=None leaked=False [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

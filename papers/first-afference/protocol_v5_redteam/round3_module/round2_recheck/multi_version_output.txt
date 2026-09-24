@@ -1,0 +1,168 @@
+##### 3.10
+== v1_round1.py
+B1 factory closure -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:check_high': its code object is shared by 2 live functions (['_make.<
+B1 no-wraps decorator -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:entry_b': its code object is shared by 2 live functions (['plain.<
+B2 dataclass __init__ -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx_dc:NullModel.__init__'] in sectio
+N2 inherited Sub.fit -> GateSpecError [V5:INHERITED] declared target 'fx_dc:Sub.fit': 'fit' is inherited by Sub, not defined on it — any subclass ca
+B3 thread outlives A (orig) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running (['ThreadPoolExecuto
+B3 variant: A exits by exception -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 
+B3 thread started outside sections -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in sectio
+B3 asyncio task A->B -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:f'] in section 'B' (it did 
+   t1 exit: [V5:EXIT_ORDER] coverage_trace exited while another profiler
+D1 non-LIFO -> sys=None thr=None
+D1 re-entry -> GateSpecError [V5:REENTRY] this coverage_trace is already active or has already exited — a tracer is entered exactly once; nested use
+D1(d) thread keeps hook -> post-exit counted={} worker profile after exit=<styxx.protocol._Hook object at 0x7f5f3ef44bb0>
+== a1_shared_after_entry.py
+A1a runtime decoration after trace entry (score_all never called) -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1b lazily imported plugin using same decorator -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1c FunctionType clone made after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+A1d __code__ assignment after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+== a2_resolution.py
+A2a INHERITED bypass via instance path -> VERDICT PASS coverage={'G': {'fx2_inst:default_model.fit': 1}}
+A2b wraps-variant aliasing via inspect.unwrap -> VERDICT PASS coverage={'G': {'fx2_wraps:run_fast': 1}}
+A2c singledispatch: public entry really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx2_sd:proc
+== a3_threads.py
+A3a run_in_executor awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still run
+A3b asyncio.to_thread awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still r
+A3c pool created+warmed outside section, used inside (correct) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never execut
+A3d pool shared by sequential sections (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running
+A3e concurrent sections sharing a pool -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 2}, 'B': {}} | REFUSED [V5:NOT_EXERCISED] gate 'B':
+A3f thread started in A starts a thread (joined) (control) -> REFUSED [V5:SECTION_ABSENT] gate 'B': section 'B' is absent from the trace — the harne
+A3g _thread.start_new_thread (stated limit, expect refusal) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed 
+A3h Thread subclass overriding start -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3i threading.Timer -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3j call_later scheduled in A fires in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed 
+A3k generator created in A, resumed in B (B executed it: expect PASS) -> VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+A3l context copied in A, run in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_si
+== a4_concurrent_pool_falsepass.py
+A4 concurrent sections + shared pool: A never calls f -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 1}, 'B': {'fx_simple:g': 1}}
+   VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+== a5_leaks.py
+A5a thread spawned during trace keeps hook after exit -> after trace exit: worker profile=_Hook tracer active=False; fib(22) main=0.003s worker=0.028s
+   exit: [V5:EXIT_ORDER] coverage_trace exited while anothe
+A5b EXIT_ORDER path leaves threading profile installed -> sys=None threading=<styxx.protocol._Hook object at 0x7fe3b8406ce0>
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7fe3b8406ce0>
+A5c exception exit after profiler replaced -> sys=<function exc_exit_with_replaced.<locals>.myprof at 0x7fe3b84452d0> threading=<styxx.protocol._Hook 
+   [leak] sys.getprofile= <function exc_exit_with_replaced.<locals>.myprof at 0x7fe3b84452d0>  threading.getprofile= <styxx.protocol._Hook object at 0
+A5d blind window then restore (f only called in window) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx
+A5e two tracers in two threads -> {'t1': '[V5:EXIT_ORDER] coverage_trace exited wh'} main sys=<styxx.protocol._Hook object at 0x7fe3b8407940> threadin
+   [leak] sys.getprofile= <styxx.protocol._Hook object at 0x7fe3b8407940>  threading.getprofile= None
+== a6_misc.py
+A6a RecursionError caught inside a section -> GateSpecError [V5:PROFILER_REPLACED] section 'G' closed with this tracer no longer installed — the har
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7faec8931e10>
+A6b same section in two shards; each joins its own helper -> errs=["shard0: [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it sti
+A6c section entered/exited in different contexts (ExitStack/fixture style) -> ESCAPED ValueError <Token var=<ContextVar name='styxx_v5_section_1403886
+A6d declared target threading:Thread.start, really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['
+A6e finalizer calling a target while tracer lock held -> no deadlock
+##### 3.12
+== v1_round1.py
+B1 factory closure -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:check_high': its code object is shared by 2 live functions (['_make.<
+B1 no-wraps decorator -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:entry_b': its code object is shared by 2 live functions (['plain.<
+B2 dataclass __init__ -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx_dc:NullModel.__init__'] in sectio
+N2 inherited Sub.fit -> GateSpecError [V5:INHERITED] declared target 'fx_dc:Sub.fit': 'fit' is inherited by Sub, not defined on it — any subclass ca
+B3 thread outlives A (orig) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running (['ThreadPoolExecuto
+B3 variant: A exits by exception -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 
+B3 thread started outside sections -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in sectio
+B3 asyncio task A->B -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:f'] in section 'B' (it did 
+   t1 exit: [V5:EXIT_ORDER] coverage_trace exited while another profiler
+D1 non-LIFO -> sys=None thr=None
+D1 re-entry -> GateSpecError [V5:REENTRY] this coverage_trace is already active or has already exited — a tracer is entered exactly once; nested use
+D1(d) thread keeps hook -> post-exit counted={} worker profile after exit=<styxx.protocol._Hook object at 0x7f6d8bfa1720>
+== a1_shared_after_entry.py
+A1a runtime decoration after trace entry (score_all never called) -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1b lazily imported plugin using same decorator -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1c FunctionType clone made after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+A1d __code__ assignment after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+== a2_resolution.py
+A2a INHERITED bypass via instance path -> VERDICT PASS coverage={'G': {'fx2_inst:default_model.fit': 1}}
+A2b wraps-variant aliasing via inspect.unwrap -> VERDICT PASS coverage={'G': {'fx2_wraps:run_fast': 1}}
+A2c singledispatch: public entry really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx2_sd:proc
+== a3_threads.py
+A3a run_in_executor awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still run
+A3b asyncio.to_thread awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still r
+A3c pool created+warmed outside section, used inside (correct) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never execut
+A3d pool shared by sequential sections (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running
+A3e concurrent sections sharing a pool -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 2}, 'B': {}} | REFUSED [V5:NOT_EXERCISED] gate 'B':
+A3f thread started in A starts a thread (joined) (control) -> REFUSED [V5:SECTION_ABSENT] gate 'B': section 'B' is absent from the trace — the harne
+A3g _thread.start_new_thread (stated limit, expect refusal) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed 
+A3h Thread subclass overriding start -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3i threading.Timer -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3j call_later scheduled in A fires in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed 
+A3k generator created in A, resumed in B (B executed it: expect PASS) -> VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+A3l context copied in A, run in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_si
+== a4_concurrent_pool_falsepass.py
+A4 concurrent sections + shared pool: A never calls f -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 1}, 'B': {'fx_simple:g': 1}}
+   VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+== a5_leaks.py
+A5a thread spawned during trace keeps hook after exit -> after trace exit: worker profile=_Hook tracer active=False; fib(22) main=0.005s worker=0.018s
+   exit: [V5:EXIT_ORDER] coverage_trace exited while anothe
+A5b EXIT_ORDER path leaves threading profile installed -> sys=None threading=<styxx.protocol._Hook object at 0x7fb8f3a8a980>
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7fb8f3a8a980>
+A5c exception exit after profiler replaced -> sys=<function exc_exit_with_replaced.<locals>.myprof at 0x7fb8f3a8e700> threading=<styxx.protocol._Hook 
+   [leak] sys.getprofile= <function exc_exit_with_replaced.<locals>.myprof at 0x7fb8f3a8e700>  threading.getprofile= <styxx.protocol._Hook object at 0
+A5d blind window then restore (f only called in window) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx
+A5e two tracers in two threads -> {'t1': '[V5:EXIT_ORDER] coverage_trace exited wh'} main sys=<styxx.protocol._Hook object at 0x7fb8f3a8ada0> threadin
+   [leak] sys.getprofile= <styxx.protocol._Hook object at 0x7fb8f3a8ada0>  threading.getprofile= None
+== a6_misc.py
+A6a RecursionError caught inside a section -> GateSpecError [V5:PROFILER_REPLACED] section 'G' closed with this tracer no longer installed — the har
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7f4a6894f580>
+A6b same section in two shards; each joins its own helper -> errs=["shard0: [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it sti
+A6c section entered/exited in different contexts (ExitStack/fixture style) -> ESCAPED ValueError <Token var=<ContextVar name='styxx_v5_section_1399573
+A6d declared target threading:Thread.start, really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['
+A6e finalizer calling a target while tracer lock held -> no deadlock
+##### 3.13
+== v1_round1.py
+B1 factory closure -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:check_high': its code object is shared by 2 live functions (['_make.<
+B1 no-wraps decorator -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:entry_b': its code object is shared by 2 live functions (['plain.<
+B2 dataclass __init__ -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx_dc:NullModel.__init__'] in sectio
+N2 inherited Sub.fit -> GateSpecError [V5:INHERITED] declared target 'fx_dc:Sub.fit': 'fit' is inherited by Sub, not defined on it — any subclass ca
+B3 thread outlives A (orig) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running (['ThreadPoolExecuto
+B3 variant: A exits by exception -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 
+B3 thread started outside sections -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in sectio
+B3 asyncio task A->B -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:f'] in section 'B' (it did 
+   t1 exit: [V5:EXIT_ORDER] coverage_trace exited while another profiler
+D1 non-LIFO -> sys=None thr=None
+D1 re-entry -> GateSpecError [V5:REENTRY] this coverage_trace is already active or has already exited — a tracer is entered exactly once; nested use
+D1(d) thread keeps hook -> post-exit counted={} worker profile after exit=<styxx.protocol._Hook object at 0x7f0b72e527a0>
+== a1_shared_after_entry.py
+A1a runtime decoration after trace entry (score_all never called) -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1b lazily imported plugin using same decorator -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1c FunctionType clone made after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+A1d __code__ assignment after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+== a2_resolution.py
+A2a INHERITED bypass via instance path -> VERDICT PASS coverage={'G': {'fx2_inst:default_model.fit': 1}}
+A2b wraps-variant aliasing via inspect.unwrap -> VERDICT PASS coverage={'G': {'fx2_wraps:run_fast': 1}}
+A2c singledispatch: public entry really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx2_sd:proc
+== a3_threads.py
+A3a run_in_executor awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still run
+A3b asyncio.to_thread awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still r
+A3c pool created+warmed outside section, used inside (correct) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never execut
+A3d pool shared by sequential sections (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running
+A3e concurrent sections sharing a pool -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 2}, 'B': {}} | REFUSED [V5:NOT_EXERCISED] gate 'B':
+A3f thread started in A starts a thread (joined) (control) -> REFUSED [V5:SECTION_ABSENT] gate 'B': section 'B' is absent from the trace — the harne
+A3g _thread.start_new_thread (stated limit, expect refusal) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed 
+A3h Thread subclass overriding start -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3i threading.Timer -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3j call_later scheduled in A fires in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed 
+A3k generator created in A, resumed in B (B executed it: expect PASS) -> VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+A3l context copied in A, run in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_si
+== a4_concurrent_pool_falsepass.py
+A4 concurrent sections + shared pool: A never calls f -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 1}, 'B': {'fx_simple:g': 1}}
+   VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+== a5_leaks.py
+A5a thread spawned during trace keeps hook after exit -> after trace exit: worker profile=_Hook tracer active=False; fib(22) main=0.010s worker=0.016s
+   exit: [V5:EXIT_ORDER] coverage_trace exited while anothe
+A5b EXIT_ORDER path leaves threading profile installed -> sys=None threading=<styxx.protocol._Hook object at 0x7f8e2922b6d0>
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7f8e2922b6d0>
+A5c exception exit after profiler replaced -> sys=<function exc_exit_with_replaced.<locals>.myprof at 0x7f8e29250540> threading=<styxx.protocol._Hook 
+   [leak] sys.getprofile= <function exc_exit_with_replaced.<locals>.myprof at 0x7f8e29250540>  threading.getprofile= <styxx.protocol._Hook object at 0
+A5d blind window then restore (f only called in window) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx
+A5e two tracers in two threads -> {'t1': '[V5:EXIT_ORDER] coverage_trace exited wh'} main sys=<styxx.protocol._Hook object at 0x7f8e2922b8e0> threadin
+   [leak] sys.getprofile= <styxx.protocol._Hook object at 0x7f8e2922b8e0>  threading.getprofile= None
+== a6_misc.py
+A6a RecursionError caught inside a section -> GateSpecError [V5:PROFILER_REPLACED] section 'G' closed with this tracer no longer installed — the har
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7f8794e48130>
+A6b same section in two shards; each joins its own helper -> errs=["shard0: [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it sti
+A6c section entered/exited in different contexts (ExitStack/fixture style) -> ESCAPED ValueError <Token var=<ContextVar name='styxx_v5_section_1402200
+A6d declared target threading:Thread.start, really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['
+A6e finalizer calling a target while tracer lock held -> no deadlock

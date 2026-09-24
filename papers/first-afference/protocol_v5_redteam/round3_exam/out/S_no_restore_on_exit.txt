@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/papers/first-afference/run_protocol_v5d.py", line 942, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/papers/first-afference/run_protocol_v5d.py", line 872, in main
+    with cov.section("G2_p1_retro_refused_as_coverage_violation"):
+  File "/usr/lib/python3.11/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/styxx/protocol.py", line 986, in section
+    self._refuse_at_close(
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt6/repo/styxx/protocol.py", line 931, in _refuse_at_close
+    raise GateSpecError(msg)
+styxx.protocol.GateSpecError: [V5:PROFILER_REPLACED] section 'G2_p1_retro_refused_as_coverage_violation' closed with this tracer no longer installed — the harness replaced the profiler (sys.setprofile, cProfile), or a RecursionError raised while CPython was entering the hook made it drop the profiler; calls after that point were not observed

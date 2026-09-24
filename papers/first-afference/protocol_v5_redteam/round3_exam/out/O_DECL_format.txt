@@ -1,0 +1,9 @@
+violations refused with their own code: 0.9545 of 66
+  MUTANT FAILED exercises_no_colon: expected DECL, got crash: ValueError: not enough values to unpack (expected 2, got 1)
+  MUTANT FAILED exercises_trailing_newline: expected DECL, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:target\n' does not resolve (AttributeError: target
+) — a declaration naming nothing would read as 
+  MUTANT FAILED x2_non_ascii_target: expected DECL, got refused: [V5:UNRESOLVED] declared target '_v5c_fix:tаrget' does not resolve (AttributeError: tаrget) — a declaration naming nothing would read as une
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 1 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

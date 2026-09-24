@@ -1,0 +1,7 @@
+violations refused with their own code: 0.9848 of 66
+  MUTANT FAILED rt_inherited_method: expected INHERITED, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:Sub.fit': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': 'e16a
+valid scored with property: 0.9375 of 16
+  VALID FAILED classmethod: refused coverage=None leaked=False [V5:NO_CODE] declared target '_v5c_fix:K.cm' resolves to method, which has no Python code object to observe (builtins, C extensions and properties cannot be traced). Declare the Python function that calls it instead.
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

@@ -1,0 +1,9 @@
+violations refused with their own code: 0.9394 of 66
+  MUTANT FAILED rt_non_string_trace_key: expected BAD_TRACE, got crash: TypeError: '<' not supported between instances of 'int' and 'str'
+  MUTANT FAILED rt_check_metrics_non_string_key_reports: expected BAD_TRACE, got crash: TypeError: '<' not supported between instances of 'NoneType' and 'str'
+  MUTANT FAILED x2_non_string_key_under_sections: expected BAD_TRACE, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:target': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '65ff9
+  MUTANT FAILED x2_check_metrics_reports_none_key: expected BAD_TRACE, got crash: RuntimeError: check_metrics raised TypeError: '<' not supported between instances of 'NoneType' and 'str'
+valid scored with property: 1.0 of 16
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 3 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

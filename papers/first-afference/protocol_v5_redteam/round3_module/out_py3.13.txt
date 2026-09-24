@@ -1,0 +1,59 @@
+== t01_wraps_family.py
+T01a declared wraps-wrapper satisfied by a plain sibling calling the inner -> VERDICT PASS coverage={'G': {'fx3_wraps:run_fast': 1}}
+T01b class-based update_wrapper siblings (R2-D2 via instances) -> VERDICT PASS coverage={'G': {'fx3_wraps:fast': 1}}
+T01c temporary wraps sibling created per call, dead at close -> VERDICT PASS coverage={'G': {'fx3_wraps:public': 1}}
+T01d undecorated target with two wraps aliases, called directly -> GateSpecError [V5:SHARED_CODE] declared target 'fx3_wraps:score' unwraps to score, which 2 wrappers share (['score']) — a call through any of them reaches the same code. Declare the in
+== t02_close_checks_bypassed.py
+   clone alive at close: 1  close_refusals: []
+T02a clone alive at close, section exited by exception -> VERDICT PASS coverage={'G': {'fx3_clone:target': 1}}
+   errors: ["[V5:SHARED_CODE] declared target 'fx3_cl", "[V5:SHARED_CODE] declared target 'fx3_cl", "[V5:SHARED_CODE] declared target 'fx3_cl"]
+   close_refusals in record: 3
+T02b close refusal swallowed by a per-item try/except -> VERDICT PASS coverage={'G': {'fx3_clone:target': 3}}
+   swallowed: [V5:SHARED_CODE] declared target 'fx3_wraps:public' unwraps 
+T02c runtime wraps sibling alive at close, refusal swallowed -> VERDICT PASS coverage={'G': {'fx3_wraps:public': 1}}
+   thread alive after close: True close_refusals: []
+T02d thread outlives an exception-exited section; its call credited to a later G -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+== t06_frame_identity.py
+3.13.12
+  F1: result=2 sections={'G': {'fx3_frames:Model.fit': 1}} impostors={}
+F1 method using super() (__class__ cell) -> VERDICT PASS coverage={'G': {'fx3_frames:Model.fit': 1}}
+  F2: result=[10, 11] sections={'G': {'fx3_frames:gen': 3}} impostors={}
+F2 generator with free var, 3 resumes -> VERDICT PASS coverage={'G': {'fx3_frames:gen': 3}}
+  F3: result=6 sections={'G': {'fx3_frames:coro': 3}} impostors={}
+F3 coroutine with free var -> VERDICT PASS coverage={'G': {'fx3_frames:coro': 3}}
+  F4: result=[[102, 103], [103, 104]] sections={'G': {'fx3_frames:cellarg': 2}} impostors={}
+F4 cell argument + free var (f_locals side effects?) -> VERDICT PASS coverage={'G': {'fx3_frames:cellarg': 2}}
+  F5: result=[[1, 2, 3], [1, 2, 3]] sections={'G': {'fx3_frames:get': 1}} impostors={'G': {'fx3_frames:get': 1}}
+F5 lazy-init nonlocal, first call in section -> VERDICT PASS coverage={'G': {'fx3_frames:get': 1}}
+  F6: result=5 sections={'G': {'fx3_frames:walk': 6}} impostors={}
+F6 recursive closure -> VERDICT PASS coverage={'G': {'fx3_frames:walk': 6}}
+== t07_resolution_and_context.py
+R fx3_ns:ops.a (plain function reached through a namespace / lazy attr) -> GateSpecError [V5:INSTANCE_PATH] declared target 'fx3_ns:ops.a': 'a' is reached through a SimpleNamespace, not a module or class — an instance's attribute is whatever its class hierarc
+R fx3_ns:reg.a (plain function reached through a namespace / lazy attr) -> GateSpecError [V5:INSTANCE_PATH] declared target 'fx3_ns:reg.a': 'a' is reached through a _Registry, not a module or class — an instance's attribute is whatever its class hierarchy say
+R fx3_ns:lazy_a (plain function reached through a namespace / lazy attr) -> GateSpecError [V5:UNRESOLVED] declared target 'fx3_ns:lazy_a' does not resolve (AttributeError: lazy_a) — a declaration naming nothing would read as unexercised forever, or worse, as a
+   close: [V5:SECTION_CONTEXT] section 'G' was exi
+   opening H afterwards in the original context: [V5:NESTED_SECTION] section 'H' opened inside section 'G' — nested sections would make one
+C1 after SECTION_CONTEXT -> {'G': {}}
+== t08_factory_products.py
+   impostors: {} close_refusals: []
+P1 defaults-only factory product (triple) credited as declared 'double' -> VERDICT PASS coverage={'G': {'fx3_factory:double': 1}}
+   impostors: {} close_refusals: []
+P2 same closure objects, different default -> credited as declared lenient scorer -> VERDICT PASS coverage={'G': {'fx3_factory:score_lenient': 1}}
+   impostors: {'G': {'fx3_factory:score_lenient': 1}}
+P3 control: different closure object -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx3_factory:score_lenient'] in section 'G' (it did execute none of them). The metric was produced without running what th
+== t12_asyncio_shared_worker.py
+   sections: {'A': {'fx_simple:f': 1, 'fx_simple:g': 1}, 'B': {'fx_simple:g': 1}} ambiguous: {}
+T12 asyncio worker tasks created by A run B's job while both open -> VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+== t11_perf_closure.py
+3.13.12 {'plain': '35x (1.2us/call)', 'clos': '24x (2.0us/call)', 'bigloc': '10x (2.0us/call)'}
+== t09 (needs tqdm in ./site)
+L1 tqdm progress bar first used inside a section -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['tqdm_monitor']) — their later work could not be told apart from this section's. Jo
+== t10
+{'KeyboardInterrupt reached harness; user profiler after: kept': 4, 'KeyboardInterrupt reached harness; user profiler after: None': 16}
+threading.getprofile: None
+== t04 record-inside-trace deadlock sweep
+non-ok k:
+== t03 signal timeout
+untraced: Timeout after 0.05s
+traced x20: Counter({"GateSpecError [V5:HOOK_FAILED] the coverage hook raised while section 'G' ": 11, 'Timeout': 9})
+sys.getprofile after: None

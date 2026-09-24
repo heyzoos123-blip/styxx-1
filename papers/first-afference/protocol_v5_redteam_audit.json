@@ -117,5 +117,80 @@
         "B1-B4 and D1/D2 repairs each genuinely tested"
       ]
     }
+  },
+  "round_3": {
+    "date": "2026-09-24",
+    "audited_impl_sha256": "9a3d3492e5c7 (protocol.py at 1d6958c2)",
+    "audited_exam": "run_protocol_v5d.py, frozen sha ae6ac686 at 342ab9c7; protocol_v5d_result.json",
+    "verdict": "NOT SHIPPABLE -- three new module blockers; five exam-survivor groups against named repairs; and one repair shipped without being declared",
+    "module_red_team": {
+      "scripts": "protocol_v5_redteam/round3_module/ (outputs out_py3{10,11,12,13}.txt; round2_recheck/)",
+      "versions": "3.10.20, 3.11.15, 3.12.3, 3.13.12 -- all findings reproduce on all four unless noted",
+      "round2_recheck": "R2-B1 closed as tested (A1a-d refuse SHARED_CODE); R2-B2 closed for threads, REOPENED via asyncio; R2-B3 closed (worker profile None after exit, 1.0x); D1, D4, D5, D6 closed; D2 closed only in the tested shape; still undisclosed: same section name in two shards (A6b), singledispatch entry point refused (A2c). On 3.12/3.13 cProfile no longer uses sys.setprofile, so the cProfile case traces instead of refusing (harmless).",
+      "blockers": {
+        "R3_B1_factory_products": "declared double = make_mul(2) (lambda x, k=k: x*k); harness calls only make_mul(3)(5) -> VERDICT PASS, no impostors, no close refusals. Frame identity sees globals and closure cells, not defaults; the product is dead by close. t08_factory_products.py",
+        "R3_B2_asyncio_inherits_context": "section A lazily starts consumer TASKS; B's job runs on them while both are open; the tasks copied A's context, so attribution is 'via context' and the thread-only ambiguity rule never applies -> PASS with A credited for f it never called. The v5d sentence 'a context that opened its own section is unaffected' is false: a copied ContextVar opened nothing. t12_asyncio_shared_worker.py",
+        "R3_B3_hook_swallows_async_exceptions": "a SIGALRM handler raising Timeout(Exception) is delivered inside _on_call most of the time and 'except Exception' eats it: timeout lost in 13/20 (3.10), 16/20 (3.11), 10/20 (3.12), 11/20 (3.13); the guarded loop runs its full 5 s in 6/10 trials -- a hang in real use. t03_signal_timeout_swallowed.py, t03b"
+      },
+      "defects": {
+        "R3_D1_wraps_family": "T01a a plain function calling the inner satisfies the @wraps wrapper; T01b class-based update_wrapper siblings pass (FunctionType-only scan); T01c per-call @wraps sibling dead at close passes; T01d reverse over-block of an undecorated function with two @wraps aliases, message names wrappers by the copied qualname",
+        "R3_D2_close_checks_skipped_or_ignored": "a section exiting by exception runs none of the close checks; score() never reads close_refusals, so a battery that catches GateSpecError per item passes (T02a-d)",
+        "R3_D3_finalizer_deadlock": "a cyclic object whose __del__ calls a target, collected while record() holds the non-reentrant lock, deadlocks the hook on 3.10 (gen-0 threshold 18-32) and 3.11 (11-21); none on 3.12/3.13",
+        "R3_D4_close_cost": "gc.collect + full-heap get_referrers per target at every close: 21 ms at 0.1M objects, 117 ms at 1M, 476 ms at 3M; ~8 min of bookkeeping for a 1000-item per-item battery on a 3M heap; undisclosed",
+        "R3_D5_library_daemon_threads": "tqdm's monitor thread started inside a section -> THREAD_OUTLIVES, unjoinable, undisclosed",
+        "R3_D6": "A6b and A2c still undisclosed"
+      },
+      "nits": [
+        "INSTANCE_PATH refuses SimpleNamespace/registry namespaces with a message about class hierarchies; PEP 562 lazy attributes refuse UNRESOLVED",
+        "after SECTION_CONTEXT the opening context keeps the section set forever (later NESTED_SECTION, misleading)",
+        "_hook_failed is sticky across sections and names the wrong section",
+        "Ctrl-C inside the hook drops a chained user profiler (16-18/20 on 3.11/3.13)",
+        "closure targets cost 1-4 us per call for f_locals",
+        "a closure clone with identical cell contents counts -- say so in the stated limit"
+      ],
+      "held": [
+        "frame identity correct for super()/__class__ cells, generator/coroutine resumes, recursive closures, different cell objects",
+        "lazy nonlocal rebinding -> impostor (disclosed)",
+        "self-removing hook safe inside the profile callback on 3.10-3.13",
+        "KeyboardInterrupt reaches the harness, no threading hook left",
+        "no non-GateSpecError escaped any public call",
+        "no deadlock in section() bookkeeping or under default gc thresholds"
+      ]
+    },
+    "exam_mutation_audit": {
+      "scripts": "protocol_v5_redteam/round3_exam/ (mut.py, mut_b.py, mutants_r3.py, mutants_r3b.py, results.txt, out/, probe/, probe_mut.py)",
+      "method": "82 mutants (round 2's 53, 4 re-anchored, plus 29 for round-3 repairs), each through run_protocol_v5d.py --smoke --full-battery",
+      "totals": {
+        "detected": 63,
+        "survived": 19
+      },
+      "survivors_blocker_class": {
+        "N06_wraps_recount_at_close": "FAILS OPEN: a functools.wraps sibling created inside the section, alive past close, called instead of the declared wrapper: current code refuses SHARED_CODE, mutant scores PASS. The only wraps case is built at import time (caught at entry); the only runtime-decoration case uses a no-wraps decorator",
+        "N09_N09b_threading_hook_reset_on_error_paths": "no case checks the threading hook after a PROFILER_REPLACED or EXIT_ORDER exit; _guarded records leaked_profiler for violation cases but never counts it, and four violation cases leak by construction, saturating the signal",
+        "N12abc_N18_HOOK_FAILED": "no violation case expects HOOK_FAILED. The hook-body route IS deterministic: def rec(n): target(); return rec(n+1) inside a section refuses HOOK_FAILED 5/5; under the mutants it refuses PROFILER_REPLACED (the round-2 R2-D4 wrong reason)",
+        "N05_wraps_check_at_entry": "same-code shadow: the close-time recount produces the same SHARED_CODE after the work is spent; the runner truncates detail at 220 chars, removing the 'found at close' suffix",
+        "N04_gc_collect": "no case depends on gc.collect before counting holders: with gc disabled, a dead clone in a reference cycle -> current PASS, mutants refuse SHARED_CODE (over-block)"
+      },
+      "defects": {
+        "D1_undeclared_repair": "round 3 added 'not isinstance(obj, types.FunctionType)' to the NO_CODE check. It is in neither the v5d repair table nor the 1d6958c2 commit message, and no case covers it (O_NO_CODE_b survives). It closes a real hole v5c had: bound_fit = Sub().fit declared, harness calls only Other().fit() -> v5c scored PASS, current refuses NO_CODE, the mutant PASSes again.",
+        "D2_REPORTED_sentinel_checks_nothing": "x2_check_metrics_reports_non_dict_result raises the sentinel whenever check_metrics returns anything; returning {} survives (N13b)",
+        "D3_nits_claimed_taken_untested": "Thread.start declarable (N14) and close_refusals recorded (N15) have no case"
+      },
+      "nits": [
+        "R01b and S_count_ignores_active are effectively equivalent mutants",
+        "342ab9c7 said every surviving exam mutant became a case; O_TARGET_SET_subset_ok (fails closed) did not",
+        "N02b '==' for closure identity survives (fails open only for equal-but-not-identical closure values in a discarded clone)",
+        "rt_check_metrics_non_string_key_reports is still a same-code shadow (the x2 reports() cases cover it)",
+        "the freeze hashes only run_protocol_v5d.py, not run_protocol_v5.py, run_p1.py, power_QUARANTINED.py.txt or p1_result.json (none changed); G_EXAM_FROZEN is self-computed; git proves the freeze COMMIT preceded the implementation COMMIT (20:47:47 vs 20:52:51), not that it preceded the writing"
+      ],
+      "verified_true": [
+        "runner sha ae6ac686 at 342ab9c7, 1d6958c2 and HEAD equals FROZEN_RUNNER_SHA256 and runner_sha256",
+        "342ab9c7 does not touch protocol.py; protocol.py is v5c's 81f6cad2 there; only 1d6958c2 changes it",
+        "the pre-freeze control reproduces exactly (8 violation cases + the thread-hook valid case fail, nothing else)",
+        "a fresh non-smoke run gives 66/66, 16/16, retro exact, 0 crashes, 86/0/33, impl 9a3d3492, verdict PROCEED_TO_RED_TEAM_ROUND_3",
+        "every round-2 exam survivor of blocker and defect class is now detected"
+      ]
+    },
+    "author_note": "The 'undeclared repair' (exam audit D1) is accurate: the FunctionType guard was written during the round-3 implementation and not listed in the v5d repair table or the commit message. It is recorded here and in the RESULT as an undeclared change, not folded in silently."
   }
 }

@@ -1,0 +1,255 @@
+{
+  "prereg": "PREREG_protocol_v5_coverage_2026_09_24.md",
+  "smoke": false,
+  "violation_cases": {
+    "never_called": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    },
+    "called_only_in_other_section": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    },
+    "called_only_outside_sections": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    },
+    "no_trace": {
+      "refused": true,
+      "detail": "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside styxx.protocol.coverage_trace() and store its record"
+    },
+    "section_absent": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can be attributed to this gate"
+    },
+    "stale_gates_sha": {
+      "refused": true,
+      "detail": "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026). A trace of a different declaration is not evid"
+    },
+    "trace_target_set_differs": {
+      "refused": true,
+      "detail": "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declared set ['_v5_fixture:target'] \u2014 it recorded someth"
+    },
+    "trace_wrong_tracer_id": {
+      "refused": true,
+      "detail": "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trace was not written by the machinery that can be re"
+    },
+    "target_unresolvable_attr": {
+      "refused": true,
+      "detail": "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming nothing would read as unexercised forever, or worse,"
+    },
+    "target_unresolvable_module": {
+      "refused": true,
+      "detail": "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mod_v5') \u2014 a declaration naming nothing would read "
+    },
+    "target_builtin": {
+      "refused": true,
+      "detail": "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code object to observe (builtins, C extensions and properti"
+    },
+    "exercises_empty": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declaration would pass every harness."
+    },
+    "exercises_not_list": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'. An empty declaration would pass every harness."
+    },
+    "exercises_non_string": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused [1]"
+    },
+    "exercises_no_colon": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused ['target']"
+    },
+    "exercises_duplicate": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+    },
+    "section_non_string": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+    },
+    "section_without_exercises": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declaration checks nothing while looking like a check"
+    },
+    "undeclared_section_opened": {
+      "refused": true,
+      "detail": "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could never count, so opening it is refused before the wo"
+    },
+    "count_bool": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with positive integer call counts"
+    },
+    "count_float": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with positive integer call counts"
+    },
+    "count_negative": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with positive integer call counts"
+    },
+    "count_zero": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with positive integer call counts"
+    },
+    "called_only_in_child_process": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    }
+  },
+  "valid_cases": {
+    "direct_call": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "transitive_call": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "wraps_decorated": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+    },
+    "method": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+    },
+    "staticmethod": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+    },
+    "thread_started_in_section": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "two_gates_share_section": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+    },
+    "declaring_beside_undeclaring": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "nested_tracers": {
+      "scored": true,
+      "detail": "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+    }
+  },
+  "p1_retro": {
+    "G4": {
+      "refused": true,
+      "detail": "gate 'G4_refuses_degenerate': COVERAGE VIOLATION \u2014 the harness never executed ['styxx.power:effective_n', 'styxx.power:order_stat_bar', 'styxx.power:false_positive_rate', 'styxx.power:min_detectable_bar'] in section 'G4_refuses_degenerate' (it did execute ['styxx.power:reachable']). The metric was produced without running what the gate names. This is the P1 defect (cycle 158): G4 scored 1.0 while ",
+      "calls": {
+        "styxx.power:reachable": 12
+      }
+    },
+    "G1_ungated": {
+      "refused": false,
+      "detail": "scored PROCEED_TO_RED_TEAM__not_yet_shippable",
+      "calls": {
+        "styxx.power:order_stat_bar": 1
+      }
+    },
+    "declared_public_functions": [
+      "styxx.power:effective_n",
+      "styxx.power:order_stat_bar",
+      "styxx.power:false_positive_rate",
+      "styxx.power:min_detectable_bar",
+      "styxx.power:reachable"
+    ]
+  },
+  "n_violation_mutants": 24,
+  "frac_violation_mutants_refused": 1.0,
+  "n_valid_cases": 9,
+  "frac_valid_cases_scored": 1.0,
+  "p1_retro_case_refused": 1.0,
+  "p1_g1_retro_refused_ungated": false,
+  "n_corpus_results_rescored": 33,
+  "n_corpus_verdict_diffs": 1,
+  "corpus_diffs": [
+    {
+      "result": "disjoint-worlds/open_set_read_result.json",
+      "was": "VOID__null_mapper_separates",
+      "now": "RAISED:GateSpecError"
+    }
+  ],
+  "coverage_trace": {
+    "tracer": "styxx.protocol.coverage_trace/1",
+    "gates_sha256": "83f08fab5477a426c6353c921a7e0c475b26a4a017c2a985c578d40a6cdde4a5",
+    "targets": {
+      "styxx.protocol:Experiment._check_coverage": "b112b6bc31e7caefdcb13c67201100f0c5e33206442a3988d3390c513a7eeb2d",
+      "styxx.protocol:coverage_trace": "b9bc4ce2d53b4cd9276d3280cabd73aaf4455d7f54322f48ca3ce1aa801e5ae1"
+    },
+    "sections": {
+      "G0_mutants_refused": {
+        "styxx.protocol:Experiment._check_coverage": 13,
+        "styxx.protocol:coverage_trace": 16
+      },
+      "G1_valid_still_scores": {
+        "styxx.protocol:Experiment._check_coverage": 11,
+        "styxx.protocol:coverage_trace": 10
+      }
+    },
+    "unsectioned": {},
+    "scope_note": "calls in this interpreter's threads only; work in a child process is not observed and reads as unexercised"
+  },
+  "metric_check": {
+    "G0_mutants_refused": {
+      "path": "frac_violation_mutants_refused",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_still_scores": {
+      "path": "frac_valid_cases_scored",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G2_p1_retro_refused": {
+      "path": "p1_retro_case_refused",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G3_corpus_byte_identical": {
+      "path": "n_corpus_verdict_diffs",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G0_mutants_refused:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_still_scores:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    }
+  },
+  "verdict": "DO_NOT_SHIP__v5_rewrites_frozen_history",
+  "gates": {
+    "G0_mutants_refused": true,
+    "G1_valid_still_scores": true,
+    "G2_p1_retro_refused": true,
+    "G3_corpus_byte_identical": false
+  },
+  "coverage": {
+    "G0_mutants_refused": {
+      "styxx.protocol:Experiment._check_coverage": 13,
+      "styxx.protocol:coverage_trace": 16
+    },
+    "G1_valid_still_scores": {
+      "styxx.protocol:Experiment._check_coverage": 11,
+      "styxx.protocol:coverage_trace": 10
+    }
+  },
+  "prereg_commit": "a98e4572027c66a14fd178ebe74f964adcb2f674",
+  "gates_sha256": "83f08fab5477a426c6353c921a7e0c475b26a4a017c2a985c578d40a6cdde4a5"
+}

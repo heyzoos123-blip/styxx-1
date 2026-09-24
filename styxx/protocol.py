@@ -38,17 +38,24 @@ harness surfaces instead of guessing).
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
+import importlib
+import inspect
+import marshal
 import math
 import json
 import numbers
 import re
 import subprocess
+import sys
+import threading
+import types
 from dataclasses import dataclass, field
 from pathlib import Path
 
 __all__ = ["Experiment", "Verdict", "PrologueError", "GateSpecError",
-           "undeclared_power_gates"]
+           "undeclared_power_gates", "coverage_trace"]
 
 
 def undeclared_power_gates(prereg) -> list:
@@ -145,6 +152,11 @@ def _select_gates_block(text: str) -> str:
     raise GateSpecError(
         f"the ```gates fence at line {i + 1} is never closed — an unterminated block renders "
         f"as everything-is-code and freezes nothing")
+_TARGET_RE = re.compile(r"^[A-Za-z_]\w*(\.[A-Za-z_]\w*)*:[A-Za-z_]\w*(\.[A-Za-z_]\w*)*$",
+                        re.ASCII)
+_TRACE_KEY = "coverage_trace"
+_TRACER_ID = "styxx.protocol.coverage_trace/1"
+
 _OPS = {">=": lambda a, b: a >= b, "<=": lambda a, b: a <= b,
         ">": lambda a, b: a > b, "<": lambda a, b: a < b,
         "==": lambda a, b: a == b}
@@ -169,6 +181,7 @@ class Verdict:
     undeclared_power_gates: list = field(default_factory=list)
     vacuous_gates: list = field(default_factory=list)    # gates no outcome row depends on
     metric_paths: dict = field(default_factory=dict)     # gate -> the dotted path it read
+    coverage: dict = field(default_factory=dict)         # gate -> {declared target: calls}
 
 
 def _resolve(result: dict, dotted: str):
@@ -269,6 +282,46 @@ class Experiment:
                 raise GateSpecError(
                     f"gate {n!r}: 'excluding' must be a non-empty result path when present")
             self.composition[n] = keys
+
+        # -- v5: declared harness coverage ------------------------------------------------------
+        # P1 (cycle 158): three of five frozen gates were satisfiable without testing what they
+        # named — G4 scored 1.0 while its harness called one of five public entry points. A gate
+        # may now declare the functions the code producing its metric must have executed:
+        #   "exercises": ["module:qualname", ...]  — non-empty, ASCII, no duplicates
+        #   "section": name                        — optional; the trace section (default: gate)
+        # coverage_trace() reads the targets from THIS frozen block, records calls to their code
+        # objects per section, and score() refuses a declaring gate whose section shows a target
+        # uncalled. Exercised is not tested: this catches a harness that never touched a
+        # function, not one that touched it and checked nothing.
+        self.coverage = {}
+        for n, g in spec["gates"].items():
+            if "exercises" not in g and "section" not in g:
+                continue
+            if "exercises" not in g:
+                raise GateSpecError(
+                    f"gate {n!r}: 'section' without 'exercises' declares a place and nothing to "
+                    f"find in it — half a declaration checks nothing while looking like a check")
+            ex = g["exercises"]
+            if not isinstance(ex, list) or not ex:
+                raise GateSpecError(
+                    f"gate {n!r}: 'exercises' must be a non-empty list of \"module:qualname\" "
+                    f"strings, got {ex!r}. An empty declaration would pass every harness.")
+            bad = [t for t in ex if not isinstance(t, str) or not _TARGET_RE.match(t)]
+            if bad:
+                raise GateSpecError(
+                    f"gate {n!r}: 'exercises' entries must be ASCII \"module:qualname\" strings "
+                    f"(e.g. \"styxx.power:reachable\"); refused {bad!r}")
+            if len(set(ex)) != len(ex):
+                raise GateSpecError(f"gate {n!r}: 'exercises' names a target twice: {ex!r}")
+            sec = g.get("section", n)
+            if not isinstance(sec, str) or not sec or not sec.isascii():
+                raise GateSpecError(
+                    f"gate {n!r}: 'section' must be a non-empty ASCII string, got {sec!r}")
+            self.coverage[n] = {"exercises": list(ex), "section": sec}
+        self.coverage_targets = sorted({t for c in self.coverage.values()
+                                        for t in c["exercises"]})
+        self.coverage_sections = sorted({c["section"] for c in self.coverage.values()})
+
         self.undeclared_power_gates = sorted(
             n for n, v in self.power_basis.items()
             if not (isinstance(v, str) and v.strip()))   # " " and true are NOT declarations
@@ -358,6 +411,16 @@ class Experiment:
                             "note": None if ok else
                             f"composition path ({kind}) resolves to {type(val).__name__}; "
                             f"score() will refuse it"}
+        # v5 coverage gets the same pre-scoring check: a harness that forgot a section learns it
+        # here, with the reason, rather than as a refusal from score().
+        for name in self.coverage:
+            key = f"{name}:exercises"
+            try:
+                self._check_coverage(name, result)
+                out[key] = {"path": _TRACE_KEY, "present": True, "usable": True, "note": None}
+            except GateSpecError as e:
+                out[key] = {"path": _TRACE_KEY, "present": isinstance(result.get(_TRACE_KEY), dict),
+                            "usable": False, "note": "smoke run" if smoke else str(e)}
         return out
 
     # -- the freeze check --------------------------------------------------
@@ -450,6 +513,56 @@ class Experiment:
                 f"belongs to a population this prereg's own declarations rule out. This is the "
                 f"E1 defect (cycle 159): a gate passing on a candidate another gate disqualified.")
 
+    def _check_coverage(self, name: str, result: dict) -> dict:
+        """Refuse a declaring gate unless the trace shows every declared target called in its
+        section. Returns {target: calls} for the gate. Everything ill-formed refuses: a trace that
+        can be half-read is a trace that can be half-forged.
+        """
+        c = self.coverage[name]
+        tr = result.get(_TRACE_KEY) if isinstance(result, dict) else None
+        if not isinstance(tr, dict):
+            raise GateSpecError(
+                f"gate {name!r} declares 'exercises' but the result carries no "
+                f"{_TRACE_KEY!r} — run the harness inside styxx.protocol.coverage_trace() and "
+                f"store its record(). A declared coverage with no trace is unverified, not met.")
+        if tr.get("tracer") != _TRACER_ID:
+            raise GateSpecError(
+                f"gate {name!r}: {_TRACE_KEY}.tracer is {tr.get('tracer')!r}, not "
+                f"{_TRACER_ID!r} — this trace was not written by the machinery that can be read")
+        if tr.get("gates_sha256") != self.gates_sha256:
+            raise GateSpecError(
+                f"gate {name!r}: the coverage trace was taken against gates block "
+                f"{str(tr.get('gates_sha256'))[:12]}…, not this one ({self.gates_sha256[:12]}…). "
+                f"A trace of a different declaration is not evidence about this one.")
+        targets = tr.get("targets")
+        if not isinstance(targets, dict) or sorted(targets) != self.coverage_targets:
+            raise GateSpecError(
+                f"gate {name!r}: the trace's target set "
+                f"{sorted(targets) if isinstance(targets, dict) else targets!r} differs from the "
+                f"declared set {self.coverage_targets} — it recorded something other than what "
+                f"the frozen document asks about")
+        sections = tr.get("sections")
+        if not isinstance(sections, dict):
+            raise GateSpecError(f"gate {name!r}: {_TRACE_KEY}.sections is not a dict")
+        sec = sections.get(c["section"])
+        if not isinstance(sec, dict):
+            raise GateSpecError(
+                f"gate {name!r}: section {c['section']!r} is absent from the trace — the "
+                f"harness never opened it, so nothing it ran can be attributed to this gate")
+        for t, n in sec.items():
+            if t not in targets or isinstance(n, bool) or not isinstance(n, int) or n < 1:
+                raise GateSpecError(
+                    f"gate {name!r}: section {c['section']!r} holds {t!r}: {n!r}; the tracer "
+                    f"writes only declared targets with positive integer call counts")
+        missing = [t for t in c["exercises"] if t not in sec]
+        if missing:
+            raise GateSpecError(
+                f"gate {name!r}: COVERAGE VIOLATION — the harness never executed {missing} in "
+                f"section {c['section']!r} (it did execute {sorted(sec) or 'none of them'}). The "
+                f"metric was produced without running what the gate names. This is the P1 defect "
+                f"(cycle 158): G4 scored 1.0 while its harness touched one of five entry points.")
+        return {t: sec[t] for t in c["exercises"]}
+
     def score(self, result: dict, smoke: bool = False) -> Verdict:
         # power_basis rides on the Verdict as metadata; verdict STRINGS are untouched so every
         # committed seal keeps verifying byte-identically.
@@ -463,6 +576,7 @@ class Experiment:
                            vacuous_gates=list(self.vacuous_gates),
                            metric_paths=dict(self.metric_paths))
         fired: dict[str, bool] = {}
+        covered: dict[str, dict] = {}
         for name, g in self.spec["gates"].items():
             op = _OPS.get(g.get("op"))
             if op is None:
@@ -479,6 +593,8 @@ class Experiment:
                     f"frozen table's false branch as a SEALED verdict, with no refusal anywhere.")
             if name in self.composition:
                 self._check_composition(name, _v, result)
+            if name in self.coverage:
+                covered[name] = self._check_coverage(name, result)
             fired[name] = bool(op(_v, g["value"]))
         for row in self.spec["outcomes"]:
             if all(fired.get(k) == v for k, v in row["when"].items()):
@@ -488,7 +604,145 @@ class Experiment:
                                power_basis=dict(self.power_basis),
                                undeclared_power_gates=list(self.undeclared_power_gates),
                                vacuous_gates=list(self.vacuous_gates),
-                               metric_paths=dict(self.metric_paths))
+                               metric_paths=dict(self.metric_paths),
+                               coverage=covered)
         raise GateSpecError(
             f"no outcome row matches gates {fired} — the frozen table is not total; "
             "this is a prereg design bug, surfaced instead of guessed around")
+
+
+# -- v5: the coverage tracer ------------------------------------------------------------------
+
+def _resolve_target(target: str) -> types.CodeType:
+    """``"module:qualname"`` -> the code object that runs when it is called, or a refusal."""
+    mod_name, qual = target.split(":", 1)
+    try:
+        obj = importlib.import_module(mod_name)
+        for part in qual.split("."):
+            obj = inspect.getattr_static(obj, part)
+    except (ImportError, AttributeError) as e:
+        raise GateSpecError(
+            f"declared target {target!r} does not resolve ({type(e).__name__}: {e}) — a "
+            f"declaration naming nothing would read as unexercised forever, or worse, as a "
+            f"typo nobody notices") from e
+    if isinstance(obj, (staticmethod, classmethod)):
+        obj = obj.__func__
+    obj = inspect.unwrap(obj) if callable(obj) else obj
+    code = getattr(obj, "__code__", None)
+    if not isinstance(code, types.CodeType):
+        raise GateSpecError(
+            f"declared target {target!r} resolves to {type(obj).__name__}, which has no Python "
+            f"code object to observe (builtins, C extensions and properties cannot be traced). "
+            f"Declare the Python function that calls it instead.")
+    return code
+
+
+class _CoverageTracer:
+    """Records calls to declared targets' code objects, attributed to the open section."""
+
+    def __init__(self, experiment: "Experiment"):
+        if not isinstance(experiment, Experiment):
+            raise TypeError("coverage_trace() takes the Experiment whose frozen gates block "
+                            "declares the targets — never a caller-supplied list")
+        if not experiment.coverage_targets:
+            raise GateSpecError(
+                "no gate in this prereg declares 'exercises' — a coverage trace with nothing "
+                "declared would record nothing and could be mistaken for a check that passed")
+        self._exp = experiment
+        self._codes: dict = {}
+        self._code_sha: dict = {}
+        for t in experiment.coverage_targets:
+            code = _resolve_target(t)
+            self._codes.setdefault(code, []).append(t)
+            self._code_sha[t] = hashlib.sha256(marshal.dumps(code)).hexdigest()
+        self._lock = threading.Lock()
+        self._current = None
+        self._sections: dict = {}
+        self._unsectioned: dict = {}
+        self._active = False
+
+    def _bump(self, bucket: dict, targets: list) -> None:
+        for t in targets:
+            bucket[t] = bucket.get(t, 0) + 1
+
+    def _make_hook(self, prev):
+        codes = self._codes
+
+        def hook(frame, event, arg):
+            if event == "call" and self._active:
+                ts = codes.get(frame.f_code)
+                if ts:
+                    with self._lock:
+                        sec = self._current
+                        self._bump(self._sections[sec] if sec is not None
+                                   else self._unsectioned, ts)
+            if prev is not None:
+                prev(frame, event, arg)
+        return hook
+
+    def __enter__(self):
+        self._prev_sys = sys.getprofile()
+        self._prev_thr = (threading.getprofile() if hasattr(threading, "getprofile")
+                          else getattr(threading, "_profile_hook", None))
+        self._active = True
+        sys.setprofile(self._make_hook(self._prev_sys))
+        threading.setprofile(self._make_hook(self._prev_thr))
+        return self
+
+    def __exit__(self, *exc):
+        self._active = False
+        sys.setprofile(self._prev_sys)
+        threading.setprofile(self._prev_thr)
+        return False
+
+    @contextlib.contextmanager
+    def section(self, name: str):
+        """Attribute every declared-target call made while this is open to *name*."""
+        if name not in self._exp.coverage_sections:
+            raise GateSpecError(
+                f"section {name!r} is not declared by any gate (declared: "
+                f"{self._exp.coverage_sections}) — calls recorded under it could never count, "
+                f"so opening it is refused before the work runs")
+        with self._lock:
+            if self._current is not None:
+                raise GateSpecError(
+                    f"section {name!r} opened inside section {self._current!r} — nested "
+                    f"sections would make one call count for two gates")
+            self._current = name
+            self._sections.setdefault(name, {})
+        try:
+            yield self
+        finally:
+            with self._lock:
+                self._current = None
+
+    def record(self) -> dict:
+        """The trace to store in the result under ``coverage_trace``."""
+        with self._lock:
+            return {"tracer": _TRACER_ID,
+                    "gates_sha256": self._exp.gates_sha256,
+                    "targets": dict(sorted(self._code_sha.items())),
+                    "sections": {k: dict(sorted(v.items()))
+                                 for k, v in sorted(self._sections.items())},
+                    "unsectioned": dict(sorted(self._unsectioned.items())),
+                    "scope_note": ("calls in this interpreter's threads only; work in a child "
+                                   "process is not observed and reads as unexercised")}
+
+
+def coverage_trace(experiment: "Experiment") -> _CoverageTracer:
+    """Trace a harness against the targets its frozen prereg declares (protocol v5).
+
+    ::
+
+        exp = Experiment("PREREG_x.md")
+        with coverage_trace(exp) as cov:
+            with cov.section("G4_refuses_degenerate"):
+                res["degenerate_refusal_rate"] = run_degenerate_battery()
+        res["coverage_trace"] = cov.record()
+        exp.score(res)       # refuses if a declared target was never called in its section
+
+    Targets resolve on construction, so a declaration naming nothing refuses before any work
+    runs. Calls are observed by code-object identity through ``sys.setprofile`` (chained to any
+    profiler already installed, so tracers nest) and in threads started while tracing.
+    """
+    return _CoverageTracer(experiment)

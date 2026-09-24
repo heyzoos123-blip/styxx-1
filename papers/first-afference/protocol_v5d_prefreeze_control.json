@@ -1,0 +1,21 @@
+{
+  "what": "PRE-FREEZE POSITIVE CONTROL, smoke-labelled, not a result: the frozen v5d runner run against the UNREPAIRED v5c implementation (protocol.py sha 81f6cad270595608ef843d854c20c39548765548c64824dfcd016ed829285cb2) in a scratch clone where the draft prereg was committed locally. Expected: every round-2 finding reproduces as a failing case and nothing else fails.",
+  "runner_sha256": "ae6ac686c174435e3f0d7e5eca3af7fe24fa7df5a10240e05efbf6ab3a135a37",
+  "failing_violation_cases": {
+    "rt2_runtime_nowraps_kept_alive": "SHARED_CODE -> scored",
+    "rt2_runtime_nowraps_discarded": "NOT_EXERCISED -> scored",
+    "rt2_clone_with_other_globals": "NOT_EXERCISED -> scored",
+    "rt2_concurrent_sections_share_pool": "NOT_EXERCISED -> scored",
+    "rt2_instance_path": "INSTANCE_PATH -> scored",
+    "rt2_wraps_siblings_share_inner": "SHARED_CODE -> scored",
+    "rt2_section_exited_in_other_context": "SECTION_CONTEXT -> crash",
+    "x2_check_metrics_reports_non_dict_result": "REPORTED -> crash"
+  },
+  "failing_valid_cases": {
+    "rt2_thread_hook_released_after_exit": "crash: RuntimeError: a thread started during the trace kept its hook after exit"
+  },
+  "n_violation": 66,
+  "n_valid": 16,
+  "p1_retro_exact": 1.0,
+  "verdict": "INVALID__smoke_plumbing_only"
+}

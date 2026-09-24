@@ -368,6 +368,23 @@ def observed(rec: dict) -> tuple[dict, dict, list, int]:
     return got, {s: dict(c) for s, c in ends.items()}, list(rec.get("problems", [])), amb
 
 
+_NOTE = __import__("re").compile(r"\[V5:([A-Z_]+)\]")
+
+
+def normalized(rec: dict) -> dict:
+    """The implementation-independent content of a record, for N-version diffing: per section,
+    the sorted multiset of openings (calls, ambiguous, end, note CODES); problem codes. Message
+    wording, target provenance paths and the partial uncredited buckets are excluded."""
+    secs = {}
+    for s, openings in sorted(rec.get("sections", {}).items()):
+        secs[s] = sorted(json.dumps({"calls": o.get("calls", {}), "ambiguous": o.get("ambiguous", {}),
+                                     "end": o.get("end"),
+                                     "notes": sorted(_NOTE.findall(" ".join(o.get("notes", []))))},
+                                    sort_keys=True) for o in openings)
+    return {"sections": secs,
+            "problems": sorted(_NOTE.findall(" ".join(rec.get("problems", []))))}
+
+
 def _commit_prereg(tmp: Path) -> Path:
     gates = {s: {"metric": "m", "op": ">=", "value": 0.5,
                  "exercises": [f"{FX}:{t}" for t in TARGETS]} for s in SECTIONS}
@@ -403,6 +420,8 @@ def main() -> int:
     exp = Experiment(_commit_prereg(pdir))
 
     disagreements, leftovers, modes = [], [], Counter()
+    dump = (open(os.environ["STYXX_V5_FUZZ_TRACES"], "w", encoding="utf-8")
+            if os.environ.get("STYXX_V5_FUZZ_TRACES") else None)
     t_start = time.time()
     for i in range(args.n):
         seed = args.seed_base + i
@@ -416,6 +435,8 @@ def main() -> int:
                 interpret(prog, cov, fx)
             rec = cov.record()
             got, got_ends, problems, amb = observed(rec)
+            if dump:
+                dump.write(json.dumps({"seed": seed, **normalized(rec)}, sort_keys=True) + "\n")
             ok = (got == want and got_ends == want_ends and not problems and amb == 0)
             detail = None if ok else {"want": want, "got": got, "want_ends": want_ends,
                                       "got_ends": got_ends, "problems": problems[:3],
@@ -439,6 +460,8 @@ def main() -> int:
         if not ok:
             disagreements.append({"seed": seed, "mode": prog["mode"],
                                   "program": json.dumps(prog)[:600], **detail})
+    if dump:
+        dump.close()
     secs = round(time.time() - t_start, 2)
     impl = Path(P.__file__)
     out = {

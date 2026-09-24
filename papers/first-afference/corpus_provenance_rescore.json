@@ -1,0 +1,108 @@
+{
+  "script": "papers/first-afference/corpus_provenance_rescore.py",
+  "v5d_committed_results_both_versions_refuse": 53,
+  "v5d_effective_population_results_scored": 33,
+  "n_results_the_differential_could_not_score": 7,
+  "effective_population_with_nested_metrics_dicts": 39,
+  "what": "each committed result that raises when its WHOLE receipt is scored, re-scored on its nested 'metrics' dict with the current styxx.protocol",
+  "n_items": 7,
+  "n_protocol_scored_runners": 6,
+  "n_reproduced_from_metrics_subdict": 6,
+  "reproduced": [
+    "closed-model-frontier/handedness_accusations_result.json",
+    "closed-model-frontier/handedness_v2_result.json",
+    "closed-model-frontier/handedness_v3_result.json",
+    "closed-model-frontier/range_sanity_report_ab_result.json",
+    "frequency-resonance/efficiency_control_result.json",
+    "rhythm-rescue/untied_control_result.json"
+  ],
+  "not_reproduced": [
+    "disjoint-worlds/open_set_read_result.json"
+  ],
+  "rows": [
+    {
+      "result": "closed-model-frontier/handedness_accusations_result.json",
+      "committed_verdict": "INVALID__rederivation_diverged",
+      "runner": "closed-model-frontier/handedness_accusations.py",
+      "runner_imports_styxx_protocol": true,
+      "runner_calls_score": true,
+      "receipt_keeps_prereg_commit": false,
+      "receipt_keeps_gates_sha256": false,
+      "score_whole_receipt": "RAISED:GateSpecError:metric 'unknown_or_ambiguous_share' not present in result",
+      "score_metrics_subdict": "INVALID__rederivation_diverged",
+      "metrics_subdict_reproduces_committed": true
+    },
+    {
+      "result": "closed-model-frontier/handedness_v2_result.json",
+      "committed_verdict": "INVALID__join_incomplete",
+      "runner": "closed-model-frontier/handedness_accusations_v2.py",
+      "runner_imports_styxx_protocol": true,
+      "runner_calls_score": true,
+      "receipt_keeps_prereg_commit": false,
+      "receipt_keeps_gates_sha256": false,
+      "score_whole_receipt": "RAISED:GateSpecError:metric 'unresolved_share' not present in result",
+      "score_metrics_subdict": "INVALID__join_incomplete",
+      "metrics_subdict_reproduces_committed": true
+    },
+    {
+      "result": "closed-model-frontier/handedness_v3_result.json",
+      "committed_verdict": "HEADER_HANDED_ACCUSES_TRUER",
+      "runner": "closed-model-frontier/handedness_accusations_v3.py",
+      "runner_imports_styxx_protocol": true,
+      "runner_calls_score": true,
+      "receipt_keeps_prereg_commit": false,
+      "receipt_keeps_gates_sha256": false,
+      "score_whole_receipt": "RAISED:GateSpecError:metric 'unresolved_share' not present in result",
+      "score_metrics_subdict": "HEADER_HANDED_ACCUSES_TRUER",
+      "metrics_subdict_reproduces_committed": true
+    },
+    {
+      "result": "closed-model-frontier/range_sanity_report_ab_result.json",
+      "committed_verdict": "SHIP__range_sanity_reports",
+      "runner": "closed-model-frontier/range_sanity_report_ab.py",
+      "runner_imports_styxx_protocol": true,
+      "runner_calls_score": true,
+      "receipt_keeps_prereg_commit": false,
+      "receipt_keeps_gates_sha256": false,
+      "score_whole_receipt": "RAISED:GateSpecError:metric 'external_unresolved_repos' not present in result",
+      "score_metrics_subdict": "SHIP__range_sanity_reports",
+      "metrics_subdict_reproduces_committed": true
+    },
+    {
+      "result": "frequency-resonance/efficiency_control_result.json",
+      "committed_verdict": "CAPACITY_IN_DISGUISE",
+      "runner": "frequency-resonance/run_efficiency_control.py",
+      "runner_imports_styxx_protocol": true,
+      "runner_calls_score": true,
+      "receipt_keeps_prereg_commit": false,
+      "receipt_keeps_gates_sha256": false,
+      "score_whole_receipt": "RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result",
+      "score_metrics_subdict": "CAPACITY_IN_DISGUISE",
+      "metrics_subdict_reproduces_committed": true
+    },
+    {
+      "result": "rhythm-rescue/untied_control_result.json",
+      "committed_verdict": "ROTATION_LOAD_BEARING__beyond_diversity",
+      "runner": "rhythm-rescue/run_untied_control.py",
+      "runner_imports_styxx_protocol": true,
+      "runner_calls_score": true,
+      "receipt_keeps_prereg_commit": false,
+      "receipt_keeps_gates_sha256": false,
+      "score_whole_receipt": "RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result",
+      "score_metrics_subdict": "ROTATION_LOAD_BEARING__beyond_diversity",
+      "metrics_subdict_reproduces_committed": true
+    },
+    {
+      "result": "disjoint-worlds/open_set_read_result.json",
+      "committed_verdict": "VOID__null_mapper_separates",
+      "runner": "disjoint-worlds/run_open_set_read.py",
+      "runner_imports_styxx_protocol": false,
+      "runner_calls_score": false,
+      "receipt_keeps_prereg_commit": true,
+      "receipt_keeps_gates_sha256": false,
+      "score_whole_receipt": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against",
+      "score_metrics_subdict": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against",
+      "metrics_subdict_reproduces_committed": false
+    }
+  ]
+}

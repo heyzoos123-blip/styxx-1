@@ -1,0 +1,977 @@
+{
+ "what": "corpus provenance audit: the seven committed results the v5 differential could not score. One auditor per result, then one independent skeptic per audit instructed to refute it (workflow corpus-provenance-audit, run wf_eee79a01-208, 2026-09-24). Read-only; no runner was executed. The mechanical re-check is corpus_provenance_rescore.py -> corpus_provenance_rescore.json.",
+ "method": {
+  "auditor": "read prereg gates, receipt, runner and git history; re-derive the verdict by walking the frozen outcome table by hand; classify",
+  "skeptic": "re-derive independently and test every claim; audit_upheld only if classification, re-derived verdict and how-produced all survive"
+ },
+ "n_items": 7,
+ "n_audits_upheld": 7,
+ "items": {
+  "efficiency_control_result.json": {
+   "audit": {
+    "result": "/home/user/styxx-1/papers/frequency-resonance/efficiency_control_result.json (committed verdict CAPACITY_IN_DISGUISE; prereg PREREG_efficiency_control_2026_09_02.md; runner run_efficiency_control.py)",
+    "runner_imports_styxx_protocol": true,
+    "runner_calls_experiment_score": true,
+    "how_verdict_was_produced": "The verdict was scored by the protocol, not written by hand. run_efficiency_control.py:26 has `from styxx.protocol import Experiment`. Lines 69-78 build a separate `metrics` dict (lines 70-73 compute the four gate quantities from res[\"drift\"][\"8\"]) and store it as res[\"metrics\"] (line 78). Line 79 calls `Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=smoke)`, which passes the metrics SUB-DICT, not the whole receipt. Lines 80-81 store only verdict.verdict -> res[\"verdict\"] and verdict.gates -> res[\"gates\"]. The runner has no if/else verdict logic. The canonical scorer refuses because the prereg's metric paths are top-level names (e.g. \"anchor_max_abs_dev\", PREREG:38), and protocol._resolve (styxx/protocol.py:190-196) walks them from the top of the dict it is given. In the committed receipt those keys only exist under metrics.* (result.json:161-167). The audit harness papers/first-afference/run_protocol_v5.py:344/355 passes the whole receipt `d`, so it hits the refusal at protocol.py:194. I loaded protocol.py standalone in my own scratch script (scratchpad/provenance/effctl_audit.py): Experiment(prereg).score(full_result) raises GateSpecError \"metric 'anchor_max_abs_dev' not present in result\", and Experiment(prereg).score(result[\"metrics\"]) returns CAPACITY_IN_DISGUISE with gates {G_P_anchors:true, G_C_oracle:true, G_E_static_wins:true, G_E_rich_wins:false}. Those gates match result.json:169-174 exactly. The scorer reports prereg_commit 1585c15eaf3c, gates_sha256 28202f8b4b73fac0..., and vacuous_gates []. The protocol that ran at the result commit (3b14f420) already had _resolve and score in the same form (protocol.py@3b14f420:174-178, 453).",
+    "prereg_has_gates_block": true,
+    "gate_metrics": [
+     {
+      "gate": "G_P_anchors",
+      "metric_path": "anchor_max_abs_dev",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.anchor_max_abs_dev (identical quantity: run_efficiency_control.py:70 computes round(max(|drift.8.static-0.4604|, |drift.8.rich-0.5451|),4), the definition at PREREG:54)",
+      "value_used": "0.0227",
+      "fires": "true"
+     },
+     {
+      "gate": "G_C_oracle",
+      "metric_path": "oracle_minus_static_8",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.oracle_minus_static_8 (run_efficiency_control.py:71: round(drift.8.oracle - drift.8.static,4); PREREG:54-55)",
+      "value_used": "0.162",
+      "fires": "true"
+     },
+     {
+      "gate": "G_E_static_wins",
+      "metric_path": "static_matched_minus_rich_8",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.static_matched_minus_rich_8 (run_efficiency_control.py:72: round(drift.8.static_matched - drift.8.rich,4); PREREG:55; static_matched is width 26 per widths.8.static_matched)",
+      "value_used": "0.1959",
+      "fires": "true"
+     },
+     {
+      "gate": "G_E_rich_wins",
+      "metric_path": "rich_minus_static_matched_8",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.rich_minus_static_matched_8 (run_efficiency_control.py:73: round(drift.8.rich - drift.8.static_matched,4); PREREG:56)",
+      "value_used": "-0.1959",
+      "fires": "false"
+     }
+    ],
+    "rederived_verdict": "CAPACITY_IN_DISGUISE",
+    "rederivation_matches_committed": true,
+    "rederivation_notes": "All values come from the committed receipt (blob 19e723f5). Anchors (PREREG:39,54; runner:29) are 0.4604 and 0.5451. They equal entrain_rich_result.json drift.8.static 0.4604337016741435 and drift.8.rich 0.5451151927312216, rounded to 4 dp.\n(0) Seed means: each drift.* value equals the mean of its per_seed.*.drift array exactly. Example: per_seed.8.static_matched.drift = (0.756738543510437 + 0.7366613149642944 + 0.7622884511947632)/3 = 0.7518961032231649 = drift.8.static_matched. All 7 arms at D=8 and D=4 match.\nG_P_anchors: |drift.8.static 0.4831160406271617 - 0.4604| = 0.022716040627161704. |drift.8.rich 0.5559939543406168 - 0.5451| = 0.010893954340616796. Max = 0.022716..., which rounds to 0.0227 = metrics.anchor_max_abs_dev. 0.0227 <= 0.03 -> TRUE.\nG_C_oracle: drift.8.oracle 0.6450705726941427 - 0.4831160406271617 = 0.16195453206698102, rounds to 0.162 = metrics.oracle_minus_static_8. 0.162 >= 0.10 -> TRUE.\nG_E_static_wins: drift.8.static_matched 0.7518961032231649 - drift.8.rich 0.5559939543406168 = 0.1959021488825481, rounds to 0.1959 = metrics.static_matched_minus_rich_8. 0.1959 >= 0.0 -> TRUE.\nG_E_rich_wins: -0.1959021488825481 rounds to -0.1959 = metrics.rich_minus_static_matched_8. -0.1959 >= 0.05 -> FALSE.\nOutcome table (PREREG:46-50), walked in order:\n- Row 0 {G_P_anchors:false}: no match.\n- Row 1 {G_P:true, G_C:false}: no match.\n- Row 2 {G_P:true, G_C:true, G_E_static_wins:true}: MATCH -> CAPACITY_IN_DISGUISE.\nThis equals result.verdict (result.json:168), and the hand gate values equal result.gates (result.json:169-174).\nThe unrounded values give the same outcome for every gate.\nCross-checks:\n- The static param formula 2D^2+143D+780 (PREREG:22) gives 2052 (D=8), 5850 (D=26), 1384 (D=4) and 3375 (D=15). These equal params.8.static, params.8.static_matched, params.4.static and params.4.static_matched.\n- params.8.rich is 5652, so 5850 >= 5652 holds.\n- The secondary (ungated) metric: drift.4.static_matched 0.6647679011027018 - drift.4.rich 0.35986361900965375 = 0.30490428209304804, which rounds to 0.3049 = metrics.reported_static_matched_minus_rich_4.\n- The canonical scorer, run in my own scratch script against result[\"metrics\"], gives the same verdict and gates. Only its top-level path lookup fails.\nMinor receipt gap: the receipt does not keep the Verdict's prereg_commit or gates_sha256 (runner:80-81 store only verdict and gates). The seal therefore cannot be checked from the receipt alone.\nThe repo's git status was clean after my audit.",
+    "git_history": "The clone is not shallow (2528 commits).\n- PREREG_efficiency_control_2026_09_02.md: `1585c15e 2026-09-02 00:07:19 +0000 PREREG: the param-matched wider-static efficiency control \u2014 frozen before data`. Only commit; the blob 6b071323 is identical at HEAD.\n- run_efficiency_control.py: the same commit, `1585c15e 2026-09-02 00:07:19 +0000`. Only commit; the blob d07307b9 is identical at HEAD.\n- efficiency_control_result.json: `3b14f420 2026-09-02 00:14:07 +0000 efficiency control: the receipt \u2014 CAPACITY_IN_DISGUISE under the frozen gates`. Only commit (git log --follow). The blob 19e723f5 is the same at 3b14f420, at HEAD and in the working tree.\nThe result was NOT edited after its first commit. The prereg and runner were committed 6m48s before the result. The 3b14f420 message says \"Scored by styxx.protocol against PREREG_efficiency_control_2026_09_02.md\".\nThe RESULT doc was first committed in 721f286c (2026-09-02 00:15:10 +0000). Its line 5 claim \"scored through styxx.protocol\" is present in that first version.",
+    "cited_by": [
+     "papers/frequency-resonance/RESULT_efficiency_control_2026_09_02.md \u2014 cites keys verdict (7), metrics.anchor_max_abs_dev (11), metrics.oracle_minus_static_8 (14), params.8.* (17-18), metrics.static_matched_minus_rich_8 (18), drift.8.* (30-32), params.4.*/metrics.reported_static_matched_minus_rich_4/drift.4.* (39-43). Line 5 CLAIMS 'Receipt: efficiency_control_result.json, scored through styxx.protocol'. That claim is TRUE (runner:26,79), and the verdict re-derives by hand and through Experiment.score(result['metrics']). The doc does not claim the full receipt dict can be scored as-is.",
+     "papers/frequency-resonance/RESULT_efficiency_control_2026_09_02.sworn.json / .sworn-receipt.json \u2014 the sworn bindings of the RESULT doc above; the doc text embedded at line 8 includes the same 'scored through styxx.protocol' sentence.",
+     "papers/SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md:49,51 (+ .sworn.json/.sworn-receipt.json) \u2014 cites result.verdict and metrics.static_matched_minus_rich_8 (0.1959) and calls the verdict 'frozen'. It makes no claim about styxx.protocol scoring.",
+     "papers/frequency-resonance/RESULT_efficiency_control_from_receipts_2026_09_02.md:3 and RESULT_entrain_rich_2026_07_23.md:3 \u2014 back-pointers to the RESULT doc ('confirmed ... under a frozen rule'). They do not cite the JSON directly.",
+     "papers/frequency-resonance/PREREG_efficiency_control_2026_09_02.md:70-71 \u2014 'Result -> efficiency_control_result.json, scored through styxx.protocol' (accurate).",
+     "NOT a RESULT/FINDING doc but relevant: papers/first-afference/protocol_v5_redteam_audit.json:31 (exam_audit.false_claim) lists this receipt among 'hand-scored verdicts the protocol cannot reproduce'. That is INACCURATE for this receipt: it was protocol-scored (runner:79), and the protocol reproduces the verdict when given result['metrics']. The refusal comes from the harness passing the whole receipt (papers/first-afference/run_protocol_v5.py:344,355). protocol_v5b/c/d_result.json record the refusal row (e.g. protocol_v5b_result.json:351-353)."
+    ],
+    "classification": "METRIC_KEY_MISMATCH_ONLY",
+    "severity": "RECORD_ONLY",
+    "recommended_action": "Record only. Do not edit the committed receipt (it was never modified after 3b14f420).\n1. Record that the canonical scorer's refusal is a path-prefix mismatch. The runner scored result['metrics'] (run_efficiency_control.py:79), but the prereg paths are top-level. Experiment(PREREG).score(result['metrics']) reproduces CAPACITY_IN_DISGUISE with identical gates.\n2. Correct papers/first-afference/protocol_v5_redteam_audit.json:31. It wrongly calls this receipt 'hand-scored'. The accurate wording is: protocol-scored on the metrics sub-dict; not re-scorable from the top level of the receipt.\n3. For the harness (run_protocol_v5.py:344), either score d['metrics'] when every gate path resolves there, or have future runners score and write the same dict they store. Future runners should also persist Verdict.prereg_commit and gates_sha256 in the receipt.\nNo RESULT/FINDING doc needs a verdict correction. The RESULT doc's 'scored through styxx.protocol' is accurate."
+   },
+   "skeptic": {
+    "result": "The audit is upheld: METRIC_KEY_MISMATCH_ONLY, RECORD_ONLY. I independently re-derived CAPACITY_IN_DISGUISE from the committed receipt, both by walking the frozen outcome table by hand and through the canonical scorer applied to result['metrics']. The runner scored exactly that sub-dict (run_efficiency_control.py:69-79), so the canonical scorer's refusal on the full receipt is only a path-prefix mismatch (top-level prereg paths vs metrics.*). The receipt blob 19e723f5 was never changed after 3b14f420. Two small inaccuracies in the audit, neither of which changes the verdict or classification: (1) cited_by omits papers/sworn/measurement/packet_L.json:139 and packet_R.json:250,536,822,900,1082; (2) calling metrics.* the 'identical quantity' glosses over the runner's 4-dp rounding, which the prereg does not declare.",
+    "claims_checked": [
+     {
+      "claim": "Runner imports styxx.protocol and calls Experiment.score",
+      "upheld": true,
+      "evidence": "run_efficiency_control.py:26 `from styxx.protocol import Experiment`; :79 `verdict = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=smoke)`."
+     },
+     {
+      "claim": "The verdict was produced by the protocol on the metrics sub-dict, not written by hand; the runner has no if/else verdict logic",
+      "upheld": true,
+      "evidence": "runner:69-74 build `metrics` from res['drift']['8']; :78 res['metrics']=metrics; :79 scores that same object; :80-81 store only verdict.verdict and verdict.gates. There is no other verdict logic in runner:1-90. The receipt matches runner output byte for byte: json.dumps(json.load(receipt), indent=2) equals the file bytes with no trailing newline, as runner:83 write_text(json.dumps(res, indent=2)) would produce. Top-level key order [prereg, config, widths, params, drift, fixed, per_seed, metrics, verdict, gates] matches runner:47-50,78,80,81. The gates key order follows the prereg gate order, which is how score() iterates (protocol.py:600). The 3b14f420 commit message says 'Scored by styxx.protocol'. Caveat: execution itself cannot be proven from files, but every artifact is consistent with it."
+     },
+     {
+      "claim": "Canonical scorer refuses on the full receipt because prereg metric paths are top-level and _resolve walks from the top",
+      "upheld": true,
+      "evidence": "PREREG:38,40,42,44 metrics are bare names. protocol.py:190-196 _resolve walks dotted keys from the given dict and raises at :194. My scratch script (scratchpad/provenance/skeptic_effctl.py, loading a copy of HEAD protocol.py) raised GateSpecError \"metric 'anchor_max_abs_dev' not present in result\" on the full receipt. result.json:161-167 holds the keys only under metrics."
+     },
+     {
+      "claim": "Experiment(prereg).score(result['metrics']) returns CAPACITY_IN_DISGUISE with gates matching result.json:169-174; prereg_commit 1585c15eaf3c, gates_sha256 28202f8b4b73fac0..., vacuous_gates []",
+      "upheld": true,
+      "evidence": "Scratch run: METRICS -> CAPACITY_IN_DISGUISE {G_P_anchors:True, G_C_oracle:True, G_E_static_wins:True, G_E_rich_wins:False}; equals result.gates and result.verdict (True/True). prereg_commit 1585c15eaf3c5962e8bbc2ee0c23a53318f44291, gates_sha256 28202f8b4b73fac009ca5c1f50943c811589a4f613469eb457b076e568f576e8, vacuous []. The same run against the 3b14f420 protocol (git show 3b14f420:styxx/protocol.py, scratchpad/provenance/skeptic_effctl2.py) gives the identical verdict, gates, commit and sha."
+     },
+     {
+      "claim": "The protocol at 3b14f420 had _resolve at 174-178 and score at 453 in the same form",
+      "upheld": true,
+      "evidence": "git show 3b14f420:styxx/protocol.py: def _resolve at 174, raise at 178, def score at 453, _resolve(result, g['metric']) at 470. git diff --stat 1585c15e 3b14f420 -- styxx/ papers/frequency-resonance/run_entrain_rich.py is empty, so the scorer and the imported runner were unchanged between the prereg and the result."
+     },
+     {
+      "claim": "The four metrics.* keys are the prereg-defined quantities",
+      "upheld": true,
+      "evidence": "PREREG:54-56 define anchor_max_abs_dev = max(|STATIC(8)-0.4604|,|RICH(8)-0.5451|), oracle_minus_static_8 = ORACLE(8)-STATIC(8), static_matched_minus_rich_8 = STATIC(26)-RICH(8), and rich_minus = its negative, all on seed-averaged drift. runner:29 ANCHORS match. runner:65 drift = float(np.mean(dacc)). runner:70-73 compute the same differences but round to 4 dp, which the prereg does not declare, so they are rounded versions rather than literally identical. The unrounded values give identical gates (scratch UNROUNDED -> same verdict and gates), and none sits near a bar."
+     },
+     {
+      "claim": "Arithmetic: 0.0227, 0.162, 0.1959, -0.1959, 0.3049 and the seed means",
+      "upheld": true,
+      "evidence": "Computed: |0.4831160406271617-0.4604|=0.022716040627161704; |0.5559939543406168-0.5451|=0.010893954340616796; max rounds to 0.0227. 0.6450705726941427-0.4831160406271617=0.16195453206698102 -> 0.162. 0.7518961032231649-0.5559939543406168=0.1959021488825481 -> 0.1959, negative -> -0.1959. D=4: 0.6647679011027018-0.35986361900965375=0.30490428209304804 -> 0.3049. All 14 drift/fixed arm values at D=8 and D=4 equal np.mean of their per_seed arrays exactly."
+     },
+     {
+      "claim": "Hand walk of outcome table PREREG:46-50 gives CAPACITY_IN_DISGUISE at row 2",
+      "upheld": true,
+      "evidence": "Fired: G_P 0.0227<=0.03 T; G_C 0.162>=0.10 T; G_E_static 0.1959>=0.0 T; G_E_rich -0.1959>=0.05 F. Row0 {G_P:false} no; Row1 {G_P:T,G_C:F} no; Row2 {G_P:T,G_C:T,G_E_static:T} MATCH -> CAPACITY_IN_DISGUISE."
+     },
+     {
+      "claim": "Param formula 2D^2+143D+780 matches params and D=26/D=15 are minimal matched widths",
+      "upheld": true,
+      "evidence": "f(8)=2052, f(26)=5850, f(4)=1384, f(15)=3375, equal to result.params. f(25)=5605<5652 and f(14)=3174<3184, so 26 and 15 are minimal (PREREG:22-24; runner:32-37)."
+     },
+     {
+      "claim": "Anchors 0.4604/0.5451 come from entrain_rich_result.json drift.8",
+      "upheld": true,
+      "evidence": "entrain_rich_result.json drift.8.static 0.4604337016741435 and drift.8.rich 0.5451151927312216. drift.8.oracle 0.6306845943133036 gives the 0.1703 cited in PREREG:41."
+     },
+     {
+      "claim": "Git history: not shallow, 2528 commits; prereg and runner only in 1585c15e (2026-09-02 00:07:19); result only in 3b14f420 (00:14:07); blobs unchanged",
+      "upheld": true,
+      "evidence": "git rev-parse --is-shallow-repository=false; rev-list --count HEAD=2528. git log --follow gives single commits. Blob hashes: prereg 6b071323, runner d07307b9, result 19e723f5, identical at commit, HEAD and working tree (git hash-object). The result is absent at 1585c15e. 3b14f420 also added .gitattributes lines for the RESULT doc (not the receipt)."
+     },
+     {
+      "claim": "RESULT doc first committed in 721f286c with line 5 'scored through styxx.protocol'; the claim is accurate",
+      "upheld": true,
+      "evidence": "git log --diff-filter=A: 721f286c 2026-09-02 00:15:10 +0000. `git show 721f286c:...:5` contains 'Receipt: `efficiency_control_result.json`, scored through `styxx.protocol`'. It is accurate per runner:79. The doc's sworn key paths (lines 7,11,14,17-18,30-32,39-43) all exist in the receipt."
+     },
+     {
+      "claim": "cited_by list is complete",
+      "upheld": false,
+      "evidence": "git grep -l efficiency_control_result also finds papers/sworn/measurement/packet_L.json:139 (embeds the RESULT doc text, including 'scored through styxx.protocol') and packet_R.json:250,536,822,900,1082 (receipt_name references). The audit omits both. They repeat the accurate claim, so the omission does not change the conclusions."
+     },
+     {
+      "claim": "protocol_v5_redteam_audit.json:31 wrongly calls this receipt 'hand-scored'; the harness passes the whole receipt",
+      "upheld": true,
+      "evidence": "protocol_v5_redteam_audit.json:31 exam_audit.false_claim lists frequency-resonance/efficiency_control_result.json among 'hand-scored verdicts the protocol cannot reproduce'. That wording is contradicted by runner:79. run_protocol_v5.py:344 `experiment_cls(prereg_path).score(d, ...)`, and :355 loads d as the whole receipt. protocol_v5b_result.json:351-353 records RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result."
+     },
+     {
+      "claim": "Receipt does not persist prereg_commit or gates_sha256",
+      "upheld": true,
+      "evidence": "Receipt top-level keys are only prereg, config, widths, params, drift, fixed, per_seed, metrics, verdict, gates. runner:80-81 store only verdict and gates."
+     }
+    ],
+    "independent_rederived_verdict": "CAPACITY_IN_DISGUISE. Gates: G_P_anchors=true (0.0227<=0.03), G_C_oracle=true (0.162>=0.10), G_E_static_wins=true (0.1959>=0.0), G_E_rich_wins=false (-0.1959<0.05). Outcome row 2 (PREREG:48) is the first match. I got the same result by hand, via HEAD protocol.score(result['metrics']), via the 3b14f420 protocol, and with unrounded values recomputed from drift.8.*.",
+    "audit_upheld": true,
+    "corrected_classification": "METRIC_KEY_MISMATCH_ONLY",
+    "corrected_severity": "RECORD_ONLY",
+    "notes": "No refutation of the classification, the verdict or the how-produced claim survived my checks.\n\nLimits of the how-produced claim: that Experiment.score produced the verdict is inferred from the runner code plus the receipt's exact consistency with runner output (byte-identical json.dumps(indent=2), no trailing newline, runner key insertion order, gates in scorer iteration order). No execution log was examined, so this is strong but circumstantial evidence.\n\nNits in the audit:\n(a) The metrics.* values are 4-dp rounded, and the prereg (PREREG:54-56) does not declare rounding. They are therefore not literally 'identical' to the prereg quantities. The unrounded values give the same gates.\n(b) cited_by omits papers/sworn/measurement/packet_L.json and packet_R.json.\n\nThe recommendation to annotate protocol_v5_redteam_audit.json:31 is sound. That file is itself a committed audit record, so the fix should be a new erratum or annotation, not an in-place edit.\n\nAll computation was done in scratchpad/provenance/skeptic_effctl.py and skeptic_effctl2.py, using copies of protocol.py (HEAD and 3b14f420). I executed nothing under /home/user/styxx-1/papers, and git status --porcelain is empty afterwards."
+   }
+  },
+  "handedness_accusations_result.json": {
+   "audit": {
+    "result": "/home/user/styxx-1/papers/closed-model-frontier/handedness_accusations_result.json",
+    "runner_imports_styxx_protocol": true,
+    "runner_calls_experiment_score": true,
+    "how_verdict_was_produced": "The verdict comes from the protocol score, not from hand-coded if/else. handedness_accusations.py:23 has `from styxx.protocol import Experiment`. Lines 121-126 build a flat dict `metrics` with the four gate keys: unknown_or_ambiguous_share, min_cell_n, delta_form_minus_text and delta_text_minus_form. Line 127 runs `verdict = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`. Line 130 writes only `\"metrics\": metrics, \"verdict\": verdict.verdict, \"gates\": verdict.gates` into the receipt; gates_sha256 and prereg_commit are not persisted. So the scorer was given result[\"metrics\"], not the whole receipt, and the gate paths are top-level keys of that sub-dict. When the canonical scorer is pointed at the whole receipt, protocol.py:190-196 (_resolve) raises \"metric 'unknown_or_ambiguous_share' not present in result\", because the value sits at #/metrics/unknown_or_ambiguous_share (result.json:101-102). The verdict logic contains no if/else. The only hand-written choices are sentinels: `round(unknown/n,4) if n else 1.0`, and -1.0 for both deltas when a class share is None (runner:118-119, 122-125). At the result commit, protocol.py (a335bb17:styxx/protocol.py) already had _resolve at :174, __init__(prereg, repo_root=...) at :186 and score(result, smoke=False) at :453, so the runner's call signature was valid when it ran. I loaded the current styxx/protocol.py standalone (it imports only the standard library) from /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/rescore_handedness.py. Experiment(prereg).score(result[\"metrics\"]) returns INVALID__rederivation_diverged with gates {G_P_plumbing:false, G_N_cells:false, G_H1_form_truer:false, G_H1_text_truer:false}. That is identical to result.json:107 and :108-113. Scoring the whole receipt refuses with the reported GateSpecError. gates_sha256 = d8f0439ed897ec40d52097a197305336fcbccb47a431b23554b4abd8b27e8479; prereg_commit = 755d8891.",
+    "prereg_has_gates_block": true,
+    "gate_metrics": [
+     {
+      "gate": "G_P_plumbing (op <=, value 0.05; PREREG:45)",
+      "metric_path": "unknown_or_ambiguous_share",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.unknown_or_ambiguous_share (result.json:102). This is the same object the runner scored: runner:122 `round(unknown / n, 4)` with unknown = count of rows whose source is 'unknown' or 'ambiguous' (runner:110). The same count is stored at top-level #/unknown = 184.",
+      "value_used": "0.5027",
+      "fires": "false"
+     },
+     {
+      "gate": "G_N_cells (op >=, value 20; PREREG:47)",
+      "metric_path": "min_cell_n",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.min_cell_n (result.json:103), computed at runner:123 as min(by_class.object_text.n, by_class.object_form.n) = min(182, 0)",
+      "value_used": "0",
+      "fires": "false"
+     },
+     {
+      "gate": "G_H1_form_truer (op >=, value 0.15; PREREG:49)",
+      "metric_path": "delta_form_minus_text",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.delta_form_minus_text (result.json:104), computed at runner:118-119,124. Because by_class.object_form.genuine_share is null (n=0), delta is None and the runner writes the sentinel -1.0. This is not a measured difference, and the prereg defines no sentinel.",
+      "value_used": "-1.0",
+      "fires": "false"
+     },
+     {
+      "gate": "G_H1_text_truer (op >=, value 0.15; PREREG:51)",
+      "metric_path": "delta_text_minus_form",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.delta_text_minus_form (result.json:105), computed at runner:125, with the same -1.0 sentinel because object_form n=0",
+      "value_used": "-1.0",
+      "fires": "false"
+     }
+    ],
+    "rederived_verdict": "INVALID__rederivation_diverged",
+    "rederivation_matches_committed": true,
+    "rederivation_notes": "Gates block: PREREG:44-59 (fenced ```gates), 4 gates, 5 outcome rows, smoke_verdict INVALID__smoke_plumbing_only. The receipt is not a smoke run: result.json:3 has smoke=false.\n\nI recomputed from the receipt's own rows (#/rows, len 366), independently of the stored metrics. Source counts are vocabulary 169, range-sanity 13, unknown 167, ambiguous 17 (sum 366). Class counts are object_text 182 (169+13), None 184, object_form 0. Panel verdicts over all rows: CLAIM 271, NOT_A_CLAIM 95.\n\nG_P_plumbing: unknown_or_ambiguous = 167 + 17 = 184. 184/366 = 0.502732..., which rounds to 0.5027 and equals metrics.unknown_or_ambiguous_share and #/unknown=184. The check 0.5027 <= 0.05 is FALSE.\nG_N_cells: min(182, 0) = 0. The check 0 >= 20 is FALSE.\nG_H1_form_truer: the object_form cell has n=0, so its genuine_share is undefined (#/by_class/object_form/genuine_share = null). The object_text share is 108/182 = 0.5934. No real delta exists, and the runner's sentinel -1.0 >= 0.15 is FALSE.\nG_H1_text_truer: same situation. -1.0 >= 0.15 is FALSE.\n\nWalking the outcome table in order:\nRow 1, when {G_P_plumbing:false}: matches, so the verdict is INVALID__rederivation_diverged, and the walk stops there. Rows 2-5 all require G_P_plumbing:true.\nRow 1 conditions only on G_P_plumbing, so the verdict does not depend on the -1.0 delta sentinels or on the empty object_form cell. Any value for the other three gates gives the same row.\n\nMachine check: the current styxx/protocol.py, loaded standalone, scored result[\"metrics\"] and returned INVALID__rederivation_diverged with gates all false. That equals the committed result.json:107-113 exactly.\n\nMinor inconsistencies that do not affect the verdict:\n(a) Top-level #/unknown (184) counts unknown and ambiguous together, while #/by_source/unknown/n is 167.\n(b) The commit message of a335bb17 says 'Half the accused tokens (167 of 366) reach no obligation clause'. 167/366 = 0.4563; the gated quantity is 184/366 = 0.5027. The RESULT doc (lines 13-16) states the 167+17=184 breakdown correctly.\n(c) #/locate_methods is {not_found:30, column:319}, sum 349 = 366 - 17 ambiguous.\n(d) h_mapping.json was modified after the result (841f232b, 00:58:01), but the handed_by values for all five sources are identical in ed084cef and 841f232b. And G_P_plumbing does not depend on the mapping.",
+    "git_history": "Repo is not shallow (2528 commits).\n\nPrereg: one commit, `755d8891 2026-09-02 00:24:13 +0000 PREREG: token-level h on the blind panel \u2014 does the source of the obligation predict a true accusation? Frozen before the sources are computed`. The runner has the same single commit (755d8891; git show --stat: PREREG +77, runner +142, LEDGER.md).\n\nResult: one commit, `a335bb17 2026-09-02 00:25:49 +0000 handedness: the receipt \u2014 INVALID__rederivation_diverged under the frozen plumbing gate` (+3777 lines, only file in the commit), 1m36s after the prereg.\n\nNone of the three files was modified after its first commit, and `git diff HEAD` on all three is empty. The prereg and gates block are unchanged since the freeze, and the prereg commit predates the result commit.\n\nRelated: styxx/protocol.py was last changed before the result at 59c9cd71 (2026-08-26) and has 3 commits after it; score()/_resolve semantics for a flat dict are unchanged. h_mapping.json: ed084cef (2026-09-01 20:41) before, and 841f232b (2026-09-02 00:58) after the result, with no change to handed_by for any source.",
+    "cited_by": [
+     "papers/closed-model-frontier/RESULT_handedness_accusations_INVALID_2026_09_02.md: lines 4-5 say 'Receipt: `handedness_accusations_result.json`, scored through `styxx.protocol`'. This is TRUE: runner:23 imports it and runner:127 calls Experiment(...).score(metrics). The doc's 12 sworn spans point at the correct JSON paths, including #/metrics/unknown_or_ambiguous_share (line 13), i.e. the nested key. So the doc implicitly names where the gate metric lives. No false claim about scoring.",
+     "papers/closed-model-frontier/RESULT_handedness_accusations_INVALID_2026_09_02.sworn.json / .sworn-receipt.json: all spans HELD at commit a335bb17, and the metric span resolves #/metrics/unknown_or_ambiguous_share = 0.5027. These make no claim about protocol scoring.",
+     "papers/closed-model-frontier/PREREG_handedness_v2_header_bound_2026_09_02.md:6-7 and PREREG_handedness_v3_join_rule_2026_09_02.md:7 cite the RESULT as 'diverged on half the accusations'. That matches 0.5027, and neither makes a scoring claim.",
+     "CHANGELOG.md:1236-1241 says the RESULT 'ships as INVALID__rederivation_diverged'. It makes no scoring-mechanism claim.",
+     "No FINDING_ doc cites this result.",
+     "Not a RESULT/FINDING doc, but relevant: papers/first-afference/protocol_v5_redteam_audit.json:31 (exam_audit.false_claim) lists this receipt among 'hand-scored verdicts the protocol cannot reproduce'. That is FALSE for this receipt: it was protocol-scored (runner:127), and it reproduces exactly when the scorer is pointed at #/metrics. protocol_v5b_result.json:306-309, protocol_v5c_result.json:716-719 and protocol_v5d_result.json:888-891 record the whole-receipt refusal, which is accurate. sworn/coverage_census_v01_result.json:42-50 and charon/charon_verify_result.json:1621 cover sworn-span status (SWORN-HELD / HELD) only."
+    ],
+    "classification": "METRIC_KEY_MISMATCH_ONLY",
+    "severity": "RECORD_ONLY",
+    "recommended_action": "Leave the committed receipt and the RESULT doc unchanged: the verdict re-derives both by hand and with the canonical scorer, and the RESULT doc's 'scored through styxx.protocol' claim is true. Record in the provenance audit that the canonical scorer reproduces the committed verdict and gates exactly when given result['metrics'] (gates_sha256 d8f0439e\u2026, prereg_commit 755d8891). The refusal comes only from where the metrics are stored: runner:130 nests them under 'metrics' and does not persist gates_sha256/prereg_commit. Correct the characterization in papers/first-afference/protocol_v5_redteam_audit.json:31, which calls this receipt 'hand-scored'; it was scored by Experiment.score at runner:127. That correction belongs in a new audit note, not an edit to the committed file. For future runners, either write gate metrics at the receipt's top level, or add a metric-root convention (e.g. score(result, root='metrics')) so whole-receipt re-scoring works. Also persist verdict.gates_sha256 and verdict.prereg_commit in the receipt. Optionally note that the two delta gates were evaluated on a -1.0 sentinel (object_form n=0), not a measured difference. This does not change the verdict, because outcome row 1 conditions only on G_P_plumbing."
+   },
+   "skeptic": {
+    "result": "/home/user/styxx-1/papers/closed-model-frontier/handedness_accusations_result.json",
+    "claims_checked": [
+     {
+      "claim": "The runner imports styxx.protocol and calls Experiment.score. The verdict comes from the protocol, with no hand-written if/else.",
+      "upheld": true,
+      "evidence": "handedness_accusations.py:23 `from styxx.protocol import Experiment`. :121-126 build the flat `metrics` dict with the 4 gate keys. :127 `verdict = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`. :130 persists `\"metrics\": metrics, \"verdict\": verdict.verdict, \"gates\": verdict.gates`. The receipt's top-level keys have no gates_sha256 or prereg_commit (#/ keys: prereg, smoke, accusations_joined, unknown, ambiguous, locate_methods, by_class, by_source, concentration_top3_repos, metrics, verdict, gates, rows, what_this_is_not). No verdict string is assigned anywhere else in the runner."
+     },
+     {
+      "claim": "The scorer was given result['metrics'], not the whole receipt. The whole receipt refuses in _resolve.",
+      "upheld": true,
+      "evidence": "Current styxx/protocol.py:190-196 `_resolve` raises GateSpecError(\"metric ... not present in result\"). My scratchpad script skeptic/rescore.py loads the current protocol.py and the a335bb17 copy standalone. Both give: whole receipt -> GateSpecError \"metric 'unknown_or_ambiguous_share' not present in result\". score(result['metrics']) -> INVALID__rederivation_diverged, gates all False, equal to #/verdict (result.json:107) and #/gates (:108-113). Both versions give gates_sha256 d8f0439ed897ec40d52097a197305336fcbccb47a431b23554b4abd8b27e8479 and prereg_commit 755d889152704ec111cff466961816de3ffd22c0."
+     },
+     {
+      "claim": "protocol.py at a335bb17 had _resolve at :174, __init__(prereg, repo_root=...) at :186 and score(result, smoke=False) at :453. Its imports are stdlib only.",
+      "upheld": true,
+      "evidence": "`git show a335bb17:styxx/protocol.py`: def _resolve at :174, class Experiment at :183, def __init__(self, prereg, repo_root=None, ...) at :186, def score(self, result, smoke=False) at :453. Current file imports (lines 39-57) are all stdlib, and there are no imports after line 60. protocol.py commits: 59c9cd71 (2026-08-26 -0400) is the last before the result; b79e2c7d, 3bdd5a22 and 1d6958c2 (all 2026-09-24) come after. Scores of the flat dict are identical across versions."
+     },
+     {
+      "claim": "The equivalent keys are the identical quantity the runner scored: metrics.unknown_or_ambiguous_share=0.5027, min_cell_n=0, and both deltas = -1.0 sentinel.",
+      "upheld": true,
+      "evidence": "runner:110 counts source in ('unknown','ambiguous'). :122 round(unknown/n,4). :123 min(object_text.n, object_form.n). :118-119 compute delta=None when object_form genuine_share is None. :124-125 map None to -1.0. The receipt holds these values at result.json:102-105. #/by_class/object_form/genuine_share is null (:24). The prereg defines no sentinel: grep for sentinel/-1.0/null/undefined in the PREREG returns nothing. Top-level #/unknown=184 is the same variable (runner:128)."
+     },
+     {
+      "claim": "Walking the frozen outcome table in order re-derives INVALID__rederivation_diverged.",
+      "upheld": true,
+      "evidence": "PREREG:44-59 is the gates block: 4 gates (:45 <=0.05, :47 >=20, :49 >=0.15, :51 >=0.15) and 5 outcome rows (:53-57). Gate values: 0.5027<=0.05 is F, 0<=20 is F... specifically 0>=20 F, -1.0>=0.15 F, -1.0>=0.15 F. Row 1 {G_P_plumbing:false} matches first, giving INVALID__rederivation_diverged. Rows 2-5 all require G_P_plumbing:true. The result is robust: counting unknown alone, 167/366=0.4563 still exceeds 0.05. Smoke is not in play because result.json:3 has smoke=false."
+     },
+     {
+      "claim": "Arithmetic: 184/366=0.5027; source counts 169/13/167/17; classes object_text 182, None 184, object_form 0; panel CLAIM 271 / NOT_A_CLAIM 95; object_text 108/182=0.5934; locate_methods sum 349=366-17.",
+      "upheld": true,
+      "evidence": "I computed these in skeptic/rederive.py: 184/366=0.50273 (rounds to 0.5027), 167/366=0.45628, 108/182=0.59341, 30+319=349=366-17. I also went beyond the audit: I re-implemented runner logic (source_of, _locate, the join) read-only on the inputs at a335bb17 (oath_adjudication_result.json, oath_external_corpus_ledger.jsonl, h_mapping.json, certify constants V07_PRECISION_DIGITS=7 at certify.py:446 and _TRIGGERS_CORR at :866-868). The produced rows are identical to the committed #/rows (rows == res['rows'] -> True)."
+     },
+     {
+      "claim": "Git history: one commit each. The prereg and runner are in 755d8891 (00:24:13), the result is in a335bb17 (00:25:49, 1m36s later, sole file, +3777). No later modification, and the repo is not shallow (2528 commits).",
+      "upheld": true,
+      "evidence": "`git log --follow` per file: PREREG and runner 755d8891 only, result a335bb17 only. `git show --stat 755d8891`: LEDGER.md 4+-, PREREG +77, runner +142. a335bb17: only handedness_accusations_result.json, +3777. `git diff HEAD` is empty. `git rev-parse --is-shallow-repository`=false, rev-list count 2528. 00:24:13 to 00:25:49 is 96 s. The inputs oath_adjudication_result.json (936fcf17) and ledger (ca2218bc) are from 2026-08-27 and unchanged since. h_mapping.json has only ed084cef (before) and 841f232b (after). handed_by is identical for all sources in ed084cef, 841f232b and HEAD."
+     },
+     {
+      "claim": "Minor inconsistencies (a)-(d), including that commit a335bb17's message says 'Half ... (167 of 366)' while the gated quantity is 184/366.",
+      "upheld": true,
+      "evidence": "The a335bb17 message body reads 'Half the accused tokens (167 of 366) reach no obligation clause'. 167/366=0.4563. The gated quantity is 184/366=0.5027. #/unknown=184 vs #/by_source/unknown/n=167 (result.json:5, :66). None of these affects the verdict."
+     },
+     {
+      "claim": "The RESULT doc's 'scored through styxx.protocol' is true, and its 12 sworn spans are all HELD, including #/metrics/unknown_or_ambiguous_share=0.5027.",
+      "upheld": true,
+      "evidence": "RESULT_handedness_accusations_INVALID_2026_09_02.md:4-5 carries the claim, and runner:127 confirms it. The doc has 12 `<sworn` tags. The .sworn-receipt.json at commit a335bb17 has 12 spans, all HELD, and the metric span receipt is '0.5027'. sworn/coverage_census_v01_result.json:42-50 shows SWORN-HELD, sworn_total 12. charon_verify_result.json:1621 shows HELD/HELD."
+     },
+     {
+      "claim": "protocol_v5_redteam_audit.json:31 wrongly calls this receipt 'hand-scored'. The v5b/c/d entries accurately record the whole-receipt refusal.",
+      "upheld": true,
+      "evidence": "protocol_v5_redteam_audit.json:31 exam_audit.false_claim lists closed-model-frontier/handedness_accusations_result.json among 'hand-scored verdicts the protocol cannot reproduce'. 'Hand-scored' is contradicted by runner:127. 'Cannot reproduce' holds only for the whole receipt; score(#/metrics) reproduces exactly. protocol_v5b_result.json:306-308, v5c:716-718 and v5d:888-890 record committed INVALID__rederivation_diverged / RAISED:GateSpecError metric not present, which is accurate."
+     },
+     {
+      "claim": "cited_by is complete, and the v2/v3 prereg citations are at v2:6-7 and v3:7.",
+      "upheld": false,
+      "evidence": "Mostly right, but the list is incomplete and one line cite is off. v3 prereg: the text 'v1, whose re-derivation diverged on half the accusations (RESULT_...)' spans lines 7-8, not :7 alone. Files that reference this result or RESULT but are not listed: papers/sworn/measurement/packet_L.json:131 (verbatim copy of the RESULT text, including 'scored through styxx.protocol', which is true), packet_R.json:42 etc., population.json:78, conformance/sworn/suite_power.json:119/764/797 (sworn dogfood tests), charon/charon.log.jsonl:113, charon/index.html, oath_external_recertify.py:8-9 ('re-derivation diverging on half the accusations'), and .gitattributes:31-33. None of these makes a false scoring claim, so the omission does not change classification or severity."
+     }
+    ],
+    "independent_rederived_verdict": "INVALID__rederivation_diverged. Gates: G_P_plumbing 0.5027<=0.05 is false. G_N_cells min(182,0)=0>=20 is false. G_H1_form_truer and G_H1_text_truer are both false on the runner's -1.0 sentinel, because the object_form cell has n=0. Outcome row 1 ({G_P_plumbing:false}, PREREG:53) matches first. The canonical scorer, at both HEAD and a335bb17, returns exactly this verdict and these gates when given #/metrics. Given the whole receipt, it refuses with GateSpecError \"metric 'unknown_or_ambiguous_share' not present in result\".",
+    "audit_upheld": true,
+    "corrected_classification": "METRIC_KEY_MISMATCH_ONLY",
+    "corrected_severity": "RECORD_ONLY",
+    "notes": "The classification, the re-derived verdict and the how-produced claim all hold up against my own checks.\n\nStronger evidence than the audit gave: I re-implemented the runner's join and source_of logic in /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/skeptic/rederive.py. It runs read-only on the inputs as committed at a335bb17 (adjudication, ledger, h_mapping, certify constants). The 366 rows it produces are identical to the committed #/rows. So the receipt is the runner's untouched output, and its metrics came straight from runner:121-126 into Experiment.score at runner:127.\n\nskeptic/rescore.py scores with both the current protocol.py and the a335bb17 copy:\n- Given #/metrics, both return the committed verdict and gates exactly.\n- Given the whole receipt, both give the reported refusal.\n- Both give gates_sha256 d8f0439e... and prereg_commit 755d8891.\n\nThe refusal comes only from runner:130 nesting the gate metrics under 'metrics' and not persisting gates_sha256 or prereg_commit.\n\nThe verdict does not depend on the questionable parts:\n- Row 1 conditions only on G_P_plumbing.\n- Even without the 17 ambiguous rows, 167/366=0.4563 is far above 0.05.\n- The -1.0 delta sentinels and the empty object_form cell cannot change it.\n\nMinor defects in the audit, none affecting the verdict:\n- Its cited_by list leaves out several referencing files: packet_L.json:131, packet_R.json, population.json:78, suite_power.json, charon.log.jsonl, oath_external_recertify.py:8-9, .gitattributes. None of them contains a false scoring claim.\n- It cites the v3 prereg at :7, but the text spans :7-8.\n- 'Line 130 writes only' is loose wording. Line 130 also writes concentration_top3_repos and begins rows. The intended point, that only verdict and gates of the Verdict object are persisted, is correct.\n\nIts recommended action stands:\n- Leave the receipt and the RESULT doc unchanged.\n- Record the #/metrics re-derivation.\n- Record in a new note that protocol_v5_redteam_audit.json:31 wrongly calls this receipt 'hand-scored'.\n- Persist gates_sha256 and prereg_commit, and put gate metrics at a resolvable root, in future runners.\n\nI did not modify or execute anything under /home/user/styxx-1."
+   }
+  },
+  "handedness_v2_result.json": {
+   "audit": {
+    "result": "/home/user/styxx-1/papers/closed-model-frontier/handedness_v2_result.json (committed verdict INVALID__join_incomplete)",
+    "runner_imports_styxx_protocol": true,
+    "runner_calls_experiment_score": true,
+    "how_verdict_was_produced": "The verdict comes from the canonical scorer. It is not hand-coded. The runner imports Experiment at handedness_accusations_v2.py:20 (`from styxx.protocol import Experiment`). It builds a flat dict `metrics` at :71-74 with the keys unresolved_share, min_cell_n, delta_header_minus_line and delta_line_minus_header. It calls `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)` at :75 and writes `\"metrics\": metrics, \"verdict\": v.verdict, \"gates\": v.gates` into the receipt at :76-78. The runner has no if/else that picks a verdict. The mismatch is caused by nesting. The scorer received the flat metrics dict, but the receipt stores that dict under the key `metrics` (result.json:94-99). The prereg's metric paths have no `metrics.` prefix, so styxx/protocol.py:_resolve (:190-196) raises \"metric 'unresolved_share' not present in result\" when it is given the whole receipt. Verified in scratch (/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/hv2.py): `Experiment(prereg).score(result)` refuses with exactly that message. `Experiment(prereg).score(result[\"metrics\"])` returns INVALID__join_incomplete with gates {G_P_join: False, G_N_cells: True, G_T1_header_truer: True, G_T1_line_truer: False}, which is identical to result.json:100-106. One small gap in the record: the runner does not store v.gates_sha256 or v.prereg_commit (:76-79), so the receipt alone cannot show which gates block was scored.",
+    "prereg_has_gates_block": true,
+    "gate_metrics": [
+     {
+      "gate": "G_P_join",
+      "metric_path": "unresolved_share",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.unresolved_share (result.json:95). Computed at runner :71 as round(unresolved/n,4); this exact dict was passed to score() at :75 and stored at :78",
+      "value_used": "0.0683",
+      "fires": "false"
+     },
+     {
+      "gate": "G_N_cells",
+      "metric_path": "min_cell_n",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.min_cell_n (result.json:96). Computed at runner :72 as min(cells.header.n, cells.line.n)",
+      "value_used": "165",
+      "fires": "true"
+     },
+     {
+      "gate": "G_T1_header_truer",
+      "metric_path": "delta_header_minus_line",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.delta_header_minus_line (result.json:97). Computed at runner :69-70,73 from the rounded genuine_share values made at :38",
+      "value_used": "0.3124",
+      "fires": "true"
+     },
+     {
+      "gate": "G_T1_line_truer",
+      "metric_path": "delta_line_minus_header",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.delta_line_minus_header (result.json:98). Computed at runner :74 as round(-delta,4)",
+      "value_used": "-0.3124",
+      "fires": "false"
+     }
+    ],
+    "rederived_verdict": "INVALID__join_incomplete",
+    "rederivation_matches_committed": true,
+    "rederivation_notes": "Gates from PREREG:45-59. Values come from result.metrics (json:94-99), and each one was cross-checked against the rows (json:107+) in a read-only scratch script.\n(1) G_P_join: unresolved_share <= 0.05. The receipt has accusations=366 (json:4), joined=341 (json:5) and unresolved=25 (json:6). 25/366 = 0.068306..., which rounds to 0.0683 and matches metrics.unresolved_share. 0.0683 <= 0.05 is FALSE.\n(2) G_N_cells: min_cell_n >= 20. Recounted from rows: header n=165, line n=169, range-sanity 5, range-correlation 2; total 341 = len(rows). min(165,169) = 165. 165 >= 20 is TRUE.\n(3) G_T1_header_truer: delta_header_minus_line >= 0.15. Header has 157 CLAIM of 165, giving 0.9515. Line has 108 of 169, giving 0.6391. Both match cells.*.genuine_share. 0.9515 - 0.6391 = 0.3124. The unrounded difference is 0.312462, which rounds to 0.3125; either way it clears 0.15. 0.3124 >= 0.15 is TRUE.\n(4) G_T1_line_truer: -0.3124 >= 0.15 is FALSE.\nWalking the outcome table (PREREG:54-58): row 1 needs {G_P_join: false}, and G_P_join is false, so row 1 matches and wins. The verdict is INVALID__join_incomplete. It equals the committed verdict (json:100), and the four gate booleans equal the committed gates (json:101-106). The canonical scorer run on result['metrics'] gives the same answer.\nExtra check: I replayed runner :43-56 read-only on the committed inputs via `git show` at b4042f24 and at HEAD. Out of 366 accused tokens, 0 matched no ledger row and 25 matched more than one. That supports the RESULT prose's explanation (duplicate token strings). The receipt itself does not store this zero-vs-several split, but the prose does not depend on the split for the verdict.",
+    "git_history": "Result: `git log -- handedness_v2_result.json` shows one commit, b4042f24 2026-09-02 00:31:47 +0000, \"handedness v2: the receipts \u2014 ... scored INVALID__join_incomplete\". It added 3861 lines together with the ledger and the recertify summary. `--follow` also lists a335bb17 (2026-09-02 00:25:49), but only because git copy detection (C059 from handedness_accusations_result.json, the v1 receipt) links the two files. This file was not edited in that commit. The result has not been modified since its first commit, and the working tree is clean.\nPrereg and runner: both appear in one commit, 43e427d7 2026-09-02 00:28:32 +0000 \"PREREG v2: ... frozen before the join\", which is an ancestor of b4042f24 (confirmed with merge-base --is-ancestor). Neither file has been modified since.\nInputs: oath_external_epistemics_ledger.jsonl was last touched in b4042f24, and oath_adjudication_result.json in 936fcf17 (2026-08-27).\nRESULT md: fc387716 2026-09-02 00:31:47.",
+    "cited_by": [
+     "papers/closed-model-frontier/RESULT_handedness_v2_INVALID_2026_09_02.md: line 4 says the result was \"scored through `styxx.protocol`\". This is TRUE (runner :20, :75). The sworn spans use the correctly nested paths #/verdict, #/metrics/unresolved_share, #/unresolved, #/cells/*/n|genuine_share and #/metrics/delta_header_minus_line (lines 6, 10-11, 20-23), and all of them hold against the receipt. The doc does not claim the receipt alone can be re-scored.",
+     "papers/closed-model-frontier/RESULT_handedness_v2_INVALID_2026_09_02.sworn.json and .sworn-receipt.json: sworn copies of the RESULT text; every span resolves (for example #/metrics/unresolved_share = 0.0683).",
+     "papers/closed-model-frontier/PREREG_handedness_v3_join_rule_2026_09_02.md:6: cites the v2 RESULT and its 25 unresolved accusations; says nothing about scoring.",
+     "papers/first-afference/protocol_v5_redteam_audit.json:31 (exam_audit.false_claim): names handedness_v2_result.json among 'hand-scored verdicts the protocol cannot reproduce'. For this receipt that is FALSE: the runner scored through Experiment.score (:75), and the scorer reproduces the verdict once it is given result['metrics'].",
+     "papers/first-afference/PREREG_protocol_v5c_repair_2026_09_24.md:30-32: repeats that 'Six of them ... are hand-scored verdicts the protocol cannot reproduce'. Same false characterisation, although this file does not name handedness_v2_result.json itself.",
+     "papers/first-afference/protocol_v5b_result.json:311-313, protocol_v5c_result.json:721-723, protocol_v5d_result.json:893-895: record the refusal \"metric 'unresolved_share' not present in result\" with committed verdict INVALID__join_incomplete; they say nothing about how it was scored.",
+     "papers/charon/charon.log.jsonl:114, charon/charon_verify_result.json:1635, charon/index.html:17, sworn/coverage_census_v01_result.json:53, sworn/measurement/packet_L.json:243, packet_R.json (receipt_name entries), population.json:9: ledger and measurement entries for the RESULT doc; none of them claims how the result was scored.",
+     "No FINDING_ doc cites this result."
+    ],
+    "classification": "METRIC_KEY_MISMATCH_ONLY",
+    "severity": "NEEDS_CORRECTION",
+    "recommended_action": "Do not change the verdict or the RESULT doc. The verdict re-derives by hand, and styxx.protocol also reproduces it when the receipt's own `metrics` sub-dict is passed in. RESULT_handedness_v2_INVALID_2026_09_02.md:4 is accurate when it says the result was scored through styxx.protocol.\nCorrect the audit record instead, as an addendum rather than by editing history. protocol_v5_redteam_audit.json:31 and PREREG_protocol_v5c_repair_2026_09_24.md:31-32 call this receipt 'hand-scored'. Reclassify it as protocol-scored at run time (runner :20, :75), with metrics nested under the key `metrics`; that nesting is the only reason re-scoring the whole receipt fails.\nFor machine reproducibility, have the re-scoring harness resolve metrics against result['metrics'] for runners that store them this way, or record a metric-path prefix, instead of editing the committed receipt. Future runners should also store v.gates_sha256 and v.prereg_commit in the receipt."
+   },
+   "skeptic": {
+    "result": "The audit holds up. I checked everything myself, read-only, using scripts in /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/skeptic_hv2/ (rescore.py, recount.py, rebuild.py).\n\n- **How the verdict was made:** the runner imports Experiment (handedness_accusations_v2.py:20). It builds a flat `metrics` dict (:71-74), calls `Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)` (:75), and writes `v.verdict` and `v.gates` into the receipt under the keys verdict and gates, next to `metrics` (:76-79). Nothing in the runner picks a verdict by hand.\n- **Rebuild from inputs:** I rebuilt cells, metrics and rows from the committed inputs at b4042f24 using the runner's own join and cell logic. All three equal the committed receipt, and the receipt's keys come in the same order as runner :76-79.\n- **Canonical scorer:** I ran styxx/protocol.py at HEAD and at b4042f24; the two versions differ. Both refuse the whole receipt with \"metric 'unresolved_share' not present in result\" (protocol.py:190-196). Given result['metrics'], both return INVALID__join_incomplete with gates {G_P_join: false, G_N_cells: true, G_T1_header_truer: true, G_T1_line_truer: false}. That equals json:100-106. Both report prereg_commit 43e427d7 and gates_sha256 0bee6236\u2026.\n- **Scoring by hand:** walking the outcome table in PREREG:54-58 by hand, row 1 wins and gives the same verdict.\n- **Cause of the refusal:** the metrics sit one level down, under the key `metrics`. The prereg's paths have no `metrics.` prefix. The quantities themselves are the same.",
+    "claims_checked": [
+     {
+      "claim": "Runner imports Experiment at :20, builds flat metrics at :71-74, calls Experiment(...).score(metrics) at :75, and writes metrics, verdict and gates into the receipt at :76-78. No hand-coded verdict logic.",
+      "upheld": true,
+      "evidence": "handedness_accusations_v2.py:20 `from styxx.protocol import Experiment`; :71-74 metrics dict; :75 `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`; :76-79 res with \"metrics\": metrics, \"verdict\": v.verdict, \"gates\": v.gates. No branch in :42-85 assigns a verdict string."
+     },
+     {
+      "claim": "The committed receipt was produced by this runner (the receipt was not assembled by hand)",
+      "upheld": true,
+      "evidence": "rebuild.py replays runner :43-74 over the inputs taken with `git show b4042f24:` (ledger, adjudication). cells == result.cells, metrics == result.metrics and rows == result.rows, all True. The receipt's keys in order are [prereg, smoke, accusations, joined, unresolved, still_accused_now, cells, metrics, verdict, gates, rows, what_this_is_not], the same as runner :76-79."
+     },
+     {
+      "claim": "The 'equivalent keys' are the identical quantities the gates name",
+      "upheld": true,
+      "evidence": "Gate metric paths (PREREG:46,48,50,52) are unresolved_share, min_cell_n, delta_header_minus_line and delta_line_minus_header. Runner :71-74 defines exactly these keys in `metrics`, passes that dict to score() at :75, and stores the same dict at :78 (result.json:94-99). The prereg has no composition or coverage declarations, so score() only reads the dict."
+     },
+     {
+      "claim": "Canonical scorer refuses the whole receipt with \"metric 'unresolved_share' not present in result\", and scoring result['metrics'] reproduces the verdict and the gates",
+      "upheld": true,
+      "evidence": "rescore.py, using protocol.py at HEAD and at b4042f24: whole receipt -> GateSpecError \"metric 'unresolved_share' not present in result\" (raised at protocol.py:194). result['metrics'] -> INVALID__join_incomplete {G_P_join: False, G_N_cells: True, G_T1_header_truer: True, G_T1_line_truer: False}; gates == result.gates and verdict == result.verdict are both True."
+     },
+     {
+      "claim": "Arithmetic: 25/366=0.0683; header 157/165=0.9515; line 108/169=0.6391; delta 0.3124 (unrounded 0.312462 -> 0.3125); min cell 165; cell counts 165/169/5/2 summing to 341",
+      "upheld": true,
+      "evidence": "recount.py: 25/366 = 0.068306 -> 0.0683. Cell counts from rows: line 169, header 165, range-sanity 5, range-correlation 2 (len(rows)=341). CLAIM counts: header 157, line 108, range-correlation 2. round(157/165,4)=0.9515 and round(108/169,4)=0.6391, difference 0.3124. Unrounded 157/165-108/169 = 0.312462 -> 0.3125."
+     },
+     {
+      "claim": "Walking the outcome table gives INVALID__join_incomplete",
+      "upheld": true,
+      "evidence": "PREREG:46 G_P_join is 0.0683 <= 0.05 -> false. PREREG:54 row 1 is when {G_P_join:false} -> INVALID__join_incomplete, and it is the first matching row. The other gates (165>=20 true, 0.3124>=0.15 true, -0.3124>=0.15 false) match json:101-106."
+     },
+     {
+      "claim": "Join replay: 0 of 366 accused tokens match no ledger row and 25 match several",
+      "upheld": true,
+      "evidence": "recount.py, at both b4042f24 and HEAD: n acc 366, zero 0, multi 25."
+     },
+     {
+      "claim": "Git history: result in one commit b4042f24 (3861 lines, together with the ledger and the recertify summary); --follow shows a335bb17 only through C059 copy detection; prereg and runner in 43e427d7, an ancestor; unchanged since; working tree clean; adjudication input 936fcf17; RESULT md fc387716",
+      "upheld": true,
+      "evidence": "git log per file gives the single commits listed. `git show --stat b4042f24` shows handedness_v2_result.json 3861, oath_external_epistemics_ledger.jsonl 5179 and oath_external_recertify_summary.json 764. `--follow --name-status` shows C059 from handedness_accusations_result.json. `merge-base --is-ancestor 43e427d7 b4042f24` succeeds. `git status --porcelain` has 0 lines."
+     },
+     {
+      "claim": "Receipt does not store gates_sha256 or prereg_commit",
+      "upheld": true,
+      "evidence": "runner :76-79 keys contain no gates_sha256 or prereg_commit, and the committed receipt's keys confirm it."
+     },
+     {
+      "claim": "RESULT md line 4 'scored through styxx.protocol' is true, and its sworn spans resolve against the receipt",
+      "upheld": true,
+      "evidence": "RESULT_handedness_v2_INVALID_2026_09_02.md:4 and runner :20,:75. The spans #/verdict, #/metrics/unresolved_share=0.0683, #/unresolved=25, #/cells/header/{genuine_share 0.9515, n 165}, #/cells/line/{0.6391, 169} and #/metrics/delta_header_minus_line=0.3124 all match result.json:6,10,12,33,35,95,97,100. coverage_census_v01_result.json:53-56 records SWORN-HELD with 8 sworn spans."
+     },
+     {
+      "claim": "protocol_v5_redteam_audit.json:31 falsely calls handedness_v2_result.json 'hand-scored'; PREREG_protocol_v5c_repair:30-32 repeats the claim without naming the file",
+      "upheld": true,
+      "evidence": "protocol_v5_redteam_audit.json:31 exam_audit.false_claim lists handedness_v2_result.json among 'hand-scored verdicts the protocol cannot reproduce'. PREREG_protocol_v5c_repair_2026_09_24.md:30-32 says 'Six of them ... are hand-scored' and names no files. Runner :75 contradicts 'hand-scored' for this receipt."
+     },
+     {
+      "claim": "v5b/v5c/v5d results record only the refusal",
+      "upheld": true,
+      "evidence": "protocol_v5b_result.json:311-313, protocol_v5c_result.json:721-723, protocol_v5d_result.json:893-895: committed INVALID__join_incomplete, v5 'RAISED:GateSpecError:metric 'unresolved_share' not present in result'."
+     },
+     {
+      "claim": "cited_by is complete, and none of the ledger or measurement entries says how the result was scored",
+      "upheld": false,
+      "evidence": "Minor, and it does not affect anything else. The list leaves out .gitattributes:34-36 and conformance/sworn/suite_power.json:120,765,798, which reference the RESULT doc's sworn tests. Also, sworn/measurement/packet_L.json:243 contains a word-for-word copy of the RESULT text, including 'scored through `styxx.protocol`'. That statement is true, but it contradicts 'none of them claims how the result was scored'. No FINDING_ doc cites the result, as the audit says."
+     }
+    ],
+    "independent_rederived_verdict": "INVALID__join_incomplete. G_P_join: 0.0683 <= 0.05 is false, so row 1 of the outcome table (PREREG:54) wins. The other gates are G_N_cells=true (165>=20), G_T1_header_truer=true (0.3124>=0.15) and G_T1_line_truer=false (-0.3124>=0.15). The canonical scorer (protocol.py at HEAD and at b4042f24) returns the same verdict and gates when given result['metrics'], and refuses when given the whole receipt.",
+    "audit_upheld": true,
+    "corrected_classification": "METRIC_KEY_MISMATCH_ONLY",
+    "corrected_severity": "NEEDS_CORRECTION",
+    "notes": "The classification, the verdict and the account of how the verdict was made all hold. I found no error that changes any of them. The receipt was scored by styxx.protocol when the runner ran. The receipt, the verdict and the RESULT doc need no change.\n\nThe committed record that needs correcting is protocol_v5_redteam_audit.json:31, which calls this receipt 'hand-scored'. PREREG_protocol_v5c_repair_2026_09_24.md:30-32 makes the same claim in general terms. The correction should be an addendum, not an edit to history. That is why the severity is NEEDS_CORRECTION rather than RECORD_ONLY.\n\nSmall inaccuracies in the audit, none of which matter:\n- cited_by leaves out .gitattributes and conformance/sworn/suite_power.json.\n- packet_L.json:243 does claim how the result was scored, because it copies the RESULT text word for word. The claim is true.\n- The RESULT prose says 25 accusations 'join to zero or several' rows. The replay finds all 25 join to several and none to zero, so the prose is correct, if imprecise.\n\nLimit on the evidence: I cannot prove the runner was actually executed, because running it is forbidden. But the scorer refuses any prereg that is not committed (protocol.py:436-452), the prereg commit is an ancestor of the result commit, and cells, metrics, rows and key order all rebuild exactly. All of this points to the committed runner producing the receipt by calling score()."
+   }
+  },
+  "handedness_v3_result.json": {
+   "audit": {
+    "result": "/home/user/styxx-1/papers/closed-model-frontier/handedness_v3_result.json (committed verdict HEADER_HANDED_ACCUSES_TRUER)",
+    "runner_imports_styxx_protocol": true,
+    "runner_calls_experiment_score": true,
+    "how_verdict_was_produced": "The verdict came from the protocol's score call. Nothing in the runner hand-codes it. handedness_accusations_v3.py:20 runs `from styxx.protocol import Experiment`. Lines 73-76 build a flat dict `metrics` = {unresolved_share, min_cell_n, delta_header_minus_line, delta_line_minus_header}. Line 77 runs `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`. Line 80 writes `\"metrics\": metrics, \"verdict\": v.verdict, \"gates\": v.gates` into the receipt. The runner has no if/else that picks a verdict. The canonical scorer refuses because the scored dict and the stored dict have different shapes. score() got the flat `metrics` dict, but the receipt nests those values under `metrics` (receipt lines 94-99: /metrics/unresolved_share etc.). The prereg gate paths are bare (`unresolved_share`, PREREG:51), so protocol.py:190-196 `_resolve` fails on the top-level receipt. I confirmed this with a read-only script (scratchpad/provenance/canon_score_v3.py; git status --porcelain --ignored md5 d3d2982562e9b8d0beead3193f3c6e1b was the same before and after). Experiment(prereg).score(receipt) raises GateSpecError \"metric 'unresolved_share' not present in result\". Experiment(prereg).score(receipt['metrics']) returns HEADER_HANDED_ACCUSES_TRUER with gates {G_P_join:true, G_N_cells:true, G_T1_header_truer:true, G_T1_line_truer:false}, which matches receipt /verdict and /gates (lines 100-106). protocol.py `_resolve` was the same at the receipt commit (git show b1a6326e:styxx/protocol.py lines 174-180). One cosmetic issue: the runner's docstring calls the file handedness_accusations_v2.py (runner:2, :7).",
+    "prereg_has_gates_block": true,
+    "gate_metrics": [
+     {
+      "gate": "G_P_join",
+      "metric_path": "unresolved_share",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.unresolved_share (runner:73 `round(unresolved / n, 4) if n else 1.0`, stored via runner:80 `\"metrics\": metrics`; the same object passed to score at runner:77)",
+      "value_used": "0.0464",
+      "fires": "true"
+     },
+     {
+      "gate": "G_N_cells",
+      "metric_path": "min_cell_n",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.min_cell_n (runner:74 `min(cells[\"header\"][\"n\"], cells[\"line\"][\"n\"])`, stored at runner:80)",
+      "value_used": "165",
+      "fires": "true"
+     },
+     {
+      "gate": "G_T1_header_truer",
+      "metric_path": "delta_header_minus_line",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.delta_header_minus_line (runner:71-72,75 `round(h - ln, 4)` where h, ln are cells.header/line.genuine_share, stored at runner:80)",
+      "value_used": "0.3124",
+      "fires": "true"
+     },
+     {
+      "gate": "G_T1_line_truer",
+      "metric_path": "delta_line_minus_header",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.delta_line_minus_header (runner:76 `round(-delta, 4)`, stored at runner:80)",
+      "value_used": "-0.3124",
+      "fires": "false"
+     }
+    ],
+    "rederived_verdict": "HEADER_HANDED_ACCUSES_TRUER",
+    "rederivation_matches_committed": true,
+    "rederivation_notes": "Script: scratchpad/provenance/rederive_handedness_v3.py. It only reads repo files. The prereg has exactly 1 fenced gates block (PREREG:50-65).\n\nI recomputed each gate value from the receipt's raw fields, without relying on /metrics:\n- unresolved_share: /unresolved=17 over /accusations=366 is 0.046448..., rounded to 0.0464. /joined 349 + 17 = 366 = len(/rows).\n- Cell counts from /rows: header n=165 with 157 panel==\"CLAIM\", share 0.951515, rounded 0.9515. Line n=169 with 108 CLAIM, share 0.639053, rounded 0.6391. These equal /cells/header and /cells/line.\n- min_cell_n = min(165, 169) = 165.\n- delta_header_minus_line = 0.9515 - 0.6391 = 0.3124. The runner subtracts the rounded shares (runner:38, 71-72).\n- delta_line_minus_header = -0.3124.\n- The recomputed dict equals /metrics exactly (True).\n\nGates:\n- G_P_join: 0.0464 <= 0.05, true.\n- G_N_cells: 165 >= 20, true.\n- G_T1_header_truer: 0.3124 >= 0.15, true.\n- G_T1_line_truer: -0.3124 >= 0.15, false.\nThese match /gates.\n\nOutcome table, walked in order:\n- Row 0 {G_P_join:false}: no match.\n- Row 1 {G_P_join:true, G_N_cells:false}: no match.\n- Row 2 {G_P_join:true, G_N_cells:true, G_T1_header_truer:true}: MATCH, giving HEADER_HANDED_ACCUSES_TRUER.\n\nThat equals the committed /verdict.\n\nIndependent check of the join: a second read-only script (scratchpad/provenance/rejoin_v3.py) replays runner:43-67 on the committed inputs. Those are oath_adjudication_result.json (last commit 936fcf17, 2026-08-27) and oath_external_epistemics_ledger.jsonl (last commit b4042f24, 2026-09-02 00:31:47, before the prereg). The replay gives 349 rows, identical in (id, cell, panel) to /rows. All 17 unresolved accusations had several accused candidates (14 with 2 candidates, 3 with 3); none joined to no row. That fits the RESULT's prose at RESULT:14.\n\nSide note, not affecting this verdict: in this checkout, protocol.py `_committed_at` uses `git log --diff-filter=A --follow` and resolves the v3 prereg's freeze commit to 43e427d7, the v2 prereg's commit. A plain `--diff-filter=A` gives c74682ac. The receipt stores neither prereg_commit nor gates_sha256.",
+    "git_history": "Without --follow:\n- PREREG_handedness_v3_join_rule_2026_09_02.md: c74682ac 2026-09-02 00:31:57 +0000 \"PREREG v3: token-level h \u2014 the join rule v2 lacked, bars unchanged, prior declared contaminated twice\" (A). No later commits.\n- handedness_accusations_v3.py: the same commit c74682ac (A). No later commits.\n- handedness_v3_result.json: b1a6326e 2026-09-02 00:34:17 +0000 \"handedness v3: the receipt \u2014 HEADER_HANDED_ACCUSES_TRUER under the frozen gates\" (A). This is the only file in that commit, and there are no later commits.\n- handedness_v3_by_kind.py: 2e5c7bb5 2026-09-02 13:34:13 -0400 \"sworn v0.2: ...\" (A). It only reads the receipt.\n\nWith --follow, git's similarity detection also lists older v1/v2 commits (a335bb17, b4042f24, 43e427d7) as ancestors. Those are separate files.\n\n`git status` shows no working-tree changes to these files. The result was never modified after its first commit, and the prereg and runner were committed 2m20s before the receipt.",
+    "cited_by": [
+     "papers/closed-model-frontier/RESULT_handedness_v3_header_handed_2026_09_02.md (the only RESULT_/FINDING_ doc citing it). Lines 4-5 say 'Receipt: handedness_v3_result.json, scored through styxx.protocol'. That is TRUE of the runner (runner:20, :77). Its sworn spans cite the nested paths correctly (#/metrics/unresolved_share RESULT:13, #/metrics/min_cell_n :15, #/metrics/delta_header_minus_line :16, #/verdict :9). It does not claim the canonical scorer can re-score the stored receipt top-level. No false statement found.",
+     "papers/SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md:26-30 quotes /verdict and /cells. It makes no scoring-method claim.",
+     "papers/PLAN_the_next_level_2026_09_02.md:33-34 quotes /cells. No scoring claim.",
+     "papers/closed-model-frontier/DECLARATION_h_mapping_2026_09_01.md:120 quotes /cells. No scoring claim.",
+     "papers/closed-model-frontier/DESIGN_provenance_law_2026_09_02.md:24-25 quotes /cells. No scoring claim.",
+     "papers/closed-model-frontier/EXPLORATORY_handedness_by_kind_2026_09_02.md:13,23 cites the RESULT and the by_kind receipt's source_verdict. No scoring claim.",
+     "papers/closed-model-frontier/PREREG_range_sanity_report_2026_09_02.md:5 cites the RESULT. No scoring claim."
+    ],
+    "classification": "METRIC_KEY_MISMATCH_ONLY",
+    "severity": "RECORD_ONLY",
+    "recommended_action": "No verdict change. Record that the receipt was scored by styxx.protocol at runner:77 on the flat `metrics` dict, and that the gate quantities are stored under the /metrics/ prefix (receipt lines 94-99). The canonical scorer reproduces HEADER_HANDED_ACCUSES_TRUER when given receipt['metrics'], and re-derivation by hand from the raw receipt fields gives the same result. Any fix belongs in a new, separately committed file or in the audit tooling, not in edits to the frozen receipt, prereg or runner. Options:\n1. The re-scoring harness scores receipt['metrics'] when the top-level path is missing and a `metrics` subdict exists.\n2. Future runners store the metrics at top level, or pass `res` to score().\n3. Future receipts also store v.prereg_commit and v.gates_sha256.\n\nSeparately:\n- Raise with the protocol owner that `_committed_at`'s `--follow` resolves this prereg's freeze commit to the v2 prereg commit 43e427d7 rather than c74682ac.\n- The runner docstring names itself handedness_accusations_v2.py (runner:2, :7). This is cosmetic."
+   },
+   "skeptic": {
+    "result": "The audit is upheld on its three load-bearing points: the classification, the re-derived verdict and how the verdict was produced. One secondary claim fails. Its cited_by list is incomplete. It misses two committed documents that call this receipt a \"hand-scored verdict the protocol cannot reproduce\": papers/first-afference/protocol_v5_redteam_audit.json at /exam_audit/false_claim, and papers/first-afference/PREREG_protocol_v5c_repair_2026_09_24.md:30-32 (which refers to the same \"six\"). For this receipt that statement is false. The runner scored the verdict with Experiment.score at handedness_accusations_v3.py:77, and the canonical scorer reproduces it from receipt['metrics'].",
+    "claims_checked": [
+     {
+      "claim": "The runner imports styxx.protocol and gets the verdict from Experiment(PREREG).score(metrics); it has no hand-coded verdict branch",
+      "upheld": true,
+      "evidence": "handedness_accusations_v3.py:20 `from styxx.protocol import Experiment`; :73-76 build flat `metrics`; :77 `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`; :80 stores `\"metrics\": metrics, \"verdict\": v.verdict, \"gates\": v.gates`. I read all 91 lines and found no if/else that assigns a verdict string."
+     },
+     {
+      "claim": "The canonical refusal is only a shape mismatch: gate paths are bare, but the receipt nests them under /metrics",
+      "upheld": true,
+      "evidence": "The gate metrics at PREREG:51,53,55,57 are the bare names unresolved_share, min_cell_n, delta_header_minus_line and delta_line_minus_header. The receipt has them only at /metrics/* (receipt lines 94-99). protocol.py:190-196 `_resolve` raises \"metric 'unresolved_share' not present in result\". My script (scratchpad/provenance/skeptic/check.py) confirmed: score(receipt) raises that GateSpecError, and score(receipt['metrics']) returns HEADER_HANDED_ACCUSES_TRUER with gates equal to /gates (True/True)."
+     },
+     {
+      "claim": "The 'equivalent keys' hold the same quantity the scorer saw",
+      "upheld": true,
+      "evidence": "runner:77 passes the same `metrics` object that runner:80 stores under key \"metrics\". Nothing changes it between the two lines (runner:78-81), so /metrics is byte-for-byte what score() read."
+     },
+     {
+      "claim": "The gate values can be recomputed from the raw receipt fields: 0.0464, 165, 0.3124, -0.3124",
+      "upheld": true,
+      "evidence": "/unresolved 17 / /accusations 366 = 0.046448 -> 0.0464. /rows: header n=165 with 157 CLAIM -> 0.9515; line n=169 with 108 CLAIM -> 0.6391; min=165. The runner subtracts rounded shares (runner:38,71-72): 0.9515-0.6391 = 0.3124 (the unrounded difference is 0.312462; the gate result is the same). The recomputed dict == /metrics is True. /cells/header and /cells/line match (165/157/0.9515, 169/108/0.6391)."
+     },
+     {
+      "claim": "Walking the outcome table in order gives HEADER_HANDED_ACCUSES_TRUER",
+      "upheld": true,
+      "evidence": "Fired: G_P_join 0.0464<=0.05 True; G_N_cells 165>=20 True; G_T1_header_truer 0.3124>=0.15 True; G_T1_line_truer -0.3124>=0.15 False. Row 0 (PREREG:59) does not match. Row 1 (:60) does not match. Row 2 (:61) matches and gives HEADER_HANDED_ACCUSES_TRUER, which equals /verdict (receipt line 100)."
+     },
+     {
+      "claim": "The prereg has exactly one fenced gates block at PREREG:50-65",
+      "upheld": true,
+      "evidence": "The opener is at line 50 and the closer at line 65. Experiment() built without error, and _select_gates_block (protocol.py:130-137) refuses any count other than one."
+     },
+     {
+      "claim": "Replaying the join on the committed inputs gives 349 rows identical to /rows, and the 17 unresolved all had several accused candidates (14 with 2, 3 with 3)",
+      "upheld": true,
+      "evidence": "My script scratchpad/provenance/skeptic/rejoin.py read the inputs via git show b1a6326e: and got joined 349, unresolved 17, with (candidates before, after filter) = {(2,2):14, (3,3):3}. The (id, cell, panel) rows equal /rows: True. The working-tree sha256 of the adjudication file, the ledger and the receipt equals the committed blobs."
+     },
+     {
+      "claim": "Git history: prereg and runner were added in c74682ac (2026-09-02 00:31:57), the receipt in b1a6326e (00:34:17) as the only file, with no later commits",
+      "upheld": true,
+      "evidence": "git log --name-status shows A for each file, one commit each. `git show --stat b1a6326e` shows one file with 3949 insertions. git diff c74682ac..HEAD and b1a6326e..HEAD on these files is empty. The gap is 2m20s. (c74682ac also touched papers/LEDGER.md; the audit does not say otherwise.)"
+     },
+     {
+      "claim": "The inputs were committed before the prereg: adjudication 936fcf17 (2026-08-27), ledger b4042f24 (2026-09-02 00:31:47)",
+      "upheld": true,
+      "evidence": "git log on oath_adjudication_result.json gives 936fcf17 2026-08-27 11:28:05 -0400. On oath_external_epistemics_ledger.jsonl it gives b4042f24 2026-09-02 00:31:47 +0000, 10s before c74682ac."
+     },
+     {
+      "claim": "protocol.py _resolve is unchanged at the receipt commit (b1a6326e lines 174-180)",
+      "upheld": true,
+      "evidence": "git show b1a6326e:styxx/protocol.py lines 174-180 have the same _resolve body. score() at that commit (line 453) walks the outcomes the same way, first match wins."
+     },
+     {
+      "claim": "_committed_at with --follow resolves the v3 prereg to 43e427d7 (the v2 prereg commit); a plain --diff-filter=A gives c74682ac; the receipt stores neither prereg_commit nor gates_sha256",
+      "upheld": true,
+      "evidence": "protocol.py:440 uses `--diff-filter=A --follow`. Experiment().prereg_commit = 43e427d77e60\u2026. 43e427d7 added PREREG_handedness_v2_header_bound and handedness_accusations_v2.py. Without --follow the result is c74682ac. The receipt has no 'prereg_commit' or 'gates_sha256' key (both False)."
+     },
+     {
+      "claim": "The runner docstring names itself handedness_accusations_v2.py",
+      "upheld": true,
+      "evidence": "runner:2 and runner:7 both say handedness_accusations_v2.py."
+     },
+     {
+      "claim": "cited_by is complete for scoring-method claims: the RESULT is the only doc that says anything about how the verdict was scored, and 'No false statement found'",
+      "upheld": false,
+      "evidence": "The audit missed two committed docs. papers/first-afference/protocol_v5_redteam_audit.json /exam_audit/false_claim names closed-model-frontier/handedness_v3_result.json among 'hand-scored verdicts the protocol cannot reproduce' (commits adbda648/4073894d, 2026-09-24). PREREG_protocol_v5c_repair_2026_09_24.md:30-32 repeats that 'Six of them \u2026 are hand-scored verdicts the protocol cannot reproduce.' For this receipt that is false: runner:77 machine-scored it, and score(receipt['metrics']) reproduces it. protocol_v5b/c/d_result.json /ungated_v5_differs_from_committed_verdict/24 also list it as RAISED but make no provenance claim. The .md citations the audit did list (RESULT:4-5,9,13-16; SYNTHESIS:26-30; PLAN:33-34; DECLARATION:120; DESIGN:24-25; EXPLORATORY:13,23; PREREG_range_sanity_report:5) are cited accurately and make no false scoring claim."
+     },
+     {
+      "claim": "The audit's scripts did not modify the repo",
+      "upheld": true,
+      "evidence": "git status --porcelain --ignored md5 was d3d2982562e9b8d0beead3193f3c6e1b before and after my scripts, the same value the audit reported. No tracked-file changes (non-'!!' lines = 0)."
+     }
+    ],
+    "independent_rederived_verdict": "HEADER_HANDED_ACCUSES_TRUER. I recomputed the gate metrics from /unresolved, /accusations and /rows: unresolved_share 0.0464, min_cell_n 165, delta_header_minus_line 0.3124, delta_line_minus_header -0.3124. Gates: G_P_join True, G_N_cells True, G_T1_header_truer True, G_T1_line_truer False. The first matching row is outcomes[2] (PREREG:61). The canonical Experiment.score(receipt['metrics']) gives the same verdict and gates. It refuses only on the top-level receipt, because the paths are bare.",
+    "audit_upheld": true,
+    "corrected_classification": "METRIC_KEY_MISMATCH_ONLY",
+    "corrected_severity": "RECORD_ONLY",
+    "notes": "I confirmed every load-bearing claim independently. The runner (papers/closed-model-frontier/handedness_accusations_v3.py:77) scores the flat metrics dict through styxx.protocol and stores that same object under /metrics (runner:80). The canonical refusal comes only from the bare gate paths (PREREG:51-57) not resolving against a receipt that nests them (receipt lines 94-99; protocol.py:190-196). The recomputation from raw rows, the order of the outcome walk, the join replay on inputs read at b1a6326e, the git timeline and the --follow quirk (protocol.py:440 gives 43e427d7 instead of c74682ac) all check out.\n\nThe one refutation is the audit's cited_by. It stopped at .md docs and missed two committed records that falsely call this receipt hand-scored:\n1. papers/first-afference/protocol_v5_redteam_audit.json, /exam_audit/false_claim.\n2. papers/first-afference/PREREG_protocol_v5c_repair_2026_09_24.md:30-32.\nThose records are exactly what the audit's how-produced finding refutes.\n\nFor this receipt the severity stays RECORD_ONLY: the receipt, prereg, runner and RESULT need no change, and the verdict re-derives. The recommended action should add a new, separately committed correction to the protocol v5 record (not an edit to history). It should say that handedness_v3_result.json was scored by Experiment.score at runner:77, and that the protocol reproduces it from receipt['metrics']. So it is not a hand-scored verdict the protocol cannot reproduce.\n\nMinor points:\n- The delta is computed from rounded shares (0.3124). The unrounded difference is 0.312462, which does not change the gate.\n- RESULT:17's 'twice the frozen 0.15' is approximate (0.3124/0.15 = 2.083).\n\nMy scripts are under /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/skeptic/ (check.py, rejoin.py). They only read the repo, and the repo status md5 was unchanged (d3d2982562e9b8d0beead3193f3c6e1b)."
+   }
+  },
+  "open_set_read_result.json": {
+   "audit": {
+    "result": "/home/user/styxx-1/papers/disjoint-worlds/open_set_read_result.json (committed verdict: VOID__null_mapper_separates)",
+    "runner_imports_styxx_protocol": false,
+    "runner_calls_experiment_score": false,
+    "how_verdict_was_produced": "The verdict is hand-coded in the runner. styxx.protocol never produced it.\n\nImports: run_open_set_read.py:42-46 imports only run_g0clear.CONCEPTS, styxx_transfer.TransferMap (the local papers/disjoint-worlds/styxx_transfer.py, since HERE is placed first on sys.path at :39), run_b31v2.fit_mlp and five run_b34v3 helpers. A grep of the runner for 'protocol|Experiment|score\\(|orthogonal|ortho|qr\\(' finds nothing (exit 1).\n\nGate logic (run_open_set_read.py:188-215):\n- :189 g1 = all(targets.*.G_O1_reconciles). Each flag is set at :158 as abs(round(read,4) - COMMITTED[tag]) < 1e-9, and COMMITTED is a literal at :50.\n- :190 g2 = all(targets.*.auroc_margin_null_mapper <= 0.55).\n- :192-197 verdict() applies the >=0.75 / <=0.55 thresholds.\n- :207-208: if not g1, the verdict is 'VOID__reconciliation_failed'.\n- :209-210: elif not g2, the verdict is 'VOID__null_mapper_separates' (the committed string).\n- :211-215: otherwise the verdict is a set-based aggregation with a 'MIXED__' fallback, which the prereg never specifies.\n\nReceipt: the gates dict is built by hand at :200-206. prereg_commit is the hard-coded literal '45d7ae5' at :120, and the file is written at :218-219.\n\nThe G-O2 null is not the preregistered one. It is null_fn = fit_mlp(XA, XB_shuf[rand], seed=SEED) at :154-155, scored at :163 and :168. That is a two-layer MLP, Linear(d_in, 2*d_in) -> GELU -> Linear (run_b31v2.py:55-63), trained with Adam for 1500 epochs at wd 1e-2 (run_b31v2.py:66-87) on a random pairing. It is the same null that b34v3 calls a 'pairing-shuffled null: MLP on a random correspondence' (run_b34v3.py:101-103). PREREG:85 instead requires a 'random-orthogonal mapper'. In this corpus that phrase means a QR orthogonal matrix (run_causal_crossworld.py:96-97).\n\nCanonical scorer: reproduced read-only with /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/score_open_set.py, which loads styxx/protocol.py standalone with bytecode writing disabled. Experiment(prereg) raises GateSpecError: \"prereg has no ```gates block \u2014 nothing frozen to score against\" (styxx/protocol.py:130-131). git status was clean afterwards.",
+    "prereg_has_gates_block": false,
+    "gate_metrics": [
+     {
+      "gate": "G-O1 closed-set reconciliation (PREREG:78-83; reproduce b34v3_result.json .targets.*.read_top1 exactly: gemma 0.5714, llama 0.6857; FAIL -> VOID)",
+      "metric_path": "targets.<tag>.closed_set_read_top1 compared with b34v3_result.json targets.<tag>.read_top1 (flag: targets.<tag>.G_O1_reconciles; gates.G_O1_closed_set_reconciliation.pass)",
+      "present_in_result": true,
+      "equivalent_key_in_result": "",
+      "value_used": "llama_1b 0.6857 vs 0.6857; gemma_2b 0.5714 vs 0.5714; qwen_1p5b 0.1429 vs 0.1429 (the runner checks qwen; the prereg names only gemma and llama). At n=70: 0.6857*70=47.999 -> 48/70, 0.5714*70=39.998 -> 40/70, 0.1429*70=10.003 -> 10/70.",
+      "fires": "true (the pass condition holds for every target)"
+     },
+     {
+      "gate": "G-O2 as frozen: a random-orthogonal mapper, matched in shape and fit on shuffled targets, must score AUROC(m) <= 0.55, else VOID (PREREG:85-89)",
+      "metric_path": "AUROC(margin) IN vs OOV under a random-orthogonal null map. No such key exists in the result.",
+      "present_in_result": false,
+      "equivalent_key_in_result": "",
+      "value_used": "",
+      "fires": "unknown. The runner never computed a random-orthogonal null. The only null it ran is the pairing-shuffled MLP at run_open_set_read.py:154-155, a different mapper class (see the next entry)."
+     },
+     {
+      "gate": "G-O2 as actually run by the runner (substitute null; not the identical quantity)",
+      "metric_path": "targets.<tag>.auroc_margin_null_mapper (= gates['G_O2_null_mapper_auroc_le_0.55'].observed.<tag>)",
+      "present_in_result": true,
+      "equivalent_key_in_result": "",
+      "value_used": "llama_1b 0.5861, gemma_2b 0.5584, qwen_1p5b 0.5012 (computed by run_open_set_read.py:155,163,168 from fit_mlp on XB_shuf[rand])",
+      "fires": "false. llama 0.5861 > 0.55 and gemma 0.5584 > 0.55 fail; qwen 0.5012 <= 0.55 passes. The all() conjunction at :190 is false, and restricting to the prereg-named gemma and llama also fails."
+     },
+     {
+      "gate": "G-O3 hypothesis table (PREREG:91-97): >=0.75 OPEN-SET SIGNAL, <=0.55 CLOSED-SET ONLY, otherwise INDETERMINATE",
+      "metric_path": "targets.<tag>.auroc_margin_in_vs_oov",
+      "present_in_result": true,
+      "equivalent_key_in_result": "",
+      "value_used": "llama_1b 0.7665, gemma_2b 0.6033, qwen_1p5b 0.5061",
+      "fires": "not reached (the table is gated behind G-O2). Per-row values: llama 0.7665 >= 0.75 gives OPEN_SET_SIGNAL, gemma 0.6033 falls in the 0.55-0.75 band (INDETERMINATE), and qwen 0.5061 <= 0.55 gives CLOSED_SET_ONLY. The prereg gives no rule for combining targets."
+     },
+     {
+      "gate": "G-O4: the C/O split is drawn once under seed 20260901 and committed to a hashed file before any mapper is fit (PREREG:99-101); the prereg states no FAIL consequence",
+      "metric_path": "No key. The receipt records only open_seed; it has no C/O indices and no split hash.",
+      "present_in_result": false,
+      "equivalent_key_in_result": "",
+      "value_used": "open_seed = 20260901 (seed only)",
+      "fires": "unknown. The split is drawn in memory at run_open_set_read.py:113-115. The runner writes only open_set_read_result.json (:218-219), and no split or hash file is tracked in papers/disjoint-worlds (git ls-files)."
+     },
+     {
+      "gate": "G-O5: no receipt is regenerated (PREREG:103-105)",
+      "metric_path": "No key; checked through git instead.",
+      "present_in_result": false,
+      "equivalent_key_in_result": "",
+      "value_used": "Last commits: b31v2_result.json 90e96436 (2026-08-01), b34v3_result.json cf31d6ff (2026-08-03), b35c_result.json 6391ff6b (2026-08-03), all four .npz banks a1293b64 (2026-08-01). All predate 45d7ae58 (2026-09-01).",
+      "fires": "true (verified from git, not from the receipt)"
+     }
+    ],
+    "rederived_verdict": "NOT_REDERIVABLE",
+    "rederivation_matches_committed": false,
+    "rederivation_notes": "Order of the prose gates: G-O1 FAIL -> VOID (PREREG:83), then G-O2 FAIL -> VOID (PREREG:88), then the G-O3 table (PREREG:93-97).\n\n1. G-O1 passes, so the run is not 'VOID__reconciliation_failed'. All three targets match b34v3_result.json targets.*.read_top1:\n   - llama_1b 0.6857 = 0.6857 (48/70 = 0.685714)\n   - gemma_2b 0.5714 = 0.5714 (40/70 = 0.571429)\n   - qwen_1p5b 0.1429 = 0.1429 (10/70 = 0.142857)\n   Hits come in steps of 1/70 = 0.0143, so equality at four decimals means identical hit counts.\n\n2. G-O2 as frozen needs the AUROC of a 'random-orthogonal mapper' (PREREG:85). That quantity is in neither the receipt nor the runner's code:\n   - The runner's null is an MLP trained on a random pairing (run_open_set_read.py:154-155; run_b31v2.py:55-87).\n   - The corpus uses 'random orthogonal map' for an np.linalg.qr matrix (run_causal_crossworld.py:96-97) and 'pairing-shuffled null' for this MLP (run_b34v3.py:101-103).\n   - The receipt's .deviation_from_prereg discloses only the 70-vs-462 partition and the 35/35 sizes. It does not disclose the null substitution.\n   Under the rule of using an equivalent key only when it holds the identical quantity, G-O2 cannot be evaluated. The verdict depends on it, so it is NOT_REDERIVABLE.\n\n3. Conditional re-derivation, taking the runner's substitute null:\n   - llama 0.5861 - 0.55 = +0.0361, fail.\n   - gemma 0.5584 - 0.55 = +0.0084, fail.\n   - qwen 0.5012 - 0.55 = -0.0488, pass.\n   - Both the conjunction over all targets and the prereg-named pair (gemma, llama) fail. The run is 'VOID' (PREREG:88), which matches the committed 'VOID__null_mapper_separates' exactly.\n   - Only an unstated mean over three targets would pass: (0.5861 + 0.5584 + 0.5012) / 3 = 0.548567 <= 0.55. The mean over llama and gemma is 0.57225, which fails.\n\n4. If G-O2 had passed, the G-O3 rows would be llama 0.7665 (OPEN_SET_SIGNAL), gemma 0.6033 (INDETERMINATE) and qwen 0.5061 (CLOSED_SET_ONLY). The prereg has no rule for combining targets. The runner would emit MIXED__gemma_2b=INDETERMINATE_llama_1b=OPEN_SET_SIGNAL_qwen_1p5b=CLOSED_SET_ONLY (:215). So the missing quantity decides between VOID and a claim-bearing mixed outcome that includes a CLOSED_SET_ONLY row, and that row carries a correction obligation (PREREG:96).\n\n5. Disclosed design deviation: every AUROC in the receipt comes from a 35/35 split of the 70 held-out concepts. The frozen design partitions all 462 concepts; its constructibility check drew a 70/57 split (PREREG:54-55, :120).\n\n6. Context, not a gate: under a pure null with 35 vs 35 trials and no ties, the AUROC standard deviation is sqrt(71/14700) = 0.069498. The observed nulls sit at z = 1.239 (llama), 0.840 (gemma) and 0.017 (qwen). The normal approximation gives P(AUROC > 0.55) \u2248 0.236 per target and \u2248 0.554 that at least one of three exceeds it. The 0.55 bar is inside sampling noise.\n\nArithmetic is in the scratch script /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/score_open_set.py and an inline python run.",
+    "git_history": "Prereg PREREG_open_set_read_2026_09_01.md:\n- 45d7ae58, 2026-09-01 13:03:18 -0400, \"PREREG: the open-set read -- does the reader know when it was handed nothing?\". This is its only commit.\n- The same commit also edits papers/LEDGER.md: preregistrations frozen 383 -> 384, while \"41 carrying a machine-scored gates block\" stays unchanged.\n\nRunner, result and RESULT doc:\n- run_open_set_read.py, open_set_read_result.json and RESULT_open_set_read_VOID_2026_09_01.md: b5dbc494, 2026-09-01 13:20:09 -0400, \"RESULT: the open-set read is VOID -- the null mapper separates too\". This is the only commit for each of the three files.\n- The parent of b5dbc494 is 45d7ae58, so the runner was first committed with its result 17 minutes after the prereg. It was not frozen alongside the prereg.\n\nEdits after first commit:\n- git diff b5dbc494 HEAD on the result and the runner: 0 lines each.\n- git diff 45d7ae58 HEAD on the prereg: 0 lines.\n- The working tree is clean for papers/disjoint-worlds.\n- The result was not modified after its first commit.",
+    "cited_by": [
+     "papers/disjoint-worlds/RESULT_open_set_read_VOID_2026_09_01.md: the primary write-up. It says 'Scored against PREREG_open_set_read_2026_09_01.md' (:3) and never mentions styxx.protocol, so it does not claim protocol scoring. But :36 says 'A random-orthogonal mapper, fit on shuffled targets ... scored 0.5861/0.5584', which is false: the runner's null is a pairing-shuffled MLP (run_open_set_read.py:154-155). Its G-O1 claims (:17-30) are accurate against the receipt.",
+     "papers/closed-model-frontier/RESULT_extraction_ceiling_REFUTED_2026_09_01.md:107-108: cites the RESULT doc as void 'because its null gate ran and failed'. It makes no claim about protocol scoring or re-derivability.",
+     "papers/first-afference/PREREG_protocol_v5b_coverage_2026_09_24.md:8-27: a prereg, not a RESULT/FINDING doc. It states correctly that 'The file was never protocol-produced': the runner hard-codes prereg_commit, builds its gates by hand, and the pinned v4 styxx/protocol.py raises GateSpecError on this prereg.",
+     "papers/first-afference/protocol_v5_redteam_audit.json:47: says correctly that the runner never imports styxx.protocol, hard-codes prereg_commit and builds gates by hand, and that the prereg has only a python fence.",
+     "papers/first-afference/protocol_v5_result_run1.json:172-176 (was VOID__null_mapper_separates, now RAISED:GateSpecError); protocol_v5b_result.json:346-348 and :371-373; protocol_v5c_result.json:756-758; protocol_v5d_result.json:928-930. All record the canonical scorer's refusal and none claims protocol scoring.",
+     "No FINDING_ document cites this result, and no document found claims or implies that it was scored by styxx.protocol."
+    ],
+    "classification": "PROTOCOL_NEVER_USED__NOT_REDERIVABLE_FROM_RECEIPT",
+    "severity": "NEEDS_CORRECTION",
+    "recommended_action": "Why NEEDS_CORRECTION rather than the other two levels:\n- Not VERDICT_UNSUPPORTED: the receipt does not contradict VOID, and VOID claims nothing. The substitute null also meets two of the prereg's three descriptors (\"matched in shape\", \"fit on shuffled targets\"), so the frozen gate text is itself ambiguous.\n- Not RECORD_ONLY: the literal G-O2 quantity is missing, and RESULT:36 misstates what ran.\n\nActions:\n1. Publish a dated ADDENDUM beside the receipt instead of editing it (in keeping with G-O5). It should state that G-O2 was evaluated on a pairing-shuffled MLP null (run_open_set_read.py:154-155, the same null as run_b34v3.py:101-103), not the preregistered 'random-orthogonal mapper' (PREREG:85), and that .deviation_from_prereg omits this.\n2. Correct RESULT_open_set_read_VOID_2026_09_01.md:36 (and describe the commit message of b5dbc494 as misdescribed) to name the null actually run.\n3. Record in the addendum:\n   - The verdict was hand-coded (run_open_set_read.py:188-215); the prereg has no gates block, so the canonical scorer refuses it.\n   - VOID__null_mapper_separates re-derives by hand only under the substitute null.\n   - G-O4's hashed split file was never committed.\n   - G-O5 holds by git.\n4. If the lab wants the frozen gate settled, run the literal random-orthogonal null (for example a QR semi-orthogonal map as in run_causal_crossworld.py:97) into a new dated receipt. If it passes the 0.55 bar, the outcome moves to G-O3, where the prereg has no rule for combining targets and qwen's 0.5061 is a CLOSED_SET_ONLY row with a correction obligation (PREREG:96).\n5. For any successor: freeze a machine-readable gates block with power_basis. At 35 vs 35 trials the 0.55 null bar is about 0.72 null standard deviations above 0.5, which gives roughly a 0.554 chance that at least one of three null targets exceeds it by noise alone."
+   },
+   "skeptic": {
+    "result": "/home/user/styxx-1/papers/disjoint-worlds/open_set_read_result.json (committed verdict: VOID__null_mapper_separates). The audit is upheld on classification, re-derived verdict and how-produced. It has two small factual slips, both in supporting detail.",
+    "claims_checked": [
+     {
+      "claim": "The canonical scorer refuses this prereg: it has no gates block, only a python fence.",
+      "upheld": true,
+      "evidence": "Code fences in PREREG_open_set_read_2026_09_01.md: the only one is at :24-29 ('```python'). styxx/protocol.py:130-131 raises GateSpecError(\"prereg has no ```gates block \u2014 nothing frozen to score against\"). My read-only loader (scratchpad/provenance/skeptic_score.py, protocol.py loaded standalone with bytecode writing disabled) printed exactly 'REFUSED GateSpecError prereg has no ```gates block \u2014 nothing frozen to score against'. git status was clean afterwards."
+     },
+     {
+      "claim": "The verdict is hand-coded in the runner, and styxx.protocol never produced it.",
+      "upheld": true,
+      "evidence": "The gate logic is at run_open_set_read.py:188-215: g1 at :189, g2 at :190, the verdict() thresholds at :192-197, VOID__reconciliation_failed at :207-208, VOID__null_mapper_separates at :209-210, and the MIXED__ fallback at :211-215. The gates dict is built by hand at :200-206, prereg_commit is the literal '45d7ae5' at :120, and the file is written at :218-219. Grepping the runner for 'protocol|Experiment|score\\(|orthogonal|ortho|qr\\(' returns rc=1. The only styxx.protocol import in the dependency chain is run_b34v3.py:118, which sits inside main(); the runner imports helpers from that module and never calls its main(). run_g0clear, styxx_transfer, run_disjoint_worlds, run_thought_transfer, run_b31v2 and introspection_gate have no styxx import (grep rc=1)."
+     },
+     {
+      "claim": "styxx_transfer resolves to the local papers/disjoint-worlds copy 'since HERE is placed first on sys.path at :39'.",
+      "upheld": false,
+      "evidence": "The reason given is wrong. :39 does sys.path.insert(0, HERE), then :40 does sys.path.insert(0, ROOT), so ROOT (/home/user/styxx-1) comes before HERE. The conclusion still holds, but for a different reason: ROOT has no styxx_transfer.py, run_g0clear.py, run_b31v2.py or run_b34v3.py ('ls: cannot access'), so the imports fall through to HERE."
+     },
+     {
+      "claim": "run_open_set_read.py:42-46 imports 'five run_b34v3 helpers'.",
+      "upheld": false,
+      "evidence": "The count is wrong. :45-46 imports six names from run_b34v3: load_A, load_pts, read_top1 and assignment_from_map (functions) plus SEED and TARGETS (constants). This does not affect any conclusion."
+     },
+     {
+      "claim": "The receipt's G-O2 key is not the preregistered quantity: it is a pairing-shuffled MLP null, not a 'random-orthogonal mapper'.",
+      "upheld": true,
+      "evidence": "PREREG:85 requires 'A random-orthogonal mapper, matched in shape and fit on shuffled targets'. The runner's null is at :154-155: rand=rng.permutation(len(tr)); null_fn=fit_mlp(XA, XB_shuf[rand], seed=SEED). fit_mlp (run_b31v2.py:66-87) trains MLPMap (run_b31v2.py:55-63: Linear(d_in, 2*d_in) -> GELU -> Linear) with Adam for 1500 epochs at wd 1e-2, so it is not orthogonal. This is the same code as run_b34v3.py:101-103, with the same rng consumption order, which that file labels a 'pairing-shuffled null'. PREREG_b34v3:56 calls it 'pairing-shuffled read'. In the corpus, 'random orthogonal map' means np.linalg.qr (run_causal_crossworld.py:96-97). The receipt's .deviation_from_prereg (result.json:11) discloses only the 70-vs-462 partition and the 35/35 sizes, not the null substitution."
+     },
+     {
+      "claim": "G-O1 passes on all targets; the hit counts are 48/40/10 out of 70.",
+      "upheld": true,
+      "evidence": "The values match b34v3_result.json targets.*.read_top1 exactly: open_set_read_result.json targets.{llama_1b,gemma_2b,qwen_1p5b}.closed_set_read_top1 = 0.6857/0.5714/0.1429, and b34v3 x_chance_read = 48.0/40.0/10.0. Computed: 0.6857*70 = 47.999, 0.5714*70 = 39.998, 0.1429*70 = 10.003. PREREG:81 names only gemma and llama."
+     },
+     {
+      "claim": "Under the substitute null, G-O2 fails, giving VOID, which matches the committed verdict.",
+      "upheld": true,
+      "evidence": "targets.*.auroc_margin_null_mapper values are 0.5861, 0.5584 and 0.5012. Their margins over 0.55 are +0.0361, +0.0084 and -0.0488. The mean of all three is 0.548567 and the mean of llama and gemma is 0.57225 (my script). Both the all-target conjunction and the gemma+llama pair fail, which gives VOID at PREREG:88."
+     },
+     {
+      "claim": "If G-O2 had passed, the runner would have emitted MIXED__gemma_2b=INDETERMINATE_llama_1b=OPEN_SET_SIGNAL_qwen_1p5b=CLOSED_SET_ONLY.",
+      "upheld": true,
+      "evidence": "The per-target values are auroc_margin_in_vs_oov 0.7665, 0.6033 and 0.5061 (result.json gates.G_O3_per_target_verdict). Keys are sorted at :215. The prereg has no rule for combining targets (PREREG:93-97). The auditor's further claim that qwen's row 'carries a correction obligation' is an interpretation of PREREG:96, which has no per-target scope."
+     },
+     {
+      "claim": "Null-noise arithmetic: SD = sqrt(71/14700) = 0.069498, z = 1.239/0.840/0.017, P(AUROC > 0.55) \u2248 0.236, P(at least 1 of 3 exceeds it) \u2248 0.554.",
+      "upheld": true,
+      "evidence": "My script gives sd 0.0694977, z 1.23889/0.84032/0.01727, p 0.235932, and 1-(1-p)^3 = 0.553938. These figures assume IN and OOV margins are exchangeable, which the RESULT doc's own mechanism argument (:51-55) disputes. The audit labels them context, not a gate."
+     },
+     {
+      "claim": "G-O4's hashed split file was never committed; G-O5 holds by git history.",
+      "upheld": true,
+      "evidence": "The split is drawn in memory at :113-115. git ls-files papers/disjoint-worlds shows no split or hash file for this study; b34v3_fresh_split_addendum.json belongs to b34v3. Last commits: b31v2_result 90e96436 (2026-08-01), b34v3_result cf31d6ff (2026-08-03), b35c_result 6391ff6b (2026-08-03), and all four npz a1293b64 (2026-08-01). All predate 45d7ae58 (2026-09-01)."
+     },
+     {
+      "claim": "Git history: the prereg's only commit is 45d7ae58. The runner, result and RESULT doc were first committed together in b5dbc494, whose parent is 45d7ae58. None has changed since. The LEDGER count went from 383 to 384 while the gates-block count stayed at 41.",
+      "upheld": true,
+      "evidence": "git log --follow shows one commit per file. b5dbc494's parent is 45d7ae5841200ac6a18992933df3f81961c84e77. The commits are 16m51s apart (13:03:18 to 13:20:09). git diff --stat b5dbc494 HEAD on the three files is empty, and 45d7ae58 HEAD on the prereg is empty. The 45d7ae58 LEDGER.md hunk changes '**383** (41 carrying...)' to '**384** (41 carrying...)'."
+     },
+     {
+      "claim": "RESULT_open_set_read_VOID:36 and the b5dbc494 commit message misdescribe the null as 'random-orthogonal'.",
+      "upheld": true,
+      "evidence": "RESULT:36 reads 'A random-orthogonal mapper, fit on shuffled targets and pushed through the identical pipeline'. The b5dbc494 message reads 'A random-orthogonal mapper fit on shuffled targets ... scored 0.5861 (llama_1b) and 0.5584 (gemma_2b)'. The code at :154-155 is an MLP. The RESULT doc never mentions 'protocol' (grep rc=1)."
+     },
+     {
+      "claim": "Citing documents: none claims protocol scoring. The first-afference files record the GateSpecError and state that the result was never protocol-produced.",
+      "upheld": true,
+      "evidence": "The only citers are the RESULT doc, closed-model-frontier RESULT_extraction_ceiling_REFUTED:106-108, first-afference PREREG_protocol_v5b_coverage:8-27 (':18 The file was never protocol-produced'), protocol_v5_redteam_audit.json:47, protocol_v5_result_run1.json:172-176, protocol_v5b_result.json:346-348 and :371-373, protocol_v5c_result.json:756-758, and protocol_v5d_result.json:928-930. No FINDING_ file cites it."
+     }
+    ],
+    "independent_rederived_verdict": "NOT_REDERIVABLE from the receipt.\n\nWalking the prose gates in order:\n- G-O1 PASS. llama 0.6857, gemma 0.5714 and qwen 0.1429 equal b34v3 read_top1, which is 48, 40 and 10 hits out of 70.\n- G-O2 as frozen needs AUROC(m) under a 'random-orthogonal mapper' (PREREG:85). No receipt key holds that quantity, because the runner's null is a pairing-shuffled MLP (run_open_set_read.py:154-155; run_b31v2.py:55-87).\n- In addition, every AUROC in the receipt comes from a 35/35 split of the 70 held-out concepts, not the frozen partition of 462 indices (PREREG:54-55). That is a second, disclosed reason the frozen quantity is absent.\n\nConditional on accepting the substitute null, G-O2 fails: llama 0.5861 and gemma 0.5584 are both above 0.55. That gives VOID, the same as the committed VOID__null_mapper_separates. Had the literal null passed, the outcome would move to G-O3 with rows OPEN_SET_SIGNAL (llama 0.7665), INDETERMINATE (gemma 0.6033) and CLOSED_SET_ONLY (qwen 0.5061). The prereg has no rule for combining those.",
+    "audit_upheld": true,
+    "corrected_classification": "PROTOCOL_NEVER_USED__NOT_REDERIVABLE_FROM_RECEIPT",
+    "corrected_severity": "NEEDS_CORRECTION",
+    "notes": "The audit holds on all three points under test:\n- **Classification** (PROTOCOL_NEVER_USED__NOT_REDERIVABLE_FROM_RECEIPT): holds.\n- **Re-derived verdict** (NOT_REDERIVABLE, with VOID only under the substitute null): holds.\n- **How-produced** (hand-coded at run_open_set_read.py:188-215; the canonical scorer refuses at styxx/protocol.py:130-131): holds.\n\nI found two factual slips, both in supporting detail and neither changing a conclusion:\n1. **sys.path order.** The audit says HERE is first on sys.path because of :39. It is not: :40 inserts ROOT at index 0 after :39 inserts HERE, so ROOT comes first. The local styxx_transfer.py is still the one imported, but only because ROOT has no module of that name.\n2. **Import count.** The audit says the runner imports five run_b34v3 helpers. It imports six names: four functions and two constants.\n\n**Why the equivalent key fails.** Per the runner code, targets.*.auroc_margin_null_mapper is not the prereg's random-orthogonal null:\n- It is literally b34v3's own pairing-shuffled MLP null. The rng consumption order and the torch seed are the same, and the code matches run_b34v3.py:101-103 line for line.\n- The corpus reserves 'random orthogonal map' for a QR matrix (run_causal_crossworld.py:96-97).\n\n**A second non-rederivability reason the audit under-weights.** The G-O2 and G-O3 AUROCs are computed on a 35/35 split of the 70 held-out concepts, not on the frozen partition of the 462 indices. The runner discloses this at :21-26 and in result.json:11. The audit records it only as context (point 5), but on its own it means the frozen design's quantity is not in the receipt.\n\n**Severity.** NEEDS_CORRECTION is reasonable:\n- VOID claims nothing, and the substitute null matches two of the three prereg descriptors.\n- But the frozen G-O2 was never computed, and RESULT:36 plus the b5dbc494 commit message misstate which null ran.\n- A case can be made for VERDICT_UNSUPPORTED. VOID lets the RESULT doc skip the G-O3 correction step ('No correction is owed', RESULT:88-91), and the literal null might have led to a MIXED outcome with a CLOSED_SET_ONLY row. The audit's claim that this row 'carries a correction obligation' reads PREREG:96 more strongly than its text supports, because the prereg has no per-target or combining rule.\n\n**Files and hygiene.** My checks are in /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/skeptic_score.py. I ran no runner scripts, and git status in /home/user/styxx-1 stayed clean."
+   }
+  },
+  "range_sanity_report_ab_result.json": {
+   "audit": {
+    "result": "/home/user/styxx-1/papers/closed-model-frontier/range_sanity_report_ab_result.json (committed verdict SHIP__range_sanity_reports; prereg PREREG_range_sanity_report_2026_09_02.md; runner range_sanity_report_ab.py)",
+    "runner_imports_styxx_protocol": true,
+    "runner_calls_experiment_score": true,
+    "how_verdict_was_produced": "The canonical protocol scorer produced the verdict, not hand-coded if/else. The runner imports the scorer at range_sanity_report_ab.py:28 (`from styxx.protocol import Experiment`). It builds a `metrics` dict at :153-158 and scores it at :159: `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`. It then writes the full receipt at :160-166 with `\"verdict\": v.verdict, \"gates\": v.gates`, nesting the four gate metrics under the key `metrics`. The runner has no if/else verdict logic. The canonical refusal happens only because the full receipt is scored instead of the sub-dict the runner scored. protocol.py:190-196 `_resolve` walks the dotted path from the receipt's top level and raises \"metric 'external_unresolved_repos' not present in result\" (protocol.py:194), because the value lives at `metrics.external_unresolved_repos`. I ran a scratch copy of protocol.py (scratchpad/provenance/rsr_score.py, read-only, no bytecode written) against the committed files. Result: Experiment(prereg).score(result) refuses with that exact message. Experiment(prereg).score(result[\"metrics\"]) returns SHIP__range_sanity_reports with gates {G_P_external:true, G_REG_internal:true, G_K_removed_false:true, G_GAIN:true}, identical to result.json /verdict and /gates. prereg_commit=144637cd, gates_sha256=6e852229e72191ed71d886bf4bd232bbc69a44554baa23a7630729ab2a7b53db.",
+    "prereg_has_gates_block": true,
+    "gate_metrics": [
+     {
+      "gate": "G_P_external",
+      "metric_path": "external_unresolved_repos",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.external_unresolved_repos (runner:155 `\"external_unresolved_repos\": e[\"unresolved_repos\"]`; the counter is incremented at runner:110 and :125 and returned at :144; the same value is also stored at external.unresolved_repos)",
+      "value_used": "0",
+      "fires": "true"
+     },
+     {
+      "gate": "G_REG_internal",
+      "metric_path": "internal_held_to_failed",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.internal_held_to_failed (runner:154 `\"internal_held_to_failed\": i[\"held_to_failed\"]`; counted at runner:78-79 when klass(off)=='OATH-HELD' and klass(on)=='OATH-FAILED' and returned at :86-87; the same value is also stored at internal.held_to_failed)",
+      "value_used": "0",
+      "fires": "true"
+     },
+     {
+      "gate": "G_K_removed_false",
+      "metric_path": "removed_genuine_share",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.removed_genuine_share (runner:156 = round(removed_genuine_by_panel / accusations_removed, 4); the inputs are stored at external.removed_genuine_by_panel=0 and external.accusations_removed=13)",
+      "value_used": "0.0",
+      "fires": "true"
+     },
+     {
+      "gate": "G_GAIN",
+      "metric_path": "false_accusation_rate_gain",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.false_accusation_rate_gain (runner:157 = round(fa_before - fa_after, 4), with fa_before = 95/366 at runner:151 and fa_after = remaining_false_by_panel / accusations_remaining at runner:152; the inputs are stored at external.remaining_false_by_panel=82, external.accusations_remaining=353, false_accusation_rate_before=0.2596 and false_accusation_rate_after=0.2323)",
+      "value_used": "0.0273",
+      "fires": "true"
+     }
+    ],
+    "rederived_verdict": "SHIP__range_sanity_reports",
+    "rederivation_matches_committed": true,
+    "rederivation_notes": "Gates block: PREREG:26-41. Each value below comes from the equivalent `metrics.*` key, which runner:153-158 shows is exactly the dict passed to Experiment.score at runner:159. I also recomputed each value from the raw receipt fields (scratchpad/provenance/rsr_arith.py).\n- G_P_external: metrics.external_unresolved_repos = 0 (= external.unresolved_repos 0). 0 <= 0 is TRUE.\n- G_REG_internal: metrics.internal_held_to_failed = 0 (= internal.held_to_failed 0). 0 <= 0 is TRUE.\n- G_K_removed_false: removed_genuine_by_panel / accusations_removed = 0/13 = 0.0, which matches the stored metrics.removed_genuine_share 0.0. 0.0 <= 0.25 is TRUE.\n- G_GAIN: fa_before = 95/366 = 0.259562841530, rounded to 4 places 0.2596 (matches /false_accusation_rate_before). fa_after = 82/353 = 0.232294617564, rounded 0.2323 (matches /false_accusation_rate_after). gain = 0.259562841530 - 0.232294617564 = 0.027268223966, rounded 0.0273, which matches metrics.false_accusation_rate_gain. 0.0273 >= 0.01 is TRUE.\n\nOutcome table (PREREG:35-39), walked in order:\n- Row 1 needs G_P_external=false. It is true, so no match.\n- Row 2 needs G_P=true and G_REG=false. G_REG is true, so no match.\n- Row 3 needs G_P, G_REG true and G_K=false. G_K is true, so no match.\n- Row 4 needs G_P, G_REG, G_K and G_GAIN all true. All four are true, so this row matches: SHIP__range_sanity_reports.\n\nThis equals result.json /verdict, and the fired dict equals result.json /gates. The canonical scorer run on result[\"metrics\"] gives the same verdict and gates.\n\nConsistency checks:\n- accusations_removed + accusations_remaining = 13 + 353 = 366. This equals the 2026-08-27 panel base: oath_adjudication_result.json /per_arm_detail/UNGROUNDED has 366 rows, 95 of them NOT_A_CLAIM, which is the hard-coded 95/366 at runner:151.\n- 95 - 82 = 13, which matches the RESULT's \"thirteen false accusations\" (RESULT:34), although the receipt does not store the removed NOT_A_CLAIM count directly.\n- sum(external.removed_moves) = 13 = accusations_removed.\n- verifier_sha256 65194cc6\u20269151 equals sha256 of styxx/certify.py at 144637cd, 48d4d549 and a5b0328e. HEAD's certify.py hashes to c448ded1\u2026, changed later by c554ab20 and 5b83cc4c on 2026-09-05.\n\nMinor unsworn prose not backed by this receipt (not gate-relevant):\n- RESULT:20-21 says each removed accusation went to ABSTAIN \"with its out-of-range flag on the ledger\". The receipt has no range_flag field; only /external/removed_moves {\"UNGROUNDED->ABSTAIN\":13} is recorded.\n- RESULT:44-46 says \"one repository holding half the accusations; the receipt prints its weight\". This receipt has no per-repo breakdown. The figure is supported instead by oath_adjudication_result.json: hopit-ai/Moda holds 194 of 366 UNGROUNDED rows = 0.5301.",
+    "git_history": "Result, range_sanity_report_ab_result.json: 48d4d549 2026-09-02 00:45:41 +0000 \"OATH v0.14: the A/B receipt \u2014 SHIP__range_sanity_reports under the frozen gates \u2014 and the flag's tests\". This is its only commit (`git log --all` count = 1). `git diff 48d4d549 HEAD` on it is empty and the working tree is clean. It was NOT modified after its first commit.\n\nPrereg, PREREG_range_sanity_report_2026_09_02.md: 144637cd 2026-09-02 00:42:58 +0000 \"PREREG OATH v0.14: range-sanity reports instead of accusing \u2014 flag added OFF, frozen before the A/B\". This is its only commit; `git diff 144637cd HEAD` is empty. It was committed 2m43s before the result.\n\nRunner, range_sanity_report_ab.py:\n- 144637cd 2026-09-02 00:42:58, committed together with the prereg.\n- a5b0328e 2026-09-02 00:52:38, \"v0.14 tests and runner: bind the certify submodule through importlib, not the name styxx/__init__ shadows\".\n\na5b0328e lands 6m57s AFTER the result commit. It changes only runner:24-25: `import styxx.certify as C` becomes `import importlib` plus `C = importlib.import_module(\"styxx.certify\")`. The scoring and metric code (runner:149-166) is unchanged. So the committed runner at HEAD is not byte-identical to the one that produced the receipt, but the difference does not touch verdict production. The receipt's 13 UNGROUNDED->ABSTAIN moves show that the flag toggle did take effect in the original run.\n\nThe RESULT doc was committed once, at cbdcccab 2026-09-02 00:45:47.",
+    "cited_by": [
+     "papers/closed-model-frontier/RESULT_range_sanity_report_SHIP_2026_09_02.md:4-7 says \"Receipt: `range_sanity_report_ab_result.json`, scored through `styxx.protocol`\". This is TRUE: runner:28 imports the scorer and runner:159 calls Experiment.score, on the `metrics` sub-dict. It is also re-derivable from the receipt via metrics.* paths. It has 11 sworn spans (lines 7, 11-14, 20-21, 24-27).",
+     "papers/closed-model-frontier/RESULT_range_sanity_report_SHIP_2026_09_02.sworn-receipt.json: 11/11 spans HELD, document_verdict SWORN-HELD, commit 48d4d549. It checks quoted values only and makes no scoring claim.",
+     "papers/closed-model-frontier/RESULT_range_sanity_report_SHIP_2026_09_02.sworn.json: a text snapshot of the RESULT at 48d4d549.",
+     "papers/closed-model-frontier/PREREG_range_sanity_report_2026_09_02.md:66-67 says the receipt is \"scored through `styxx.protocol`\". This is TRUE.",
+     "papers/SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md:34-38: sworn to /verdict, /internal/tokens_moved, /external/accusations_removed, /external/removed_genuine_by_panel and /false_accusation_rate_after. No scoring-method claim.",
+     "papers/PLAN_the_next_level_2026_09_02.md:20: sworn to /false_accusation_rate_after. No scoring-method claim.",
+     "papers/closed-model-frontier/h_mapping.json grain_note: cites the RESULT's numbers. No scoring-method claim.",
+     "papers/first-afference/protocol_v5_redteam_audit.json /round_1/exam_audit/false_claim names range_sanity_report_ab_result.json among six \"hand-scored verdicts the protocol cannot reproduce\". This is FALSE for this receipt: it was protocol-scored at runner:159, and the protocol reproduces it given result[\"metrics\"].",
+     "papers/first-afference/PREREG_protocol_v5c_repair_2026_09_24.md:30-33 repeats that the six (not named here) \"are hand-scored verdicts the protocol cannot reproduce\". Same false characterization, and it promises a correction in the v5c RESULT; no v5c RESULT exists yet.",
+     "papers/first-afference/protocol_v5b_result.json, protocol_v5c_result.json, protocol_v5d_result.json /ungated_v5_differs_from_committed_verdict/25 record v5 = \"RAISED:GateSpecError:metric 'external_unresolved_repos' not present in result\". This is factually accurate.",
+     "No FINDING_ doc cites this result."
+    ],
+    "classification": "METRIC_KEY_MISMATCH_ONLY",
+    "severity": "NEEDS_CORRECTION",
+    "recommended_action": "Leave the verdict, receipt, prereg and SHIP RESULT unchanged. The verdict re-derives by hand and through the canonical scorer applied to result[\"metrics\"]. The RESULT's statement \"scored through styxx.protocol\" (RESULT:5) is true.\n\nThe correction belongs in the protocol-v5 audit lineage. protocol_v5_redteam_audit.json /round_1/exam_audit/false_claim and PREREG_protocol_v5c_repair_2026_09_24.md:30-33 call this receipt \"hand-scored\" and \"a verdict the protocol cannot reproduce\". Both are false. When the v5c RESULT is written (the prereg says corrections go there, not into history), it should reclassify range_sanity_report_ab_result.json as protocol-scored with a key-prefix mismatch. The evidence is runner:28 and :159, which score the `metrics` sub-dict, and Experiment(prereg).score(result[\"metrics\"]), which returns SHIP__range_sanity_reports with gates identical to /gates.\n\nFor machine reproducibility, a re-scoring harness should record that this runner scored the `metrics` sub-dict. Future runners should pass the full receipt, or store gate metrics at the declared top-level paths. The frozen prereg and the committed receipt must not be edited.\n\nRecord-only notes:\n- The runner was changed at a5b0328e after the receipt. Only the import lines 24-25 changed; the scoring code did not.\n- RESULT:20-21 (\"out-of-range flag on the ledger\") is not backed by any field in this receipt.\n- RESULT:44-46 (\"the receipt prints its weight\") is not backed by this receipt. The half-the-accusations figure comes from oath_adjudication_result.json: 194/366 = 0.5301 for hopit-ai/Moda."
+   },
+   "skeptic": {
+    "result": "/home/user/styxx-1/papers/closed-model-frontier/range_sanity_report_ab_result.json (committed verdict SHIP__range_sanity_reports). I checked everything independently and the audit is upheld on classification, verdict and how-produced. I found three problems, none of which changes the verdict: (1) the cited_by list is incomplete; (2) it calls the v5 red-team 'false_claim' simply FALSE, but only its 'hand-scored' half is false, since the full receipt really cannot be scored as committed; (3) its 95-82=13 consistency check leaves out that the panel join has 8 duplicate keys.",
+    "claims_checked": [
+     {
+      "claim": "The runner imports styxx.protocol and calls Experiment.score. The verdict came from the canonical scorer, not from hand-coded if/else.",
+      "upheld": true,
+      "evidence": "range_sanity_report_ab.py:28 `from styxx.protocol import Experiment`. :159 `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`. :163 writes `\"verdict\": v.verdict, \"gates\": v.gates`. There is no other verdict logic in the file (lines 1-175). The receipt's key order (prereg, smoke, internal, external, false_accusation_rate_before/after, metrics, verdict, gates, verifier_sha256; result.json:2-39) exactly matches the res dict at runner:160-164. The internal/external key orders match runner:86-87 and :144-146. This is an inference from the committed code, not an observed execution."
+     },
+     {
+      "claim": "The canonical scorer refuses on the full receipt only because the gate metrics are nested under `metrics`.",
+      "upheld": true,
+      "evidence": "protocol.py:190-196 `_resolve` walks from the top level and raises at :194. The receipt holds the values at /metrics/* (result.json:26-31), not at the top level. My scratch run (scratchpad/provenance/score_indep.py) used both the run-time protocol.py (git show 48d4d549, which equals the 59c9cd71 version) and HEAD protocol.py. Both refuse on the full receipt with \"metric 'external_unresolved_repos' not present in result\". Both return SHIP__range_sanity_reports with gates {G_P_external:T, G_REG_internal:T, G_K_removed_false:T, G_GAIN:T} on result['metrics'], equal to /verdict and /gates. prereg_commit=144637cdede5..., gates_sha256=6e852229...7b53db."
+     },
+     {
+      "claim": "The 'equivalent keys' are the same quantities the runner scored.",
+      "upheld": true,
+      "evidence": "runner:153-158 builds `metrics` and passes that same object to score at :159, then writes it verbatim at :163. So /metrics/* are the exact scored inputs, not merely equivalent ones. Raw-field equality checks (arith_indep.py): metrics.external_unresolved_repos == external.unresolved_repos (0), from runner:155, :110, :125, :144. metrics.internal_held_to_failed == internal.held_to_failed (0), from runner:154, :78-79, :86-87. round(0/13,4) == 0.0 == metrics.removed_genuine_share, from runner:156. round(95/366 - 82/353, 4) == 0.0273 == metrics.false_accusation_rate_gain, from runner:151-152 and :157."
+     },
+     {
+      "claim": "Arithmetic: fa_before 0.2596, fa_after 0.2323, gain 0.0273, share 0.0.",
+      "upheld": true,
+      "evidence": "Computed: 95/366 = 0.25956284153005466, rounding to 0.2596 (= /false_accusation_rate_before). 82/353 = 0.23229461756373937, rounding to 0.2323 (= /false_accusation_rate_after). The difference is 0.027268223966315286, rounding to 0.0273. 0/13 = 0.0. 13+353 = 366. sum(/external/removed_moves) = 13."
+     },
+     {
+      "claim": "Walking the frozen table in order gives SHIP__range_sanity_reports.",
+      "upheld": true,
+      "evidence": "The gates block is PREREG:26-41. The fired gates are 0<=0 T, 0<=0 T, 0.0<=0.25 T and 0.0273>=0.01 T. Outcome rows at PREREG:35-39: row 1 needs G_P=false (no match); row 2 needs G_REG=false (no match); row 3 needs G_K=false (no match); row 4 needs all four true (match), giving SHIP__range_sanity_reports. This equals /verdict at result.json:32."
+     },
+     {
+      "claim": "The panel base is 366 UNGROUNDED rows, 95 of them NOT_A_CLAIM, and hopit-ai/Moda holds 194/366 = 0.5301.",
+      "upheld": true,
+      "evidence": "oath_adjudication_result.json /per_arm_detail/UNGROUNDED at both HEAD and 48d4d549: 366 rows, {NOT_A_CLAIM:95, CLAIM:271}, top repo hopit-ai/Moda 194, 194/366 = 0.5301. The auditor did not mention one thing: 8 (repo, line, token) keys are duplicated, so runner:93's dict join collapses them. The 95-82=13 'consistency' is therefore suggestive, not an identity."
+     },
+     {
+      "claim": "verifier_sha256 equals certify.py at 144637cd, 48d4d549 and a5b0328e. HEAD's certify.py hashes to c448ded1 after c554ab20 and 5b83cc4c (2026-09-05).",
+      "upheld": true,
+      "evidence": "sha256 of `git show <ref>:styxx/certify.py` is 65194cc6...9151 for all three commits, equal to /verifier_sha256. HEAD's hash is c448ded108df.... `git log a5b0328e..HEAD -- styxx/certify.py` lists only 5b83cc4c (2026-09-05T05:34:48-04:00) and c554ab20 (2026-09-05T00:10:48-04:00)."
+     },
+     {
+      "claim": "Git history: result and prereg each have one commit and are unchanged since. The runner was changed only at lines 24-25 by a5b0328e, 6m57s after the result. The prereg preceded the result by 2m43s.",
+      "upheld": true,
+      "evidence": "`git log --all`: result 48d4d549 00:45:41 only; prereg 144637cd 00:42:58 only; runner 144637cd then a5b0328e 00:52:38; RESULT cbdcccab 00:45:47. `git diff 48d4d549 HEAD` and `git diff 144637cd HEAD` on the result and prereg are empty. `git diff 144637cd a5b0328e` on the runner changes only the import at line 24 (to lines 24-25). I also checked that the pre-fix `import styxx.certify as C` binds the submodule in a fresh process: in a scratch git-archive of 48d4d549, C is a module with V14_RANGE_SANITY_REPORT present. So the committed pre-receipt runner could toggle the flag. The shadowing named in a5b0328e's message was a test-suite-order issue."
+     },
+     {
+      "claim": "The RESULT's 11 sworn spans are all HELD, and the RESULT's 'scored through styxx.protocol' (RESULT:5) is true.",
+      "upheld": true,
+      "evidence": "The sworn-receipt.json has commit 48d4d549, sworn_total 11, all 11 spans HELD, document_verdict SWORN-HELD. The spans sit at RESULT:7 (1), 11-14 (4), 20-21 (2) and 24-27 (4). RESULT:5 is backed by runner:28/:159."
+     },
+     {
+      "claim": "The unsworn RESULT prose at :20-21 ('out-of-range flag on the ledger') and :45-46 ('the receipt prints its weight') is not backed by this receipt.",
+      "upheld": true,
+      "evidence": "result.json:1-40 has no range_flag field and no per-repo breakdown. Only /external/removed_moves {\"UNGROUNDED->ABSTAIN\":13} is recorded."
+     },
+     {
+      "claim": "The cited_by list is complete, and no FINDING_ doc cites the result.",
+      "upheld": false,
+      "evidence": "The no-FINDING part holds. The list itself leaves out several citers that a grep finds: .gitattributes:43-45; conformance/sworn/suite_power.json:126,771,804 (the tests test_the_verdict_receipt_re_derives_at_the_commit_it_names and test_the_sidecar_renders_to_the_committed_document_bytes for this RESULT); papers/charon/charon_verify_result.json ~:1929 (seq 134 status MOVED_VERIFIER, recorded HELD, fresh HELD); papers/charon/index.html:17; papers/charon/charon.log.jsonl:135; papers/sworn/coverage_census_v01_result.json:77; papers/sworn/measurement/packet_L.json:107 (repeats 'scored through `styxx.protocol`'), packet_R.json:81,185,380,445, and population.json:147; plus the PLAN and SYNTHESIS .sworn(-receipt).json sidecars. None of them contradicts the audit's classification."
+     },
+     {
+      "claim": "protocol_v5_redteam_audit.json /round_1/exam_audit/false_claim ('hand-scored verdicts the protocol cannot reproduce') is FALSE for this receipt.",
+      "upheld": false,
+      "evidence": "Only partly. 'Hand-scored' is false: runner:28 and :159 score through the protocol. 'The protocol cannot reproduce' is literally true of the committed receipt as given, because the canonical scorer refuses (my run, and protocol_v5b/c/d_result.json /ungated_v5_differs_from_committed_verdict/25 record \"RAISED:GateSpecError:metric 'external_unresolved_repos' not present in result\"). It reproduces only when someone who knows the runner passes result['metrics']. PREREG_protocol_v5c_repair_2026_09_24.md:30-33 repeats the sentence and promises a correction 'in the RESULT'. No RESULT_protocol_v5* doc exists (`git ls-files`), and protocol_v5c/v5d_result.json contain no 'hand-scored' or 'predate' correction (grep)."
+     }
+    ],
+    "independent_rederived_verdict": "SHIP__range_sanity_reports. Gates: G_P_external (0<=0), G_REG_internal (0<=0), G_K_removed_false (0.0<=0.25) and G_GAIN (0.0273>=0.01) are all TRUE. Outcome row 4 (PREREG:38) is the first match. The canonical Experiment(prereg).score gives the same verdict and gates on result['metrics'], at both the run-time protocol.py (48d4d549) and HEAD. On the full receipt it refuses.",
+    "audit_upheld": true,
+    "corrected_classification": "METRIC_KEY_MISMATCH_ONLY",
+    "corrected_severity": "NEEDS_CORRECTION",
+    "notes": "What holds: the classification, the verdict and the how-produced claim all survive an independent check. The runner scores the exact dict it later writes under /metrics (runner:153-163). The canonical scorer, at both the run-time protocol.py (git show 48d4d549, equal to 59c9cd71) and HEAD, refuses on the full receipt and returns SHIP__range_sanity_reports with identical gates on result['metrics'].\n\nSeverity: NEEDS_CORRECTION is kept, but the correction targets the protocol-v5 lineage, not this receipt. protocol_v5_redteam_audit.json /round_1/exam_audit/false_claim and PREREG_protocol_v5c_repair_2026_09_24.md:30-33 call this receipt 'hand-scored', which runner:28 and :159 contradict. The promised RESULT correction does not exist yet. The case for RECORD_ONLY is that nothing in the receipt, the prereg or the SHIP RESULT is wrong.\n\nThe audit's wording should be tightened in three places:\n(a) 'cannot reproduce' is literally true of the receipt as committed. Only the 'hand-scored' half of the v5 sentence is false.\n(b) The cited_by list is incomplete. It misses charon (MOVED_VERIFIER, HELD to HELD), the sworn census and measurement packets, conformance/sworn/suite_power.json, and .gitattributes.\n(c) The 95-82=13 consistency check should mention the 8 duplicate panel keys that runner:93 collapses.\n\nProvenance extra: in a fresh process the pre-a5b0328e runner's `import styxx.certify as C` binds the real submodule (tested on a scratch git-archive of 48d4d549). So the runner as committed before the receipt could have produced the 13 moves.\n\nRepo check: nothing under /home/user/styxx-1 was modified (a find for files newer than 21:00 found none, and git status is clean). All scripts are in /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/ (score_indep.py, arith_indep.py, arch/)."
+   }
+  },
+  "untied_control_result.json": {
+   "audit": {
+    "result": "papers/rhythm-rescue/untied_control_result.json (committed verdict ROTATION_LOAD_BEARING__beyond_diversity; prereg PREREG_untied_magnitudes_2026_09_02.md; runner run_untied_control.py)",
+    "runner_imports_styxx_protocol": true,
+    "runner_calls_experiment_score": true,
+    "how_verdict_was_produced": "The verdict came from the protocol score, not from an if/else in the runner. run_untied_control.py:35 is `from styxx.protocol import Experiment`. Lines 133-139 build a flat `metrics` dict with the keys anchor_max_abs_dev, gap_free_minus_clamped, real2_minus_clamped, free_minus_real2 and recovery_fraction. Line 140 nests it into the receipt as res[\"metrics\"]. Line 141 is `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`, so the scorer was given the FLAT `metrics` dict, not the whole receipt. Line 142 is `res[\"verdict\"], res[\"gates\"] = v.verdict, v.gates`. Nothing in the runner chooses a verdict string. The prereg's metric paths are bare names (PREREG:35-41, e.g. \"anchor_max_abs_dev\", not \"metrics.anchor_max_abs_dev\"). They resolve against the dict the runner passed, but not against the saved receipt, where they sit under /metrics. styxx/protocol.py:190-196 `_resolve` walks the dotted path from the top of the dict it is given, and that produces the refusal. The v5 exam scores the whole receipt: papers/first-afference/run_protocol_v5.py:344 `experiment_cls(prereg_path).score(d, ...)`. That is why it refuses. I checked this with a read-only scratch script: /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/score_untied.py loads styxx/protocol.py by file path, with no bytecode written and git status clean afterwards. Experiment(prereg).score(full_receipt) raises GateSpecError \"metric 'anchor_max_abs_dev' not present in result\". Experiment(prereg).score(full_receipt[\"metrics\"]) returns ROTATION_LOAD_BEARING__beyond_diversity with gates {G_P_anchors: True, G_C_gap: True, G_R_recovers: False, G_R_fails: True}. That is identical to the receipt's /verdict and /gates (untied_control_result.json:239-245). prereg_commit is bb1e8b50 and gates_sha256 is 8089e624f48e33585a55e3a637d938ab14acfd8d5bb46209e697b4ac3e210697. At the result commit 3f4a03ea, `_resolve` in styxx/protocol.py (lines 174-180 at that commit) had the same semantics.",
+    "prereg_has_gates_block": true,
+    "gate_metrics": [
+     {
+      "gate": "G_P_anchors",
+      "metric_path": "anchor_max_abs_dev",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.anchor_max_abs_dev (identical quantity: run_untied_control.py:134 computes it and :140 stores it under res['metrics'])",
+      "value_used": "0.0",
+      "fires": "true"
+     },
+     {
+      "gate": "G_C_gap",
+      "metric_path": "gap_free_minus_clamped",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.gap_free_minus_clamped (run_untied_control.py:135, stored at :140)",
+      "value_used": "3.3333",
+      "fires": "true"
+     },
+     {
+      "gate": "G_R_recovers",
+      "metric_path": "free_minus_real2",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.free_minus_real2 (run_untied_control.py:137, stored at :140)",
+      "value_used": "3.3333",
+      "fires": "false"
+     },
+     {
+      "gate": "G_R_fails",
+      "metric_path": "real2_minus_clamped",
+      "present_in_result": false,
+      "equivalent_key_in_result": "metrics.real2_minus_clamped (run_untied_control.py:136, stored at :140)",
+      "value_used": "0.0",
+      "fires": "true"
+     }
+    ],
+    "rederived_verdict": "ROTATION_LOAD_BEARING__beyond_diversity",
+    "rederivation_matches_committed": true,
+    "rederivation_notes": "1. Gates block: PREREG:34-49. Gate values are read from receipt /metrics, the exact dict the runner scored (run_untied_control.py:141):\n- G_P_anchors: 0.0 <= 1.5, TRUE.\n- G_C_gap: 3.3333 >= 2.0, TRUE.\n- G_R_recovers: 3.3333 <= 1.0, FALSE.\n- G_R_fails: 0.0 <= 1.0, TRUE.\n\n2. Outcome table, in order (PREREG:43-47):\n- row0 {G_P:false}: no.\n- row1 {G_P:true, G_C:false}: no.\n- row2 {G_P:true, G_C:true, G_R_recovers:true}: no.\n- row3 {G_P:true, G_C:true, G_R_recovers:false, G_R_fails:true}: MATCH, giving ROTATION_LOAD_BEARING__beyond_diversity. This equals /verdict.\n\n3. The metrics re-derive from the per-seed data:\n- I recomputed kcap from /arms/*/seeds/*/acc using config kgrid [1,2,3,4,6,8,10,12,15,18,20] and acc_thr 0.8.\n  - free: [6,6,6], mean 6.0.\n  - clamped: [3,3,2], mean 2.6666666666666665.\n  - real2: [3,3,2], mean 2.6666666666666665.\n  - All match the stored kcap and kcap_mean.\n- anchor_max_abs_dev:\n  - Runner anchors (run_untied_control.py:39) are free 6.0 and clamped 2.6667.\n  - |6.0-6.0| = 0.0 and |2.6666666666666665-2.6667| = 3.33e-05.\n  - The max, rounded to 4 dp, is 0.0.\n- gap = 6.0 - 2.6667 = 3.3333.\n- real2 - clamped = 0.0.\n- free - real2 = 3.3333.\n- recovery_fraction = 0.0/3.3333 = 0.0.\n- All match /metrics (untied_control_result.json:232-238).\n\n4. The anchors are the parent receipt's own numbers: rhythm_rescue_result.json gives free per-seed kcap [6,6,6], mean 6.0, and clamped [3,3,2], mean 2.6666666666666665.\n\n5. The canonical scorer agrees: Experiment(prereg).score(receipt['metrics']) returns the same verdict and gates. It refuses only when given the whole receipt.\n\nMinor, and irrelevant to the verdict:\n- The G_P_anchors power_basis says the K grid \"steps by 2 above K=4\", but the grid steps by 3 from 12 to 15 to 18.\n- RESULT:20 calls the parent receipt the \"committed GPU receipt\", but rhythm_rescue_result.json has no device field, so the receipt cannot confirm that.\n- RESULT:32 says the clamped and real2 curves \"lie on each other\". The largest acc_mean gap is 0.02, at K=3.",
+    "git_history": "- papers/rhythm-rescue/untied_control_result.json: one commit, 3f4a03ea 2026-09-02 00:35:26 +0000 \"untied magnitudes: the receipt \u2014 ROTATION_LOAD_BEARING__beyond_diversity under the frozen gates\". That commit touches only this file (+246 lines). `git log --all` shows no other commit on it, and the working tree equals HEAD (git diff --quiet HEAD). The result has NOT been modified since its first commit.\n- papers/rhythm-rescue/PREREG_untied_magnitudes_2026_09_02.md: one commit, bb1e8b50 2026-09-02 00:21:20 +0000 \"PREREG: the confound in the knob \u2014 rotation, or timescale diversity? Frozen before data\". Never edited afterwards.\n- papers/rhythm-rescue/run_untied_control.py: one commit, the same bb1e8b50 2026-09-02 00:21:20 +0000. Never edited afterwards.\n- The prereg and runner were frozen about 14 minutes before the receipt.\n- The RESULT doc followed in 2acf4f29 at 2026-09-02 00:36:18 +0000.",
+    "cited_by": [
+     "papers/rhythm-rescue/RESULT_untied_magnitudes_2026_09_02.md:4-7 says 'Receipt: untied_control_result.json, scored through styxx.protocol' and swears to #/verdict. TRUE: run_untied_control.py:35 and :141 call Experiment.score. It swears numbers to #/metrics/* at lines 20, 23, 25-27 and to #/arms/*/kcap_mean and params at lines 14-15 and 21-24. Every sworn value matches the receipt.",
+     "papers/SYNTHESIS_the_grain_of_the_handed_target_2026_09_02.md:53 swears to #/verdict and :55 swears to #/metrics/recovery_fraction (0.0). Both match. It makes no claim about how the verdict was scored.",
+     "papers/rhythm-rescue/RESULT_rhythm_rescue_2026_06_03.md:3 and papers/frequency-resonance/RESULT_pmnist_ablation_2026_07_23.md:3 are forward-pointers that cite the RESULT doc, not the receipt, and make no scoring claim.",
+     "papers/frequency-resonance/PREREG_pmnist_untied_2026_09_02.md:5 cites the RESULT doc.",
+     "NOT a RESULT_/FINDING_ doc, but it makes a FALSE scoring claim: papers/first-afference/protocol_v5_redteam_audit.json /round_1/exam_audit/false_claim (line 31) lists rhythm-rescue/untied_control_result.json among 'hand-scored verdicts the protocol cannot reproduce'. The runner did not hand-score (run_untied_control.py:141), and the protocol does reproduce the verdict from receipt['metrics'].",
+     "papers/first-afference/protocol_v5b_result.json, protocol_v5c_result.json and protocol_v5d_result.json /ungated_v5_differs_from_committed_verdict/32 record v5 'RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result'. That is an artifact of run_protocol_v5.py:344 passing the whole receipt.",
+     "papers/sworn/measurement/packet_L.json:255 and packet_R.json (receipt_name entries) embed the RESULT text and sworn leaves as measurement data. They add no new scoring claim."
+    ],
+    "classification": "METRIC_KEY_MISMATCH_ONLY",
+    "severity": "NEEDS_CORRECTION",
+    "recommended_action": "Leave the receipt, the RESULT doc and the verdict alone. The verdict re-derives by hand, and the canonical scorer reproduces it byte-for-byte from receipt['metrics']. RESULT:5's 'scored through styxx.protocol' is true.\n\nWhat needs correcting is the characterization in papers/first-afference/protocol_v5_redteam_audit.json /round_1/exam_audit/false_claim. It calls this result a 'hand-scored verdict the protocol cannot reproduce'. It is instead a key-path mismatch: the runner scored the flat metrics dict (run_untied_control.py:141) but saved it nested under /metrics (:140). Add an erratum or annotation there, and on the protocol_v5b/c/d ungated_v5_differs entry 32.\n\nTo make the receipt re-scorable without changing any committed bytes, do one of these:\n(a) Teach the exam harness (run_protocol_v5.py:344) to fall back to d['metrics'] when a gate path is absent at the top level and the receipt has a 'metrics' dict whose bare keys match.\n(b) Record in the ledger that this receipt is scored as Experiment(prereg).score(receipt['metrics']).\n\nDo not edit the frozen prereg's metric paths. For future runners, either save the exact dict that was passed to score(), or use dotted paths like 'metrics.anchor_max_abs_dev'."
+   },
+   "skeptic": {
+    "result": "The audit is UPHELD. I could not refute any of the three core claims. First, the verdict was produced by styxx.protocol (run_untied_control.py:35, :141, :142). Second, the refusal is purely a key-path mismatch: the runner scored the flat `metrics` dict, then saved that same dict under /metrics (:140-141), while the prereg gates use bare paths (PREREG:35,37,39,41). Third, walking the frozen outcome table independently gives ROTATION_LOAD_BEARING__beyond_diversity. The canonical scorer reproduces that verdict and the exact gate dict from receipt['metrics'] under both the HEAD protocol.py and the protocol.py at the result commit 3f4a03ea. It refuses on the whole receipt. The audit has three flaws, none of which touch the verdict or the classification. (1) The gap arithmetic is written as 6.0-2.6667; the runner actually computes kf-kc with kc=2.6666666666666665, and the rounded result is the same. (2) The prereg_commit and gates_sha256 the audit quotes are not fields in the receipt; they are recomputed now. (3) cited_by leaves out CHANGELOG.md:1271-1276 and several sworn/charon index files, none of which make a scoring claim.",
+    "claims_checked": [
+     {
+      "claim": "Runner imports styxx.protocol.Experiment",
+      "upheld": true,
+      "evidence": "run_untied_control.py:35 `from styxx.protocol import Experiment`; ROOT is added to sys.path at :33-34"
+     },
+     {
+      "claim": "Runner builds a flat metrics dict, nests it in the receipt, and scores the flat dict with Experiment.score; no verdict string is chosen in the runner",
+      "upheld": true,
+      "evidence": "run_untied_control.py:133-139 build `metrics`; :140 `res[\"metrics\"] = metrics` (the same object, not a copy); :141 `v = Experiment(PREREG, repo_root=ROOT).score(metrics, smoke=SMOKE)`; :142 `res[\"verdict\"], res[\"gates\"] = v.verdict, v.gates`. Nothing else in the file (lines 1-151) contains a verdict literal. The receipt's top-level keys are [prereg, config, arms, metrics, verdict, gates], exactly the order the runner builds them in (:118-142). The file has no trailing newline, which matches write_text(json.dumps(...)) at :144."
+     },
+     {
+      "claim": "'Equivalent keys' metrics.* are the identical quantity that was gated",
+      "upheld": true,
+      "evidence": "The dict passed to score() at :141 is the same object stored at :140. Scoring only reads it: protocol.py:597-617 reads via _resolve, and this gates block declares no composition or coverage."
+     },
+     {
+      "claim": "Prereg metric paths are bare names; _resolve walks from the top of the dict; semantics unchanged at the result commit",
+      "upheld": true,
+      "evidence": "PREREG:35,37,39,41 use metric paths anchor_max_abs_dev, gap_free_minus_clamped, free_minus_real2, real2_minus_clamped. styxx/protocol.py:190-196 is _resolve. `git show 3f4a03ea:styxx/protocol.py` has the identical _resolve at :174-180. `git diff --stat bb1e8b50 3f4a03ea -- styxx/protocol.py` is empty, so protocol.py did not change between the prereg freeze and the receipt."
+     },
+     {
+      "claim": "Canonical scorer refuses on the full receipt and reproduces verdict and gates from receipt['metrics']",
+      "upheld": true,
+      "evidence": "My own scratchpad/provenance/skeptic/rescore.py uses dont_write_bytecode and loads both HEAD styxx/protocol.py and the 3f4a03ea copy by file path. score(full receipt) raises GateSpecError \"metric 'anchor_max_abs_dev' not present in result\". score(receipt['metrics']) returns ROTATION_LOAD_BEARING__beyond_diversity with gates {G_P_anchors: True, G_C_gap: True, G_R_recovers: False, G_R_fails: True}. That equals /verdict and /gates (untied_control_result.json:239-245), in the same key order. The same holds under both protocol versions."
+     },
+     {
+      "claim": "prereg_commit bb1e8b50 and gates_sha256 8089e624...0697",
+      "upheld": true,
+      "evidence": "Recomputed by Experiment: prereg_commit bb1e8b5089ff7f1286c41863995a073408efdb61, gates_sha256 8089e624f48e33585a55e3a637d938ab14acfd8d5bb46209e697b4ac3e210697. Caveat: the receipt contains neither field (grep count 0), because runner :142 saves only verdict and gates. The values are recomputed; they are not read from the receipt."
+     },
+     {
+      "claim": "Gate values and firing: 0.0<=1.5 T; 3.3333>=2.0 T; 3.3333<=1.0 F; 0.0<=1.0 T; outcome row 3 matches",
+      "upheld": true,
+      "evidence": "Values: /metrics/anchor_max_abs_dev 0.0, /metrics/gap_free_minus_clamped 3.3333, /metrics/free_minus_real2 3.3333, /metrics/real2_minus_clamped 0.0. Bars and ops: PREREG:35,37,39,41. Rows 0-2 (PREREG:43-45) fail. Row 3 (PREREG:46) {T,T,F,T} matches and yields ROTATION_LOAD_BEARING__beyond_diversity."
+     },
+     {
+      "claim": "Metrics re-derive from per-seed accuracies",
+      "upheld": true,
+      "evidence": "Recomputed with kgrid /config/kgrid and acc_thr 0.8. free caps [6,6,6], mean 6.0. clamped [3,3,2], mean 2.6666666666666665. real2 [3,3,2], mean 2.6666666666666665. All equal the stored kcap and kcap_mean, and acc_mean also matches. |kc-2.6667| = 3.333333333355171e-05, which rounds to 0.0. The recomputed metrics dict == /metrics. One minor misstatement: the audit writes 'gap = 6.0 - 2.6667', but runner :135 subtracts kc=2.6666666666666665, not the anchor. The rounded result is 3.3333 either way."
+     },
+     {
+      "claim": "Anchors equal the parent receipt's numbers",
+      "upheld": true,
+      "evidence": "rhythm_rescue_result.json /free/{0,1,2}/kcap = [6,6,6] and /clamped/{0,1,2}/kcap = [3,3,2]; /gate/kcap_free 6.0 and /gate/kcap_clamped 2.6666666666666665. Runner ANCHORS are at :39. The parent receipt has no device field (grep for device/cuda/gpu returns nothing), so the 'GPU receipt' wording cannot be confirmed from the receipt."
+     },
+     {
+      "claim": "Git history: each file has a single commit, receipt unmodified, prereg and runner frozen about 14 minutes before",
+      "upheld": true,
+      "evidence": "The repo is not shallow (is-shallow false, 2528 commits). git log --all: result has only 3f4a03ea (2026-09-02 00:35:26, 1 file, +246). Prereg and runner have only bb1e8b50 (00:21:20, which also touched LEDGER.md). RESULT doc has only 2acf4f29 (00:36:18). The gap is 14m06s. git diff --quiet HEAD -- papers/rhythm-rescue/ is clean."
+     },
+     {
+      "claim": "The v5 exam scores the whole receipt, which produces the recorded RAISED entries",
+      "upheld": true,
+      "evidence": "run_protocol_v5.py:342-346 `_outcome` calls experiment_cls(prereg_path).score(d, ...) on the full dict (call at :344), used by differential() at :366-374. run_protocol_v5c.py:597,624 and run_protocol_v5d.py:847,874 reuse attempt_b.differential(). protocol_v5b/c/d_result.json /ungated_v5_differs_from_committed_verdict/32 = {result: rhythm-rescue/untied_control_result.json, v5: \"RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result\"}."
+     },
+     {
+      "claim": "protocol_v5_redteam_audit.json /round_1/exam_audit/false_claim wrongly calls this a hand-scored verdict",
+      "upheld": true,
+      "evidence": "protocol_v5_redteam_audit.json:31 lists rhythm-rescue/untied_control_result.json among 'hand-scored verdicts the protocol cannot reproduce'. Runner :141 contradicts 'hand-scored', and the protocol reproduces the verdict from receipt['metrics']. The same entry does say 'The verdict is unaffected'."
+     },
+     {
+      "claim": "RESULT doc claims ('scored through styxx.protocol', sworn values) are true",
+      "upheld": true,
+      "evidence": "RESULT_untied_magnitudes_2026_09_02.md:5 is true per runner :141. Sworn spans are at :7, :14-15, :20-27, and I checked every value against the receipt. The committed RESULT_...sworn-receipt.json spans read verdict HELD."
+     },
+     {
+      "claim": "Minor observations (K-grid step, GPU unconfirmable, max clamped/real2 acc_mean gap 0.02 at K=3)",
+      "upheld": true,
+      "evidence": "KGRID = [1,2,3,4,6,8,10,12,15,18,20] (run_rhythm_rescue.py:31), so the steps 12->15->18 are 3. The recomputed max |acc_mean clamped - real2| is 0.019999999999999907 at K=3."
+     },
+     {
+      "claim": "cited_by list is complete",
+      "upheld": false,
+      "evidence": "The list omits CHANGELOG.md:1271-1276, which repeats the unconfirmable 'GPU receipt' wording. It also omits conformance/sworn/suite_power.json, papers/sworn/coverage_census_v01_result.json, papers/sworn/measurement/population.json, papers/charon/* and papers/frequency-resonance/run_pmnist_untied.py:6-7. I checked the context of each hit, and none makes a scoring or hand-scored claim. No doc other than protocol_v5_redteam_audit.json:31 says 'hand-scored' about this receipt."
+     }
+    ],
+    "independent_rederived_verdict": "ROTATION_LOAD_BEARING__beyond_diversity (G_P_anchors 0.0<=1.5 True; G_C_gap 3.3333>=2.0 True; G_R_recovers 3.3333<=1.0 False; G_R_fails 0.0<=1.0 True; first matching row is PREREG:46)",
+    "audit_upheld": true,
+    "corrected_classification": "METRIC_KEY_MISMATCH_ONLY",
+    "corrected_severity": "NEEDS_CORRECTION",
+    "notes": "I kept the severity at NEEDS_CORRECTION, but the only false statement in the committed record is outside this result: protocol_v5_redteam_audit.json:31 says 'hand-scored'. The receipt, the RESULT doc and the verdict need no correction. The v5b/c/d entry 32 records a raise that really happened, so it needs an annotation, not a correction. If severity were scoped strictly to the receipt and its RESULT doc, RECORD_ONLY would be the better label.\n\nOne real weakness in the receipt: it does not carry prereg_commit or gates_sha256 (runner :142). That is why run_protocol_v5.py:306-307's 'only verdicts styxx.protocol itself produced' filter would exclude it. Provenance rests on the runner code and structural consistency: key order, no trailing newline, and config matching run_rhythm_rescue.py:21-32. There is no sealed record.\n\nMy scratch files are /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/provenance/skeptic/rescore.py and protocol_at_3f4a03ea.py. I made no writes under the repo.\n\nWhile I worked, two untracked directories appeared: papers/first-afference/protocol_v5_redteam/round3_exam/ and round3_module/, with mtimes 2026-09-24 21:20:44 UTC. I did not create them. They are not in git and are unrelated to this audit, but whoever owns this repo should know about them."
+   }
+  }
+ }
+}

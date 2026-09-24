@@ -7,15 +7,18 @@ the implementation, a mutant with that one refusal deleted must be DETECTED by t
 
 Definitions, fixed here before any v5e code is written:
 
-* A refusal site is (a) a ``raise GateSpecError(<msg>)`` statement, or (b) an expression statement
-  that is a call whose first positional argument is <msg>, where <msg> is a string literal or an
-  f-string whose literal text begins with ``[V5:``. Anywhere in ``styxx/protocol.py``.
+* A coded emission site is (a) a ``raise GateSpecError(<msg>)`` statement, or (b) an expression
+  statement that is a call whose first positional argument is <msg> -- a refusal helper, a recorded
+  problem, or a note appended to a trace -- where <msg> is a string literal or an f-string whose
+  LITERAL text begins with a complete code ``[V5:<CODE>]``. Anywhere in ``styxx/protocol.py``.
+  Every coded emission must be observable by the exam, notes included.
 * The mutant replaces that one statement with ``pass``. Nothing else changes.
 * HYGIENE: a ``raise GateSpecError(...)`` inside the v5 region whose message is NOT such a literal
   (a name, a call, a concatenation) is a refusal the mutator cannot see. The v5 region is every
   top-level definition after the line ``# -- v5: the coverage tracer`` plus every ``Experiment``
   method whose name contains ``coverage``. Their count is reported and gated at zero.
-* A mutant is DETECTED if the frozen exam, run as ``--smoke --full-battery`` against it, exits
+* A mutant is DETECTED if the frozen exam, run as ``--smoke --full-battery --mutation-mode``
+  (the runner's frozen fast mode: every case except the hazard sweeps and the stress run) against it, exits
   non-zero, times out, reports any violation case not refused with its own code, any valid case
   not scoring with its property, a P1 retro that is not exact, or any crash.
 * The UNMUTATED implementation must pass the same run cleanly, or the gate is INVALID: a gate that
@@ -33,6 +36,7 @@ import concurrent.futures as cf
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -45,13 +49,23 @@ IMPL = ROOT / "styxx" / "protocol.py"
 MARKER = "# -- v5: the coverage tracer"
 
 
+_CODED = re.compile(r"\[V5:[A-Z_]+\]")
+
+
 def _msg_is_coded(node) -> bool:
+    """The message's LITERAL text begins with a complete code, e.g. ``[V5:NOT_EXERCISED]``.
+
+    A message that builds its code at run time (``f"[V5:{code}] ..."``) is not coded: a helper
+    that assembles every code in one place would make all refusals a single mutation site, so
+    deleting any one of them could never be told apart from deleting all. Such a raise is a
+    hygiene violation, not a site.
+    """
     if isinstance(node, ast.Constant) and isinstance(node.value, str):
-        return node.value.startswith("[V5:")
+        return bool(_CODED.match(node.value))
     if isinstance(node, ast.JoinedStr) and node.values:
         first = node.values[0]
         return isinstance(first, ast.Constant) and isinstance(first.value, str) \
-            and first.value.startswith("[V5:")
+            and bool(_CODED.match(first.value))
     return False
 
 
@@ -139,7 +153,8 @@ def run_exam(runner: Path, impl_src: str | None, timeout: int) -> dict:
         env["STYXX_V5_RESULT_OUT"] = str(out)
         env["PYTHONDONTWRITEBYTECODE"] = "1"
         try:
-            p = subprocess.run([sys.executable, str(runner), "--smoke", "--full-battery"],
+            p = subprocess.run([sys.executable, str(runner), "--smoke", "--full-battery",
+                                "--mutation-mode"],
                                cwd=ROOT, env=env, capture_output=True, text=True,
                                timeout=timeout)
         except subprocess.TimeoutExpired:

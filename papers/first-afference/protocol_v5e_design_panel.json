@@ -1,0 +1,945 @@
+{
+ "what": "protocol v5 design panel (workflow v5-class-closing-design, run wf_a011ff7d-e47, 2026-09-24): three designers from different angles, two judges scoring every design against every red-team finding of rounds 1-3 (one soundness-first, one adoption/testability), one synthesizer. The synthesized spec is DESIGN_protocol_v5e_mint_anchor_2026_09_24.md. Scratch prototypes are not committed; the designs' experiments_run fields describe what each checked.",
+ "designs": [
+  {
+   "name": "v5e \"mint-and-anchor\": the narrowest sound coverage instrument",
+   "one_paragraph": "Replace the identity heuristics and the attribution heuristics with two constructions, each provable in one sentence. IDENTITY BY MINTING: at trace entry, each declared function object T gets a brand-new code object M_T = T.__code__.replace(), assigned as T.__code__ and restored at exit. A frame counts for T iff frame.f_code IS M_T and frame.f_globals IS T.__globals__. Factory products, decorator products, wraps siblings, pre-trace clones and vendored or exec'd copies all run a different code object, because CPython builds functions only from compiled constants (MAKE_FUNCTION) or by explicit construction, and M_T is never a compiled constant. So nested code and wrapped targets need not be refused at all: the object at the declared path, wrapper included, is what gets observed, and nothing is ever unwrapped. ATTRIBUTION BY STACK ANCHOR: sections are calls, cov.run(name, fn, *a) and await cov.run_async(name, afn, *a). The frame of that run call is the anchor. A hit is credited to an opening iff that opening's anchor is registered (open) and is on the hit frame's f_back chain, and no other open opening of the same tracer is on that chain. Threads, pool workers, library daemon threads, grandchildren, asyncio tasks, loop callbacks and after-close calls cannot reach a section's anchor. Parallel harnesses open their own sections, and the same section name may be open many times at once. HOOK: one module-level sys.setprofile function. It is installed only on a thread that opens a section, and refuses any foreign profiler rather than chaining it. It contains no try/except, takes no lock, and removes itself from any thread with nothing open. Its loss is detected at close by identity plus an install epoch. Every close-time finding is written into the trace, and score() reads it. Removed machinery: gc holder scans, unwrap, closure and f_locals identity, ContextVars, Thread.start interception, threading.setprofile, profiler chaining, and the impostor, ambiguous and after-close buckets. The P1 retro, run with the unmodified run_p1.degenerate, records exactly {styxx.power:reachable: 12} and refuses [V5:NOT_EXERCISED] naming exactly the other four functions, on 3.10, 3.11, 3.12 and 3.13. The price is disclosed over-blocking: off-stack work never counts, sections must be calls, foreign setprofile profilers refuse, and only plain functions can be declared. One residual in the identity class remains: a function explicitly built from T's own code object with T's own globals during the trace, called and then dropped before exit.",
+   "target_identity_rule": "ONE SENTENCE: a frame counts for target T iff frame.f_code IS M_T \u2014 a fresh code object the tracer created at entry with T.__code__.replace() and published only by assigning it to T.__code__ \u2014 and frame.f_globals IS T.__globals__.\n\nRESOLUTION (at tracer __enter__, all targets resolved before anything is touched): 'module:Q.u.a.l' -> importlib.import_module(module), then vars()[part] steps through that module and then classes only. There is no getattr, no descriptor or __getattr__ execution, no __wrapped__ following and no unwrap. The final object is accepted iff type(obj) is types.FunctionType, or it is a staticmethod/classmethod whose __func__ is one.\nACCEPTED: module-level functions; methods defined on the named class; closures and factory products bound to a module/class name (e.g. double = make_mul(2)); functools.wraps wrappers (the WRAPPER is the target); singledispatch dispatchers; dataclass-generated methods; functions with __class__ cells; generator, coroutine and async functions; functions whose original code object is shared with other functions.\nREFUSED: [V5:UNRESOLVED] \u2014 the import raised (any Exception, including SyntaxError), or the name is absent from the namespace; PEP 562 lazy attributes and unimported submodules are named in the message. [V5:INHERITED] \u2014 a class step whose name is only in a base's __dict__. [V5:INSTANCE_PATH] \u2014 a mid-path step through a non-class (instance, SimpleNamespace, registry) or a module after the colon. [V5:NOT_A_FUNCTION] \u2014 builtins, C/Cython, lru_cache/cache, class-based update_wrapper wrappers, partial, property, bound method, singledispatchmethod. [V5:ALIAS] \u2014 two declared targets are one function object. [V5:CODE_SWAPPED] \u2014 an enclosing trace already minted T and T.__code__ is no longer its M_T. [V5:REENTRY] \u2014 a tracer entered twice.\nTRIPWIRES FOR THE ONE REMAINING DOOR: [V5:CLONE_CALLED] \u2014 M_T ran with f_globals that are not T.__globals__, i.e. a function was built from T's code object, or exec(T.__code__, other_ns). This credits nothing and refuses every declaring gate. [V5:CLONE_ALIVE] \u2014 at exit, the refcount of M_T exceeds what T and the registry account for, and a gc.get_referrers scan (only then) finds another FunctionType holding M_T. [V5:CODE_SWAPPED] \u2014 at exit, T.__code__ is not M_T.\n\nWHY THE CLASS CANNOT REOPEN: Python exposes no link from a frame to the function object being run except its code object (and globals). Minting makes the code-to-function map one-to-one for the life of the trace. CPython creates frames running code C only by calling a function whose __code__ is C, or by exec/eval of C. Functions acquire C only through MAKE_FUNCTION on a compiled constant, through FunctionType(C, ...), or through __code__ assignment. M_T is in no co_consts. So every non-T frame running M_T requires someone to take M_T out of T.__code__, or out of a live T frame, generator or traceback, during the trace and construct a function or exec from it.\n- Factories, decorators with or without wraps, update_wrapper classes, per-call siblings, plugin registries built at import, vendored or exec'd copies, dataclass siblings, copy.copy/deepcopy (functions are atomic) and pickle (by reference) cannot do this.\n- Because nothing is unwrapped, no two distinct callables are ever mapped to one observed code object. That many-to-one mapping was the root of R2-D2 and R3-D1.\n- Everything previously refused as SHARED_CODE because the ORIGINAL code was shared now works, since sharing of the original is irrelevant.\n- The residual is a clone with T's own globals, built during the trace from T's own code object, called and then dropped before exit. It is stated as a limit and never claimed closed.",
+   "attribution_rule": "ONE SENTENCE: a counted frame is credited to opening O iff O's anchor \u2014 the frame of the cov.run()/cov.run_async() call that opened O \u2014 is registered (O is open) and is on the frame's f_back chain, and no other open opening of O's tracer is on that chain.\n\nDETAILS:\n- Sections are calls, not with-blocks: run(section, fn, /, *a, **k) opens, calls fn from its own frame, and closes on BOTH the except and the return path of that same frame. run_async does the same as a coroutine frame awaited directly by the caller's task. Opening and closing therefore always happen in one frame: per-stack LIFO by construction, no foreign-context exit, no ContextVar.\n- At open: [V5:TRACE_INACTIVE] if the tracer is not active, [V5:UNDECLARED_SECTION], and [V5:NESTED_SECTION] if an open opening of the SAME tracer is on the opener's stack. Other tracers may nest; each credits its own openings, so nesting blinds neither.\n- At a hit: the hook walks f_back to the root and collects registered anchors. For each tracer with exactly one anchor on the chain, it increments that opening's count for the tracer's name of T. With two or more, the hit goes to that opening's 'ambiguous' counter and credits nothing. This is only reachable by resuming a suspended coroutine of one opening inside another opening's flow; tested.\n- At close: the anchor is deregistered before anything else, so nothing can credit O afterwards. At tracer exit, _by_code is emptied, so no credit is possible after exit, and every still-open opening gets [V5:OPEN_AT_EXIT].\n- Close findings ([V5:PROFILER_LOST], [V5:THREAD_HOP]) and tracer findings ([V5:CODE_SWAPPED], [V5:CLONE_ALIVE], [V5:CLONE_CALLED], [V5:OPEN_AT_EXIT]) are appended to the trace. run() raises them only when no exception is in flight, so the original exception is never masked.\n- score() refuses a declaring gate if the trace carries any tracer finding, if any opening of its section carries a finding, or if any opening's end is not 'returned' ([V5:SECTION_UNFINISHED]). It otherwise checks the union of calls over all openings of the section ([V5:NOT_EXERCISED]).\n\nWHY THE CLASS CANNOT REOPEN: a frame's f_back chain consists of frames on the same thread that called it, directly or through C. Suspended coroutine chains rejoin a stack only when resumed by that stack. The chain of a thread, pool worker, library daemon thread, grandchild, asyncio Task, loop callback, Future callback or executor job begins at its own bootstrap or loop step, so it contains another flow's anchor only if that flow is literally running the loop. In that case the loop's tasks are inside that section by definition, and any section they try to open refuses NESTED_SECTION.\n- Nothing is inherited, so no context copy, thread-start record, pool lifetime or shard name can carry credit anywhere.\n- Calls after close cannot credit, because the anchor is gone.\n- Concurrent sections cannot cross-credit: a frame is on one chain at a time, and the only-one-per-tracer clause handles resumed coroutines.\n- Exception exits run the same close code.\n- Refusals swallowed by the harness do not help it, because they are data in the trace, not only exceptions.",
+   "mechanism": "sys.setprofile only, the same on 3.9\u20133.13, per thread and never threading.setprofile, plus code minting through __code__ assignment and frame anchors from sys._getframe(). No sys.monitoring, no patching of names, no ContextVars, and no gc at resolution or close.\n\nHOOK RULES (one sentence): one module-level profile function, containing no try/except and taking no lock, installed with sys.setprofile only by an opening on its own thread, removed at that thread's last close, and removing itself on the first event on any thread with no open opening or once no trace is active.\n\nLIFECYCLE:\n(1) __enter__: resolve every target, check ALIAS, then under an RLock mint M_T for each T. Minting is refcounted in a global registry keyed by id(M_T) and id(T), whose entries hold the objects so ids cannot be reused. Nested or concurrent tracers declaring the same T share one M_T and one list of tracers.\n(2) _open (in run/run_async): read sys.getprofile(). A non-None profiler that is not our hook refuses [V5:FOREIGN_PROFILER] before anything is installed; a foreign profiler is never called, chained, restored or replaced. If it is None, bump the thread's install epoch and install the hook. Increment the thread's open count, and register the anchor frame -> opening.\n(3) Hook: if no trace is active, or this thread has no open opening, it calls sys.setprofile(None) and returns. Otherwise, on 'call' events only, it looks up id(frame.f_code) in the mint registry and checks identity (m.code is frame.f_code). On a globals mismatch it sets CLONE_CALLED and returns. On a hit it walks f_back to attribute the call. The per-opening counters are single-writer, because an anchor is on one stack at a time, so no lock is needed.\n(4) _close: deregister the anchor. If closed on another thread, record [V5:THREAD_HOP]. Otherwise, if sys.getprofile() is not our hook or the thread's epoch changed since open, record [V5:PROFILER_LOST]: the hook was dropped by an exception raised in or while entering it (signal handler, KeyboardInterrupt, RecursionError) or replaced by the harness. Decrement the count, and at 0 remove the hook iff it is still ours.\n(5) __exit__: empty _by_code, mark open openings OPEN_AT_EXIT, and convert clone flags to CLONE_CALLED. For each mint, drop this tracer; if T.__code__ is not M_T record CODE_SWAPPED, else restore the original when the last tracer leaves. The CLONE_ALIVE check does one sys.getrefcount per target and a gc.get_referrers scan only if unexplained references exist.\n(6) record() is refused before exit ([V5:TRACE_ACTIVE]) and takes no lock; it copies dicts. Sections are recorded as lists of openings: {calls, ambiguous, end: returned|raised|open, problems}.\n(7) score(): validate the trace (dict types, string keys, positive int counts, known [V5:...] problem codes, the end enum), then apply the attribution rule's scoring clause.\n\nTracer ID bumped to coverage_trace/2, so /1 traces refuse WRONG_TRACER and committed v5/v5c/v5d results must be scored with their pinned version.",
+   "machinery_removed": [
+    "_code_holders / _wrappers_of / _sharing_problem and every gc.collect()+gc.get_referrers scan at resolution and at each section close (SHARED_CODE at entry and at close)",
+    "inspect.unwrap and all __wrapped__ following (targets are the object at the path, wrapper included)",
+    "_identity: globals+freevars+closure-cell identity via frame.f_locals, and the impostors bucket",
+    "marshal/sha256 code provenance in the trace (replaced by file:line provenance, still unchecked)",
+    "contextvars section slot, _effective/via-context/via-thread attribution",
+    "Thread.start interception (_THREAD_START_CODE, f_locals['self']) and the _thread_section map",
+    "THREAD_OUTLIVES check and the is_alive() scan at close",
+    "ambiguous-while-two-sections-open (thread-inherited) bucket, after_close bucket, unsectioned bucket",
+    "threading.setprofile / threading.getprofile / _thread_profile and every thread-level hook",
+    "_Hook chaining (prev), _skip_exited, _hook_chain_has_self, chained-profiler restore, EXIT_ORDER",
+    "try/except Exception inside the hook, the sticky _hook_failed flag, HOOK_FAILED",
+    "the tracer _lock acquired inside the hook and inside record()",
+    "with cov.section(name) context manager, SECTION_CONTEXT, contextlib generator bookkeeping",
+    "PROFILER_REPLACED (subsumed by PROFILER_LOST with the epoch check)",
+    "NO_CODE (subsumed by NOT_A_FUNCTION)"
+   ],
+   "machinery_added": [
+    "_Mint: per-function fresh code object (fn.__code__.replace()) installed as fn.__code__ for the trace, refcounted across nested/concurrent tracers in a global registry keyed by id(M_T) and id(T), restored when the last tracer exits",
+    "f_globals identity check at a hit, with CLONE_CALLED when M_T runs under another namespace",
+    "exit tripwire: sys.getrefcount(M_T) against the known holders, then gc.get_referrers(M_T) only if unexplained refs exist -> CLONE_ALIVE; CODE_SWAPPED if T.__code__ is not M_T",
+    "cov.run(section, fn, /, *a, **kw) and await cov.run_async(section, afn, /, *a, **kw): a section is a call whose own frame is the anchor",
+    "_ANCHORS: id(anchor frame) -> opening (the opening holds the frame); f_back walk on hits only; the one-opening-per-tracer-per-chain rule with an informational ambiguous counter",
+    "NESTED_SECTION check by stack walk at open (same tracer only)",
+    "one module-level self-removing profile hook; per-thread [open count, install epoch] for install/remove and PROFILER_LOST detection; THREAD_HOP",
+    "per-opening records {calls, ambiguous, end, problems}; tracer-level problems; OPEN_AT_EXIT; score() reads every recorded problem and requires end == 'returned' (SECTION_UNFINISHED)",
+    "record() refused before exit (TRACE_ACTIVE)",
+    "one RLock for enter/exit/open/close only"
+   ],
+   "finding_closure": [
+    {
+     "id": "R1-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Frames are matched against M_T, minted per function object. Siblings sharing the ORIGINAL code (check_low/check_high from one _make; entry_a/entry_b behind one no-wraps decorator) run the original, never M_T, and MAKE_FUNCTION cannot produce M_T because it is in no co_consts. Tested: both refuse NOT_EXERCISED; the declared object itself passes. The one remaining door in the class \u2014 a function built during the trace from T's own code object with T's own globals, called and then dropped before exit \u2014 requires reading T.__code__ (or a T frame/generator/traceback) and constructing from it. It is a stated limit, with CLONE_ALIVE (live clone) and CLONE_CALLED (other globals) tripwires."
+    },
+    {
+     "id": "R1-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Identity only: registry lookup by id(M_T), whose entry holds M_T so the id cannot be reused, then `m.code is frame.f_code`. Vendored equal copies, an exec'd copy of the module and a sibling dataclass __init__ each have their own code object, which is never M_T. Tested: all three refuse NOT_EXERCISED."
+    },
+    {
+     "id": "R1-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There is no section slot. Credit requires the opener's own run() frame on the call's f_back chain. A thread started in A, or a task, has a chain rooted at its own bootstrap or loop step. Tested: thread from A calling while B is open, and a task created in A, credit neither section."
+    },
+    {
+     "id": "R1-B4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The hook never calls, chains, restores or replaces another profiler. A foreign sys.getprofile() at open refuses FOREIGN_PROFILER before anything is installed. Tested on 3.10/3.11: cProfile present gives FOREIGN_PROFILER and the user's Profile is still installed afterwards. On 3.12/3.13 cProfile runs on sys.monitoring, is invisible to getprofile, and coexists (scores PASS)."
+    },
+    {
+     "id": "R1-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Sections are calls, so open and close are in one frame and LIFO per stack by construction. Tracers share one hook and a refcounted mint registry, so exit order is irrelevant. Tested: tracer A exited before B (both PASS, code restored, registry empty); two tracers in two threads interleaved on the same target (exact counts 3 and 5). Re-entering a tracer refuses REENTRY."
+    },
+    {
+     "id": "R1-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Resolution is import + vars() lookups + type checks. Only import can raise, and any Exception there is UNRESOLVED (tested RuntimeError at import). No unwrap is done, so a __wrapped__ loop cannot be reached, and no getattr/__getattr__ runs user code."
+    },
+    {
+     "id": "R1-D3",
+     "status": "CLOSED_BY_PATCH",
+     "how": "score() validates type(...) is dict/list/str/int at every level: targets keys, sections keys, opening dicts, calls keys, counts (bool refused), problems strings, known codes. check_metrics reports and never raises. Tested: non-string keys in targets, sections and calls; list/dict section formats; unknown problem code; bool count; undeclared key \u2014 all refuse with BAD_TRACE or BAD_COUNT."
+    },
+    {
+     "id": "R1-D4",
+     "status": "DISCLOSED_LIMIT",
+     "how": "Every refused honest shape is listed in over_blocking_costs, including threads/tasks/pools, pre-existing threads, _thread threads, and profilers inside sections. Parallel sections are now supported: each worker opens its own; tested 8 concurrent openings of one name, exact counts."
+    },
+    {
+     "id": "R1-N2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A class step reads only vars(cls); an inherited name refuses INHERITED (tested Sub.fit). Declaring the definer (Base.fit) credits any call of that one function object, which is literally what ran (tested). The fullmatch regex is kept from the existing DECL parse."
+    },
+    {
+     "id": "R2-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A decorator applied at runtime creates its product through MAKE_FUNCTION from the original inner code constant, so the product never runs M_T. Tested: timed(cheap_path)() inside the section with score_all declared refuses NOT_EXERCISED. No close-time gc re-check is needed."
+    },
+    {
+     "id": "R2-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Pool worker stacks never contain a section's anchor, so pooled work credits only a section the work item itself opens. Tested: B's job on a pool shared with concurrently open A credits A nothing."
+    },
+    {
+     "id": "R2-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "threading.setprofile is never used. The hook exists on a thread only while that thread has an open opening, and removes itself on the first event otherwise, or when no trace is active. Tested: a harness reinstalling a saved hook after close sees it vanish after one event; pool threads end unhooked; threading.getprofile() is never touched."
+    },
+    {
+     "id": "R2-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The path grammar is one module, then classes only. Tested: instance path default_model.fit and SimpleNamespace NS.fit refuse INSTANCE_PATH with the offending type named."
+    },
+    {
+     "id": "R2-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "No unwrapping: run_fast and run_safe are distinct wrapper objects with distinct observed code, and the declared wrapper is what is traced. Tested: declaring run_fast and calling run_safe refuses NOT_EXERCISED; calling run_fast passes."
+    },
+    {
+     "id": "R2-D3",
+     "status": "DISCLOSED_LIMIT",
+     "how": "The shape changed. A pool created anywhere, reused across sections, ThreadPool, executors and to_thread all work when the submitted function opens its own section (tested: to_thread(cov.run, 'G', target) passes; pool.map of cov.run passes). Work submitted from inside a section without its own section never counts (tested: to_thread(target) inside run_async gives NOT_EXERCISED). Listed in over_blocking_costs."
+    },
+    {
+     "id": "R2-D4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The hook has no handler, so a RecursionError raised in or while entering it propagates as CPython defines, and the drop is detected at close by hook identity plus install epoch, giving PROFILER_LOST with a message naming this route. There is no thread hook to leak. Tested on 3.10\u20133.13: recursion to the limit inside a section refuses PROFILER_LOST. The resulting over-block (harnesses that exercise the recursion limit) is disclosed."
+    },
+    {
+     "id": "R2-D5",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "No thread-level hook exists. The per-thread sys hook is removed by the last close on both the except and return paths of run(), with self-removal as a backstop. Tested: exception exits, KeyboardInterrupt and SIGALRM exits leave sys.getprofile() None and the bookkeeping empty."
+    },
+    {
+     "id": "R2-D6",
+     "status": "CLOSED_BY_PATCH",
+     "how": "The foreign-context exit half is structural: sections are calls, so there is no __exit__ callable from another Context and no ContextVar.reset. The check_metrics(non-dict) half is the existing report path, kept. Tested: None, [], 's' and 5 are reported unusable, never raised."
+    },
+    {
+     "id": "R3-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A factory product is built from the original lambda/closure constant and never runs M_T, so defaults and cells are irrelevant. Tested: double=make_mul(2) declared with make_mul(3)(5) called refuses NOT_EXERCISED; score_lenient declared with make_scorer(abs, True) called (same cells, other default) refuses NOT_EXERCISED; calling double passes. The only way to get a same-defaults-invisible impostor is the explicit in-trace clone from M_T (the stated R1-B1 residual)."
+    },
+    {
+     "id": "R3-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Attribution never reads contextvars. A consumer task's stack begins at the loop step and does not contain A's run_async anchor. Tested: A lazily starts consumer tasks and B's job runs on them while both are open; A is credited 0 and B 0 (both refuse). Tasks opening their own run_async sections are attributed exactly (stress: 40 tasks plus unsectioned noise tasks, exact counts, 0 cross-credit, 3 runs \u00d7 4 versions)."
+    },
+    {
+     "id": "R3-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The hook contains no try/except, so it cannot swallow anything. Tested: a SIGALRM Timeout(Exception) in a tight traced loop propagated in 20/20 trials on each of 3.10\u20133.13, with PROFILER_LOST recorded whenever it landed inside the hook (16\u201319/20); a KeyboardInterrupt from a signal propagated 5/5."
+    },
+    {
+     "id": "R3-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "(a) A plain direct caller of the inner no longer satisfies a wraps wrapper (no unwrap): tested NOT_EXERCISED. (b) A class-based update_wrapper instance is refused NOT_A_FUNCTION: tested. (c) Per-call wraps siblings are separate products with original code: tested NOT_EXERCISED. (d) Reverse over-block removed: an undecorated score with two wraps aliases, called only via score_v1, passes."
+    },
+    {
+     "id": "R3-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Close runs in both branches of the one run() frame. Every finding is written into the trace, and score() refuses on any recorded finding and on any opening whose end is not 'returned'. Tested: a section raising, with the exception swallowed by the harness, refuses SECTION_UNFINISHED; a swallowed PROFILER_LOST or OPEN_AT_EXIT still refuses at score."
+    },
+    {
+     "id": "R3-D3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Neither the hook nor record() takes any lock; enter/exit/open/close share one RLock. Tested: cyclic garbage whose __del__ calls a target, collected at 39 swept gen-0 thresholds around open/close/record on 3.10\u20133.13, never deadlocked."
+    },
+    {
+     "id": "R3-D4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "No gc at resolution or close. Measured on a 1M-object heap with 3 targets: per-section close 0.02\u20130.05 ms (current: 100\u2013122 ms), tracer exit 0.01 ms. The refcount-gated gc scan runs only when something besides T holds M_T (17\u201319 ms, measured with a live generator of the target)."
+    },
+    {
+     "id": "R3-D5",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Other threads are never credited, so no THREAD_OUTLIVES check exists. Tested: a daemon thread started in the section and outliving it scores PASS on the section's own call."
+    },
+    {
+     "id": "R3-D6",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A section name maps to a list of openings merged at score, so many concurrent shards of one name are fine (tested 8 in a pool; stress with up to 32 openings per name). The singledispatch dispatcher is a plain function, credited when called (tested PASS)."
+    },
+    {
+     "id": "R3-N1-SimpleNamespace",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "INSTANCE_PATH now names the type ('NS' is a SimpleNamespace, not a class) and says what to declare instead; the grammar refuses any non-class mid-path."
+    },
+    {
+     "id": "R3-N2-PEP562",
+     "status": "DISCLOSED_LIMIT",
+     "how": "Still refused, deliberately: resolution never runs module __getattr__. The UNRESOLVED message names PEP 562 and unimported submodules; the fix is to declare the defining module."
+    },
+    {
+     "id": "R3-N3-sticky-hook_failed",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "No tracer-wide flag exists. Findings are per opening; PROFILER_LOST is judged per opening from hook identity and the thread's install epoch at its own open and close."
+    },
+    {
+     "id": "R3-N4-CtrlC-drops-chained-profiler",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There is no chaining. A foreign profiler refuses at open and is left untouched, so an exception in our hook can drop only our hook."
+    },
+    {
+     "id": "R3-N5-f_locals-cost",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "f_locals is never read; closure identity is implied by minting. The remaining per-hit cost is the f_back walk: about 3.3\u20134.6 us per hit at depth 30 (disclosed)."
+    },
+    {
+     "id": "R3-N6-closure-clone-identical-cells",
+     "status": "DISCLOSED_LIMIT",
+     "how": "Clones made at import or through a factory are not credited (tested REGISTRY[0]). A clone built during the trace from T.__code__ with T.__globals__ (and T.__closure__) and dropped before exit is credited \u2014 the stated residual. A live clone gives CLONE_ALIVE; other globals give CLONE_CALLED (both tested)."
+    }
+   ],
+   "p1_retro": "Run with papers/first-afference/run_p1.py UNMODIFIED, loaded as run_p1 against styxx/power_QUARANTINED.py.txt loaded as styxx.power, exactly as run_protocol_v5d.py does. The only change is in the exam runner: `cov.run(\"G4_refuses_degenerate\", run_p1.degenerate, np.random.default_rng(run_p1.SEED))` replaces `with cov.section(...)`. P1's G4 carries exercises = [effective_n, order_stat_bar, false_positive_rate, min_detectable_bar, reachable].\n\nOn 3.10.20, 3.11.15, 3.12.3 and 3.13.12 alike:\n- The section records exactly [{'calls': {'styxx.power:reachable': 12}, 'ambiguous': {}, 'end': 'returned', 'problems': []}], and degenerate_refusal_rate is 1.0.\n- score() refuses with \"[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION -- never executed ['styxx.power:effective_n', 'styxx.power:order_stat_bar', 'styxx.power:false_positive_rate', 'styxx.power:min_detectable_bar'] ... (did execute ['styxx.power:reachable'])\". That is exactly the four unexercised functions.\n- reachable.__code__ is restored and sys.getprofile() is None afterwards.\n\nMinting is what makes this work unmodified: run_p1 imported `reachable` by name before the trace, and name patching would have missed every call; minting the function object's code catches calls through any captured reference.\n\nReported, not gated: P1's G1 re-run with exercises=[order_stat_bar] records order_stat_bar x1, reached transitively through reachable(n_draws>1), so it passes \u2014 the outcome the v5 prereg anticipated.",
+   "over_blocking_costs": [
+    "Off-stack work never counts. Anything not called from inside fn on the section's own stack credits nothing (NOT_EXERCISED): threads and grandchildren started in the section; thread pools, executors, loop.run_in_executor, asyncio.to_thread, multiprocessing.pool.ThreadPool; library worker threads; asyncio tasks spawned inside run_async (create_task, gather, TaskGroup, ensure_future, shield, as_completed, wait_for on <=3.11); loop callbacks (call_soon, call_later, add_done_callback). Each worker, job or task must open its own section: cov.run inside the submitted function, or run_async inside the task. Exception: an event loop run inside cov.run (asyncio.run inside) puts all its tasks on the section's stack, and they count.",
+    "v5c/v5d valid cases this design refuses: thread_started_in_section, thread_pool_inside_section, x2_grandchild_thread_in_section, asyncio_task_in_one_section (when the loop runs outside the section), and preexisting_python_profiler_chained. The frozen v5d exam therefore cannot be reused; a v5e exam must be frozen before implementation.",
+    "`with cov.section(name):` no longer exists; sections are calls, cov.run(name, fn, ...) or await cov.run_async(...). A section cannot be opened from a helper context manager, a yield fixture or ExitStack. Passing a generator or coroutine function to run() does its work after the section closes, so it counts nothing.",
+    "Nested sections of one tracer on one stack refuse NESTED_SECTION. This includes tasks that try to open sections inside a loop that itself runs inside a section.",
+    "Any pre-existing sys.setprofile profiler on the thread refuses FOREIGN_PROFILER; a profiler started inside a section refuses PROFILER_LOST. Refused: cProfile/profile on <=3.11, profile.runcall, yappi, pyinstrument, pure-Python profilers. On 3.12+ cProfile uses sys.monitoring and coexists. settrace tools (coverage.py, pdb) are unaffected.",
+    "Any exception raised in or while entering the hook drops it, and the section refuses PROFILER_LOST even if the harness catches the exception and carries on. Causes: hitting the recursion limit, signal-handler exceptions (pytest-timeout's signal method), KeyboardInterrupt. A battery that deliberately exercises the recursion limit inside a section cannot be traced.",
+    "An exception escaping cov.run makes that opening 'raised', and the gate refuses SECTION_UNFINISHED. Expected exceptions (pytest.raises style) must be caught inside fn.",
+    "Only plain Python functions can be declared: module functions, methods on the defining class, staticmethod/classmethod, closures bound to a name, wraps wrappers. Refused: lru_cache/cache, class-based wrappers, functools.partial, properties, bound methods, singledispatchmethod, builtins/C/Cython, PEP 562 lazy attributes, paths through instances, namespaces or sub-modules, and inherited methods (declare the definer).",
+    "A wrapped target is the wrapper. A harness that calls the inner function directly (f.__wrapped__, or another reference to the inner) does not exercise the declared name.",
+    "During the trace, T.__code__ is a different (equal) object. Code that keys caches on code identity or compares f.__code__ by identity sees the change. Hot-reload tools that rewrite __code__ in place (IPython autoreload, jurigged) refuse CODE_SWAPPED. Test utilities that clone or rebind functions from their code refuse CLONE_ALIVE or CLONE_CALLED.",
+    "Two declared names for one function object refuse ALIAS; declare it once.",
+    "A section still running on another thread when the trace exits refuses OPEN_AT_EXIT. A manually driven coroutine section finished on another thread refuses THREAD_HOP.",
+    "Cost: every Python call on a thread with an open section pays the profile hook (about 0.4 us per event, similar to the current implementation). Every target hit also pays a full f_back walk: 100k hits at depth 30 took 0.33\u20130.46 s, against 0.11\u20130.14 s for the current implementation.",
+    "Child processes remain invisible (unchanged); their calls read as unexercised."
+   ],
+   "stated_limits": [
+    "Exercised is not tested: one call with its result discarded satisfies a declaration (unchanged).",
+    "Transitive calls count: a target reached through another declared target is exercised (unchanged).",
+    "Declared only: a gate without 'exercises' is unchecked (unchanged).",
+    "The trace is runner-written: forgery of the result dict is out of scope (unchanged threat model).",
+    "Hardcoded values (P1's G3 defect) are out of scope (unchanged).",
+    "Class A residual, never claimed closed: a function constructed DURING the trace from T's own code object \u2014 read from T.__code__, or from a live T frame's f_code, a T generator's gi_code or a traceback \u2014 with T's own globals, called and then dropped before the trace exits, is credited as T. It requires explicit code-object construction (FunctionType/exec/__code__ assignment). No factory, decorator, MAKE_FUNCTION, copy or pickle path reaches M_T. It is caught if the clone is alive at exit (CLONE_ALIVE) or runs under other globals (CLONE_CALLED).",
+    "Code that CPython runs on the section's own stack without the harness calling it counts for that section: signal handlers, __del__/weakref finalizers and gc callbacks triggered there, import-time module code. Calls made by settrace/setprofile callbacks are not observed.",
+    "A harness that saves sys.getprofile() and later reinstalls our hook blinds that window without a PROFILER_LOST record. This can only under-count, so it can only cause a refusal.",
+    "An asynchronous exception landing in the few bytecodes between run()'s registration and its try leaves the opening 'open' (refused as SECTION_UNFINISHED or OPEN_AT_EXIT). It may leave that thread's hook installed until no trace is active.",
+    "Counts are frame entries: generator and coroutine resumptions count again (tested: a two-yield generator records 3). Coverage needs only >= 1.",
+    "A generator or coroutine created in one section and resumed in another is credited where it runs, the resumer's section: the code executed in that flow.",
+    "Re-entry of open/close from a finalizer or signal handler on the same thread is serialized by an RLock rather than deadlocking. Credit cannot result from partially updated bookkeeping, because it requires a registered anchor of an open opening on the stack; the worst case is a spurious PROFILER_LOST.",
+    "CPython only. Greenlet/gevent stack switching and free-threaded 3.13t are untested. 3.9 is not executed (no interpreter available).",
+    "Tracer ID bumped to coverage_trace/2: committed v5/v5c/v5d results carrying /1 traces must be re-scored with their pinned implementation, not this one."
+   ],
+   "reason_codes": [
+    "DECL (parse, unchanged)",
+    "SECTION_DECL (parse, unchanged)",
+    "NOTHING_DECLARED (construction)",
+    "UNRESOLVED (entry: import raised, or name absent; PEP 562 and unimported submodules named)",
+    "INHERITED (entry: class step finds the name only in a base)",
+    "INSTANCE_PATH (entry: mid-path step through a non-class, or a module after the colon)",
+    "NOT_A_FUNCTION (entry: replaces NO_CODE; anything but FunctionType or a staticmethod/classmethod of one)",
+    "ALIAS (entry: two declared targets are one function object; replaces the SHARED_CODE alias case)",
+    "REENTRY (entry: a tracer entered twice)",
+    "CODE_SWAPPED (entry: an enclosing trace's M_T was replaced; recorded at exit: T.__code__ is not M_T)",
+    "TRACE_INACTIVE (open: run() outside an active trace)",
+    "UNDECLARED_SECTION (open)",
+    "NESTED_SECTION (open: an open opening of the same tracer is on the stack)",
+    "FOREIGN_PROFILER (open: a non-styxx setprofile profiler is on this thread; nothing touched)",
+    "PROFILER_LOST (recorded at close: hook not ours or install epoch changed; replaces HOOK_FAILED and PROFILER_REPLACED)",
+    "THREAD_HOP (recorded at close: opening closed on a different thread)",
+    "OPEN_AT_EXIT (recorded at tracer exit: opening still open)",
+    "CLONE_ALIVE (recorded at exit: another FunctionType holds M_T)",
+    "CLONE_CALLED (recorded: M_T ran with f_globals that are not T.__globals__)",
+    "TRACE_ACTIVE (record() before exit)",
+    "NO_TRACE (score)",
+    "WRONG_TRACER (score)",
+    "STALE_TRACE (score)",
+    "BAD_TRACE (score: malformed structure, unknown recorded code)",
+    "TARGET_SET (score)",
+    "SECTION_ABSENT (score: no opening of the gate's section)",
+    "SECTION_UNFINISHED (score: an opening ended 'raised' or 'open')",
+    "BAD_COUNT (score)",
+    "NOT_EXERCISED (score)",
+    "RETIRED: SHARED_CODE, NO_CODE, THREAD_OUTLIVES, HOOK_FAILED, PROFILER_REPLACED, EXIT_ORDER, SECTION_CONTEXT"
+   ],
+   "python_versions": "Executed on 3.10.20, 3.11.15, 3.12.3 and 3.13.12, with byte-identical outputs for the identity (e2) and attribution (e3) batteries across all four.\n\nPrimitives verified on all four:\n- code.replace() returns a new, equal object.\n- __code__ assignment works for plain functions, closures, __class__-cell methods, generators and coroutines, and their frames carry M_T.\n- New factory products keep the original constant.\n- The idle refcount baseline of M_T is 0 extra.\n- Anchor frame identity is stable through f_back walks, including coroutine anchors resumed by the loop and lazily materialized frames on 3.11+.\n\nVersion-specific:\n(1) cProfile: on 3.10/3.11 it is a setprofile Profile object, so it refuses FOREIGN_PROFILER when present at open (the user's profiler is left installed) and PROFILER_LOST when started inside a section. On 3.12/3.13 cProfile runs on sys.monitoring, sys.getprofile() stays None, and both cases score PASS with exact counts.\n(2) SIGALRM delivery inside the hook: 16\u201319 of 20 trials depending on version. Propagation was 20/20 everywhere.\n(3) Live-generator refcount contribution differs (2 extra refs on 3.10/3.11, 1 on 3.12/3.13). The exit tripwire only asks whether there is any unexplained ref and then classifies referrers by type, so it is version-independent.\n(4) Per-hit f_back walk cost: 3.3 us on 3.11, 4.3 on 3.10, 4.6 on 3.12, 4.1 on 3.13 (depth 30).\n\n3.9 was not executed, since no interpreter is available. The design uses only APIs present in 3.8+ (code.replace, positional-only parameters, per-thread sys.setprofile, sys._getframe), plus asyncio.to_thread (3.9) in tests only. Expected behavior is the same as 3.10, but unverified.\n\nFree-threaded 3.13t is untested. The design needs no GIL for credit correctness, because counters are single-writer per opening, but the self-removal race and dict iteration under free threading have not been exercised.",
+   "experiments_run": "All scratch files are under /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/design/narrow/:\n- the prototype is v5e.py (about 300 LOC; score() is patched in-process only);\n- run_all.sh runs everything on four interpreters;\n- final_3.10.txt, final_3.11.txt, final_3.12.txt and final_3.13.txt are the outputs.\n\n- e0_primitives.py (4 versions): code.replace() gives a new equal object; minted frames were seen for plain, closure, super() method, generator (3 entries) and coroutine functions, with 0 frames on the original code; factory products made after minting share the original, not M_T; idle refcount extra is 0, a live clone is +1, and a live suspended generator is +1 or +2 by version; sys.getprofile() under cProfile is a Profile on 3.10/3.11 and None on 3.12/3.13.\n- e1_p1_retro.py (4 versions): unmodified run_p1.degenerate against the quarantined module records exactly {reachable: 12} and refuses NOT_EXERCISED naming exactly the other four; code is restored and the profiler is None. The G1 variant records order_stat_bar x1, transitively.\n- e2_identity.py (4 versions, identical): these refuse NOT_EXERCISED \u2014 factory sibling, no-wraps sibling, runtime timed(cheap_path), wraps siblings, plain caller of the wraps inner, per-call wraps sibling, make_mul(3) against declared double, other-default scorer, vendored copy, exec'd module copy, sibling dataclass __init__, import-time registry clone, module attribute rebound to a mock. Sub.fit refuses INHERITED; instance and SimpleNamespace paths refuse INSTANCE_PATH; PEP 562 and import-time RuntimeError refuse UNRESOLVED; class-based Timed, lru_cache and property refuse NOT_A_FUNCTION; an alias pair refuses ALIAS; an in-trace clone kept alive refuses CLONE_ALIVE; a harness __code__ swap refuses CODE_SWAPPED. Scored PASS as intended: entry_a, run_fast, double, singledispatch dispatch(1), staticmethod+classmethod, Base.fit via Other(), score called only through a wraps alias, and nested tracers on the same target (both see it). The in-trace same-globals clone that is dropped passes: this is the RESIDUAL, shown explicitly.\n- e3_attribution.py (4 versions, identical): no cross-credit from a thread started in A calling while B is open, a pool shared by concurrent sections, asyncio consumer tasks of A running B's job (A=0 and B=0), a thread calling after close, a task running after close, or a grandchild thread. Valid: a library daemon thread outliving the section; 8 pool openings of one section name with exact counts and no hooked threads left; asyncio.run inside cov.run; to_thread(cov.run, ...). Over-blocks shown: gather and to_thread inside run_async. NESTED_SECTION is refused. A raised-and-swallowed section refuses SECTION_UNFINISHED. A coroutine opening A resumed inside B gives ambiguous on both and credits none. A cross-thread coroutine close refuses THREAD_HOP.\n- e4_hook.py (4 versions): cProfile before the section gives FOREIGN_PROFILER with the user's profiler kept (<=3.11) and PASS (3.12+); cProfile inside gives PROFILER_LOST (<=3.11) and PASS (3.12+); a pure-Python profiler gives FOREIGN_PROFILER and is kept; SIGALRM Timeout x20 propagates 20/20 on each version; RecursionError at the limit gives PROFILER_LOST; a __del__ calling a target across 39 gc thresholds never deadlocks; a reinstalled hook self-removes after one event; a blind window (hook lost in task A, reinstalled by task B) gives PROFILER_LOST for A; KeyboardInterrupt propagates 5/5; threading.getprofile() is never touched.\n- e5_perf.py (4 versions): 300k non-target calls take 130\u2013191 ms narrow against 150\u2013235 ms current (untraced 10\u201316 ms). 100k hits at depth 30 take 334\u2013464 ms narrow against 113\u2013144 ms current. On a 1M-object heap, a close costs 0.018\u20130.045 ms narrow against 100\u2013122 ms current, and tracer exit 0.01 ms. The exit gc scan when a live generator holds M_T costs 16\u201319 ms. The current implementation REFUSES SHARED_CODE on a target that merely has an import-time clone; the narrow design accepts it and does not credit the clone.\n- e6_self_and_malformed.py: the exam's self-coverage shape (outer tracer declaring the tracer's own functions, inner tracers running fixtures) gives exact outer counts 3/3/3/3/3 and 2/2/2/2/2 with everything restored. A tracer exiting while a section is open on another thread gives OPEN_AT_EXIT for both the early and the late record. This came after I found and fixed a prototype bug that had given the wrong reason (PROFILER_LOST). run after exit gives TRACE_INACTIVE; re-entry gives REENTRY; early record gives TRACE_ACTIVE; an undeclared section gives UNDECLARED_SECTION. Eleven forged or malformed traces refuse with BAD_TRACE, BAD_COUNT, SECTION_UNFINISHED, SECTION_ABSENT or WRONG_TRACER. check_metrics(None/[]/'s'/5) reports without raising.\n- e7_lifecycle.py (3.10/3.11/3.13): non-LIFO tracer exit gives both PASS with code restored and the registry empty; two tracers in two threads on the same target give exact counts; an exception outside sections keeps a valid trace; one unresolvable target means nothing is minted.\n- e8_clone_globals.py: the v5d case rt2_clone_with_other_globals, and exec(T.__code__, {}), give CLONE_CALLED. This was added after I found that pure minting would have credited them \u2014 a regression against the current f_globals check. The same-globals dropped clone passes (the residual).\n- e9_stress.py (4 versions \u00d7 3 runs): 8 threads and 40 tasks with random sections A/B, plus unsectioned noise threads and tasks, give recorded counts equal to expected in every run, 0 cross-credits, and no leftover hooks, anchors or thread entries.",
+   "approx_loc": 300
+  },
+  {
+   "name": "v5e \"lower-bound trace\": one-owner carriers for identity, opener-stack ownership for attribution",
+   "one_paragraph": "Three rounds of patches kept failing because v5 rests on two wrong primitives. For identity (class A), it treats a code object plus frame state (globals, closure cells) as \"the declared function ran\". For attribution (class B), it credits whichever section name a unit inherited. Each patch closed the instance it was shown, and the adversary came back through another door into the same class. v5e replaces both primitives, and every count becomes a lower bound.\n\nIDENTITY. A target is traced through one \"carrier\" function. The compiler must not have marked the carrier's code CO_NESTED, so the only thing that ever instantiates it is a module or class body, and that body finished running before resolution. The carrier must be the only live function holding that code when tracing starts. If the declared object is a wrapper, the carrier must be held only by that wrapper. The first credited call per (target, section) re-checks that the carrier is still the only live holder. That check is exact, because a calling function is alive and visible to the garbage collector during its own call.\n\nATTRIBUTION. Each time a section is entered, a fresh instance is created that remembers the frame of its with-statement (the opener). A call is DIRECT when the opener frame is on the calling stack inside the same coroutine unit and the context variable holds that instance. Everything else is INHERITED: threads, tasks, callbacks, context copies, and concurrent.futures work items (which carry their submitter's section). An INHERITED call counts only while its instance is open and is the only open instance.\n\nMECHANICS. Nothing detected at close can change a verdict, so there is no close-time check to skip or swallow. Hook mishaps only lose calls and are recorded as notes. The hook re-raises every exception except RecursionError and MemoryError. Any thread holding the lock is marked busy, and the hook ignores busy threads, so re-entry cannot deadlock. score() refuses only on a bad declaration, zero credited calls, or a malformed or stale trace.\n\nBREADTH KEPT. Decorated entry points (functools.wraps stacks, lru_cache, contextmanager), thread pools and asyncio inside a section, one executor reused across sequential sections (even when warmed outside them), to_thread, ThreadPool, library daemon threads, two threads each opening a section with the same name, and per-item sections that exit by exception all score. Tested.\n\nWHERE BREADTH COSTS SOUNDNESS, exactly three places:\n- A decorated target is defined as its undecorated body, so a call through `__wrapped__` counts.\n- Inherited credit while only one section is open admits work handed to that section's workers through user queues by code outside every section.\n- Code the runtime injects onto a section's own stack (signal handlers, finalizers) counts for that section.\n\nWHERE SOUNDNESS COSTS BREADTH. While two sections overlap, only each section's own with-block stack counts. Nested-code and multi-route targets cannot be declared.\n\nThe prototype passes 108/108 checks on each of 3.10, 3.11, 3.12 and 3.13, and the P1 retro-case is exact on all four. Eight cases in the frozen v5d exam change their expected outcome under this design, so v5e needs its own frozen prereg and a round-4 red team before any shipping claim.",
+   "target_identity_rule": "RESOLUTION. `module:qualname` is resolved by walking own dicts only:\n- a module's `__dict__`, falling back to the module's PEP 562 `__getattr__` only when the module defines one;\n- a class's own `__dict__`; if an ancestor defines the name instead, refuse INHERITED;\n- an instance's own `__dict__` (e.g. SimpleNamespace, registry objects); a class-provided attribute reached through an instance refuses INSTANCE_PATH.\nstaticmethod and classmethod unwrap to `__func__`. Any exception raised during import, the attribute steps, or the `__wrapped__` walk (loop-detected, at most 64 steps) refuses UNRESOLVED.\n\nCARRIER. Starting from the declared object D, the carrier is the first object on D's `__wrapped__` chain that is a FunctionType whose code lacks CO_NESTED. When D is itself a plain module-level or class-level def, D is its own carrier and nothing is unwrapped. So a `@functools.wraps(_run) def run_fast` is traced as run_fast.\n\nREFUSED AT ENTRY:\n- NESTED_CODE: the chain ends at a nested function, i.e. factory products, closures, decorator wrappers without functools.wraps, dataclass/attrs-generated methods, methods of classes built inside functions.\n- NO_CODE: a non-function with no `__wrapped__` (builtins, partial, property, bound-method aliases, JIT dispatchers).\n- SHARED_CODE: after one gc.collect() and ONE gc.get_referrers(*all_codes) pass, a carrier's code has another live FunctionType holder, or two targets share a carrier (alias).\n- SHARED_ROUTE: D is not the carrier, and some link of the chain has a GC referrer the link above does not hold directly. \"Held directly\" means the wrapper object itself (a C-level wrapper's slots), its own referents (`__dict__`, defaults, closure tuple), or its closure cells. Only frames on the resolving stack are ignored. So module globals, sibling wrappers, registries (even one captured in the closure), suspended generators, and live objects holding the inner function all refuse.\n\nAT CALL TIME. A call matches only by id(frame.f_code) plus an `is` check; equality is never used. The first credited call per (target, section name) runs one gc.get_referrers(code) and is credited only if the carrier is the sole live FunctionType holder. A failed check sends the call to `uncredited.shared_code` and is retried at most once per new section instance.\n\nACCEPTED: plain module functions, module-level lambdas, methods/staticmethods/classmethods of module-level classes (credited when called through subclasses too, because the object is the defining class's), functools.wraps stacks, lru_cache, contextmanager, a class-based update_wrapper decorator that is the sole wrapper, own-dict namespace paths.\n\nWHY THE CLASS CANNOT REOPEN:\n1. The compiler sets CO_NESTED on exactly the code objects that are re-instantiated each time an enclosing function runs; the 20-row table matched on 3.10\u20133.13. An accepted carrier is therefore instantiated only by its module or class body, which has already finished.\n2. Any other function running that code must come from explicit metaprogramming (FunctionType(...), `__code__` assignment). Such a function is alive and GC-visible during its own call, so the call-time holder check sees it. Defaults, closures, kwdefaults and globals are never consulted, so there is no per-function state for an impostor to match.\n3. For wrappers, every route to the carrier either existed at entry (and was refused unless the wrapper owns it) or was taken from the declared wrapper itself (`__wrapped__`, its closure), which is calling its body.\nThe only remaining door is execution with no function object at all, which exists only on 3.9/3.10 (see stated limits).",
+   "attribution_rule": "SECTION INSTANCES. Each section entry creates a fresh instance {name, serial, opener, open}. The opener is the frame whose with-statement entered the section, skipping contextlib frames and the generators contextlib drives (ExitStack, a user @contextmanager wrapper).\n\nATTRIBUTION, computed once per watched call:\n1. Walk frame.f_back from the call.\n   - If an open instance's opener frame is reached AND the tracer's ContextVar holds that same instance, the call is DIRECT.\n   - If a `concurrent.futures._WorkItem.run` frame is reached first, the call takes the section that item recorded, as INHERITED.\n   - The walk stops at a unit boundary: a coroutine frame whose f_back is not a coroutine frame, meaning a task base or a manual driver.\n2. Otherwise, if the ContextVar holds an instance (tasks, callbacks, copied contexts), INHERITED.\n3. Otherwise, the section recorded at Thread.start for the current thread, INHERITED.\n4. Otherwise, unsectioned.\nThread.start and `_WorkItem.__init__` record the attribution of the stack that calls them, keeping the instance but always as INHERITED. Work items are INHERITED rather than DIRECT because a long-running item (a queue consumer) can execute another section's jobs. My first draft made items DIRECT; I built that exact attack and it passed, and making items INHERITED closed it.\n\nCREDIT RULE. A call is credited iff, at call time, its instance is open AND (the call is DIRECT OR that instance is the only open instance in the tracer). Otherwise it goes to the after_close, ambiguous or unsectioned bucket, and those buckets count for nothing.\n\nWHY THE CLASS CANNOT REOPEN. Every mechanism that moves work off the opener's own stack is non-DIRECT by construction, including mechanisms nobody has named yet. That covers threads, grandchildren, pools, asyncio tasks, call_soon/call_later handles, copy_context().run, run_coroutine_threadsafe onto a loop running inside the section, executor items, and library daemons. DIRECT requires two things: the opener frame on the current stack within the current coroutine unit, and the section's own context. A non-DIRECT call is credited only under exclusivity, evaluated at call time against the tracer's global set of open instances. An instance never reopens: a later section with the same name is a new instance. Closing an instance happens in `__exit__`, which runs on every exit path.\n\nSo three things cannot happen, whatever created the descendant:\n- a descendant of A credits A (or B) while both A and B are open;\n- a descendant of a closed A credits a later A or B;\n- a unit descended from no section credits the open section.\nEvery class-B door from the three rounds is an instance of one of these.\n\nWHAT DIRECT DOES ADMIT. Anything executing on the with-block's own stack in its own context. That is the definition of \"inside the section\", and it is why hand-offs through user queues and runtime-injected calls are stated limits rather than doors.\n\nBREADTH PRICE. While two or more instances are open, work in a thread, task, item or callback counts for neither. Sequential sections keep every pool, task and executor shape.",
+   "mechanism": "OBSERVATION. The tracer uses sys.setprofile in the entering thread and threading.setprofile for threads started afterwards. Each installed hook is a `_Hook` chained to any Python-level profiler already present. A non-Python profiler in either slot refuses FOREIGN_PROFILER before any slot is written, and a C profiler present at entry is left installed. On 3.12+ cProfile uses sys.monitoring and simply coexists with the tracer.\n\nHOT PATH. Only 'call' events are processed. Each one costs a single dict lookup of id(frame.f_code) in a watch table holding the carriers, Thread.start and `_WorkItem.__init__`. One code object can carry several handlers, which is why declaring `threading:Thread.start` now works. Handlers run only on a hit, and only if the current thread is not in the tracer's busy set.\n- The busy set covers the hook body, section bookkeeping and record(), so finalizers, signal handlers and the hook's own allocations never re-enter.\n- The lock is taken only for small commits, and only by busy threads; heap scans run outside the lock.\n- The hook catches only RecursionError and MemoryError, records a note, and stays installed. Every other BaseException is noted and re-raised; CPython then drops the chain, which loses calls but fails closed.\n- The stack walk runs only on hits: about 2\u20133 \u00b5s per target call against 1.2\u20131.5 \u00b5s today. Non-target profiled calls cost the same as today (fib(22): 28 ms vs 31 ms).\n\nTRACER LIFECYCLE.\n- `__enter__` refuses REENTRY and FOREIGN_PROFILER.\n- `__exit__` never raises. It restores a slot only if that slot holds its own hook or is empty, and when empty it restores the pre-entry profiler (so Ctrl-C no longer loses a chained user profiler). Every restore skips exited hooks. It marks the tracer exited; exited hooks become inert and remove themselves from whichever thread next calls them. Unclosed sections are recorded as notes.\n\nSECTION LIFECYCLE. Sections are class-based context managers.\n- `__enter__` refuses UNDECLARED_SECTION, TRACER_INACTIVE and NESTED_SECTION (an open instance in the ContextVar, or a DIRECT open instance on the stack), then creates the instance and sets the ContextVar.\n- `__exit__` never raises. It sets the instance's `open` flag to False, resets the ContextVar (a ValueError becomes a note), and records a note if the hook is no longer installed.\n\nCOST. One gc.collect() and one gc.get_referrers(*codes) pass at entry, plus route checks for wrapped targets. After that, at most one heap pass per (target, section name), and none at close.\n\nRECORD. Tracer id `styxx.protocol.coverage_trace/2`; gates sha256; targets; `sections` as {name: {target: credited count}}; `uncredited` as {after_close, ambiguous, shared_code, unsectioned}; notes; `complete` (informational only).\n\nSCORE. score() validates the whole trace shape in one pass before reading any of it. It then checks, in order: WRONG_TRACER, BAD_TRACE, STALE_TRACE, TARGET_SET, SECTION_ABSENT, BAD_COUNT, NOT_EXERCISED. The NOT_EXERCISED message lists that section's uncredited calls and the notes.",
+   "machinery_removed": [
+    "Frame identity (_identity: f_globals is __globals__ and each free variable is the closure's object, read through f_locals) and the impostors bucket",
+    "The _sharing_problem re-check, and the gc.collect() before it, at every section close",
+    "_wrappers_of (the two-hop __wrapped__ referrer search) and unconditional inspect.unwrap of every declared object",
+    "THREAD_OUTLIVES and the name-keyed _thread_section map",
+    "The special rule 'thread-inherited attribution counts only if exactly one section is open', applied to threads only; replaced by one uniform rule for all non-DIRECT work",
+    "The name-keyed _open counter; sections are instances now",
+    "Every close-time refusal and the _close_refusals list: SECTION_CONTEXT, THREAD_OUTLIVES, HOOK_FAILED, PROFILER_REPLACED and SHARED_CODE-at-close all become notes or disappear",
+    "The EXIT_ORDER raise at tracer exit (now a note)",
+    "`except Exception` in the hook, which swallowed signal-handler exceptions",
+    "The contextmanager-generator implementation of section()",
+    "The sticky _hook_failed flag"
+   ],
+   "machinery_added": [
+    "Carrier selection: the first non-CO_NESTED FunctionType on the declared object's __wrapped__ chain, starting with the object itself (new code NESTED_CODE)",
+    "A direct-ownership route check at entry for wrapped targets: each inner link's gc referrers must be the wrapper, its own referents, or its closure cells; only frames on the resolving stack are ignored (new code SHARED_ROUTE)",
+    "A single heap pass for all targets at entry: gc.get_referrers(*codes), after one gc.collect()",
+    "Holder verification at the first credited call per (target, section name), with a shared_code bucket and at most one retry per new section instance",
+    "Section instances (_SI) carrying their opener frame; a class-based _Section whose opener selection understands contextlib",
+    "The attribution walk: opener on the stack within the coroutine unit, plus ContextVar agreement, gives DIRECT; otherwise the ContextVar, the Thread.start map or the work item gives INHERITED; exclusivity is evaluated at call time",
+    "concurrent.futures provenance: a _WorkItem.__init__ hook plus recognition of _WorkItem.run frames during the walk, stored as a weakref-keyed table with periodic sweeping",
+    "A per-thread busy set covering the hook body, section bookkeeping and record(); the lock is held only by busy threads",
+    "Hook exception policy: swallow and note RecursionError/MemoryError, note and re-raise everything else",
+    "Restore-on-empty-slot at tracer exit",
+    "A watch table that allows several handlers per code object",
+    "A strict single-pass trace validator; tracer id /2; notes and uncredited buckets in record()",
+    "Own-instance-dict steps and the PEP 562 fallback in resolution"
+   ],
+   "finding_closure": [
+    {
+     "id": "R1-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A carrier must have non-CO_NESTED code: factory closures (check_low/check_high) and no-wraps wrappers (entry_a) refuse NESTED_CODE at entry (tested). It must be the sole live holder at entry (SHARED_CODE), and the first credited call re-verifies sole holdership. No other door: any function running the code is alive and visible to the garbage collector during its own call, so a second holder is seen at the verified moment. Execution with no function object at all exists only on 3.9/3.10 and is a stated limit; on 3.11+ both variants are refused (tested)."
+    },
+    {
+     "id": "R1-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The watch table is keyed by id(code), with an `is` check against the carrier's own code; equality is never consulted. A vendored equal-code copy and an exec'd copy of the whole module both refuse NOT_EXERCISED. A dataclass-generated __init__ is nested code and refuses NESTED_CODE (all tested on 3.10\u20133.13)."
+    },
+    {
+     "id": "R1-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Section values are fresh instances, credit requires the instance to be open, and non-DIRECT credit requires it to be the only open instance. All of these refuse NOT_EXERCISED (tested): a thread from A calling during B, a background thread started outside sections, a task created in A awaited in B, call_later from A firing in B, copy_context() from A run in B, and a grandchild thread started after A closed. Every hand-off path is non-DIRECT by construction; see attribution_rule."
+    },
+    {
+     "id": "R1-B4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A non-Python profiler in either slot refuses FOREIGN_PROFILER before anything is written, and the C profiler is still installed afterwards (tested). The tracer only chains Python-level profilers, and exit only restores slots holding its own hook or empty slots, restoring a pre-entry profiler that was checked at entry. On 3.12+ cProfile runs on sys.monitoring and coexists with the tracer (tested)."
+    },
+    {
+     "id": "R1-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Exited hooks are inert and remove themselves; every restore skips exited hooks; entering an active or exited tracer refuses REENTRY. An out-of-order exit is only a note, and both traces still score correctly (tested); no leaked profiler appeared in any of the 432 checks."
+    },
+    {
+     "id": "R1-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Import, attribute steps and the bounded, cycle-detected __wrapped__ walk sit inside one refusal boundary, so anything raised becomes UNRESOLVED. Tested: RuntimeError at import, SyntaxError, and a __wrapped__ loop through non-functions. A self-wrapped module function (`f.__wrapped__ = f`) no longer loops, because the walk stops at the first non-nested function."
+    },
+    {
+     "id": "R1-D3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "score() validates the whole trace shape in one pass before reading anything: keys at all levels, dict-valued sections, uncredited buckets and notes. 14 malformed traces refuse with their named code, and check_metrics on None, [], \"s\" and 5 reports instead of raising: 18/18 on every version."
+    },
+    {
+     "id": "R1-D4",
+     "status": "DISCLOSED_LIMIT",
+     "how": "Several of round 1's over-blocks are gone: two threads each in their own section now score direct calls, and cProfile coexists on 3.12+. What remains is listed in over_blocking_costs: threads that predate the trace, _thread-started threads, and a profiler replaced inside a section on 3.9\u20133.11 (which blinds that thread)."
+    },
+    {
+     "id": "R1-N2",
+     "status": "CLOSED_BY_PATCH",
+     "how": "Carried over: a class step requires the class's own __dict__ (INHERITED), and targets are matched with a full-string regex (a trailing newline refuses DECL; tested). Instance steps now require the instance's own __dict__."
+    },
+    {
+     "id": "R2-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A target decorated without functools.wraps is nested code and cannot be declared at all (NESTED_CODE; tested with score_all). A function created at runtime from a carrier's code, whether a FunctionType clone or a `__code__` swap, is a second live holder at its own call and is never credited (both tested, NOT_EXERCISED with shared_code recorded). The argument is the same as for R1-B1; no per-function state is ever consulted."
+    },
+    {
+     "id": "R2-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Pool workers are INHERITED units, and executor work items carry their submitter's section, also as INHERITED. Any inherited call while two instances are open is ambiguous. Tested: A's executor running B's job, A's raw queue-worker thread, and A's long-running consumer work item (a door in my own first draft, closed by making items INHERITED). All refuse for A, with the call recorded as ambiguous or credited to B's own submission."
+    },
+    {
+     "id": "R2-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Keeps v5d's self-removing inert hook. A worker started during the trace reports sys.getprofile() as None after its first event following exit (tested on 3.10\u20133.13)."
+    },
+    {
+     "id": "R2-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A step through an instance accepts only that instance's own __dict__, so default_model.fit, which comes from the class, refuses INSTANCE_PATH (tested). SimpleNamespace and registry namespaces are accepted (tested)."
+    },
+    {
+     "id": "R2-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "When the declared object has its own non-nested code it is its own carrier and nothing is unwrapped: run_fast is traced as itself, so calling run_safe_w refuses NOT_EXERCISED (tested). Real wrappers unwrap only when the inner function is held directly by the wrapper; otherwise SHARED_ROUTE."
+    },
+    {
+     "id": "R2-D3",
+     "status": "DISCLOSED_LIMIT",
+     "how": "Sequential shapes now score (tested): an executor warmed outside sections and reused by two sections, to_thread and run_in_executor(None) in sequence, multiprocessing ThreadPool with terminate-without-join, and library daemon threads. Still refused and disclosed (tested): concurrent sections sharing one executor, to_thread under concurrent async gates, executors whose workers predate the tracer, and workers of a multiprocessing ThreadPool created outside any section."
+    },
+    {
+     "id": "R2-D4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Counts are lower bounds and no refusal code depends on hook health. The hook swallows only RecursionError/MemoryError, its own synchronous failures, and records a note. A RecursionError CPython raises while entering the hook drops it, which only loses calls and is noted at close. A6a (RecursionError caught inside a section) scores with notes and leaves the profiler clean (tested)."
+    },
+    {
+     "id": "R2-D5",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The tracer's __exit__ runs on every with-exit, including exception exits, and resets the threading slot if it holds this tracer's hook; inert hooks remove themselves. After an exception exit, both the sys and threading slots are None (tested)."
+    },
+    {
+     "id": "R2-D6",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "A ValueError from ContextVar.reset is caught and recorded as a note. The instance is closed regardless, because credit is keyed on instance.open, and a closed instance left in a context never blocks a later section (tested: G entered and exited in different tasks, then H opens fine). check_metrics on a non-dict reports (tested)."
+    },
+    {
+     "id": "R3-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Factory products (`lambda x, k=k`, or one closure with different defaults) have CO_NESTED code and refuse NESTED_CODE at entry (P1 and P2 tested). No other door: the design never identifies a function through per-function state (defaults, cells, globals). It requires a code object instantiated by exactly one function, and verifies that at the credited call."
+    },
+    {
+     "id": "R3-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The stack walk stops at a task base (a coroutine driven by a non-coroutine), and DIRECT also requires the ContextVar to hold the instance. So tasks, handles and foreign coroutines, even on a loop running inside A's with-block, are INHERITED and ambiguous while B is open. Tested: t12's lazily started worker tasks, run_coroutine_threadsafe from B, and call_soon_threadsafe from B onto a loop inside A all refuse for A."
+    },
+    {
+     "id": "R3-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The hook re-raises every BaseException except RecursionError/MemoryError. CPython drops the chain (fail-closed, noted), and exit restores the pre-entry profiler when the slot is empty. A SIGALRM Timeout was delivered 20/20 on each of 3.10\u20133.13. Ctrl-C with a chained user profiler: the interrupt reached the harness and the profiler was restored 10/10 (8/10 in my first draft, fixed by restoring whenever the slot is empty)."
+    },
+    {
+     "id": "R3-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "T01a (a plain caller of the inner) refuses NOT_EXERCISED because run_fast is its own carrier. T01b (class-based update_wrapper siblings) refuses SHARED_ROUTE. T01c (a per-call wraps sibling) refuses NOT_EXERCISED. T01d (an undecorated target with two wraps aliases) now scores, and so does a call through an alias (transitive). The ownership test is direct, so a registry captured in the wrapper's closure and a suspended generator holding the inner function both refuse SHARED_ROUTE. The generator case appears as a frame referrer on 3.10, which was a second door in my own draft, closed by skipping only frames on the current stack."
+    },
+    {
+     "id": "R3-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There are no close-time checks. Closing an instance only flips instance.open, inside __exit__, which runs on every exit path. Every condition that could over-credit is decided per call at call time, and mishaps only lose calls, so no refusal exists that an exception exit could skip or a try/except could swallow. T02a\u2013d refuse NOT_EXERCISED: clones are never verified, and a straggler thread's call lands in after_close for its own instance. Per-item sections that exit by exception still score (all tested)."
+    },
+    {
+     "id": "R3-D3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Invariant: every thread holding the tracer lock is in the busy set, and the hook ignores busy threads; heap scans run outside the lock. A sweep of GC thresholds 1\u201325 at three sites (record, section, hook) found 0 hangs on each of 3.10\u20133.13. A mutant whose record() holds the lock without the busy mark hangs at k=10, 11 and 12, so the sweep does detect the defect."
+    },
+    {
+     "id": "R3-D4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There is no gc work at close. The whole cost is one gc.collect() plus one gc.get_referrers(*codes) pass at entry, and at most one pass per (target, section name) at the first credited call. Measured per section (open, 5 target calls, close), amortised over 200 sections: 0.10 / 0.17 / 0.30 ms at 0.1M / 1M / 3M heap objects, against 30 / 71 ms for the current implementation at 0.1M / 1M. Construction takes 26\u2013106 ms."
+    },
+    {
+     "id": "R3-D5",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "THREAD_OUTLIVES is removed: a descendant that outlives its instance credits nobody (after_close). A never-joined daemon thread started in a section scores (tested). multiprocessing ThreadPool terminate-without-join also scores."
+    },
+    {
+     "id": "R3-D6",
+     "status": "DISCLOSED_LIMIT",
+     "how": "Same section name in two shards is closed structurally: they are two instances, and A6b scores {f: 2} (tested). singledispatch entry points still over-block, now disclosed and explained: they refuse SHARED_ROUTE at entry because the dispatch registry is a second route to the base function, and registered implementations would not count anyway. The author must declare the registered implementations under their own names (tested)."
+    },
+    {
+     "id": "R3-nits",
+     "status": "CLOSED_BY_PATCH",
+     "how": "SimpleNamespace and registry own-dict steps are accepted (tested). PEP 562 module __getattr__ is used when the name is absent from the module dict (tested). Hook failures are notes, never sticky refusals. The profiler is restored when the slot is empty (Ctrl-C 10/10). f_locals is gone from the hot path because frame identity is removed; it is read only at Thread.start, at _WorkItem.__init__, and when the walk passes a work-item frame. A closure clone with identical cell contents is now a second live holder and is not credited."
+    }
+   ],
+   "p1_retro": "The committed P1 harness was run UNMODIFIED: run_p1.degenerate(np.random.default_rng(SEED)) against styxx/power_QUARANTINED.py.txt loaded as styxx.power, inside section G4_refuses_degenerate, with P1's G4 rewritten to declare effective_n, order_stat_bar, false_positive_rate, min_detectable_bar and reachable.\n\n- All five targets resolve to their own module-level carriers, with no NESTED_CODE or SHARED_ROUTE.\n- The trace's sections are exactly {'G4_refuses_degenerate': {'styxx.power:reachable': 12}}. Every uncredited bucket is empty, there are no notes, and one heap scan ran.\n- score() refuses [V5:NOT_EXERCISED], naming exactly ['styxx.power:effective_n', 'styxx.power:order_stat_bar', 'styxx.power:false_positive_rate', 'styxx.power:min_detectable_bar'].\n- The result is identical on 3.10, 3.11, 3.12 and 3.13 (e2_retro.py).\n\nAll 12 calls are DIRECT, because the frame holding the with-statement in the retro function is on the stack. The outcome therefore does not depend on the exclusivity rule or on any heuristic. The refusal names exactly the four unexercised functions.",
+   "over_blocking_costs": [
+    "NESTED_CODE: targets whose code the compiler marks nested cannot be declared. This covers factory products and closures (double = make_mul(2)), entry points decorated without functools.wraps, methods of classes defined inside functions, generated methods (dataclass/attrs __init__, __eq__), and module functions returned by builder functions. The author must declare the module-level function those call.",
+    "SHARED_ROUTE: a decorated target whose inner function is reachable other than through its wrapper refuses. Examples: singledispatch entry points, entry = deco(raw) with raw still bound in the module, two wrappers of one function, a registry holding the inner function, or any live object holding it at entry (e.g. a pending contextmanager instance).",
+    "SHARED_CODE at entry: several live functions from one module-level def (lambdas made in a module-level loop), or two declared names for one function.",
+    "NO_CODE / INSTANCE_PATH / INHERITED: bound-method aliases (run = _default.run), functools.partial, property and cached_property, C and JIT callables (numba and similar never run their Python code), attributes a class provides through an instance, and inherited methods.",
+    "The overlap rule, which is the main breadth cost: while two or more section instances are open anywhere in the tracer, only calls on each section's own with-block stack count. Threads, asyncio child tasks (gather), executor items, to_thread/run_in_executor and callbacks in overlapping sections count for neither, which refuses NOT_EXERCISED (tested). This also affects sections opened in fixtures or wrapped in async context managers while running concurrently.",
+    "Workers reused across sections: raw threads, asyncio tasks and multiprocessing.pool.ThreadPool workers started in one section credit nobody in the next section. concurrent.futures executors are the exception, because their work items carry the submitter's section.",
+    "Invisible threads: threads that predate the tracer, including an executor warmed at import time (tested), threads started via _thread.start_new_thread, and workers of a multiprocessing ThreadPool created outside every section (unsectioned).",
+    "Profilers: on 3.9\u20133.11, a C profiler present at entry refuses FOREIGN_PROFILER, and one started inside a section blinds that thread; calls made under it are not counted (tested). 3.12+ coexists with cProfile.",
+    "Calls made only from inside profiler or trace callbacks (another tracer's hook, a user's profile function) are invisible. lru_cache hits do not execute the target and are not counted.",
+    "Child processes are invisible (carried from earlier rounds).",
+    "NESTED_SECTION: sections cannot nest on one stack, or in a task created inside an open section. A thread started inside a section may open its own section (sharding).",
+    "Committed v5-family results carry tracer/1 traces, which refuse WRONG_TRACER under v5e. This is intended, because those counts were attributed under rules now known to be unsound. Their committed verdicts stand as history, and the differential excludes them, as v5d already did."
+   ],
+   "stated_limits": [
+    "Exercised is not tested: one credited call on one input satisfies a declaration (carried).",
+    "Transitive calls count. For a decorated target, the target IS its undecorated body, so a call obtained from the wrapper (entry.__wrapped__(x), inspect.unwrap, its closure) counts as the declared entry point, even though the decorator's own code did not run.",
+    "Attribution certifies WHERE a call executed (the with-block's own stack in its own context, or a descendant unit while its section was the only one open), not WHO asked for it. Work handed in through user data structures counts for the section that executes it. Two cases: the with-block drains a queue fed by others; or, while it is the only open section, code outside every section feeds that section's workers (tested: scores).",
+    "Code the runtime injects onto a section's own stack counts for that section: signal handlers, cyclic-GC finalizers, weakref callbacks and audit hooks. This holds even for an object belonging to a concurrently open section (tested: scores). A gc.callbacks start/stop flag could exclude cyclic-GC finalizers; I did not adopt it, to keep the invariant set small.",
+    "3.9/3.10 only: running a declared function's bare code object (exec(f.__code__)), or resuming a generator whose cloned function was freed before its first next(), is credited as the declared function (tested on 3.10). On 3.11+ the interpreter keeps a function object alive, and both are refused as shared (tested).",
+    "Schedulers that use neither coroutines nor contextvars (generator trampolines, greenlets) are treated as part of the section's own stack when run inside a with-block. greenlet, gevent and trio are untested.",
+    "The trace is written by the runner. Forgery is the accepted residual: hand-edited counts, rewritten co_flags or code objects, and C-level references hidden from the garbage collector.",
+    "Declared only: gates without 'exercises' get no check. G3's hardcoded-baseline defect is out of scope (carried).",
+    "Counts are lower bounds. Hook, profiler and context mishaps are recorded as notes and never refuse by themselves. A tracer blinded by the harness's own profiler reads as unexercised, not as an error.",
+    "Python 3.9 and free-threaded 3.13t were not executed.",
+    "Process: the frozen v5d exam cannot score v5e, because 8 of its violation cases change expected outcome. rt_factory_closure_sibling, rt_nowraps_decorator_sibling and rt2_runtime_nowraps_kept_alive become NESTED_CODE. rt2_wraps_siblings_share_inner becomes NOT_EXERCISED. rt_thread_outlives_section, rt_cprofile_inside_section, rt_out_of_order_exit and rt2_section_exited_in_other_context become notes with a count-determined outcome. v5e needs its own prereg with a frozen exam, and a round-4 red team, before any shipping claim."
+   ],
+   "reason_codes": [
+    "DECL: the 'exercises' declaration is malformed (carried)",
+    "SECTION_DECL: the 'section' declaration is malformed (carried)",
+    "NOTHING_DECLARED: no gate in the prereg declares 'exercises' (carried)",
+    "UNRESOLVED: anything raised during import, attribute steps or the __wrapped__ walk, including loops",
+    "INHERITED: the qualname names an attribute that an ancestor class defines",
+    "INSTANCE_PATH: an instance step reaches an attribute outside that instance's own __dict__",
+    "NO_CODE: a non-function with no __wrapped__",
+    "NESTED_CODE (new): the carrier's code is compiled CO_NESTED, i.e. re-instantiated each time an enclosing function runs",
+    "SHARED_CODE (entry only now): the carrier's code has another live holder, or two targets share a carrier",
+    "SHARED_ROUTE (new): a wrapper's inner function is reachable other than through the wrapper",
+    "FOREIGN_PROFILER: a non-Python profiler is installed at entry (effectively 3.9\u20133.11 only)",
+    "REENTRY: the tracer is already active or has exited",
+    "UNDECLARED_SECTION: the section name is not declared by any gate",
+    "NESTED_SECTION: a section is opened inside an open section on the same stack or context",
+    "TRACER_INACTIVE (new): a section is opened outside its tracer's with-block",
+    "NO_TRACE",
+    "WRONG_TRACER: includes every tracer/1 trace",
+    "BAD_TRACE: shape validation failed",
+    "STALE_TRACE",
+    "TARGET_SET",
+    "SECTION_ABSENT",
+    "BAD_COUNT",
+    "NOT_EXERCISED: the message lists that section's uncredited calls and the notes",
+    "Removed as refusals (now notes only): THREAD_OUTLIVES (deleted), PROFILER_REPLACED, PROFILER_DROPPED, HOOK_FAILED, HOOK_ABORTED, EXIT_ORDER, SECTION_CONTEXT, SECTION_UNCLOSED",
+    "Uncredited buckets (never counted): after_close, ambiguous, shared_code, unsectioned"
+   ],
+   "python_versions": "Tested on 3.10.20, 3.11.15, 3.12.3 and 3.13.12. Every battery gives identical results, 108/108 checks per version, apart from intended version differences:\n\n1. On 3.12+, cProfile is built on sys.monitoring, not setprofile. There is no FOREIGN_PROFILER refusal, and cProfile started inside a section does not blind the tracer; on 3.10/3.11 both behave as disclosed.\n2. On 3.10 only, exec() of a bare code object and a generator from a dead clone are credited, because 3.11+ interpreter frames keep a function object alive. This is a stated limit.\n3. A suspended generator holding a wrapped target's inner function shows up as a frame referrer on 3.10 and as a generator object on 3.11+; both refuse SHARED_ROUTE after the fix.\n\nCO_NESTED semantics are identical across 3.10\u20133.13 over 20 shapes (e1_conested.py). f_back skips C frames on every version, so the opener walk and the task-boundary rule behave the same. concurrent.futures._WorkItem.__init__ and run exist in 3.9\u20133.13 but not in 3.14's redesigned executor, so 3.14 would need re-validation.\n\n3.9 was not run (no interpreter available). The design uses threading._profile_hook when threading.getprofile is missing, and has the same frame and generator model as 3.10, so 3.10 behaviour is expected. Free-threaded 3.13t is untested.",
+   "experiments_run": "All scripts are under /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/design/rootcause/. The prototype is v5e.py (it monkeypatches Experiment._check_coverage in the scratch process only; styxx is untouched). run_all.sh runs every battery on every version, with outputs in out_py3.1x.txt: 108 ok, 0 FAIL, 0 escapes or leaked profilers per version.\n\n1. e1_conested.py: CO_NESTED over 20 shapes on 3.10\u20133.13. Module defs, lambdas, methods, nested-class methods, the inner of a wraps wrapper, the lru_cache inner and namedtuple __new__ are not nested. Nested defs, factory lambdas, class-in-function methods, wraps wrappers, singledispatch and contextmanager helpers, and dataclass __init__ are nested.\n2. e2_retro.py: P1 retro exact on all four versions, {reachable: 12}, exactly the other four missing.\n3. e3_classA.py: 38/38 on each version.\n   - Refused as designed: R1-B1a/b, R1-B2a/b/c, R2-B1a/c/d, R2-D1, R1-N2, R2-D2, R3-B1 P1/P2, T01a/b/c, T02a/b, alias targets, raw also bound in the module, a registry in the closure, a suspended generator holding the inner function, a bound-method alias, a builtin, an unresolvable target, and singledispatch (SHARED_ROUTE).\n   - Scored: T01d and a call through its alias, a wraps decorator, a __wrapped__ call, stacked decorators, lru_cache (1 miss in 2 calls), contextmanager (2 resumes), static and class methods, a defining-class method called via a subclass, a module lambda, SimpleNamespace, PEP 562.\n4. e4_classB.py: 36/36 on each version, 5 repeat runs each (20/20 runs clean).\n   - Refused for the right gate: R1-B3a/b/c, R2-B2 (executor and raw queue worker), R3-B2 (t12), T02d, the R06 late call, call_later, copy_context, B's task and B's callback on a loop inside A, a grandchild after close, a call after close, an R2-D6 context mismatch, and the probe of concurrent sections whose target runs only in a child task.\n   - Scored: thread, grandchild, executor, executor warmed outside and reused across sections, asyncio.run with gather, concurrent async gates with direct awaits, to_thread in sequence, parallel threads, A6b shards, a daemon thread, a multiprocessing ThreadPool, ExitStack, a user @contextmanager wrapper under concurrency, a yield fixture, nested tracers, a shared section, and per-item sections exiting by exception.\n5. e4b_itemdoor.py: my first draft's DIRECT work items let A's long-running consumer item be credited with B's job (SCORED PASS, a real door). With items INHERITED it refuses on all versions.\n6. e5_hook.py: 9/9 per version. FOREIGN_PROFILER keeps the C profiler (3.10/3.11; 3.12+ coexists); cProfile inside a section; non-LIFO exit; REENTRY; worker hook released; RecursionError at the limit scores with notes; exception exit leaves both slots None. SIGALRM Timeout delivered 20/20. Ctrl-C with a chained profiler: delivered and restored 10/10, versus 8/10 before restore-on-empty.\n7. e7_finalizer.py: GC thresholds 1\u201325 \u00d7 3 sites \u00d7 4 versions, 0 hangs. The e7_mutant.py mutant (record() holding the lock without the busy mark) hangs at k=10, 11, 12.\n8. e6_cost.py, per section with 5 targets: 0.10 / 0.17 / 0.30 ms at 0.1M / 1M / 3M heap objects, against 30 / 71 ms for the current implementation at 0.1M / 1M. Build takes 26\u2013106 ms (old: 82\u2013162 ms). e6b_hot.py: fib(22) 28 ms vs 31 ms old vs 2.2 ms untraced; a target call costs 2.0\u20132.8 \u00b5s against 1.2\u20131.5 \u00b5s old.\n9. e8_residuals.py measures the stated limits. exec(code) and a dead-clone generator are credited on 3.10 and refused on 3.11+. An unsectioned producer feeding G's worker, a finalizer of B's object on A's stack, and a signal handler all score. 18/18 malformed traces and check_metrics(None/[]/'s'/5) refuse or report.\n10. e9_prewarm.py: an executor warmed before tracer entry refuses NOT_EXERCISED (disclosed over-block).\n11. e10_misc.py: 6/6. RuntimeError and SyntaxError at import give UNRESOLVED; a self-wrapped function scores; a __wrapped__ loop gives UNRESOLVED; a declared threading:Thread.start scores; a trailing newline gives DECL.\n12. v5d frozen exam cases whose expected code changes: grep of run_protocol_v5d.py found 8.",
+   "approx_loc": 460
+  },
+  {
+   "name": "v5m: private replica + live stack",
+   "one_paragraph": "A profiler is a reasonable primitive; the mistake was what it was asked to identify. Python shares code objects by design, so \"this code object ran\" can never mean \"this function ran\". Under v5m, the code object being observed is made private. At trace entry each declared function object F gets F.__code__ = F.__code__.replace(): an equal but distinct code object that nothing else holds, restored at exit. A start of that replica is a call of F through any reference, including P1's from-import alias. Nothing that shares the original code ever runs it: factory products, closures, wraps and no-wraps siblings, class wrappers, vendored or exec'd copies, pre-trace clones. Attribution drops all inherited state (ContextVar, thread-start lineage, ambiguity rules). A start counts for section-opening O only if O's marker frame is on the executing thread's live f_back chain before any asyncio dispatch frame, and O is still open. The marker is either the frame running O's `with` statement or a frame the author explicitly bound to O with cov.carry(). Observation uses sys.monitoring local PY_START events on the replicas only (3.12+), or a per-thread setprofile hook that exists only while that thread holds a marker (3.9\u20133.11). The observer takes no lock and re-raises everything. It never refuses: every problem goes into the record, and score() reads it there. The result is that every round-1 to round-3 blocker is closed by construction, and a scratch prototype passes all of them on 3.10\u20133.13. The P1 retro is exact with run_p1.py unmodified. The price is stated plainly: work on other threads, pools or asyncio tasks counts only when carried, and non-function targets (lru_cache, partial, callable instances) cannot be declared. The one residual attribution door is another gate's work that the section's own with-block runs synchronously.",
+   "target_identity_rule": "ACCEPTED: the object bound at \"module:qualname\" when the trace is entered, provided it is a types.FunctionType. Resolution rules:\n- Module steps use inspect.getattr_static. They fall back to getattr only when the module defines a PEP 562 __getattr__.\n- Class steps go only through that class's own __dict__.\n- Non-module, non-class steps go only through that object's own instance __dict__. This allows SimpleNamespace and registry slots.\n- staticmethod and classmethod resolve to __func__.\n- NOTHING IS UNWRAPPED: no inspect.unwrap and no __wrapped__. A @functools.wraps wrapper is declared as itself, so only calls through that wrapper count.\n- Aliases (two declared names bound to one function) are accepted. It is one object with one replica, so one call credits both names.\n- A singledispatch function resolves to its dispatch wrapper function and counts when dispatched through.\n\nREFUSED at trace entry, before any work runs:\n- [V5:DECL]: malformed or non-ASCII strings, including a trailing newline.\n- [V5:UNRESOLVED]: any exception while importing or getting attributes.\n- [V5:INHERITED]: a class step naming an attribute that is only inherited.\n- [V5:INSTANCE_PATH]: an attribute reached through an instance but found on its class, e.g. default_model.fit.\n- [V5:NO_CODE]: anything that is not a FunctionType. That includes builtins, C wrappers such as lru_cache and cache, functools.partial, callable instances (including class-based update_wrapper wrappers), property, singledispatchmethod, bound methods, and Cython or numba functions.\n\nWHY THE CLASS CANNOT REOPEN. The credit predicate is `frame.f_code is replica(F)`: an id-keyed lookup followed by `is`, so equality is never consulted. replica(F) is created by the tracer, and user code can reach it only as F.__code__. A frame can therefore run it only if:\n- (i) F itself was called, through any reference: a module attribute, a from-import alias, a closure cell, a registry dict, a partial, a bound method or super(); or\n- (ii) code read F.__code__ during the trace and built, assigned or exec'd another function with it.\n\nEvery sharing mechanism in rounds 1\u20133 shares the ORIGINAL code, which is never observed. That covers closures, factory products and defaults, no-wraps decorators (including runtime decoration), wraps siblings, per-call siblings, class wrappers, dataclass-generated __init__, vendored or exec'd module copies, and clones made before the trace. None of them can produce a credit. Case (ii) needs a deliberate code-level clone made inside the trace. It is detected as [V5:CODE_CLONED] if the clone is still alive at trace exit (one gc.get_referrers pass), and is a stated residual otherwise. No holder counting, wrapper scanning or frame globals/closure matching remains to be fooled.",
+   "attribution_rule": "WHICH CALLS COUNT. At every start of a replica, walk frame.f_back from the target's frame, stopping at the first of two boundaries:\n- a frame whose code is asyncio.events.Handle._run (an event-loop dispatch; the call is bucketed 'dispatched' and credited nowhere); or\n- the bottom of the thread (bucketed 'unattributed').\n\nFor each tracer observing the target, the FIRST marker of that tracer met on the way decides. There are two kinds of marker:\n- (a) The frame executing a `with cov.section(name):` statement. It is registered at __enter__ and removed at __exit__, so it exists for exactly the lifetime of that with-block. __enter__ verifies that the caller's f_lasti is at SETUP_WITH (3.9/3.10) or BEFORE_WITH (3.11\u20133.13). It hops through @contextlib.contextmanager helpers to the with-statement that uses the helper. ExitStack, pytest fixtures, a manual __enter__ and asynccontextmanager helpers refuse [V5:SECTION_FORM] at open, before the work runs.\n- (b) The frame of one invocation of a cov.carry(fn) wrapper, sync or coroutine. It is bound to the opening in whose synchronous chain carry() was called; outside one, carry refuses [V5:CARRY_OUTSIDE].\n\nThe call is credited to that opening if it is still open, and otherwise bucketed 'after_close'. The same walk at section enter refuses [V5:NESTED_SECTION] within one tracer. Different tracers may nest, and each credits its own opening, so a self-tracing exam works.\n\nNothing else carries a section: no ContextVar, no thread-start lineage, no task or context lineage, no time window, no global slot, no ambiguity heuristic. Counts go into per-thread dicts with no lock. Section-time refusals are raised AND written to record()['problems']. score() refuses a gate whose section or targets appear in problems, and otherwise requires every declared target to appear in the section's counts.\n\nWHY THE CLASS CANNOT REOPEN. A frame is on the chain only while it is executing and transitively waiting on this very call. That rules out each door found in rounds 1\u20133:\n- Threads, pool workers, library daemon threads and grandchildren begin their chains at their own bootstrap.\n- asyncio tasks reach their driver only through Handle._run, which cuts the walk.\n- Context copies are never read.\n- Concurrent sections, including two shards with the same name, each see only their own chain.\n- A closed section has no marker, and a carry frame checks that its opening is still open.\n- There are no close-time checks for an exception exit to skip.\n- A swallowed raise remains in the record.\n\nThe only ways to be credited to O are to be synchronously awaited by O's with-block, or by a frame the author explicitly carried to O.\n\nRESIDUAL DOOR (stated and demonstrated): another gate's work that O's block itself runs synchronously. Examples are a queue drained inline, a non-asyncio scheduler or uvloop driven inside the block, and finalizers or signal handlers that fire inside it.",
+   "mechanism": "IDENTITY: at tracer __enter__, each resolved function F gets a _Swap in a process-wide registry. The _Swap holds original = F.__code__ and replica = original.replace(), which was tested to be a distinct, equal, behaviour-preserving object on 3.10\u20133.13. The tracer then sets F.__code__ = replica. The registry is reference-counted across nested and concurrent tracers, so any order of tracer exits restores correctly. At the last exit it restores F.__code__ = original, but only if F still holds the replica; otherwise it adds a CODE_REBOUND note and leaves F alone. Then one gc.get_referrers(*replicas) pass finds any function other than F that holds a replica, which is a fatal CODE_CLONED problem. Frames already running the replica finish normally.\n\nOBSERVATION, 3.12+: sys.monitoring with tool id 4, or 3 if 4 is taken. The DEBUGGER, COVERAGE, PROFILER and OPTIMIZER ids are never taken; if 4 and 3 are both busy the tracer refuses MONITOR_BUSY. The only event is local PY_START, set on the replicas only. It fires in every thread (including pre-existing and _thread ones), costs nothing for any other code, and does not use setprofile or settrace at all. cProfile (which uses sys.monitoring on 3.12+), coverage, debuggers and a harness calling sys.setprofile all coexist with it. The callback gets the target frame as sys._getframe(1). Events are not re-entrant during a callback (tested). If the callback raises, the exception surfaces from the target call, the body does not run, and the local events remain set (tested). A tool freed or reset by someone else becomes a MONITOR_LOST note at exit.\n\nOBSERVATION, 3.9\u20133.11: a per-thread _Hook installed with sys.setprofile. It is installed only when that thread's marker depth goes 0\u21921 (a section with-block entered on it, or a carried invocation starting on it) and removed at 1\u21920 in a finally block. threading.setprofile is never used.\n- A pre-existing Python-level profiler is chained. A C-level profiler refuses FOREIGN_PROFILER before anything is touched (cProfile tested to be still installed and still recording).\n- If CPython dropped the hook because an exception arose inside a profile function, the user's chained profiler is reinstalled and a HOOK_GONE note is recorded. If the harness replaced the profiler, the hook is marked dead and a PROFILER_REPLACED note is recorded.\n- A section closed on a different thread marks that thread's hook dead; a dead hook removes itself on its next event.\n- A fresh start is f_lasti == -1 (3.9/3.10) or the offset of RESUME 0 (3.11). Generator resumes are ignored, matching the PY_START semantics of 3.12+ (tested).\n\nOBSERVER RULES, both backends: the callback reads id(code) \u2192 _Swap and checks `is`. It walks f_back and reads the marker dict without a lock; writers replace tuples rather than mutating them in place. It increments this thread's own count dict. It holds no lock at any point, so a finalizer that calls a target during record() cannot deadlock. Its only exception handler is `except BaseException: note; raise`, so a signal handler's exception is never swallowed. It never refuses.\n\nLIFECYCLE:\n- Entry order: resolve all targets \u2192 acquire the backend \u2192 swap codes.\n- section() returns a single-use context manager that checks, in order: declared name, tracer active, with-form, not nested, then pushes its marker.\n- carry(fn) returns a wrapper that pushes and pops its own frame as a marker for each invocation.\n- Exit order: close any openings still open (an OPEN_AT_EXIT note), restore codes, run the clone scan, release the backend, and only then set complete=True. A crash inside exit therefore yields INCOMPLETE_TRACE.\n- record() merges the per-thread counts into: tracer, gates_sha256, complete, backend, targets (sha256 of the original code, provenance only), provenance (module:qualname@file:line), sections (every opened section present even when empty), after_close, unattributed, dispatched, problems (fatal), notes (under-count diagnostics). score() and check_metrics() read problems and complete.",
+   "machinery_removed": [
+    "_code_holders / _wrappers_of / _sharing_problem: gc.get_referrers holder and wrapper scans, run at entry and again at every section close, together with the per-close gc.collect() and the SHARED_CODE reason code",
+    "inspect.unwrap in _resolve_target: declared objects are never unwrapped",
+    "_identity and frame-identity matching: comparing f_globals with the declared globals and f_locals with closure cells (and the per-call f_locals cost), plus the 'impostors' bucket",
+    "_THREAD_START_CODE interception of threading.Thread.start, the _thread_section lineage map, THREAD_OUTLIVES, and the 'ambiguous' bucket with its only-one-open-section rule",
+    "the ContextVar section slot, token reset, and SECTION_CONTEXT",
+    "threading.setprofile everywhere, the per-tracer _Hook chain, _skip_exited self-removal chaining, EXIT_ORDER, _hook_chain_has_self, and the PROFILER_REPLACED refusal (on 3.9\u20133.11 it survives only as a non-fatal note)",
+    "the hook's `except Exception` and the sticky _hook_failed / HOOK_FAILED",
+    "the non-reentrant self._lock taken inside the hook",
+    "_refuse_at_close raising at section close, and the unread close_refusals list",
+    "sys.setprofile entirely on Python 3.12+"
+   ],
+   "machinery_added": [
+    "_Swap registry: one private replica per declared function object (fn.__code__ = fn.__code__.replace()), reference-counted across tracers, restored at the last exit",
+    "3.12+ backend: sys.monitoring tool id 4 or 3, with local PY_START events on the replicas only; MONITOR_BUSY at entry, MONITOR_LOST note at exit",
+    "3.9\u20133.11 backend: a per-thread sys.setprofile _Hook present only while that thread holds a marker, with a per-thread depth counter, a Python-profiler chain, restoration of a user profiler dropped by an exception, and a dead-flag for self-removal",
+    "a live-stack attribution walk: frame\u2192opening marker dict, cut at asyncio.events.Handle._run, lock-free and non-swallowing observer, per-thread count dicts",
+    "a with-statement form check at section __enter__ (SETUP_WITH or BEFORE_WITH at the caller's f_lasti, cached per code object), with a hop through @contextlib.contextmanager helpers",
+    "cov.carry(fn): an explicit delegation API for threads, pools, executors and asyncio tasks (sync and coroutine functions)",
+    "record()['problems'] (fatal: every refusal raised at section or carry time is also written here, plus CODE_CLONED) and record()['notes'] (under-count diagnostics appended to NOT_EXERCISED)",
+    "record()['complete'], set last at exit, and the score-side INCOMPLETE_TRACE check",
+    "one gc.get_referrers pass over the replicas at tracer exit, giving CODE_CLONED",
+    "resolution relaxations: steps through an instance's own __dict__ slot, and the PEP 562 module __getattr__ fallback",
+    "diagnostic buckets 'dispatched', 'unattributed' and 'after_close', plus per-target provenance in the record"
+   ],
+   "finding_closure": [
+    {
+     "id": "R1-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Identity is the declared function object's private replica, not a code object shared with others. Factory closures and no-wraps siblings run the original code, which is never observed. e2: entry_b is not credited for entry_a, make_scorer(abs,True) is not credited for score_lenient (NOT_EXERCISED), and the declared object itself passes. No other door exists: running the replica requires either calling F or reading F.__code__ during the trace (see R3-D1 and stated limit L4)."
+    },
+    {
+     "id": "R1-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Lookup is by id(code) followed by `is` against a freshly created replica; equality is never consulted. e2: a vendored equal-code copy, an exec'd copy of the whole module and DB.__init__ versus DA.__init__ are all NOT_EXERCISED on 3.10\u20133.13."
+    },
+    {
+     "id": "R1-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There is no global, context or thread slot: credit comes only from a marker on the executing thread's live chain. e3: a thread started in A calling f while B is open credits neither; an unsectioned background thread during B credits nothing; tasks are cut at Handle._run."
+    },
+    {
+     "id": "R1-B4",
+     "status": "CLOSED_BY_PATCH",
+     "how": "On 3.12+ it is closed structurally: setprofile is never used, and cProfile (which uses sys.monitoring) coexists (e4: traced count 1, cProfile still recording). On 3.9\u20133.11 a C-level profiler refuses FOREIGN_PROFILER at section enter before anything is touched (e4: cProfile still installed, entries recorded). The refusal is also written to problems, so swallowing it still refuses at score (e7)."
+    },
+    {
+     "id": "R1-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Tracers never chain each other's hooks. Code swaps are reference-counted in one registry, and there is one per-thread hook with a depth counter. e4: non-LIFO exits of two tracers on the same target leave both counted, the code restored, and no profiler or thread profiler behind. Re-entering a tracer or section refuses REENTRY (a kept patch)."
+    },
+    {
+     "id": "R1-D2",
+     "status": "CLOSED_BY_PATCH",
+     "how": "The catch-all remains: any exception during import or attribute access becomes [V5:UNRESOLVED]. The __wrapped__ loop case is gone because nothing is unwrapped. e2: a nonexistent module gives UNRESOLVED."
+    },
+    {
+     "id": "R1-D3",
+     "status": "CLOSED_BY_PATCH",
+     "how": "The string-key checks are kept and extended to the new problems list. e6: int or None keys in targets, sections or inside a section, a list-valued section and a non-list problems all give BAD_TRACE; a bool count or a forged undeclared key gives BAD_COUNT."
+    },
+    {
+     "id": "R1-D4",
+     "status": "DISCLOSED_LIMIT",
+     "how": "Parallel sections in two threads and _thread-started threads now work: sections by the live stack, _thread work via carry (e3, e7). A harness setprofile inside a section no longer blinds tracing on 3.12+; on 3.9\u20133.11 it is an under-count note. The remaining over-blocking is published in over_blocking_costs: uncarried concurrency, pre-existing threads, non-function targets, section form, and C profilers on 3.9\u20133.11."
+    },
+    {
+     "id": "R1-N2",
+     "status": "CLOSED_BY_PATCH",
+     "how": "The class-own-__dict__ rule (INHERITED) and _TARGET_RE.fullmatch are kept. e2: Sub.fit gives INHERITED; a trailing newline gives DECL. Base.fit is credited when Other().fit() runs, because that IS Base.fit (object identity)."
+    },
+    {
+     "id": "R2-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Runtime decoration builds a new function from the decorator's original inner code, which is never the replica. e2: timed(cheap_path)() is not credited as score_all. No check at close is needed because there is no sharing to recount."
+    },
+    {
+     "id": "R2-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Pool threads are never credited through lineage. A carried job credits exactly the opening it was carried from, whichever thread created the pool. e3: with A and B open concurrently on a shared pool, uncarried work credits neither and a carried job credits B {f:1} only (exact counts in e3b)."
+    },
+    {
+     "id": "R2-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "threading.setprofile is never used. On 3.9\u20133.11 a thread has a hook only while it holds a marker, and it is removed in a finally block (or self-removes if dead). e4: threads and _thread threads started inside a section see sys.getprofile() and the thread profiler as None."
+    },
+    {
+     "id": "R2-D1",
+     "status": "CLOSED_BY_PATCH",
+     "how": "INSTANCE_PATH is kept for attributes an instance gets from its class (e9: holder.method refused). It is relaxed only for the instance's own __dict__ slots, where no MRO is involved (holder.handler and SimpleNamespace resolve)."
+    },
+    {
+     "id": "R2-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There is no unwrapping: a declared wraps wrapper is its own object with its own replica. e2: run_safe is not credited for run_fast; run_fast itself passes."
+    },
+    {
+     "id": "R2-D3",
+     "status": "DISCLOSED_LIMIT",
+     "how": "One pool used across sequential sections, multiprocessing ThreadPool (terminate without join), run_in_executor and to_thread all score when their jobs are carried (e3). THREAD_OUTLIVES no longer exists. Executor or thread work that is not carried is refused NOT_EXERCISED, with the 'unattributed' and 'dispatched' diagnostics; this is published."
+    },
+    {
+     "id": "R2-D4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "No refusal depends on the observer's health; a missed observation can only under-count, never produce a wrong-reason refusal. e4: recursion to the limit inside a section scores PASS with notes CALLBACK_RAISED and HOOK_GONE (3.9\u20133.11 only), and no profiler is left on any version."
+    },
+    {
+     "id": "R2-D5",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There is no threading hook to leak. The per-thread hook is uninstalled in the finally of every marker extent; exception exits and non-LIFO exits were tested with nothing left behind (e3/e4 print 'profile left: None')."
+    },
+    {
+     "id": "R2-D6",
+     "status": "CLOSED_BY_PATCH",
+     "how": "The foreign-context-exit escape cannot occur because no ContextVar is used, and section __exit__ never raises. check_metrics on a non-dict keeps its round-3 report-not-raise patch. The prototype check() returns NO_TRACE for a non-dict."
+    },
+    {
+     "id": "R3-B1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Products of make_mul(3) run the lambda code from make_mul's co_consts, never double's replica. e2: make_mul(3)(5) is NOT_EXERCISED for declared double, P2 (same closure, other default) is NOT_EXERCISED, and double(5) passes."
+    },
+    {
+     "id": "R3-B2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Contexts are never read, and task chains are cut at Handle._run. e3, e3b: in the t12 shape (consumer tasks created lazily in A run B's f while both are open) A is not credited (A={}, dispatched {f:1}). In the sync-driven cross-thread variant neither is credited. With B's job carried, B is credited and A is not."
+    },
+    {
+     "id": "R3-B3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The observer's only handler is `except BaseException: note; raise`. e4: a SIGALRM Timeout was delivered 20/20 on 3.10, 3.11, 3.12 and 3.13, versus 4\u201310 of 20 under the round-3 implementation."
+    },
+    {
+     "id": "R3-D1",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Object identity with no unwrapping. T01a: a plain caller of _run is not credited for run_fast. T01b: a class-based update_wrapper declaration refuses NO_CODE (a disclosed over-block). T01c: a per-call wraps sibling is not credited. T01d: an undecorated score with two wraps aliases is accepted, credited when an alias calls score. All in e2 on 3.10\u20133.13."
+    },
+    {
+     "id": "R3-D2",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There are no close-time refusals. Every refusal raised at section or carry time is also appended to record()['problems'], which score() reads. e3/e7: a swallowed NESTED_SECTION, SECTION_FORM (ExitStack), CARRY_OUTSIDE or FOREIGN_PROFILER still refuses at score with its own code, and a section exiting by exception still credits the calls made before it."
+    },
+    {
+     "id": "R3-D3",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "The observer takes no lock; counts go into per-thread dicts, and record() only copies them. e4: at gc threshold 5, 20k cyclic objects whose __del__ calls the target, with record() called every 50 iterations, completed on 3.10\u20133.13 with no hang."
+    },
+    {
+     "id": "R3-D4",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Section close does no gc and no heap scan. e5: 1000 section open/close pairs take 5\u201318 ms in total. One gc.get_referrers pass per tracer exit takes 75\u201390 ms on a 3M-object heap; entry takes about 1 ms for 18 targets."
+    },
+    {
+     "id": "R3-D5",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "THREAD_OUTLIVES is gone: a thread that is never carried is simply never credited, so it cannot make a section refuse. e3: a daemon thread started in a section and never joined, with the section's own call, scores PASS."
+    },
+    {
+     "id": "R3-D6",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Two concurrent shards with the same section name each credit their own opening, merged under the one name (e3: A={f:1, g:1}, PASS). A singledispatch entry point resolves to its dispatch wrapper function and is credited when called (e2 PASS)."
+    },
+    {
+     "id": "R3-N-SimpleNamespace",
+     "status": "CLOSED_BY_PATCH",
+     "how": "An instance step is allowed when the attribute is in that object's own __dict__ (e2: registry.handler PASS; e9: holder.handler PASS). The INSTANCE_PATH message now says the attribute comes from the class."
+    },
+    {
+     "id": "R3-N-PEP562",
+     "status": "CLOSED_BY_PATCH",
+     "how": "getattr is used as a fallback only when the module defines __getattr__ (e9: fxlazy:lazy_fn PASS). Whatever object it returns at trace entry is the declared object."
+    },
+    {
+     "id": "R3-N-sticky_hook_failed",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "There is no hook_failed state. Observer failures are counted as CALLBACK_RAISED notes for the tracer that was active, and are non-fatal."
+    },
+    {
+     "id": "R3-N-CtrlC_drops_chained_profiler",
+     "status": "CLOSED_BY_PATCH",
+     "how": "On 3.9\u20133.11, a hook dropped by CPython gets the user's profiler reinstalled at the end of the marker extent (e4: user profiler kept 10/10 on 3.10 and 3.11). On 3.12+ styxx is not in the setprofile chain. The residual losses seen there (1\u20134 of 10) are baseline CPython: the control e4b loses the profiler in 6\u201313 of 20 with no tracer at all."
+    },
+    {
+     "id": "R3-N-f_locals_cost",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "f_locals is never read, since there is no closure-cell identity check. The cost per target start is +1.4\u20132.3 \u00b5s at shallow depth and grows with stack depth instead (+19\u201328 \u00b5s at depth 200); this is published."
+    },
+    {
+     "id": "R3-N-SECTION_CONTEXT_sticky",
+     "status": "NOT_APPLICABLE",
+     "how": "No ContextVar exists. A marker lives exactly as long as its with-block, or its carry invocation."
+    },
+    {
+     "id": "R3-N-closure_clone_equal_cells",
+     "status": "CLOSED_STRUCTURALLY",
+     "how": "Clones share the original code and are never credited, whatever their cells or defaults. The only exception is an in-trace clone of the replica itself (stated limit L4; detected if still alive at exit, e2 CODE_CLONED)."
+    }
+   ],
+   "p1_retro": "With the committed papers/first-afference/run_p1.py UNMODIFIED (sha256 656eb5ad047ea44eb63fdf10af83bd0947a18f1b84363c1a55576ffc0c81736d), styxx/power_QUARANTINED.py.txt is loaded as styxx.power exactly as run_protocol_v5d._load_p1 does it. run_p1 is imported BEFORE the trace, so its `from styxx.power import PowerError, effective_n, reachable` binds the very function objects that are later swapped (asserted: run_p1.reachable is mod.reachable). The retro declares G4_refuses_degenerate: exercises [effective_n, order_stat_bar, false_positive_rate, min_detectable_bar, reachable] and traces `with cov.section('G4_refuses_degenerate'): run_p1.degenerate(np.random.default_rng(run_p1.SEED))`. On 3.10.20, 3.11.15, 3.12.3 and 3.13.12 the results are identical:\n- degenerate_refusal_rate is 1.0;\n- the section records exactly {'styxx.power:reachable': 12};\n- score refuses [V5:NOT_EXERCISED], naming exactly effective_n, order_stat_bar, false_positive_rate and min_detectable_bar;\n- all five __code__ attributes are restored after exit.\nSo the refusal names exactly the four unexercised functions, with no harness rewrite. It works because the swap happens at the one place every reference passes through, the function object's __code__; a binding proxy would have missed run_p1's pre-bound alias.\n\nNested under an outer self-trace that declares run_p1:degenerate (e6), the outer tracer credits degenerate:1 and the inner retro is still exactly {reachable: 12}. The ungated G1 companion (historical() under a declaration naming order_stat_bar) records order_stat_bar:1, reached transitively through reachable(n_draws=45). So it would not refuse, matching the transitive semantics the v5 prereg predicted.",
+   "over_blocking_costs": [
+    "Concurrency must be carried. Work run on threads, ThreadPoolExecutor or ThreadPool workers, run_in_executor/to_thread, or asyncio tasks (gather, create_task, TaskGroup, and wait_for on \u22643.11, which wraps its argument in a task) counts only inside cov.carry(fn). Uncarried, it is refused NOT_EXERCISED with 'unattributed' or 'dispatched' diagnostics. The round-2/3 valid cases 'thread started in section', 'pool created and shut down in section' and 'task created and awaited in section' therefore need carry, which means a new exam prereg.",
+    "A sync section that drives asyncio (asyncio.run(main()) inside `with section`) credits nothing unless main is carried: asyncio.run(cov.carry(main)()). Each child task main spawns needs its own carry.",
+    "Child processes and process pools are never observed, and a carried wrapper is not picklable.",
+    "Only plain Python functions can be declared. lru_cache/cache-decorated entry points, functools.partial, callable instances, class-based wrappers, property, singledispatchmethod, bound methods and Cython/numba functions refuse NO_CODE. Nothing is unwrapped, so a call made directly to __wrapped__ does not count for the wrapper.",
+    "section() must be entered by a literal `with` statement, optionally through @contextlib.contextmanager helpers. ExitStack.enter_context, pytest fixtures, a manual __enter__ and asynccontextmanager helpers refuse SECTION_FORM at open.",
+    "Once raised at section or carry time, NESTED_SECTION, SECTION_FORM, UNDECLARED_SECTION (for that name), CARRY_OUTSIDE and FOREIGN_PROFILER refuse the named section's gates at score, even if the harness caught the error and recovered.",
+    "On 3.9\u20133.11, a C-level profiler (cProfile, yappi, line_profiler) on the thread where a section opens or a carried job runs refuses FOREIGN_PROFILER. There is no such refusal on 3.12+.",
+    "On 3.9\u20133.11, pure-Python code inside an open section runs about 10\u201311x slower (a profile hook on every event on that thread). Outside sections and on other threads it runs at about 1.0x. On 3.12+ it is about 1.0x everywhere.",
+    "Every start of a target costs a stack walk: +1.4\u20132.3 \u00b5s at shallow depth, +19\u201328 \u00b5s at depth 200. A deeply recursive declared target that is called very often pays O(depth) per call.",
+    "Tools keyed on code-object identity (line_profiler, code-identity memoisation, some JIT caches) do not recognise the declared functions during the trace. inspect.signature, getsource and pickling are unchanged (e7).",
+    "Not counted: a call already running when the trace begins, a generator created from the target before the trace, and function objects created by an importlib.reload during the trace.",
+    "Functions executed only from inside the observer callback (styxx's own _on_start) can never be declared (e6: GX refused).",
+    "On 3.12+, MONITOR_BUSY refuses if another component holds both sys.monitoring tool ids 3 and 4.",
+    "On 3.9\u20133.11 only, a section opened inside a generator that is resumed on another thread under-counts (SECTION_THREAD note).",
+    "On 3.9\u20133.11, the 'unattributed' diagnostic covers only threads that hold a marker, so a NOT_EXERCISED message can tell less about where calls went than it does on 3.12+.",
+    "Each tracer exit makes one heap scan for CODE_CLONED, about 75\u201390 ms at 3M objects."
+   ],
+   "stated_limits": [
+    "Exercised is not tested (carried forward): one call whose result is discarded satisfies a declaration.",
+    "Transitive calls count (carried forward): a target reached through another function counts, so order_stat_bar via reachable(n_draws>1) satisfies P1's G1.",
+    "The trace is written by the runner (carried forward): forgery is an accepted residual. The threat model is honest-but-careless authors.",
+    "Only declared gates are checked (carried forward). G3's hard-coded baseline is out of scope.",
+    "L1 (attribution residual, demonstrated in e8): work belonging to another gate that O's with-block itself runs synchronously counts for O. Examples: a queue of B's jobs drained inline in A, or a generator created elsewhere and advanced in A. The stack shows who is waiting on a call, not who asked for it.",
+    "L2 (demonstrated in e8): only asyncio's Handle._run is recognised as a dispatch boundary. A hand-rolled scheduler, trio/curio, or uvloop (Cython handles) driven inside a section credits the tasks it runs to that section.",
+    "L3 (demonstrated in e8): finalizers (__del__, weakref callbacks) and signal handlers that fire inside a section's extent are credited to it.",
+    "L4 (demonstrated in e8): a function built from the declared function's __code__ during the trace runs as the declared function. This covers types.FunctionType(f.__code__, ...), g.__code__ = f.__code__ and exec(f.__code__). It is detected (CODE_CLONED) only if still alive at trace exit. It requires reading f.__code__ deliberately.",
+    "L5 (demonstrated in e8): the declared object is whatever the name is bound to at trace entry. A mock installed before the trace is what gets checked. Provenance (module:qualname@file:line) is recorded for a reader, not verified.",
+    "carry() is an assertion by the author: a carried callable counts for the section it was carried from, wherever it runs.",
+    "Rebinding a declared function's __code__ during the trace (e.g. an IPython autoreload) makes later calls unobserved. That under-counts and is noted as CODE_REBOUND.",
+    "Python 3.9 is untested (no interpreter available). Free-threaded builds are untested; F.__code__ assignment racing with concurrent calls is the main concern there.",
+    "The with-statement opcode check covers SETUP_WITH (3.9/3.10) and BEFORE_WITH (3.11\u20133.13). Python 3.14 replaces BEFORE_WITH, so the check must be extended before 3.14 is supported."
+   ],
+   "reason_codes": [
+    "DECL",
+    "SECTION_DECL",
+    "NOTHING_DECLARED",
+    "UNRESOLVED",
+    "NO_CODE",
+    "INHERITED",
+    "INSTANCE_PATH",
+    "REENTRY",
+    "MONITOR_BUSY",
+    "UNDECLARED_SECTION",
+    "TRACE_INACTIVE",
+    "SECTION_FORM",
+    "NESTED_SECTION",
+    "FOREIGN_PROFILER",
+    "CARRY_OUTSIDE",
+    "CODE_CLONED",
+    "NO_TRACE",
+    "WRONG_TRACER",
+    "STALE_TRACE",
+    "INCOMPLETE_TRACE",
+    "BAD_TRACE",
+    "TARGET_SET",
+    "SECTION_ABSENT",
+    "BAD_COUNT",
+    "NOT_EXERCISED",
+    "note:HOOK_GONE",
+    "note:PROFILER_REPLACED",
+    "note:SECTION_THREAD",
+    "note:CALLBACK_RAISED",
+    "note:CODE_REBOUND",
+    "note:OPEN_AT_EXIT",
+    "note:MONITOR_LOST",
+    "removed:SHARED_CODE",
+    "removed:THREAD_OUTLIVES",
+    "removed:SECTION_CONTEXT",
+    "removed:HOOK_FAILED",
+    "removed:EXIT_ORDER",
+    "demoted:PROFILER_REPLACED(refusal->note)"
+   ],
+   "python_versions": "3.12 and 3.13 (tested on 3.12.3 and 3.13.12) use the sys.monitoring backend: local PY_START on the replicas, observation in all threads, and no setprofile. cProfile, coverage and a harness sys.setprofile all coexist. There is no FOREIGN_PROFILER refusal and no slowdown of other code.\n\n3.10 and 3.11 (tested on 3.10.20 and 3.11.15) use the scoped per-thread setprofile backend. A fresh start is f_lasti == -1 on 3.10 and RESUME 0 on 3.11, verified against generator resumes. Behaviour specific to these versions:\n- a C-level profiler refuses FOREIGN_PROFILER;\n- code inside an open section runs about 10\u201311x slower;\n- HOOK_GONE, PROFILER_REPLACED and SECTION_THREAD notes can occur;\n- a user profiler dropped by CPython is restored.\n\n3.9 is untested: no interpreter was available. It is expected to behave like 3.10 (f_lasti -1, SETUP_WITH, code.replace available since 3.8, and threading.getprofile is not needed), but it is unverified.\n\nSemantics are identical across versions (credit = replica PY_START under a live marker before any Handle._run), with two exceptions:\n- on 3.9\u20133.11, a section inside a generator resumed on another thread under-counts;\n- the 'unattributed' diagnostic is complete only on 3.12+.\n\nEvery battery produced identical verdicts on all four tested versions. Python 3.14 needs the with-opcode set extended, because BEFORE_WITH is gone there.",
+   "experiments_run": "Scratch prototype /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/design/mechanism/v5m.py (585 lines, including a stand-in Spec and the check). Everything below was run on 3.10.20, 3.11.15, 3.12.3 and 3.13.12, and every result was identical across versions unless noted. The final regression log is final_all_versions.txt.\n\n- p0_primitives: code.replace() gives a distinct, equal, same-hash object, and a swapped function, closure or generator behaves identically. The caller's f_lasti at __enter__ is SETUP_WITH (3.10) or BEFORE_WITH (3.11+), and under ExitStack it is not a with-op. sys._getframe identity is stable across f_back.\n- p1_monitoring (3.12/3.13): PY_START on a replica fires with sys._getframe(1) as the target frame, in any thread; it does not fire at generator creation or on resumes, and it does not re-enter from inside the callback. A callback exception propagates to the caller, the body does not run, and events stay set. cProfile and sys.setprofile do not blind it.\n- p2_profile (3.10/3.11): fresh starts are f_lasti -1 (3.10) and RESUME 0 at offset 0 or 4 (3.11); resumes show other offsets. An exception in a profile hook propagates and CPython drops the hook.\n- e1 P1 retro: unmodified run_p1 (sha 656eb5ad\u2026) gives {reachable: 12} and [V5:NOT_EXERCISED] naming exactly the other four, with codes restored. The G1 companion records order_stat_bar:1.\n- e2 identity battery: 31/31 as expected. This covers factory products and defaults, no-wraps siblings, runtime timed(), wraps siblings, T01a\u2013d, vendored, exec'd and dataclass copies, a pre-trace clone, an in-trace clone kept alive (CODE_CLONED) and discarded (PASS, residual), singledispatch, aliases, INHERITED, INSTANCE_PATH, SimpleNamespace, lru_cache and builtin (NO_CODE), UNRESOLVED, DECL, a from-import alias, and a registry/partial.\n- e3 attribution battery: 28/28 as expected. This covers R1-B3 threads, R2-B2 pool uncarried and carried, the R3-B2 t12 shape uncarried and carried, the sync-driven cross-thread R3-B2 variant, grandchild threads, a daemon thread, same-name shards, concurrent sections, carried jobs after close, R06 late tasks, exception exit, swallowed NESTED_SECTION and SECTION_FORM, gather uncarried and carried, asyncio.run uncarried and carried, async-native direct await, run_in_executor/to_thread, one pool across sections, ThreadPool, a generator created in A and resumed in B, and a generator section closed on another thread. No profiler was left behind. e3b confirmed the exact counts, e.g. R2-B2 carried: A {g:1}, B {f:1}.\n- e4 hook battery: a SIGALRM Timeout was delivered 20/20. RecursionError at the limit scored PASS with notes and left no profiler. A finalizer calling the target at gc threshold 5 across 20k cycles, with record() every 50, completed. cProfile was refused FOREIGN_PROFILER and left intact (3.10/3.11), and traced alongside (3.12/3.13). Non-LIFO tracers both counted and restored. REENTRY was refused. A harness setprofile gave a note (\u22643.11) or had no effect (3.12+). Ctrl-C propagated 10/10, and the user profiler was kept 10/10 on \u22643.11. Threads saw no hooks.\n- e4b control: with no tracer at all, CPython drops a user profiler after Ctrl-C in 6\u201313 of 20 runs on 3.11\u20133.13.\n- e5 performance: within sections, pure-Python code runs about 10\u201311x slower on \u22643.11 and about 1.0x on 3.12+. A target start costs +1.4\u20132.3 \u00b5s shallow and +19\u201328 \u00b5s at depth 200. 1000 section open/close pairs take 5\u201318 ms in total (after caching with-offsets; before caching they took 0.4\u20131.2 s). Entry takes about 1 ms; exit takes 75\u201390 ms at 3M objects.\n- e6 self-trace: an outer tracer declaring machinery plus run_p1:degenerate credits them, and the inner retro stays exact; _on_start can never be credited. Malformed records: 10/10 refused with the expected codes, including INCOMPLETE_TRACE for a record taken inside the trace.\n- e7: introspection and pickling are unchanged. Swallowed CARRY_OUTSIDE refuses at score, and a swallowed FOREIGN_PROFILER refuses on \u22643.11 while 3.12+ passes. A section opened after exit gives TRACE_INACTIVE. A carried job on a _thread thread is credited.\n- e8 residuals demonstrated: an inline queue drain, a non-asyncio generator scheduler, a finalizer inside a section, a discarded in-trace clone, and a name rebound before the trace all PASS, as stated in the limits.\n- e9: the PEP 562 lazy attribute and the instance-own slot resolve; an instance-reached method gives INSTANCE_PATH.\n- e10: a contextmanager helper and a helper inside a helper score; an ExitStack-entered helper and an asynccontextmanager helper give SECTION_FORM.",
+   "approx_loc": 400
+  }
+ ],
+ "judgements": {
+  "judge:1": {
+   "per_design": [
+    {
+     "name": "v5e \"mint-and-anchor\": the narrowest sound coverage instrument",
+     "soundness_0_10": 7.5,
+     "overblocking_cost_0_10": 4,
+     "simplicity_0_10": 8.5,
+     "testability_0_10": 8.5,
+     "p1_retro_ok": true,
+     "claims_that_do_not_hold": [
+      "R1-B3 / R3-B2 CLOSED_STRUCTURALLY ('concurrent sections cannot cross-credit'): this fails when work is submitted from another thread into an event loop that runs inside another section's cov.run. In judge1/n_attacks.py X2, A = cov.run('A', asyncio.run, main_a()), where main_a never calls f. B, open at the same time on another thread, calls run_coroutine_threadsafe(job_b(), loopA). A is credited f:1 and scores PASS on 3.10, 3.11 and 3.13. The attribution text says the loop's tasks are 'inside that section by definition', but B's work being credited to A is exactly the R3-B2 outcome.",
+      "R3-B2 ('tasks opening their own run_async sections are attributed exactly'): the design's own remedy is to give each worker or task its own section. Doing that on a long-lived consumer brings the t12 false pass back. In X4, A's consumer thread opens its own 'A' opening and drains a queue, B enqueues jmod.f, and A PASSes with f:1 on 3.10\u20133.13. stated_limits discloses only generators and coroutines resumed in another section, not queue drains or sectioned consumers.",
+      "e2's 'module attribute rebound to a mock -> NOT_EXERCISED' covers only rebinding during the trace. A stub function bound at the declared name before the trace (e.g. a fixture's monkeypatch) is itself resolved, minted and credited. X1 PASSes, with provenance pointing at jstub.py and nothing checking it. This limit is not listed."
+     ],
+     "holes_found": [
+      "X2: a concurrently open section B submits work cross-thread (run_coroutine_threadsafe / call_soon_threadsafe) into a loop running inside cov.run('A', ...), and A is credited for it. Verified on 3.10, 3.11 and 3.13. The Handle._run cut graft closes it.",
+      "X4: a consumer that opened its own opening of section A executes jobs B enqueued, and A is credited. This is the 'where, not who' residual, and it is not stated.",
+      "X1: a stub bound at the declared path before the trace is the declared target, and is credited. Common to all three designs.",
+      "Stated, confirmed: a same-globals clone built in-trace from T.__code__ and dropped before exit is credited. Code injected onto the section's stack (signal handlers, finalizers) counts.",
+      "Minor: open-time refusals (NESTED_SECTION, FOREIGN_PROFILER, UNDECLARED_SECTION) are raised but not recorded in the trace. I found no false pass from this, because the section never opens, but the swallowed-refusal audit trail is weaker than v5m's."
+     ],
+     "summary": "This has the strongest identity rule of the three. A frame counts only if its f_code is a minted code object M_T and its f_globals is T.__globals__, with CLONE_CALLED, CLONE_ALIVE and CODE_SWAPPED tripwires. None of my identity attacks, and none of the round 1\u20133 class-A cases, got through except the stated in-trace clone. Attribution uses the fewest moving parts: a registered anchor frame on the live f_back chain, with no ContextVar, no inheritance and no CPython-internal interception. The unmodified P1 retro is exact: I re-ran it and got {reachable: 12} plus NOT_EXERCISED naming exactly the other four. I found two false passes it did not state. X2 (a cross-thread job credited to a section whose stack runs the loop) is closed by a one-line graft, which I verified in scratch. X4 (sectioned shared consumers) is the universal where-not-who residual and needs stating. It over-blocks heavily: off-stack work never counts, sections must be calls, a raised section refuses, hook loss from signals or RecursionError refuses, and foreign profilers are refused on <=3.11. Most of those refusals only guard against under-counting and can be demoted to notes at no soundness cost."
+    },
+    {
+     "name": "v5e \"lower-bound trace\": one-owner carriers for identity, opener-stack ownership for attribution",
+     "soundness_0_10": 5,
+     "overblocking_cost_0_10": 6.5,
+     "simplicity_0_10": 3,
+     "testability_0_10": 4.5,
+     "p1_retro_ok": true,
+     "claims_that_do_not_hold": [
+      "R3-B2 CLOSED_STRUCTURALLY and R2-B2 CLOSED_STRUCTURALLY: a timing variant of t12 passes. Section A starts a plain consumer thread (X5) or task (X5b), which inherits A. B enqueues jmod.f fire-and-forget and closes. The job runs while A is the only open instance, so the INHERITED call is credited to A. A scores PASS with f:1 on 3.10, 3.11 and 3.13, and A's author did nothing explicit. The stated limit covers only producers 'outside every section'; here the producer is section B.",
+      "'WHY THE CLASS CANNOT REOPEN ... every class-B door from the three rounds is an instance of one of these [three impossibilities]': R3-B2 (A credited for B's job run on A's inherited consumer) is not one of the three. It reopens because exclusivity is judged when the call runs, not when the job is submitted.",
+      "R3-D1 closure relies on 'run_fast is its own carrier'. For an ordinary nested @functools.wraps decorator, though, the carrier is the inner function. A harness calling entry.__wrapped__(x), bypassing the wrapper's validation (X7), or lru_cache's __wrapped__ (X8) is credited as the declared entry point. This is stated as a limit, but it means the declared wrapper is never actually verified to run."
+     ],
+     "holes_found": [
+      "X5/X5b: a fire-and-forget job from B, executed by A's inherited worker thread or asyncio consumer task after B closes, is credited to A. Undisclosed; verified on 3.10, 3.11 and 3.13.",
+      "X7/X8: calling __wrapped__ credits the declared decorated target, including lru_cache. Stated.",
+      "X1: a stub bound before the trace is accepted, because a module-level def in a test file is non-CO_NESTED and the sole holder. Undisclosed.",
+      "Stated: on 3.10, exec(f.__code__) and generators of freed clones are credited. Unsectioned producers feeding a sole-open section's workers are credited.",
+      "Structural fragility: correctness rests on concurrent.futures._WorkItem internals (gone in 3.14), Thread.start f_locals interception, ContextVar agreement, and gc-visibility of holders. Each is a heuristic door of the kind rounds 1\u20133 kept reopening."
+     ],
+     "summary": "This design has the broadest honest-harness coverage for sequential sections: with-sections, pools, tasks and executors reused across sections, lru_cache, and raised sections. It gets that breadth by keeping inheritance: a time-window exclusivity rule plus ContextVar, Thread.start and _WorkItem provenance. That is exactly the machinery rounds 1\u20133 kept breaking, and I reopened R3-B2 with a timing change: B leaves before its job runs on A's inherited consumer, and A passes. Its identity rule defines a decorated target as its inner body, so calls through __wrapped__ count. It also over-blocks targets the minting designs handle soundly: factory products, closures, dataclass methods and singledispatch. It has the most machinery and the weakest soundness under this lens."
+    },
+    {
+     "name": "v5m: private replica + live stack",
+     "soundness_0_10": 7,
+     "overblocking_cost_0_10": 5,
+     "simplicity_0_10": 5,
+     "testability_0_10": 6,
+     "p1_retro_ok": true,
+     "claims_that_do_not_hold": [
+      "R2-B2 / R3-B2 CLOSED_STRUCTURALLY: this holds only for uncarried work. carry() is the documented remedy for every thread, pool and task, and applying it brings the false pass back. In X3b, A's carried consumer thread runs B's queued job and A PASSes. In X3, a cov.carry() wrapper created lazily in A and cached is invoked synchronously inside B's own with-block. It credits A and not B, silently, because carried frames get no nesting check and the nearest marker wins. Verified on 3.11 and 3.12. This is disclosed only generically ('carry() is an assertion by the author').",
+      "R1-B1 'no other door exists': true only as a statement about who can reach the replica. exec(jmod.f.__code__, {}) inside a section is credited as f, with no tripwire (X5, 3.11 and 3.12). It is listed under L4, but there is no CLONE_CALLED-style check of f_globals, as the mint-and-anchor design has."
+     ],
+     "holes_found": [
+      "X3: a cached carry() wrapper from section A, called on B's with-block stack while both are open, credits A and not B. No refusal. Undisclosed in this specific form.",
+      "X3b: a carried long-lived consumer credits its section for other gates' jobs (the where-not-who residual via carry).",
+      "X5: bare exec of the replica under foreign globals is credited (stated L4, not detected).",
+      "X1: a stub bound before the trace is credited (stated L5).",
+      "Stated: L1 inline queue drain, L2 non-asyncio schedulers and uvloop run inside a section, L3 finalizers and signals.",
+      "Fragility: the SECTION_FORM check depends on the SETUP_WITH/BEFORE_WITH opcode at f_lasti, which must change for 3.14. There are two observation backends (sys.monitoring on 3.12+, scoped setprofile on <=3.11) that must be proven equivalent."
+     ],
+     "summary": "Its identity rule is the same sound minting idea as mint-and-anchor, minus the f_globals tripwire. The Handle._run dispatch cut is the right idea: it closes the cross-thread loop-submission door that mint-and-anchor leaves open (X2 gives A nothing here). Recording refusals into problems and demoting hook mishaps to notes are good lower-bound mechanics, and sys.monitoring on 3.12+ removes most profiler over-blocking. carry() is its weak point. It is the only way to count concurrent work, and it attaches a section label to a callable that then credits that section wherever and on whoever's stack it runs, with no nesting check. So the careless shared-helper and shared-consumer shapes re-create R2-B2 and R3-B2. With-form opcode inspection and dual backends cost simplicity and testability. It comes a close second, and it is the main graft donor."
+    }
+   ],
+   "winner": "v5e \"mint-and-anchor\": the narrowest sound coverage instrument",
+   "grafts": [
+    "From v5m: stop the attribution f_back walk, and the NESTED_SECTION walk, at asyncio.events.Handle._run, the loop dispatch boundary. This closes X2 (B's cross-thread job credited to a section running the loop); verified in scratch on 3.10, 3.11 and 3.13, where X2 then refuses NOT_EXERCISED for A and asyncio.run(cov.run_async('G', main)) still counts. It also lets tasks inside such a loop open their own sections instead of refusing NESTED_SECTION. Document that cov.run(name, asyncio.run, main()) counts nothing and asyncio.run(cov.run_async(...)) is the form to use.",
+    "NEW (none of the three has it): a provenance gate at resolution. Refuse [V5:FOREIGN_DEFINITION] when the resolved function's __module__ is not the declared module. This closes X1, the stub bound at the declared name by a fixture before the trace, which all three designs credit. Verified: all five P1 targets have __module__ 'styxx.power', so the retro is unaffected. wraps wrappers copy __module__ and still pass.",
+    "From v5m: write open-time refusals (NESTED_SECTION, FOREIGN_PROFILER, UNDECLARED_SECTION, TRACE_INACTIVE) into the trace as well as raising them, so a harness that swallows one still refuses at score.",
+    "From v5m / lower-bound: demote findings that can only lose calls to notes. That means PROFILER_LOST, THREAD_HOP, OPEN_AT_EXIT and end=='raised' (SECTION_UNFINISHED). No credit is possible without a registered open anchor on the live chain, so these refusals only over-block (pytest-timeout's signal method, recursion-limit batteries, sections that raise as expected). Keep CODE_SWAPPED, CLONE_ALIVE and CLONE_CALLED as refusals: a __code__ swapped to another target's minted code could over-credit.",
+    "From v5m (optional, 3.12+ only): observe with sys.monitoring local PY_START on the minted code objects instead of setprofile. Attribution stays identical, and it removes FOREIGN_PROFILER and hook-loss on 3.12+ along with the per-event cost. Adopt only if both backends run the same e2/e3 batteries byte-identically.",
+    "From v5m L1 and the lower-bound design's 'where not who' limit: state explicitly that a section's own stack, or a worker that opened an opening of that section name, which drains another gate's queued jobs is credited for them (X4). Keep the current NESTED_SECTION refusal, which makes a job wrapped in B's section fail closed on A's consumer (X4b)."
+   ],
+   "rationale": "I judged soundness first. I attacked all three prototypes with scratch harnesses in /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/design/judge1/ (n_attacks.py, m_attacks.py, r_attacks.py, n_graft.py, with fixtures jmod.py, jstub.py and jdeco.py). I re-ran each P1 retro, and all three are exact.\n\nFor identity (class A), the two minting designs are the sound ones. A minted code object reaches a frame only by calling T or by deliberately reading T.__code__ during the trace. None of my attacks, and none of the round 1\u20133 cases, got past minting. mint-and-anchor adds the f_globals identity tripwire (CLONE_CALLED), which v5m lacks: exec(f.__code__, {}) is credited silently under v5m (X5). The lower-bound design defines a decorated target as its inner body, so __wrapped__ calls are credited (X7, X8), and it refuses closures and factories that minting handles soundly.\n\nFor attribution (class B), the lower-bound design keeps inheritance and a time-window exclusivity rule. I reopened R3-B2 with a timing change: B enqueues a job fire-and-forget and closes, the job runs on A's inherited worker or task, and A passes on 3.10, 3.11 and 3.13 with no explicit act by A's author. That design claims the case is CLOSED_STRUCTURALLY and does not disclose this. v5m's Handle._run cut is correct, but carry() re-creates cross-section credit silently. A cached carried helper invoked on B's own with-block stack credits A (X3), and there is no nesting check.\n\nmint-and-anchor attributes only by a registered anchor frame on the live f_back chain. Of the three it has the least machinery and the fewest heuristics: no ContextVar, no Thread.start or _WorkItem interception, no gc scans, one hook with no try/except. Its equivalent of X3 (a callable labelled with section A, invoked inside B) fails closed with NESTED_SECTION (X4b). Its one false pass that is neither stated nor shared by all three is X2, B's cross-thread submission into a loop running inside A. The Handle._run graft from v5m closes it, verified in scratch on 3.10, 3.11 and 3.13 with the async control still passing. The pre-trace stub door (X1) is common to all three; a __module__ provenance graft closes it without touching the P1 retro. The remaining shared residual is the where-not-who queue-drain (X4), which only needs stating.\n\nmint-and-anchor's cost is over-blocking. Most of it (PROFILER_LOST, THREAD_HOP, SECTION_UNFINISHED) guards only against under-counting and can be demoted to notes, as v5m and the lower-bound design do, with no loss of soundness. Its single backend and one-sentence rules also make it the most testable. With the listed grafts it is the design least likely to be re-entered through another door in round 4."
+  },
+  "judge:2": {
+   "per_design": [
+    {
+     "name": "v5e \"mint-and-anchor\": the narrowest sound coverage instrument",
+     "soundness_0_10": 7.5,
+     "overblocking_cost_0_10": 5,
+     "simplicity_0_10": 8.5,
+     "testability_0_10": 8,
+     "p1_retro_ok": true,
+     "claims_that_do_not_hold": [
+      "R1-B3 / R3-B2 CLOSED_STRUCTURALLY, and the attribution claims 'asyncio Task, loop callback ... cannot reach a section's anchor' and 'Concurrent sections cannot cross-credit'. Neither holds once an event loop runs inside a section. Test (judge2/probe_narrow2.py): cov.run('A', <runs loop.run_until_complete>) on thread 1, and on thread 2 cov.run('B', ...) submits job() via run_coroutine_threadsafe. Result: gate A VERDICT PASS {'jfx:target': 1}, although A's own code never calls target (3.11 and 3.12). The WHY text says the loop's tasks are 'inside that section by definition', and that definition is exactly the cross-credit.",
+      "The stated limits leave out the queue-drain shape: A's stack runs a job that B's section queued, and A gets the credit. Test: gate A VERDICT PASS while A never names target (probe_narrow2.py P2iso). v5m (L1) and lower-bound state this limit. This design does not, and claims no cross-credit instead.",
+      "R2-D4 and R3-B3 are called closed, but refusing PROFILER_LOST is a new over-block, and a nondeterministic one. Losing the hook can only drop calls, so the refusal adds no soundness. Test (probe_flaky.py): a battery calls the target and then catches a SIGALRM Timeout in a solver loop. Across 20 runs of the identical harness it refused PROFILER_LOST 12 times on 3.11 and 17 times on 3.13, and scored PASS otherwise. A caught RecursionError after the target was called also refuses (probe_narrow.py P3).",
+      "R3-D2 CLOSED_STRUCTURALLY via SECTION_UNFINISHED. Refusing a raised opening is over-blocking, not a closure. Calls made before the raise are real, and close already runs on both paths. Test: the honest per-case refusal battery `try: cov.run('G', refuses, x) except PowerError` refuses SECTION_UNFINISHED (P4) with every target called. v5m and lower-bound both score the same shape."
+     ],
+     "holes_found": [
+      "A cross-thread job submitted onto an event loop that runs inside another section's cov.run is credited to that section (false PASS, demonstrated on 3.11 and 3.12).",
+      "An inline drain of another section's queued jobs is credited to the section doing the draining (false PASS, demonstrated). It is not disclosed.",
+      "Stated residual: a clone built during the trace with T's own globals and dropped before exit is credited."
+     ],
+     "summary": "The best adoption-to-soundness ratio. One setprofile backend, about 300 LOC, and byte-identical battery outputs on 3.10\u20133.13. Both rules are facts about the stack or about object identity, so every rule can be pinned by a deterministic mutant; PROFILER_LOST can be forced with sys.setprofile(None) in fn. Minting accepts the widest set of honest targets: factory products, no-wraps decorator products, dataclass methods and singledispatch. The f_globals CLONE_CALLED tripwire gives it the strongest identity of the three. The P1 retro is exact with run_p1 unmodified (reproduced on 3.10, 3.11, 3.12 and 3.13); only the exam runner changes to cov.run. Its over-blocking comes mostly from refusals that buy no soundness: PROFILER_LOST, which is flaky under signals; SECTION_UNFINISHED, which refuses expected-exception batteries; and ALIAS, THREAD_HOP and CODE_SWAPPED. It also refuses every foreign setprofile profiler, including pure-Python ones. The NOT_EXERCISED message says 'never executed' for targets that did run on pool threads or child tasks (P5/P6), which misleads honest authors. The one demonstrated false pass is the where-not-who class (a loop or queue drained inside a section), and the claims overstate closure there."
+    },
+    {
+     "name": "v5e \"lower-bound trace\": one-owner carriers for identity, opener-stack ownership for attribution",
+     "soundness_0_10": 6,
+     "overblocking_cost_0_10": 5,
+     "simplicity_0_10": 3.5,
+     "testability_0_10": 4,
+     "p1_retro_ok": true,
+     "claims_that_do_not_hold": [
+      "The attribution WHY lists 'a unit descended from no section credits the open section' among the things that cannot happen. The design's own stated limit and e8 show an unsectioned producer feeding G's worker scoring for G. The guarantee is about units, not work, so the class-B door is admitted rather than closed.",
+      "R2-D3 and R1-D4: 'sequential shapes now score' holds only if no other section is open at call time. The same harness flips verdict with scheduling (probe_lb.py): G's pool jobs with H opening at t=0 give NOT_EXERCISED with ambiguous {'jfx:target': 2}; with H opening after G closes, the same code scores PASS (3.11 and 3.12). This verdict flakiness is not disclosed as such.",
+      "R2-B1 is presented as closed ('cannot be declared at all'), but for honest code it is an unfixable over-block. `@timed def score_all` (a decorator without wraps) refuses NESTED_CODE, and the inner function is bound to no name, so the entry point cannot be declared without editing the code under test. Factory products (double = make_mul(2)) and dataclass __init__ also refuse NESTED_CODE; singledispatch refuses SHARED_ROUTE (all demonstrated).",
+      "R1-B1 is called CLOSED_STRUCTURALLY, yet on 3.9/3.10 exec(carrier.__code__) and a generator from a dead clone are credited, by the design's own stated limit. So it is structural only on 3.11+."
+     ],
+     "holes_found": [
+      "While G is the only open section, work that unsectioned code feeds into G's inherited workers is credited to G (stated; tested by the designer to score).",
+      "An inline drain of another section's jobs is credited to the section doing the draining (demonstrated PASS; stated).",
+      "A call through entry.__wrapped__ credits the declared wrapper (stated).",
+      "3.10: bare exec of the carrier's code is credited (stated)."
+     ],
+     "summary": "The broadest attribution for honest harnesses: with-blocks including ExitStack, @contextmanager and fixtures; pools, tasks and executors when sections do not overlap; exceptions tolerated; hook mishaps kept as notes; lru_cache accepted. The principle that counts are lower bounds is right, and the other designs should take it. The cost is the highest complexity of the three: CO_NESTED carrier selection, the gc-graph SHARED_ROUTE analysis (which differs by version; the designer found a 3.10 door in their own draft), heap scans inside the hook on the first credited call, private concurrent.futures._WorkItem internals that break on 3.14, Thread.start interception, a ContextVar, contextlib opener heuristics, and a busy set. Credit depends on thread timing through the exclusivity rule, so a frozen exam cannot pin it deterministically and honest verdicts can be flaky. Identity over-blocks common research-code shapes (no-wraps decorators, factories, dataclasses) with no remedy short of editing the module under test. The P1 retro is exact (reproduced on all four versions)."
+    },
+    {
+     "name": "v5m: private replica + live stack",
+     "soundness_0_10": 7.5,
+     "overblocking_cost_0_10": 5,
+     "simplicity_0_10": 6,
+     "testability_0_10": 6,
+     "p1_retro_ok": true,
+     "claims_that_do_not_hold": [
+      "R2-B2 and the WHY 'the only ways to be credited to O are to be synchronously awaited by O's with-block, or by a frame the author explicitly carried to O'. Because the nearest marker wins, a carried callback fired from B's with-block credits A, not B. Test (probe_v5m.py V1): A carries a callback into a shared registry, and B's section fires it while A is open. Result: gate A PASS {'jfx:target': 1}, and A's own flow never ran the target (3.11 and 3.12). carry() turns a careless registry into a cross-credit.",
+      "The experiments claim e10 (a helper inside a helper scores; ExitStack gives SECTION_FORM) is in the final regression log. final_all_versions.txt is truncated by a BrokenPipeError from `head` at e10 on 3.10 and 3.11, so those lines are missing. I reproduced ExitStack giving SECTION_FORM independently."
+     ],
+     "holes_found": [
+      "A carried callback invoked from another section's flow credits the section that carried it (false PASS, demonstrated).",
+      "An in-trace clone with OTHER globals (FunctionType(f.__code__, {})), called and dropped, is credited: PASS, demonstrated V3. There is no f_globals check; mint catches this as CLONE_CALLED. L4 discloses it only in general terms.",
+      "An inline drain of another gate's jobs is credited (stated L1; demonstrated). Stated L2: non-asyncio schedulers are credited too."
+     ],
+     "summary": "The same identity core as mint, the private replica, which reaches the P1 retro exactly (reproduced on all four versions). It has the soundest attribution against loops: the Handle._run cut correctly refuses the cross-thread-onto-loop case that fools mint. Hook mishaps and exceptions are notes, and per-case expected-exception batteries score. It accepts aliases, instance own-dict paths and PEP 562. On 3.12+ the sys.monitoring local-PY_START backend coexists with cProfile and setprofile tools at about 1.0x overhead, which is valuable. For adoption and testability it costs more: two backends with version-conditional expected outcomes (FOREIGN_PROFILER, HOOK_GONE and SECTION_THREAD exist only on \u22643.11), so an exam must run and mutate on both sides. There is a bytecode f_lasti check for the with-statement form that 3.14 breaks, and generator-start detection by RESUME offset on 3.11. carry() is an author-assertion door. Every thread, pool job and asyncio child task must be carried: `with section: asyncio.run(main())` credits nothing (V2), and gather needs a carry per coroutine. Fixtures and ExitStack are refused (SECTION_FORM). Code inside sections runs 10\u201311x slower on \u22643.11."
+    }
+   ],
+   "winner": "v5e \"mint-and-anchor\": the narrowest sound coverage instrument",
+   "grafts": [
+    "From lower-bound (and v5m): COUNTS ARE LOWER BOUNDS. Demote every condition that can only lose calls to a note printed in the NOT_EXERCISED message: PROFILER_LOST, THREAD_HOP, CODE_SWAPPED, OPEN_AT_EXIT and end=='raised'. Keep the calls credited to a raised opening. Refuse only on over-credit tripwires (CLONE_ALIVE, CLONE_CALLED), malformed or stale traces, and missing targets. This removes the nondeterministic signal-timeout refusals (12/20 on 3.11, 17/20 on 3.13 in probe_flaky.py) and the per-case expected-exception over-block (P4), and cuts about five reason codes from the exam.",
+    "From v5m: resolution relaxations that stay sound under object identity, because the object is pinned at trace entry. Allow steps through an instance's own __dict__ (SimpleNamespace, registries) and the PEP 562 module __getattr__ fallback. Accept aliases, so one mint credits every declared name of that one object, instead of refusing ALIAS.",
+    "From v5m and lower-bound: diagnostic buckets. Count M_T hits on hooked threads that have no anchor on the chain (child tasks, callbacks) and hits after close. The NOT_EXERCISED message should name them and say that work on other threads, pools or tasks is never credited and must open its own cov.run or run_async. Today mint prints 'never executed' for targets that ran on a pool thread or a task (P5/P6).",
+    "From v5m, as a conditional graft: the asyncio Handle._run walk boundary. Adopting it closes the demonstrated loop-inside-section cross-credit, at the cost of asyncio.run inside cov.run crediting only through run_async. Under the adoption lens, the preferred alternative is to keep the breadth. Then add 'a scheduler or queue drained on a section's stack (an asyncio loop run inside cov.run, a queue of other sections' jobs) credits that section' to stated_limits, correct the R1-B3/R3-B2 claims, and freeze an exam case that pins the documented outcome.",
+    "From v5m, optional and only with a split exam: on 3.12+, observe minted code objects with sys.monitoring local PY_START events instead of setprofile. This drops FOREIGN_PROFILER on 3.12+, lets cProfile and pure-Python profilers coexist, gives about 1.0x overhead outside targets, and lets the diagnostic bucket see every thread. Keep the one setprofile backend if the exam cannot be run and mutated on both backends.",
+    "From lower-bound: accept C caching wrappers (lru_cache/cache) by minting their one-hop __wrapped__ FunctionType. Misses count and hits do not; disclose that a direct __wrapped__ call counts. Keep class-based wrappers, partial and property refused.",
+    "From lower-bound: exam hygiene. Pair every hazard sweep with a mutant that proves the sweep detects the defect, following the e7_mutant pattern (a record() holding the lock without the busy mark hangs at k=10..12). Keep the GC-threshold sweep for finalizer re-entry around open, close and record."
+   ],
+   "rationale": "I judged on adoption and testability. All three designs reproduce the P1 retro exactly with run_p1.py unmodified on 3.10, 3.11, 3.12 and 3.13: {styxx.power:reachable: 12}, refusing [V5:NOT_EXERCISED] with exactly the other four named. So the retro does not separate them.\n\n**Why mint-and-anchor wins.** It is the only design whose every rule is a fact about identity or stack structure, running on one observation backend. Its batteries are byte-identical across all four versions, so a frozen mutant exam can pin each rule deterministically.\n\n- **Identity.** Minting accepts the widest set of honest targets: factory products, no-wraps decorator products, dataclass methods and singledispatch. The lower-bound design refuses most of these with no remedy short of editing the module under test. Mint also has the strongest identity tripwires; the CLONE_CALLED check catches an other-globals clone that v5m credits.\n- **Over-blocking.** Most of mint's over-blocking comes from refusals that add no soundness: PROFILER_LOST, SECTION_UNFINISHED and ALIAS. Hook loss or a raise can only drop calls, never over-credit. I showed two costs of these refusals:\n  - PROFILER_LOST makes an honest signal-timeout battery flaky: the same harness refused 12/20 runs on 3.11 and 17/20 on 3.13.\n  - SECTION_UNFINISHED refuses per-case expected-refusal batteries, the natural shape for a 'refuses degenerate' gate.\n\n  The lower-bound principle, where only over-credit refuses and everything else is a note, removes both costs cheaply.\n- **Holes.** Mint's one demonstrated false pass is in the where-not-who class: an event loop run inside section A executes B's cross-thread job, or A drains B's queue, and A is credited. All three designs admit the queue form, but mint claimed closure there instead of disclosing it. That needs a claim correction plus either a stated limit or v5m's Handle._run cut.\n\n**v5m is a close second.** It uses the same replica identity and has the soundest attribution against event loops. Its 3.12+ sys.monitoring backend is attractive. Against it:\n- Two backends, a bytecode with-form check that 3.14 breaks, and version-conditional expected outcomes roughly double the exam matrix.\n- carry() is an author-assertion door. I demonstrated a false PASS when a carried callback is fired from another section's flow.\n- Async harnesses must carry every task.\n\n**The lower-bound design has the broadest attribution** for pools, tasks and fixtures, and the right 'lower bound' principle. It ranks last under this lens:\n- Its verdicts depend on thread scheduling through the exclusivity rule. I showed the same harness flipping between NOT_EXERCISED and PASS.\n- Identity refuses common research-code entry points with no remedy.\n- It rests on CO_NESTED, gc-graph SHARED_ROUTE analysis, private concurrent.futures internals and a busy set. This machinery is hard to freeze an exhaustive exam against, and its soundness text admits inherited-credit and __wrapped__ doors.\n\n**Probes.** They are under /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/design/judge2/: probe_narrow.py, probe_narrow2.py, probe_flaky.py, probe_v5m.py, probe_lb.py, with fixtures jfx.py and jfx2.py."
+  }
+ }
+}

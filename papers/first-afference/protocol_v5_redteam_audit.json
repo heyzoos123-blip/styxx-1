@@ -1,49 +1,121 @@
 {
-  "instrument": "styxx.protocol v5 (declared harness coverage)",
-  "audited_impl_sha256": "652dd0898570d04e9a4ad92e7fdd04d60e0ed5d5f130a49d060ed55ebda29a35",
-  "audited_exam": "run_protocol_v5.py at 13ae3fed; protocol_v5b_result.json",
-  "date": "2026-09-24",
-  "round": 1,
-  "verdict": "DO_NOT_SHIP -- four blockers in the module, reproduced by the author; the exam's gates count any refusal and cannot see a mutant refusing for the wrong reason",
-  "module_red_team": {
-    "scripts": "protocol_v5_redteam/round1_module/",
-    "blockers": {
-      "B1_shared_code_object": "functions sharing one code object pass for each other: factory closures (check_low/check_high from one _make), and every function behind a decorator without functools.wraps resolves to the same inner code. t01_shared_code.py: 'factory closure: VERDICT PASS' with only check_low called; 'no-wraps decorator: VERDICT PASS' with only entry_a called",
-      "B2_code_equality_not_identity": "calls matched with == on code objects, which ignores co_filename and qualname: a vendored copy in another module, a pinned exec'd copy of styxx.protocol (the pattern run_protocol_v5.py itself uses for v4), and two dataclasses' generated __init__ all satisfy each other. t02_code_equality.py, t03_generated.py",
-      "B3_global_section_slot": "the open section is one process-wide slot: a thread started in A (or outside any section) that calls while B is open credits B; an asyncio task created in A and run during B credits B. t04_thread_leak_section.py, t10_misc.py (a)",
-      "B4_c_profiler_crash": "under cProfile sys.getprofile() is a non-callable Profile object; the hook calls it -> TypeError escapes the harness, and exit reinstalls it so the user's profiler is destroyed. t06_under_cprofile.py"
+  "round_1": {
+    "instrument": "styxx.protocol v5 (declared harness coverage)",
+    "audited_impl_sha256": "652dd0898570d04e9a4ad92e7fdd04d60e0ed5d5f130a49d060ed55ebda29a35",
+    "audited_exam": "run_protocol_v5.py at 13ae3fed; protocol_v5b_result.json",
+    "date": "2026-09-24",
+    "round": 1,
+    "verdict": "DO_NOT_SHIP -- four blockers in the module, reproduced by the author; the exam's gates count any refusal and cannot see a mutant refusing for the wrong reason",
+    "module_red_team": {
+      "scripts": "protocol_v5_redteam/round1_module/",
+      "blockers": {
+        "B1_shared_code_object": "functions sharing one code object pass for each other: factory closures (check_low/check_high from one _make), and every function behind a decorator without functools.wraps resolves to the same inner code. t01_shared_code.py: 'factory closure: VERDICT PASS' with only check_low called; 'no-wraps decorator: VERDICT PASS' with only entry_a called",
+        "B2_code_equality_not_identity": "calls matched with == on code objects, which ignores co_filename and qualname: a vendored copy in another module, a pinned exec'd copy of styxx.protocol (the pattern run_protocol_v5.py itself uses for v4), and two dataclasses' generated __init__ all satisfy each other. t02_code_equality.py, t03_generated.py",
+        "B3_global_section_slot": "the open section is one process-wide slot: a thread started in A (or outside any section) that calls while B is open credits B; an asyncio task created in A and run during B credits B. t04_thread_leak_section.py, t10_misc.py (a)",
+        "B4_c_profiler_crash": "under cProfile sys.getprofile() is a non-callable Profile object; the hook calls it -> TypeError escapes the harness, and exit reinstalls it so the user's profiler is destroyed. t06_under_cprofile.py"
+      },
+      "defects": {
+        "D1_non_lifo_and_reentry": "tracers exited out of LIFO order, or one tracer entered twice, leave a hook installed and blind the other; re-entry refuses a correct call. t07_state_leaks.py",
+        "D2_resolution_crashes": "a declared module raising RuntimeError or SyntaxError at import, or a __wrapped__ loop, escapes as that exception rather than GateSpecError. t08_crashes.py",
+        "D3_non_string_trace_keys": "coverage_trace.targets with an int/None key crashes score() and check_metrics() with TypeError in sorted(). t08_crashes.py",
+        "D4_undisclosed_overblocking": "threads existing before the trace, _thread-started threads, parallel sections in two threads, and a harness that calls sys.setprofile/cProfile inside a section are all refused or blinded; only child processes were disclosed. t05_false_refusals.py, t10_misc.py (b)"
+      },
+      "nits": {
+        "N1_reserved_keys": "'section' and 'exercises' used as free-text notes scored under v4 and refuse under v5; no committed prereg uses them (G3 honestly 0) but the prereg's 'adds only optional keys' should say they are now reserved",
+        "N2_looseness": "_TARGET_RE uses $ (matches before a trailing newline); Sub.fit resolves through the MRO to Base.fit so Other().fit() satisfies it; recorded code sha256 values are never checked"
+      }
     },
-    "defects": {
-      "D1_non_lifo_and_reentry": "tracers exited out of LIFO order, or one tracer entered twice, leave a hook installed and blind the other; re-entry refuses a correct call. t07_state_leaks.py",
-      "D2_resolution_crashes": "a declared module raising RuntimeError or SyntaxError at import, or a __wrapped__ loop, escapes as that exception rather than GateSpecError. t08_crashes.py",
-      "D3_non_string_trace_keys": "coverage_trace.targets with an int/None key crashes score() and check_metrics() with TypeError in sorted(). t08_crashes.py",
-      "D4_undisclosed_overblocking": "threads existing before the trace, _thread-started threads, parallel sections in two threads, and a harness that calls sys.setprofile/cProfile inside a section are all refused or blinded; only child processes were disclosed. t05_false_refusals.py, t10_misc.py (b)"
+    "exam_audit": {
+      "scripts": "protocol_v5_redteam/round1_exam/",
+      "reproduced": "attempt B reproduces exactly: 24/24, 9/9, G4 refused with reachable x12, G1 not refused with order_stat_bar x1, 86 pairable / 0 disagreements / 53 raised, sha 652dd089, PROCEED_TO_RED_TEAM",
+      "false_claim": "commit 13ae3fed says the 53 identically-refused results refuse 'because their preregs predate the gates-block format'. False for 6 of 53: those preregs HAVE gates blocks and both versions refuse with 'metric not present in result' -- hand-scored verdicts the protocol cannot reproduce: closed-model-frontier/handedness_accusations_result.json, handedness_v2_result.json, handedness_v3_result.json, range_sanity_report_ab_result.json, frequency-resonance/efficiency_control_result.json, rhythm-rescue/untied_control_result.json. The verdict is unaffected.",
+      "defects": {
+        "D1_g0_counts_any_refusal": "frac_violation_mutants_refused counts any GateSpecError; with individual checks deleted from protocol.py, undeclared_section_opened, section_non_string, target_builtin, exercises_not_list, exercises_empty and section_absent still refuse for a later reason. With the non-empty check deleted, an empty 'exercises' beside a declaring gate SCORES PASS and no exam mutant can see it. In the committed run every detail string names the intended reason, so the result is truthful; the gate does not require it.",
+        "D2_g2_counts_any_refusal": "p1_retro_case_refused is 1.0 on any GateSpecError: misspelling one declared target ('reachabel') refuses at resolution with the P1 harness never run and G2 still passes",
+        "D3_valid_cases_insensitive": "nested_tracers passes with profiler chaining removed (outer count drops 2->1, unchecked); wraps_decorated passes with inspect.unwrap removed; without unwrap a sibling wraps-decorated function satisfies the declaration and no case covers it",
+        "D4_shared_code_uncovered": "independently confirms module B1",
+        "D5_self_coverage_floor_only": "one genuine case per section plus fabricated results reaches PROCEED; only coverage_trace (a one-line factory) and _check_coverage are declared",
+        "D6_population_overstated": "of 86 'pairable', 47 fail at construction before v5's new code runs; v5 reached score() on 39 and produced verdicts on 33. All 33 match their committed verdicts, so a correctly filtered attempt-A G3 would also have passed -- the outcome does not depend on the G3 rewrite",
+        "D7_attempt_a_undocumented": "no RESULT doc or CHANGELOG entry for attempt A's failure, unlike BC-1/BIN-1; the rename protocol_v5_result.json -> protocol_v5_result_run1.json is unexplained"
+      },
+      "nits": [
+        "code sha256 values in the trace are path-dependent (marshal includes co_filename) and never checked",
+        "retro G1's scored metric comes from the committed receipt, the traced re-run output is discarded",
+        "retro degenerate() uses a fresh rng, so its inputs differ from P1's original run (outcome structurally identical)",
+        "the pinned 'v4' 98a5c368 includes protocol.py changes of 08-23 and 08-26, after v4's own exam"
+      ],
+      "goalpost_assessment": "legitimate by the BIN-1 -> BIN-2 precedent (one gate changed, code under test identical, A's verdict left unedited); the open_set_read justification is true (its runner never imports styxx.protocol, hard-codes prereg_commit, builds gates by hand; its prereg has only a python fence). It brushes the no-weakening rail because the committed-verdict comparison became ungated; mitigated by D6."
     },
-    "nits": {
-      "N1_reserved_keys": "'section' and 'exercises' used as free-text notes scored under v4 and refuse under v5; no committed prereg uses them (G3 honestly 0) but the prereg's 'adds only optional keys' should say they are now reserved",
-      "N2_looseness": "_TARGET_RE uses $ (matches before a trailing newline); Sub.fit resolves through the MRO to Base.fit so Other().fit() satisfies it; recorded code sha256 values are never checked"
+    "author_reproduction": "B1, B2, B3 and B4 re-run by the author from the red team's scripts before any repair; all four reproduced verbatim."
+  },
+  "round_2": {
+    "date": "2026-09-24",
+    "audited_impl_sha256": "81f6cad270595608ef843d854c20c39548765548c64824dfcd016ed829285cb2",
+    "audited_exam": "run_protocol_v5c.py at 3bdd5a22; protocol_v5c_result.json",
+    "verdict": "NOT SHIPPABLE -- three module blockers; five surviving mutants of named repairs in the exam",
+    "module_red_team": {
+      "scripts": "protocol_v5_redteam/round2_module/ (outputs: output_py311.txt; multi_version_output.txt -- identical on 3.10, 3.11, 3.12, 3.13)",
+      "round1_recheck": "every round-1 blocker closed as tested (SHARED_CODE, identity, THREAD_OUTLIVES, section attribution, FOREIGN_PROFILER, EXIT_ORDER, REENTRY, UNRESOLVED, BAD_TRACE, INHERITED); still open: thread-level hook persists after exit (round-1 t07 d), check_metrics(list) AttributeError (inherited from v4)",
+      "blockers": {
+        "R2_B1_shared_code_checked_once": "holders counted only at tracer construction; a no-wraps decorator applied at runtime (timed(cheap_path)), or a lazily imported plugin using it, is credited as the declared function: 'score_all never called -> VERDICT PASS'. a1_shared_after_entry.py",
+        "R2_B2_concurrent_sections_share_pool": "a pool worker started by section A is attributed to A permanently; B's pooled call is credited to A while both are open -> VERDICT PASS. a4_concurrent_pool_falsepass.py",
+        "R2_B3_thread_hook_persists": "__exit__ restores only the exiting thread's profiler; threads started during the trace keep the inert _Hook for life: fib(22) 8.2x slower in a worker on 3.11. a5_leaks.py"
+      },
+      "defects": {
+        "R2_D1_instance_path": "'fx2_inst:default_model.fit' reaches Base.fit through an instance; Other().fit() -> PASS",
+        "R2_D2_wraps_siblings": "run_fast and run_safe both @functools.wraps(_run); declaring run_fast unwraps to _run, calling only run_safe -> PASS",
+        "R2_D3_undisclosed_overblocking": "run_in_executor/to_thread inside a section, one pool across sequential sections, a pool warmed outside a section, multiprocessing.pool.ThreadPool (terminate without join), two threads sharing a section name",
+        "R2_D4_recursion_in_hook": "a RecursionError raised in the hook makes CPython drop the profiler; the section refuses PROFILER_REPLACED (wrong reason) and the thread hook leaks",
+        "R2_D5_thread_hook_leak_on_error_paths": "EXIT_ORDER and exception exits leave threading's profile hook set to the _Hook",
+        "R2_D6_escapes": "section() exited in another Context raises ValueError from ContextVar.reset; check_metrics(None|[]|'s'|5) AttributeError (v4-inherited)"
+      },
+      "nits": [
+        "SHARED_CODE counts dead-but-uncollected closures (gc timing)",
+        "declaring threading:Thread.start can never be satisfied",
+        "huge-int counts / non-sha target values accepted (provenance only)",
+        "a dict-subclass trace whose .get raises escapes (forged)",
+        "two tracers entered in two threads leave a hook (unlikely)",
+        "record() does not carry section-close refusals",
+        "construction 1.7s for 40 targets on a 3M-object heap"
+      ],
+      "held": [
+        "threading.Timer and Thread subclasses calling base start",
+        "call_later from A firing in B refused",
+        "copy_context() from A run in B refused",
+        "generator created in A resumed in B credited to B (correct)",
+        "grandchild thread after A exited -> after_close[A]",
+        "blind window -> refusal, never miscount",
+        "no finalizer deadlock",
+        "malformed traces refused by score and check_metrics",
+        "3.9 parse + threading._profile_hook fallback (not executed: no 3.9 interpreter)"
+      ]
+    },
+    "exam_mutation_audit": {
+      "scripts": "protocol_v5_redteam/round2_exam/ (mut.py driver, mutants.py, out/*.txt, results.txt, repro.py)",
+      "method": "53 mutants of styxx/protocol.py, each dry-run through run_protocol_v5c.py --smoke --full-battery in a clone",
+      "survivors_blocker_class": {
+        "R06_count_after_close": "counting calls after their section closed survives and FAILS OPEN: an asyncio task created in G and awaited after G closes scores PASS under the mutant; the only closed-section case lands its late call in a gate that never declared the target",
+        "R13b_R13c_non_string_keys": "only targets[1] was tested; a non-string key under sections scores PASS; inside a section it refuses BAD_COUNT (wrong code); a list-valued section crashes score() and check_metrics() with AttributeError",
+        "R13d_same_code_shadow": "the check_metrics case converts a reported BAD_TRACE into a raised one, so a check_metrics that RAISES [V5:BAD_TRACE] passes the case too -- 'reports, never raises' could not fail",
+        "R02b_alias_targets": "no case declares two names for one function (alias = target); removing that SHARED_CODE check refuses NOT_EXERCISED instead (fails closed, wrong code)"
+      },
+      "defects": [
+        "R04a detected only by deadlock: parallel case swallows worker exceptions and Barrier has no timeout, so a scored run would hang",
+        "B4 half tested: wiping the user's C profiler before refusing (R09b) and the threading-side foreign check (R09c) survive; committed result shows leaked_profiler true on the two cProfile cases, masked by _guarded",
+        "re-entering an EXITED tracer (R10b) untested; BAD_COUNT's undeclared-key clause untested (forged undeclared key -> PASS); grandchild thread (R05b) untested",
+        "PROCESS: run_protocol_v5c.py was first committed with the implementation and the scored result -- the spec was frozen, the cases were not"
+      ],
+      "nits": [
+        "non-ASCII target (R14b) untested",
+        "TARGET_SET weakened to subset survives but fails closed",
+        "R01b and 'hook ignores _active' effectively equivalent mutants"
+      ],
+      "verified_true": [
+        "protocol_v5c_result.json reproduces in a fresh clone: 46/46, 14/14, retro exact, 0 crashes, 86/0/33",
+        "impl_sha256 81f6cad2 equals protocol.py at 3bdd5a22 and da9a63ab",
+        "the profile.runcall correction is legitimate: 'Bad return' under any prior Python profiler with no styxx involved; the replacement case is sensitive (removing chaining fails it)",
+        "B1-B4 and D1/D2 repairs each genuinely tested"
+      ]
     }
-  },
-  "exam_audit": {
-    "scripts": "protocol_v5_redteam/round1_exam/",
-    "reproduced": "attempt B reproduces exactly: 24/24, 9/9, G4 refused with reachable x12, G1 not refused with order_stat_bar x1, 86 pairable / 0 disagreements / 53 raised, sha 652dd089, PROCEED_TO_RED_TEAM",
-    "false_claim": "commit 13ae3fed says the 53 identically-refused results refuse 'because their preregs predate the gates-block format'. False for 6 of 53: those preregs HAVE gates blocks and both versions refuse with 'metric not present in result' -- hand-scored verdicts the protocol cannot reproduce: closed-model-frontier/handedness_accusations_result.json, handedness_v2_result.json, handedness_v3_result.json, range_sanity_report_ab_result.json, frequency-resonance/efficiency_control_result.json, rhythm-rescue/untied_control_result.json. The verdict is unaffected.",
-    "defects": {
-      "D1_g0_counts_any_refusal": "frac_violation_mutants_refused counts any GateSpecError; with individual checks deleted from protocol.py, undeclared_section_opened, section_non_string, target_builtin, exercises_not_list, exercises_empty and section_absent still refuse for a later reason. With the non-empty check deleted, an empty 'exercises' beside a declaring gate SCORES PASS and no exam mutant can see it. In the committed run every detail string names the intended reason, so the result is truthful; the gate does not require it.",
-      "D2_g2_counts_any_refusal": "p1_retro_case_refused is 1.0 on any GateSpecError: misspelling one declared target ('reachabel') refuses at resolution with the P1 harness never run and G2 still passes",
-      "D3_valid_cases_insensitive": "nested_tracers passes with profiler chaining removed (outer count drops 2->1, unchecked); wraps_decorated passes with inspect.unwrap removed; without unwrap a sibling wraps-decorated function satisfies the declaration and no case covers it",
-      "D4_shared_code_uncovered": "independently confirms module B1",
-      "D5_self_coverage_floor_only": "one genuine case per section plus fabricated results reaches PROCEED; only coverage_trace (a one-line factory) and _check_coverage are declared",
-      "D6_population_overstated": "of 86 'pairable', 47 fail at construction before v5's new code runs; v5 reached score() on 39 and produced verdicts on 33. All 33 match their committed verdicts, so a correctly filtered attempt-A G3 would also have passed -- the outcome does not depend on the G3 rewrite",
-      "D7_attempt_a_undocumented": "no RESULT doc or CHANGELOG entry for attempt A's failure, unlike BC-1/BIN-1; the rename protocol_v5_result.json -> protocol_v5_result_run1.json is unexplained"
-    },
-    "nits": [
-      "code sha256 values in the trace are path-dependent (marshal includes co_filename) and never checked",
-      "retro G1's scored metric comes from the committed receipt, the traced re-run output is discarded",
-      "retro degenerate() uses a fresh rng, so its inputs differ from P1's original run (outcome structurally identical)",
-      "the pinned 'v4' 98a5c368 includes protocol.py changes of 08-23 and 08-26, after v4's own exam"
-    ],
-    "goalpost_assessment": "legitimate by the BIN-1 -> BIN-2 precedent (one gate changed, code under test identical, A's verdict left unedited); the open_set_read justification is true (its runner never imports styxx.protocol, hard-codes prereg_commit, builds gates by hand; its prereg has only a python fence). It brushes the no-weakening rail because the committed-verdict comparison became ungated; mitigated by D6."
-  },
-  "author_reproduction": "B1, B2, B3 and B4 re-run by the author from the red team's scripts before any repair; all four reproduced verbatim."
+  }
 }

@@ -1,0 +1,7 @@
+violations refused with their own code: 0.9565 of 46
+  MUTANT FAILED rt_factory_closure_sibling: expected SHARED_CODE, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:check_low': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': 'bf
+  MUTANT FAILED rt_nowraps_decorator_sibling: expected SHARED_CODE, got scored: {'verdict': 'PASS', 'coverage': {'G': {'_v5c_fix:entry_a': 1}}, 'trace': {'tracer': 'styxx.protocol.coverage_trace/1', 'gates_sha256': '96b9
+valid scored with property: 1.0 of 14
+P1 retro exact=True calls={'styxx.power:reachable': 12} outcome=[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION — the harness never ex
+crashes 0 | differential 5 pairable, 0 disagreements, v5 scored 0
+VERDICT: INVALID__smoke_plumbing_only

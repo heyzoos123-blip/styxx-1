@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/repo/papers/first-afference/run_protocol_v5c.py", line 686, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/repo/papers/first-afference/run_protocol_v5c.py", line 623, in main
+    retro = p1_retro(run_p1)
+            ^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/repo/papers/first-afference/run_protocol_v5c.py", line 576, in p1_retro
+    v = exp.score(res)
+        ^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/repo/styxx/protocol.py", line 614, in score
+    covered[name] = self._check_coverage(name, result)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/repo/styxx/protocol.py", line 581, in _check_coverage
+    return {t: sec[t] for t in c["exercises"]}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/repo/styxx/protocol.py", line 581, in <dictcomp>
+    return {t: sec[t] for t in c["exercises"]}
+               ~~~^^^
+KeyError: 'styxx.power:effective_n'

@@ -1,0 +1,149 @@
+== v1_round1.py
+B1 factory closure -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:check_high': its code object is shared by 2 live functions (['_make.<locals>.check']), so a call to any of them is indistingu
+B1 no-wraps decorator -> GateSpecError [V5:SHARED_CODE] declared target 'fx_factory:entry_b': its code object is shared by 2 live functions (['plain.<locals>.inner']), so a call to any of them is indistinguish
+B2 dataclass __init__ -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx_dc:NullModel.__init__'] in section 'G' (it did execute none of them). The metric was produced without running what the
+N2 inherited Sub.fit -> GateSpecError [V5:INHERITED] declared target 'fx_dc:Sub.fit': 'fit' is inherited by Sub, not defined on it — any subclass calling it would satisfy this declaration. Declare the definin
+B3 thread outlives A (orig) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running (['ThreadPoolExecutor-0_0']) — their later work could not be told apart from this sec
+B3 variant: A exits by exception -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names.  | after_close={'A': {'fx_simple:g': 1}}
+B3 thread started outside sections -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names. 
+B3 asyncio task A->B -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:f'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names. 
+   t1 exit: [V5:EXIT_ORDER] coverage_trace exited while another profiler
+D1 non-LIFO -> sys=None thr=None
+D1 re-entry -> GateSpecError [V5:REENTRY] this coverage_trace is already active or has already exited — a tracer is entered exactly once; nested use needs a second tracer
+D1(d) thread keeps hook -> post-exit counted={} worker profile after exit=<styxx.protocol._Hook object at 0x7fe9a2244550>
+== a1_shared_after_entry.py
+A1a runtime decoration after trace entry (score_all never called) -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1b lazily imported plugin using same decorator -> VERDICT PASS coverage={'G': {'fx2_timed:score_all': 1}}
+A1c FunctionType clone made after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+A1d __code__ assignment after entry -> VERDICT PASS coverage={'G': {'fx2_clone:target': 1}}
+== a2_resolution.py
+A2a INHERITED bypass via instance path -> VERDICT PASS coverage={'G': {'fx2_inst:default_model.fit': 1}}
+A2b wraps-variant aliasing via inspect.unwrap -> VERDICT PASS coverage={'G': {'fx2_wraps:run_fast': 1}}
+A2c singledispatch: public entry really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx2_sd:process'] in section 'G' (it did execute none of them). The metric was produced without running what the gate name
+== a3_threads.py
+A3a run_in_executor awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['asyncio_0']) — their later work could not be told apart from this section's. Join 
+A3b asyncio.to_thread awaited inside section (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['asyncio_0']) — their later work could not be told apart from this section's. Join 
+A3c pool created+warmed outside section, used inside (correct) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx_simple:f'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names.  unsectioned={'fx_simple:f': 1}
+A3d pool shared by sequential sections (correct) -> GateSpecError [V5:THREAD_OUTLIVES] section 'A' closed with threads started inside it still running (['ThreadPoolExecutor-1_0']) — their later work could not be told apart from this sec
+A3e concurrent sections sharing a pool -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 2}, 'B': {}} | REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names. 
+A3f thread started in A starts a thread (joined) (control) -> REFUSED [V5:SECTION_ABSENT] gate 'B': section 'B' is absent from the trace — the harness never opened it, so nothing it ran can be attributed to this gate
+A3g _thread.start_new_thread (stated limit, expect refusal) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx_simple:f'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. 
+A3h Thread subclass overriding start -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3i threading.Timer -> VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+A3j call_later scheduled in A fires in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names. 
+A3k generator created in A, resumed in B (B executed it: expect PASS) -> VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+A3l context copied in A, run in B (expect B refused) -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names. 
+== a4_concurrent_pool_falsepass.py
+A4 concurrent sections + shared pool: A never calls f -> errs=[] sections={'A': {'fx_simple:f': 1, 'fx_simple:g': 1}, 'B': {'fx_simple:g': 1}}
+   VERDICT PASS coverage={'A': {'fx_simple:f': 1}, 'B': {'fx_simple:g': 1}}
+== a5_leaks.py
+A5a thread spawned during trace keeps hook after exit -> after trace exit: worker profile=_Hook tracer active=False; fib(22) main=0.003s worker=0.023s (9.1x)
+   exit: [V5:EXIT_ORDER] coverage_trace exited while anothe
+A5b EXIT_ORDER path leaves threading profile installed -> sys=None threading=<styxx.protocol._Hook object at 0x7f4d4e32ab90>
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7f4d4e32ab90>
+A5c exception exit after profiler replaced -> sys=<function exc_exit_with_replaced.<locals>.myprof at 0x7f4d4e317e20> threading=<styxx.protocol._Hook object at 0x7f4d4e32a560>
+   [leak] sys.getprofile= <function exc_exit_with_replaced.<locals>.myprof at 0x7f4d4e317e20>  threading.getprofile= <styxx.protocol._Hook object at 0x7f4d4e32a560>
+A5d blind window then restore (f only called in window) -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['fx_simple:f'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. 
+A5e two tracers in two threads -> {'t1': '[V5:EXIT_ORDER] coverage_trace exited wh'} main sys=<styxx.protocol._Hook object at 0x7f4d4e32a5c0> threading=None
+   [leak] sys.getprofile= <styxx.protocol._Hook object at 0x7f4d4e32a5c0>  threading.getprofile= None
+== a6_misc.py
+A6a RecursionError caught inside a section -> GateSpecError [V5:PROFILER_REPLACED] section 'G' closed with this tracer no longer installed — the harness replaced the profiler (sys.setprofile, cProfile) and the calls after that poi
+   [leak] sys.getprofile= None  threading.getprofile= <styxx.protocol._Hook object at 0x7f079d01e200>
+A6b same section in two shards; each joins its own helper -> errs=["shard0: [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['Th"]
+A6c section entered/exited in different contexts (ExitStack/fixture style) -> ESCAPED ValueError <Token var=<ContextVar name='styxx_v5_section_139670903630992' default=None at 0x7f079d20e390> at 0x7f079d022980> was created in a different Context
+A6d declared target threading:Thread.start, really called -> REFUSED [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION — the harness never executed ['threading:Thread.start'] in section 'G' (it did execute none of them). The metric was produced without running what the g
+A6e finalizer calling a target while tracer lock held -> no deadlock
+== a6a_recursion_rootcause.py
+before: _Hook
+RecursionError raised in: {'depth', '__call__', '_on_call'}
+after caught RecursionError, sys.getprofile(): None
+== a7_malformed.py
+good: VERDICT PASS coverage={'G': {'fx_simple:f': 1}}
+trace=None                   score         GateSpecError [V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+trace=None                   check_metrics ok note=[V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+trace=list                   score         GateSpecError [V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+trace=list                   check_metrics ok note=[V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+trace=str                    score         GateSpecError [V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+trace=str                    check_metrics ok note=[V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+trace=int 10**400            score         GateSpecError [V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+trace=int 10**400            check_metrics ok note=[V5:NO_TRACE] gate 'G' declares 'exercises' but the result c
+tracer=None                  score         GateSpecError [V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is None, n
+tracer=None                  check_metrics ok note=[V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is None, n
+tracer=list                  score         GateSpecError [V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is [1], no
+tracer=list                  check_metrics ok note=[V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is [1], no
+tracer=dict                  score         GateSpecError [V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is {}, not
+tracer=dict                  check_metrics ok note=[V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is {}, not
+tracer=nan                   score         GateSpecError [V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is nan, no
+tracer=nan                   check_metrics ok note=[V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is nan, no
+gates_sha=None               score         GateSpecError [V5:STALE_TRACE] gate 'G': the coverage trace was taken agai
+gates_sha=None               check_metrics ok note=[V5:STALE_TRACE] gate 'G': the coverage trace was taken agai
+gates_sha=bytes              score         GateSpecError [V5:STALE_TRACE] gate 'G': the coverage trace was taken agai
+gates_sha=bytes              check_metrics ok note=[V5:STALE_TRACE] gate 'G': the coverage trace was taken agai
+targets=list                 score         GateSpecError [V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a di
+targets=list                 check_metrics ok note=[V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a di
+targets=None                 score         GateSpecError [V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a di
+targets=None                 check_metrics ok note=[V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a di
+sections=None                score         GateSpecError [V5:BAD_TRACE] gate 'G': coverage_trace.sections must be a d
+sections=None                check_metrics ok note=[V5:BAD_TRACE] gate 'G': coverage_trace.sections must be a d
+sections=list                score         GateSpecError [V5:BAD_TRACE] gate 'G': coverage_trace.sections must be a d
+sections=list                check_metrics ok note=[V5:BAD_TRACE] gate 'G': coverage_trace.sections must be a d
+section G=None               score         GateSpecError [V5:SECTION_ABSENT] gate 'G': section 'G' is absent from the
+section G=None               check_metrics ok note=[V5:SECTION_ABSENT] gate 'G': section 'G' is absent from the
+section G=list               score         GateSpecError [V5:BAD_TRACE] gate 'G': section 'G' must be a dict with str
+section G=list               check_metrics ok note=[V5:BAD_TRACE] gate 'G': section 'G' must be a dict with str
+section G=str                score         GateSpecError [V5:BAD_TRACE] gate 'G': section 'G' must be a dict with str
+section G=str                check_metrics ok note=[V5:BAD_TRACE] gate 'G': section 'G' must be a dict with str
+count huge                   score         VERDICT PASS
+count huge                   check_metrics ok note=None
+count nan                    score         GateSpecError [V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': na
+count nan                    check_metrics ok note=[V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': na
+count inf                    score         GateSpecError [V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': in
+count inf                    check_metrics ok note=[V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': in
+count True                   score         GateSpecError [V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': Tr
+count True                   check_metrics ok note=[V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': Tr
+count 0                      score         GateSpecError [V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': 0;
+count 0                      check_metrics ok note=[V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': 0;
+count -1                     score         GateSpecError [V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': -1
+count -1                     check_metrics ok note=[V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': -1
+count '1'                    score         GateSpecError [V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': '1
+count '1'                    check_metrics ok note=[V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': '1
+count dict                   score         GateSpecError [V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': {}
+count dict                   check_metrics ok note=[V5:BAD_COUNT] gate 'G': section 'G' holds 'fx_simple:f': {}
+section extra key None       score         GateSpecError [V5:BAD_TRACE] gate 'G': coverage_trace.sections must be a d
+section extra key None       check_metrics ok note=[V5:BAD_TRACE] gate 'G': coverage_trace.sections must be a d
+section G key int            score         GateSpecError [V5:BAD_TRACE] gate 'G': section 'G' must be a dict with str
+section G key int            check_metrics ok note=[V5:BAD_TRACE] gate 'G': section 'G' must be a dict with str
+target key unhashable?       score         VERDICT PASS
+target key unhashable?       check_metrics ok note=None
+targets extra                score         GateSpecError [V5:TARGET_SET] gate 'G': the trace's target set ['fx_simple
+targets extra                check_metrics ok note=[V5:TARGET_SET] gate 'G': the trace's target set ['fx_simple
+dict subclass .get raises    score         ESCAPED RuntimeError: weird get
+dict subclass .get raises    check_metrics ESCAPED RuntimeError: weird get
+missing tracer               score         GateSpecError [V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is None, n
+missing tracer               check_metrics ok note=[V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is None, n
+result=None                           score         GateSpecError
+result=None                           check_metrics ESCAPED AttributeError: 'NoneType' object has no attribute 'get'
+result=[]                             score         GateSpecError
+result=[]                             check_metrics ESCAPED AttributeError: 'list' object has no attribute 'get'
+result=s                              score         GateSpecError
+result=s                              check_metrics ESCAPED AttributeError: 'str' object has no attribute 'get'
+result=5                              score         GateSpecError
+result=5                              check_metrics ESCAPED AttributeError: 'int' object has no attribute 'get'
+result={'m': nan}                     score         GateSpecError
+result={'m': nan}                     check_metrics ok
+result={'m': 1.0, 'coverage_trace': { score         ok
+result={'m': 1.0, 'coverage_trace': { check_metrics ok
+== a9_threadpool_race.py
+A9a multiprocessing.pool.ThreadPool as ctx manager (run 0) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['Thread-1 (worker)', 'Thread-2 (worker)', 'Thread-4 (worker)']) — their later work 
+A9a multiprocessing.pool.ThreadPool as ctx manager (run 1) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['Thread-8 (worker)', 'Thread-9 (worker)', 'Thread-11 (worker)']) — their later work
+A9a multiprocessing.pool.ThreadPool as ctx manager (run 2) -> GateSpecError [V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['Thread-15 (worker)', 'Thread-16 (worker)']) — their later work could not be told a
+A9b concurrent.futures ThreadPoolExecutor ctx manager (control) -> VERDICT PASS coverage={'G': {'fx_simple:f': 8}}
+== a10_cyclic_garbage.py
+A10 dead (uncollected) closure counted as a live sharer -> GateSpecError [V5:SHARED_CODE] declared target 'fx2_cyc:walk10': its code object is shared by 2 live functions (['_make.<locals>.walk']), so a call to any of them is indistinguishable 
+A10 same after gc.collect() -> VERDICT PASS coverage={'G': {'fx2_cyc:walk10': 11}}
+== a11_grandchild.py
+A11 grandchild thread started after A closed, while B open -> REFUSED [V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION — the harness never executed ['fx_simple:g'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names.  after_close={'A': {'fx_simple:g': 1}}
+== v1_b4_cprofile.py under -m cProfile
+profiler before: <__main__.Profile object at 0x7f674c362b30>
+ESCAPED: GateSpecError [V5:FOREIGN_PROFILER] a Profile is installed as the sys profiler; it cannot be chained or restored from Python. Run the traced harness outside it.
+profiler after: <__main__.Profile object at 0x7f674c362b30>

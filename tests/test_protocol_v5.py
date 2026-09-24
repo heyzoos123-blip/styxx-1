@@ -443,3 +443,144 @@ def test_non_string_trace_keys_refuse_and_check_metrics_reports(mk, fx):
 def test_trailing_newline_target_refuses(mk):
     with pytest.raises(GateSpecError, match=r"^\[V5:DECL\]"):
         mk(G={"exercises": [T + "\n"]})
+
+
+# -- red team round 2: each break pinned by its reason code -----------------------------------
+
+R2_FIX = '''
+import functools
+def _timed(fn):
+    def inner(*a, **k): return fn(*a, **k)
+    return inner
+def _impl(): return 1
+score_all = _timed(_impl)
+def cheap_path(): return 2
+def target(): return 3
+def _run(): return 4
+@functools.wraps(_run)
+def run_fast(): return _run()
+@functools.wraps(_run)
+def run_safe(): return _run()
+class Base:
+    def fit(self): return 5
+class Other(Base): pass
+default_model = Base()
+'''
+
+
+@pytest.fixture()
+def r2(tmp_path, monkeypatch):
+    d = tmp_path / "r2mod"
+    d.mkdir()
+    (d / "_v5_r2fix.py").write_text(R2_FIX, encoding="utf-8")
+    monkeypatch.syspath_prepend(str(d))
+    sys.modules.pop("_v5_r2fix", None)
+    yield __import__("_v5_r2fix")
+    sys.modules.pop("_v5_r2fix", None)
+
+
+def test_runtime_decoration_is_an_impostor_not_a_call(mk, r2):
+    exp = mk(G={"exercises": ["_v5_r2fix:score_all"]})
+    with coverage_trace(exp) as cov:
+        with cov.section("G"):
+            r2._timed(r2.cheap_path)()          # same code object, different closure
+    rec = cov.record()
+    assert rec["impostors"] == {"G": {"_v5_r2fix:score_all": 1}}
+    with pytest.raises(GateSpecError, match=r"^\[V5:NOT_EXERCISED\]"):
+        exp.score({"m": 1.0, "coverage_trace": rec})
+
+
+def test_runtime_decoration_still_alive_at_close_is_shared_code(mk, r2):
+    exp = mk(G={"exercises": ["_v5_r2fix:score_all"]})
+    keep = []
+    with pytest.raises(GateSpecError, match=r"^\[V5:SHARED_CODE\].*close of section 'G'"):
+        with coverage_trace(exp) as cov:
+            with cov.section("G"):
+                keep.append(r2._timed(r2.cheap_path))
+    keep.clear()
+
+
+def test_clone_with_other_globals_is_an_impostor(mk, r2):
+    import types
+    exp = mk(G={"exercises": ["_v5_r2fix:target"]})
+    with pytest.raises(GateSpecError, match=r"^\[V5:NOT_EXERCISED\]"):
+        exp.score(_traced(exp, "G",
+                          lambda: types.FunctionType(r2.target.__code__, {"__builtins__": {}})()))
+
+
+def test_wraps_siblings_of_one_inner_function_refuse(mk, r2):
+    with pytest.raises(GateSpecError, match=r"^\[V5:SHARED_CODE\].*wrappers share"):
+        coverage_trace(mk(G={"exercises": ["_v5_r2fix:run_fast"]}))
+
+
+def test_instance_path_refuses(mk, r2):
+    with pytest.raises(GateSpecError, match=r"^\[V5:INSTANCE_PATH\]"):
+        coverage_trace(mk(G={"exercises": ["_v5_r2fix:default_model.fit"]}))
+
+
+def test_section_exited_in_another_context_refuses(mk, fx):
+    import contextvars
+    exp = mk(G={"exercises": [T]})
+    with pytest.raises(GateSpecError, match=r"^\[V5:SECTION_CONTEXT\]"):
+        with coverage_trace(exp) as cov:
+            cm = cov.section("G")
+            cm.__enter__()
+            fx.target()
+            contextvars.copy_context().run(cm.__exit__, None, None, None)
+
+
+def test_thread_inherited_work_is_ambiguous_while_two_sections_are_open(mk, fx):
+    from concurrent.futures import ThreadPoolExecutor
+    exp = mk(A={"exercises": [T]}, B={"exercises": [O]})
+    pool = ThreadPoolExecutor(max_workers=1)
+    b1, b2 = threading.Barrier(2, timeout=20), threading.Barrier(2, timeout=20)
+
+    def run_a(cov):
+        with cov.section("A"):
+            pool.submit(fx.other).result(timeout=20)
+            b1.wait()
+            b2.wait()
+            pool.shutdown(wait=True)
+
+    def run_b(cov):
+        with cov.section("B"):
+            b1.wait()
+            fx.other()
+            pool.submit(fx.target).result(timeout=20)
+            b2.wait()
+    with coverage_trace(exp) as cov:
+        ths = [threading.Thread(target=run_a, args=(cov,)),
+               threading.Thread(target=run_b, args=(cov,))]
+        for th in ths:
+            th.start()
+        for th in ths:
+            th.join(30)
+    rec = cov.record()
+    assert rec["ambiguous"] == {"A": {T: 1}}
+    with pytest.raises(GateSpecError, match=r"gate 'A': COVERAGE VIOLATION"):
+        exp.score({"m": 1.0, "coverage_trace": rec})
+
+
+def test_thread_started_during_trace_drops_the_hook_after_exit(mk, fx):
+    from styxx.protocol import _Hook
+    exp = mk(G={"exercises": [T]})
+    go, seen = threading.Event(), {}
+
+    def worker():
+        go.wait(20)
+        fx.other()
+        seen["after"] = sys.getprofile()
+    th = threading.Thread(target=worker)
+    with coverage_trace(exp) as cov:
+        th.start()
+        with cov.section("G"):
+            fx.target()
+    assert threading.getprofile() is None if hasattr(threading, "getprofile") else True
+    go.set()
+    th.join(30)
+    assert not isinstance(seen["after"], _Hook)
+
+
+def test_check_metrics_reports_on_a_non_dict(mk):
+    out = mk(G={"exercises": [T]}).check_metrics([])
+    assert out["G"]["usable"] is False and out["G:exercises"]["usable"] is False

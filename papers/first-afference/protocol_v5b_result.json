@@ -1,0 +1,440 @@
+{
+  "prereg": "PREREG_protocol_v5b_coverage_2026_09_24.md",
+  "smoke": false,
+  "violation_cases": {
+    "never_called": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    },
+    "called_only_in_other_section": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    },
+    "called_only_outside_sections": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    },
+    "no_trace": {
+      "refused": true,
+      "detail": "refused: gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside styxx.protocol.coverage_trace() and store its record"
+    },
+    "section_absent": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can be attributed to this gate"
+    },
+    "stale_gates_sha": {
+      "refused": true,
+      "detail": "refused: gate 'G': the coverage trace was taken against gates block 8c15bd2d5c7a\u2026, not this one (a2ea29cd804b\u2026). A trace of a different declaration is not evid"
+    },
+    "trace_target_set_differs": {
+      "refused": true,
+      "detail": "refused: gate 'G': the trace's target set ['_v5_fixture:other', '_v5_fixture:target'] differs from the declared set ['_v5_fixture:target'] \u2014 it recorded someth"
+    },
+    "trace_wrong_tracer_id": {
+      "refused": true,
+      "detail": "refused: gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trace was not written by the machinery that can be re"
+    },
+    "target_unresolvable_attr": {
+      "refused": true,
+      "detail": "refused: declared target '_v5_fixture:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming nothing would read as unexercised forever, or worse,"
+    },
+    "target_unresolvable_module": {
+      "refused": true,
+      "detail": "refused: declared target 'no_such_mod_v5:f' does not resolve (ModuleNotFoundError: No module named 'no_such_mod_v5') \u2014 a declaration naming nothing would read "
+    },
+    "target_builtin": {
+      "refused": true,
+      "detail": "refused: declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code object to observe (builtins, C extensions and properti"
+    },
+    "exercises_empty": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declaration would pass every harness."
+    },
+    "exercises_not_list": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5_fixture:target'. An empty declaration would pass every harness."
+    },
+    "exercises_non_string": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused [1]"
+    },
+    "exercises_no_colon": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused ['target']"
+    },
+    "exercises_duplicate": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'exercises' names a target twice: ['_v5_fixture:target', '_v5_fixture:target']"
+    },
+    "section_non_string": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'section' must be a non-empty ASCII string, got 5"
+    },
+    "section_without_exercises": {
+      "refused": true,
+      "detail": "refused: gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declaration checks nothing while looking like a check"
+    },
+    "undeclared_section_opened": {
+      "refused": true,
+      "detail": "refused: section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could never count, so opening it is refused before the wo"
+    },
+    "count_bool": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': True; the tracer writes only declared targets with positive integer call counts"
+    },
+    "count_float": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': 1.0; the tracer writes only declared targets with positive integer call counts"
+    },
+    "count_negative": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': -1; the tracer writes only declared targets with positive integer call counts"
+    },
+    "count_zero": {
+      "refused": true,
+      "detail": "refused: gate 'G': section 'G' holds '_v5_fixture:target': 0; the tracer writes only declared targets with positive integer call counts"
+    },
+    "called_only_in_child_process": {
+      "refused": true,
+      "detail": "refused: gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5_fixture:target'] in section 'G' (it did execute none of them). The metric was produced"
+    }
+  },
+  "valid_cases": {
+    "direct_call": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "transitive_call": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "wraps_decorated": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:wrapped': 1}}"
+    },
+    "method": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:K.meth': 1}}"
+    },
+    "staticmethod": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:K.stat': 1}}"
+    },
+    "thread_started_in_section": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "two_gates_share_section": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}, 'H': {'_v5_fixture:other': 1}}"
+    },
+    "declaring_beside_undeclaring": {
+      "scored": true,
+      "detail": "scored PASS coverage={'G': {'_v5_fixture:target': 1}}"
+    },
+    "nested_tracers": {
+      "scored": true,
+      "detail": "scored PASS/PASS outer={'G': {'_v5_fixture:target': 2}} inner={'H': {'_v5_fixture:other': 1}}"
+    }
+  },
+  "p1_retro": {
+    "G4": {
+      "refused": true,
+      "detail": "gate 'G4_refuses_degenerate': COVERAGE VIOLATION \u2014 the harness never executed ['styxx.power:effective_n', 'styxx.power:order_stat_bar', 'styxx.power:false_positive_rate', 'styxx.power:min_detectable_bar'] in section 'G4_refuses_degenerate' (it did execute ['styxx.power:reachable']). The metric was produced without running what the gate names. This is the P1 defect (cycle 158): G4 scored 1.0 while ",
+      "calls": {
+        "styxx.power:reachable": 12
+      }
+    },
+    "G1_ungated": {
+      "refused": false,
+      "detail": "scored PROCEED_TO_RED_TEAM__not_yet_shippable",
+      "calls": {
+        "styxx.power:order_stat_bar": 1
+      }
+    },
+    "declared_public_functions": [
+      "styxx.power:effective_n",
+      "styxx.power:order_stat_bar",
+      "styxx.power:false_positive_rate",
+      "styxx.power:min_detectable_bar",
+      "styxx.power:reachable"
+    ]
+  },
+  "n_violation_mutants": 24,
+  "frac_violation_mutants_refused": 1.0,
+  "n_valid_cases": 9,
+  "frac_valid_cases_scored": 1.0,
+  "p1_retro_case_refused": 1.0,
+  "p1_g1_retro_refused_ungated": false,
+  "coverage_trace": {
+    "tracer": "styxx.protocol.coverage_trace/1",
+    "gates_sha256": "0dfe60ede24274b3fd2f8cfd371308b9530f7113a8fb9c5ef171d900bab109bb",
+    "targets": {
+      "styxx.protocol:Experiment._check_coverage": "b112b6bc31e7caefdcb13c67201100f0c5e33206442a3988d3390c513a7eeb2d",
+      "styxx.protocol:coverage_trace": "b9bc4ce2d53b4cd9276d3280cabd73aaf4455d7f54322f48ca3ce1aa801e5ae1"
+    },
+    "sections": {
+      "G0_mutants_refused": {
+        "styxx.protocol:Experiment._check_coverage": 13,
+        "styxx.protocol:coverage_trace": 16
+      },
+      "G1_valid_still_scores": {
+        "styxx.protocol:Experiment._check_coverage": 11,
+        "styxx.protocol:coverage_trace": 10
+      }
+    },
+    "unsectioned": {},
+    "scope_note": "calls in this interpreter's threads only; work in a child process is not observed and reads as unexercised"
+  },
+  "n_pairable_results": 86,
+  "n_v5_raised_on": 53,
+  "n_v4_v5_outcome_disagreements": 0,
+  "v4_v5_disagreements": [],
+  "ungated_n_v5_differs_from_committed_verdict": 33,
+  "ungated_v5_differs_from_committed_verdict": [
+    {
+      "result": "agent-conscience/belief_asymptote_result.json",
+      "committed": "CLOSED_NEGATIVE__belief_asymptote_below_floor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/combined_signal_result.json",
+      "committed": "CLOSED_NEGATIVE__combined_signal_does_not_predict_correctness",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/cot_inward_powered_result.json",
+      "committed": "CLOSED_NEGATIVE__reasoned_cave_has_reach",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/cot_inward_result.json",
+      "committed": "INVALID__probe_cells_underpowered__CG1_reasoning_does_not_immunize_the_report",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/coupling_battery_result.json",
+      "committed": "SURVIVED__belief_rewrite_coupled_to_capability_damage",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/coupling_resolution_result.json",
+      "committed": "SURVIVED__coupling_replicates__NO_MATERIAL_RESIDUAL__BROAD",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_freetext_result.json",
+      "committed": "INVALID__underpowered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_freetext_v9_result.json",
+      "committed": "SURVIVED__frontier_caves_free_text",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_incontext_oof_result.json",
+      "committed": "CLOSED_NEGATIVE__cave_persists_out_of_frame",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_knowsay_result.json",
+      "committed": "SURVIVED__frontier_caves__recovery_underpowered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_recovery_result.json",
+      "committed": "SURVIVED__frontier_beliefs_recover_powered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/kp_recovery_result.json",
+      "committed": "SURVIVED__knowledge_preserving_attack_spares_the_belief",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/kp_replication_result.json",
+      "committed": "SURVIVED__kp_dose_result_replicates",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/poisoned_recovery_result.json",
+      "committed": "CLOSED_NEGATIVE__weight_attack_reaches_the_belief",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/scale3b_result.json",
+      "committed": "SURVIVED__weight_channel_holds_at_3B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/scale_test_result.json",
+      "committed": "SURVIVED__vulnerability_and_recovery_hold_at_7B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/self_verification_result.json",
+      "committed": "CLOSED_NEGATIVE__belief_divergence_does_not_predict_correctness",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/thirdframe_result.json",
+      "committed": "SURVIVED__kp_sparing_is_frame_invariant",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/two_channel_result.json",
+      "committed": "CLOSED_NEGATIVE__two_channel_misses_instrument_floor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/vendor3b_result.json",
+      "committed": "SURVIVED__weight_channel_holds_at_second_vendor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/verifier_7b_result.json",
+      "committed": "CLOSED_NEGATIVE__not_useful_as_a_selective_instrument_at_7B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "anchored-validity/buried_judge_result.json",
+      "committed": "SURVIVED__prices_where_covered_refuses_below_gate",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "closed-model-frontier/handedness_accusations_result.json",
+      "committed": "INVALID__rederivation_diverged",
+      "v5": "RAISED:GateSpecError:metric 'unknown_or_ambiguous_share' not present in result"
+    },
+    {
+      "result": "closed-model-frontier/handedness_v2_result.json",
+      "committed": "INVALID__join_incomplete",
+      "v5": "RAISED:GateSpecError:metric 'unresolved_share' not present in result"
+    },
+    {
+      "result": "closed-model-frontier/handedness_v3_result.json",
+      "committed": "HEADER_HANDED_ACCUSES_TRUER",
+      "v5": "RAISED:GateSpecError:metric 'unresolved_share' not present in result"
+    },
+    {
+      "result": "closed-model-frontier/range_sanity_report_ab_result.json",
+      "committed": "SHIP__range_sanity_reports",
+      "v5": "RAISED:GateSpecError:metric 'external_unresolved_repos' not present in result"
+    },
+    {
+      "result": "disjoint-worlds/b31v2_result.json",
+      "committed": "DOOR_OPENS__content_capacity_limited",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b34_result.json",
+      "committed": "INVALID__pipeline_broken",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b34v2_result.json",
+      "committed": "INVALID__pipeline_broken",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b36_result.json",
+      "committed": "READ_NEQ_WRITE_SURVIVES_CAPACITY",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/open_set_read_result.json",
+      "committed": "VOID__null_mapper_separates",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "frequency-resonance/efficiency_control_result.json",
+      "committed": "CAPACITY_IN_DISGUISE",
+      "v5": "RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result"
+    },
+    {
+      "result": "rhythm-rescue/untied_control_result.json",
+      "committed": "ROTATION_LOAD_BEARING__beyond_diversity",
+      "v5": "RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result"
+    }
+  ],
+  "v4_pin": {
+    "commit": "98a5c368ba9ffa242c6862e021df7f8bad2ed8e6",
+    "sha256": "45da869e1571396589dc50ed75183de56055a846432ae43dde6aa7fac7519fdc"
+  },
+  "impl_sha256": "652dd0898570d04e9a4ad92e7fdd04d60e0ed5d5f130a49d060ed55ebda29a35",
+  "impl_matches_attempt_a": 1.0,
+  "attempt_a_style_n_rescored": 33,
+  "attempt_a_style_n_diffs": 1,
+  "attempt_a_style_diffs": [
+    {
+      "result": "disjoint-worlds/open_set_read_result.json",
+      "was": "VOID__null_mapper_separates",
+      "now": "RAISED:GateSpecError"
+    }
+  ],
+  "metric_check": {
+    "G_IMPL_unchanged": {
+      "path": "impl_matches_attempt_a",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G0_mutants_refused": {
+      "path": "frac_violation_mutants_refused",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_still_scores": {
+      "path": "frac_valid_cases_scored",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G2_p1_retro_refused": {
+      "path": "p1_retro_case_refused",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G3_no_v4_v5_disagreement": {
+      "path": "n_v4_v5_outcome_disagreements",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G0_mutants_refused:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_still_scores:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    }
+  },
+  "verdict": "PROCEED_TO_RED_TEAM__not_yet_shippable",
+  "gates": {
+    "G_IMPL_unchanged": true,
+    "G0_mutants_refused": true,
+    "G1_valid_still_scores": true,
+    "G2_p1_retro_refused": true,
+    "G3_no_v4_v5_disagreement": true
+  },
+  "coverage": {
+    "G0_mutants_refused": {
+      "styxx.protocol:Experiment._check_coverage": 13,
+      "styxx.protocol:coverage_trace": 16
+    },
+    "G1_valid_still_scores": {
+      "styxx.protocol:Experiment._check_coverage": 11,
+      "styxx.protocol:coverage_trace": 10
+    }
+  },
+  "prereg_commit": "20782604949de9a0caa002061f6fa1553246d4b7",
+  "gates_sha256": "0dfe60ede24274b3fd2f8cfd371308b9530f7113a8fb9c5ef171d900bab109bb"
+}

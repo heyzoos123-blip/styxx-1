@@ -24,8 +24,16 @@ sys.path.insert(0, str(ROOT))
 from styxx.protocol import (Experiment, GateSpecError, _select_gates_block,  # noqa: E402
                             coverage_trace)
 
-PREREG = "PREREG_protocol_v5_coverage_2026_09_24.md"
 SMOKE = "--smoke" in sys.argv
+ATTEMPT_B = "--attempt-b" in sys.argv
+PREREG = ("PREREG_protocol_v5b_coverage_2026_09_24.md" if ATTEMPT_B
+          else "PREREG_protocol_v5_coverage_2026_09_24.md")
+OWN_PREREGS = {"PREREG_protocol_v5_coverage_2026_09_24.md",
+               "PREREG_protocol_v5b_coverage_2026_09_24.md"}
+# Attempt B pins: the bytes attempt A scored, and the v4 implementation it is differenced against.
+ATTEMPT_A_IMPL_SHA = "652dd0898570d04e9a4ad92e7fdd04d60e0ed5d5f130a49d060ed55ebda29a35"
+V4_COMMIT = "98a5c368ba9ffa242c6862e021df7f8bad2ed8e6"
+V4_SHA = "45da869e1571396589dc50ed75183de56055a846432ae43dde6aa7fac7519fdc"
 
 FIXTURE = '''
 import functools
@@ -299,7 +307,7 @@ def corpus() -> tuple[int, list]:
         if "prereg_commit" not in d or "gates" not in d:
             continue
         prereg_path = res_file.parent / pr
-        if not prereg_path.exists() or prereg_path.name == PREREG:
+        if not prereg_path.exists() or prereg_path.name in OWN_PREREGS:
             continue
         pairs.append((prereg_path, res_file, d, old))
     if SMOKE:
@@ -315,6 +323,64 @@ def corpus() -> tuple[int, list]:
     return len(pairs), diffs
 
 
+def _pinned_v4():
+    """The v4 implementation, from git, hash-checked. Never the working tree."""
+    import hashlib
+    import types
+    src = subprocess.run(["git", "show", f"{V4_COMMIT}:styxx/protocol.py"], cwd=ROOT,
+                         capture_output=True, check=True).stdout
+    got = hashlib.sha256(src).hexdigest()
+    if got != V4_SHA:
+        raise SystemExit(f"pinned v4 hashes to {got}, not {V4_SHA}")
+    mod = types.ModuleType("styxx_protocol_v4_pinned")
+    mod.__file__ = f"git:{V4_COMMIT}:styxx/protocol.py"
+    sys.modules[mod.__name__] = mod
+    exec(compile(src, mod.__file__, "exec"), mod.__dict__)
+    return mod
+
+
+def _outcome(experiment_cls, prereg_path, d) -> str:
+    try:
+        return experiment_cls(prereg_path).score(d, smoke=bool(d.get("smoke"))).verdict
+    except Exception as e:
+        return f"RAISED:{type(e).__name__}:{e}"
+
+
+def differential() -> dict:
+    """Attempt B's G3: every pairable result scored by pinned v4 and by v5, outcomes compared."""
+    v4 = _pinned_v4()
+    rows = []
+    for res_file in sorted(ROOT.glob("papers/*/*_result.json")):
+        try:
+            d = json.loads(res_file.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            continue
+        if not isinstance(d, dict) or not isinstance(d.get("prereg"), str):
+            continue
+        prereg_path = res_file.parent / d["prereg"]
+        if not prereg_path.is_file() or prereg_path.name in OWN_PREREGS:
+            continue
+        rows.append((res_file, prereg_path, d))
+    if SMOKE:
+        rows = rows[:5]
+    disagree, vs_committed, n_raised = [], [], 0
+    for res_file, prereg_path, d in rows:
+        name = f"{res_file.parent.name}/{res_file.name}"
+        o4 = _outcome(v4.Experiment, prereg_path, d)
+        o5 = _outcome(Experiment, prereg_path, d)
+        n_raised += o5.startswith("RAISED:")
+        if o4 != o5:
+            disagree.append({"result": name, "v4": o4[:300], "v5": o5[:300]})
+        committed = d.get("verdict")
+        if isinstance(committed, str) and o5 != committed:
+            vs_committed.append({"result": name, "committed": committed[:200], "v5": o5[:200]})
+    return {"n_pairable_results": len(rows), "n_v5_raised_on": n_raised,
+            "n_v4_v5_outcome_disagreements": len(disagree), "v4_v5_disagreements": disagree,
+            "ungated_n_v5_differs_from_committed_verdict": len(vs_committed),
+            "ungated_v5_differs_from_committed_verdict": vs_committed,
+            "v4_pin": {"commit": V4_COMMIT, "sha256": V4_SHA}}
+
+
 def main() -> int:
     fixdir = Path(tempfile.mkdtemp(prefix="v5fix_"))
     (fixdir / f"{FIX}.py").write_text(FIXTURE, encoding="utf-8")
@@ -328,6 +394,10 @@ def main() -> int:
         with cov.section("G1_valid_still_scores"):
             vals = valids()
     retro = p1_retro()
+    if ATTEMPT_B:
+        import hashlib
+        impl_sha = hashlib.sha256((ROOT / "styxx" / "protocol.py").read_bytes()).hexdigest()
+        diff_b = differential()
     checked, diffs = corpus()
 
     res = {"prereg": PREREG, "smoke": SMOKE,
@@ -344,6 +414,14 @@ def main() -> int:
            "n_corpus_results_rescored": checked,
            "n_corpus_verdict_diffs": len(diffs), "corpus_diffs": diffs,
            "coverage_trace": cov.record()}
+    if ATTEMPT_B:
+        res.update(diff_b)
+        res["impl_sha256"] = impl_sha
+        res["impl_matches_attempt_a"] = 1.0 if impl_sha == ATTEMPT_A_IMPL_SHA else 0.0
+        # attempt A's key-shape-filtered measurement, kept beside attempt B's under new names
+        res["attempt_a_style_n_rescored"] = res.pop("n_corpus_results_rescored")
+        res["attempt_a_style_n_diffs"] = res.pop("n_corpus_verdict_diffs")
+        res["attempt_a_style_diffs"] = res.pop("corpus_diffs")
 
     try:
         res["metric_check"] = self_exp.check_metrics(res)
@@ -358,7 +436,8 @@ def main() -> int:
     except BaseException as exc:
         res["verdict"] = f"UNSCORED__{type(exc).__name__}: {exc}"
 
-    (HERE / f"protocol_v5_result{'_smoke' if SMOKE else ''}.json").write_text(
+    stem = "protocol_v5b_result" if ATTEMPT_B else "protocol_v5_result"
+    (HERE / f"{stem}{'_smoke' if SMOKE else ''}.json").write_text(
         json.dumps(res, indent=2) + "\n", encoding="utf-8")
     print(f"violations refused {res['frac_violation_mutants_refused']} of {len(viol)} | "
           f"valid scored {res['frac_valid_cases_scored']} of {len(vals)}")
@@ -371,7 +450,16 @@ def main() -> int:
     print(f"P1 retro G4: refused={retro['G4']['refused']} calls={retro['G4']['calls']}")
     print(f"P1 retro G1 (ungated): refused={retro['G1_ungated']['refused']} "
           f"calls={retro['G1_ungated']['calls']}")
-    print(f"corpus: {checked} rescored, {len(diffs)} diffs")
+    print(f"corpus (attempt-A filter): {checked} rescored, {len(diffs)} diffs")
+    if ATTEMPT_B:
+        print(f"impl sha {res['impl_sha256'][:12]} matches attempt A: "
+              f"{res['impl_matches_attempt_a']}")
+        print(f"v4/v5 differential: {res['n_pairable_results']} pairable, "
+              f"{res['n_v4_v5_outcome_disagreements']} disagreements "
+              f"(v5 raised on {res['n_v5_raised_on']}; "
+              f"{res['ungated_n_v5_differs_from_committed_verdict']} differ from committed)")
+        for d in res["v4_v5_disagreements"][:5]:
+            print("  DISAGREE:", d)
     for d in diffs[:5]:
         print("  DIFF:", d)
     print(f"VERDICT: {res['verdict']}", flush=True)

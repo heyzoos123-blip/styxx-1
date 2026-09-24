@@ -1,0 +1,1078 @@
+{
+  "prereg": "PREREG_protocol_v5d_repair_2026_09_24.md",
+  "smoke": false,
+  "violation_cases": {
+    "never_called": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "called_only_in_other_section": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "called_only_outside_sections": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "no_trace": {
+      "expected": "NO_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NO_TRACE] gate 'G' declares 'exercises' but the result carries no 'coverage_trace' \u2014 run the harness inside styxx.protocol.coverage_trace() and store its record(). A declared coverage with no trace is unverified, not",
+      "leaked_profiler": false
+    },
+    "section_absent": {
+      "expected": "SECTION_ABSENT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SECTION_ABSENT] gate 'G': section 'G' is absent from the trace \u2014 the harness never opened it, so nothing it ran can be attributed to this gate",
+      "leaked_profiler": false
+    },
+    "stale_gates_sha": {
+      "expected": "STALE_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:STALE_TRACE] gate 'G': the coverage trace was taken against gates block 65ff9937f360\u2026, not this one (d2c45937c41d\u2026). A trace of a different declaration is not evidence about this one.",
+      "leaked_profiler": false
+    },
+    "trace_target_set_differs": {
+      "expected": "TARGET_SET",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TARGET_SET] gate 'G': the trace's target set ['_v5c_fix:other', '_v5c_fix:target'] differs from the declared set ['_v5c_fix:target'] \u2014 it recorded something other than what the frozen document asks about",
+      "leaked_profiler": false
+    },
+    "trace_wrong_tracer_id": {
+      "expected": "WRONG_TRACER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:WRONG_TRACER] gate 'G': coverage_trace.tracer is 'handwritten/1', not 'styxx.protocol.coverage_trace/1' \u2014 this trace was not written by the machinery that can be read",
+      "leaked_profiler": false
+    },
+    "target_unresolvable_attr": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5c_fix:nope' does not resolve (AttributeError: nope) \u2014 a declaration naming nothing would read as unexercised forever, or worse, as a typo nobody notices",
+      "leaked_profiler": false
+    },
+    "target_unresolvable_module": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target 'no_mod_v5c:f' does not resolve (ModuleNotFoundError: No module named 'no_mod_v5c') \u2014 a declaration naming nothing would read as unexercised forever, or worse, as a typo nobody notices",
+      "leaked_profiler": false
+    },
+    "target_builtin": {
+      "expected": "NO_CODE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NO_CODE] declared target 'builtins:len' resolves to builtin_function_or_method, which has no Python code object to observe (builtins, C extensions and properties cannot be traced). Declare the Python function that ca",
+      "leaked_profiler": false
+    },
+    "exercises_empty_beside_declaring": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declaration would pass every harness.",
+      "leaked_profiler": false
+    },
+    "exercises_not_list": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got {'_v5c_fix:target': 1}. An empty declaration would pass every harness.",
+      "leaked_profiler": false
+    },
+    "exercises_non_string": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused [1]",
+      "leaked_profiler": false
+    },
+    "exercises_no_colon": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused ['target']",
+      "leaked_profiler": false
+    },
+    "exercises_duplicate": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' names a target twice: ['_v5c_fix:target', '_v5c_fix:target']",
+      "leaked_profiler": false
+    },
+    "exercises_trailing_newline": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused ['_v5c_fix:target\\n']",
+      "leaked_profiler": false
+    },
+    "section_non_string": {
+      "expected": "SECTION_DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SECTION_DECL] gate 'G': 'section' must be a non-empty ASCII string, got 5",
+      "leaked_profiler": false
+    },
+    "section_without_exercises": {
+      "expected": "SECTION_DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SECTION_DECL] gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declaration checks nothing while looking like a check",
+      "leaked_profiler": false
+    },
+    "undeclared_section_opened": {
+      "expected": "UNDECLARED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G']) \u2014 calls recorded under it could never count, so opening it is refused before the work runs",
+      "leaked_profiler": false
+    },
+    "nested_sections": {
+      "expected": "NESTED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NESTED_SECTION] section 'H' opened inside section 'G' \u2014 nested sections would make one call count for two gates",
+      "leaked_profiler": false
+    },
+    "nothing_declared": {
+      "expected": "NOTHING_DECLARED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOTHING_DECLARED] no gate in this prereg declares 'exercises' \u2014 a coverage trace with nothing declared would record nothing and could be mistaken for a check that passed",
+      "leaked_profiler": false
+    },
+    "count_bool": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': section 'G' holds '_v5c_fix:target': True; the tracer writes only declared targets with positive integer call counts",
+      "leaked_profiler": false
+    },
+    "count_float": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': section 'G' holds '_v5c_fix:target': 1.0; the tracer writes only declared targets with positive integer call counts",
+      "leaked_profiler": false
+    },
+    "count_negative": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': section 'G' holds '_v5c_fix:target': -1; the tracer writes only declared targets with positive integer call counts",
+      "leaked_profiler": false
+    },
+    "count_zero": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': section 'G' holds '_v5c_fix:target': 0; the tracer writes only declared targets with positive integer call counts",
+      "leaked_profiler": false
+    },
+    "called_only_in_child_process": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "rt_factory_closure_sibling": {
+      "expected": "SHARED_CODE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SHARED_CODE] declared target '_v5c_fix:check_low': its code object is shared by 2 live functions (['_make.<locals>.check']), so a call to any of them is indistinguishable from a call to it. Declare a function with it",
+      "leaked_profiler": false
+    },
+    "rt_nowraps_decorator_sibling": {
+      "expected": "SHARED_CODE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SHARED_CODE] declared target '_v5c_fix:entry_a': its code object is shared by 2 live functions (['_nowraps.<locals>.inner']), so a call to any of them is indistinguishable from a call to it. Declare a function with i",
+      "leaked_profiler": false
+    },
+    "rt_wraps_decorator_sibling": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:wrapped'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 ",
+      "leaked_profiler": false
+    },
+    "rt_vendored_equal_code_copy": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_impl_new:score_null'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is",
+      "leaked_profiler": false
+    },
+    "rt_pinned_exec_copy_of_protocol": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['styxx.protocol:undeclared_power_gates'] in section 'G' (it did execute none of them). The metric was produced without running what the gate n",
+      "leaked_profiler": false
+    },
+    "rt_dataclass_equal_init": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:NullModel.__init__'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This",
+      "leaked_profiler": false
+    },
+    "rt_thread_outlives_section": {
+      "expected": "THREAD_OUTLIVES",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:THREAD_OUTLIVES] section 'G' closed with threads started inside it still running (['Thread-1 (<lambda>)']) \u2014 their later work could not be told apart from this section's. Join them (or shut the pool down) before the ",
+      "leaked_profiler": false
+    },
+    "rt_background_thread_started_outside": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "rt_asyncio_task_from_closed_section": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'B': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'B' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "rt_c_profiler_present": {
+      "expected": "FOREIGN_PROFILER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_PROFILER] a Profile is installed as the sys profiler; it cannot be chained or restored from Python. Run the traced harness outside it.",
+      "leaked_profiler": true
+    },
+    "rt_cprofile_inside_section": {
+      "expected": "PROFILER_REPLACED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:PROFILER_REPLACED] section 'G' closed with this tracer no longer installed \u2014 the harness replaced the profiler (sys.setprofile, cProfile), or a RecursionError raised while CPython was entering the hook made it drop t",
+      "leaked_profiler": true
+    },
+    "rt_reentry": {
+      "expected": "REENTRY",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:REENTRY] this coverage_trace is already active or has already exited \u2014 a tracer is entered exactly once; nested use needs a second tracer",
+      "leaked_profiler": false
+    },
+    "rt_out_of_order_exit": {
+      "expected": "EXIT_ORDER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:EXIT_ORDER] coverage_trace exited while another profiler is installed \u2014 tracers were exited out of order, or the harness replaced the profiler. Nothing was restored in this thread; this tracer's hook is inert and rem",
+      "leaked_profiler": false
+    },
+    "rt_import_raises": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5c_broken:f' does not resolve (RuntimeError: optional backend not configured) \u2014 a declaration naming nothing would read as unexercised forever, or worse, as a typo nobody notices",
+      "leaked_profiler": false
+    },
+    "rt_import_syntax_error": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5c_syntax:f' does not resolve (SyntaxError: invalid syntax (_v5c_syntax.py, line 1)) \u2014 a declaration naming nothing would read as unexercised forever, or worse, as a typo nobody notices",
+      "leaked_profiler": false
+    },
+    "rt_unwrap_loop": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5c_cycle:f' does not resolve (ValueError: wrapper loop when unwrapping <function f at 0x7ff2faeb6c00>) \u2014 a declaration naming nothing would read as unexercised forever, or worse, as a t",
+      "leaked_profiler": false
+    },
+    "rt_non_string_trace_key": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a dict with string keys",
+      "leaked_profiler": false
+    },
+    "rt_check_metrics_non_string_key_reports": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a dict with string keys",
+      "leaked_profiler": false
+    },
+    "rt_inherited_method": {
+      "expected": "INHERITED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:INHERITED] declared target '_v5c_fix:Sub.fit': 'fit' is inherited by Sub, not defined on it \u2014 any subclass calling it would satisfy this declaration. Declare the defining class.",
+      "leaked_profiler": false
+    },
+    "rt2_runtime_nowraps_kept_alive": {
+      "expected": "SHARED_CODE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SHARED_CODE] declared target '_v5c_fix:score_all': its code object is shared by 2 live functions (['_timed.<locals>.inner']), so a call to any of them is indistinguishable from a call to it. Declare a function with i",
+      "leaked_profiler": false
+    },
+    "rt2_runtime_nowraps_discarded": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:score_all'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P",
+      "leaked_profiler": false
+    },
+    "rt2_clone_with_other_globals": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "rt2_concurrent_sections_share_pool": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'A' (it did execute ['_v5c_fix:other']). The metric was produced without running what the gate names. This is th",
+      "leaked_profiler": false
+    },
+    "rt2_instance_path": {
+      "expected": "INSTANCE_PATH",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:INSTANCE_PATH] declared target '_v5c_fix:default_model.fit': 'fit' is reached through a Sub, not a module or class \u2014 an instance's attribute is whatever its class hierarchy says today. Declare the defining class.",
+      "leaked_profiler": false
+    },
+    "rt2_wraps_siblings_share_inner": {
+      "expected": "SHARED_CODE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SHARED_CODE] declared target '_v5c_fix:run_fast' unwraps to _run, which 2 wrappers share (['_run']) \u2014 a call through any of them reaches the same code. Declare the inner function's callers individually only if each h",
+      "leaked_profiler": false
+    },
+    "rt2_section_exited_in_other_context": {
+      "expected": "SECTION_CONTEXT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SECTION_CONTEXT] section 'G' was exited in a different context from the one that opened it, so this tracer cannot tell which calls were its own",
+      "leaked_profiler": false
+    },
+    "x2_call_after_its_section_closed": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION \u2014 the harness never executed ['_v5c_fix:target'] in section 'G' (it did execute none of them). The metric was produced without running what the gate names. This is the P1 d",
+      "leaked_profiler": false
+    },
+    "x2_non_string_key_under_sections": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': coverage_trace.sections must be a dict with string keys",
+      "leaked_profiler": false
+    },
+    "x2_non_string_key_inside_section": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': section 'G' must be a dict with string keys",
+      "leaked_profiler": false
+    },
+    "x2_list_valued_section": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': section 'G' must be a dict with string keys",
+      "leaked_profiler": false
+    },
+    "x2_check_metrics_reports_none_key": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': coverage_trace.targets must be a dict with string keys",
+      "leaked_profiler": false
+    },
+    "x2_check_metrics_reports_list_section": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': section 'G' must be a dict with string keys",
+      "leaked_profiler": false
+    },
+    "x2_check_metrics_reports_non_dict_result": {
+      "expected": "REPORTED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:REPORTED] check_metrics returned a report",
+      "leaked_profiler": false
+    },
+    "x2_alias_targets_one_function": {
+      "expected": "SHARED_CODE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SHARED_CODE] declared targets ['_v5c_fix:alias', '_v5c_fix:target'] resolve to one code object \u2014 a single call would count for all of them",
+      "leaked_profiler": false
+    },
+    "x2_c_profiler_refused_and_kept": {
+      "expected": "FOREIGN_PROFILER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_PROFILER] a Profile is installed as the sys profiler; it cannot be chained or restored from Python. Run the traced harness outside it.",
+      "leaked_profiler": true
+    },
+    "x2_foreign_threading_profiler": {
+      "expected": "FOREIGN_PROFILER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_PROFILER] a Profile is installed as the threading profiler; it cannot be chained or restored from Python. Run the traced harness outside it.",
+      "leaked_profiler": true
+    },
+    "x2_reenter_exited_tracer": {
+      "expected": "REENTRY",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:REENTRY] this coverage_trace is already active or has already exited \u2014 a tracer is entered exactly once; nested use needs a second tracer",
+      "leaked_profiler": false
+    },
+    "x2_forged_undeclared_key_in_section": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': section 'G' holds '_v5c_fix:other': 1; the tracer writes only declared targets with positive integer call counts",
+      "leaked_profiler": false
+    },
+    "x2_non_ascii_target": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused ['_v5c_fix:t\u0430rget']",
+      "leaked_profiler": false
+    }
+  },
+  "valid_cases": {
+    "direct_call": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "transitive_call": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "wraps_decorated": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:wrapped": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:wrapped": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "method": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:K.meth": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:K.meth": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "staticmethod": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:K.stat": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:K.stat": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "classmethod": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:K.cm": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:K.cm": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "thread_started_in_section": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "thread_pool_inside_section": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 3
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 3
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "asyncio_task_in_one_section": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "parallel_sections_in_two_threads": {
+      "expected_coverage": {
+        "A": {
+          "_v5c_fix:target": 1
+        },
+        "B": {
+          "_v5c_fix:other": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "A": {
+          "_v5c_fix:target": 1
+        },
+        "B": {
+          "_v5c_fix:other": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "two_gates_share_section": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        },
+        "H": {
+          "_v5c_fix:other": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        },
+        "H": {
+          "_v5c_fix:other": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "declaring_beside_undeclaring": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "nested_tracers_outer_sees_inner_calls": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 2
+        },
+        "H": {
+          "_v5c_fix:other": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 2
+        },
+        "H": {
+          "_v5c_fix:other": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "preexisting_python_profiler_chained": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "x2_grandchild_thread_in_section": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    },
+    "rt2_thread_hook_released_after_exit": {
+      "expected_coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "outcome": "scored",
+      "ok": true,
+      "coverage": {
+        "G": {
+          "_v5c_fix:target": 1
+        }
+      },
+      "leaked_profiler": false,
+      "detail": null
+    }
+  },
+  "p1_retro": {
+    "declared": [
+      "styxx.power:effective_n",
+      "styxx.power:order_stat_bar",
+      "styxx.power:false_positive_rate",
+      "styxx.power:min_detectable_bar",
+      "styxx.power:reachable"
+    ],
+    "calls": {
+      "styxx.power:reachable": 12
+    },
+    "unexercised": [
+      "styxx.power:effective_n",
+      "styxx.power:false_positive_rate",
+      "styxx.power:min_detectable_bar",
+      "styxx.power:order_stat_bar"
+    ],
+    "outcome": "[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION \u2014 the harness never executed ['styxx.power:effective_n', 'styxx.power:order_stat_bar', 'styxx.power:false_positive_rate', 'styxx.power:min_detectable_bar'] in section 'G4_refuses_degenerate' (it did execute ['styxx.power:reachable']). The metric was produced without running what the gate names. This is the P1 defect (cycle 158): G4 scored 1.0 while its harness touched one of five entry points.",
+    "exact": true
+  },
+  "n_violation_mutants": 66,
+  "frac_violation_mutants_refused_with_expected_code": 1.0,
+  "n_valid_cases": 16,
+  "frac_valid_cases_scored_with_property": 1.0,
+  "p1_retro_exact": 1.0,
+  "n_crashes": 0,
+  "n_v4_v5_outcome_disagreements": 0,
+  "v4_v5_disagreements": [],
+  "n_pairable_results": 86,
+  "n_results_v5_scored": 33,
+  "n_v5_raised_on": 53,
+  "ungated_n_v5_differs_from_committed_verdict": 33,
+  "ungated_v5_differs_from_committed_verdict": [
+    {
+      "result": "agent-conscience/belief_asymptote_result.json",
+      "committed": "CLOSED_NEGATIVE__belief_asymptote_below_floor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/combined_signal_result.json",
+      "committed": "CLOSED_NEGATIVE__combined_signal_does_not_predict_correctness",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/cot_inward_powered_result.json",
+      "committed": "CLOSED_NEGATIVE__reasoned_cave_has_reach",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/cot_inward_result.json",
+      "committed": "INVALID__probe_cells_underpowered__CG1_reasoning_does_not_immunize_the_report",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/coupling_battery_result.json",
+      "committed": "SURVIVED__belief_rewrite_coupled_to_capability_damage",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/coupling_resolution_result.json",
+      "committed": "SURVIVED__coupling_replicates__NO_MATERIAL_RESIDUAL__BROAD",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_freetext_result.json",
+      "committed": "INVALID__underpowered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_freetext_v9_result.json",
+      "committed": "SURVIVED__frontier_caves_free_text",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_incontext_oof_result.json",
+      "committed": "CLOSED_NEGATIVE__cave_persists_out_of_frame",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_knowsay_result.json",
+      "committed": "SURVIVED__frontier_caves__recovery_underpowered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_recovery_result.json",
+      "committed": "SURVIVED__frontier_beliefs_recover_powered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/kp_recovery_result.json",
+      "committed": "SURVIVED__knowledge_preserving_attack_spares_the_belief",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/kp_replication_result.json",
+      "committed": "SURVIVED__kp_dose_result_replicates",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/poisoned_recovery_result.json",
+      "committed": "CLOSED_NEGATIVE__weight_attack_reaches_the_belief",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/scale3b_result.json",
+      "committed": "SURVIVED__weight_channel_holds_at_3B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/scale_test_result.json",
+      "committed": "SURVIVED__vulnerability_and_recovery_hold_at_7B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/self_verification_result.json",
+      "committed": "CLOSED_NEGATIVE__belief_divergence_does_not_predict_correctness",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/thirdframe_result.json",
+      "committed": "SURVIVED__kp_sparing_is_frame_invariant",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/two_channel_result.json",
+      "committed": "CLOSED_NEGATIVE__two_channel_misses_instrument_floor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/vendor3b_result.json",
+      "committed": "SURVIVED__weight_channel_holds_at_second_vendor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/verifier_7b_result.json",
+      "committed": "CLOSED_NEGATIVE__not_useful_as_a_selective_instrument_at_7B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "anchored-validity/buried_judge_result.json",
+      "committed": "SURVIVED__prices_where_covered_refuses_below_gate",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "closed-model-frontier/handedness_accusations_result.json",
+      "committed": "INVALID__rederivation_diverged",
+      "v5": "RAISED:GateSpecError:metric 'unknown_or_ambiguous_share' not present in result"
+    },
+    {
+      "result": "closed-model-frontier/handedness_v2_result.json",
+      "committed": "INVALID__join_incomplete",
+      "v5": "RAISED:GateSpecError:metric 'unresolved_share' not present in result"
+    },
+    {
+      "result": "closed-model-frontier/handedness_v3_result.json",
+      "committed": "HEADER_HANDED_ACCUSES_TRUER",
+      "v5": "RAISED:GateSpecError:metric 'unresolved_share' not present in result"
+    },
+    {
+      "result": "closed-model-frontier/range_sanity_report_ab_result.json",
+      "committed": "SHIP__range_sanity_reports",
+      "v5": "RAISED:GateSpecError:metric 'external_unresolved_repos' not present in result"
+    },
+    {
+      "result": "disjoint-worlds/b31v2_result.json",
+      "committed": "DOOR_OPENS__content_capacity_limited",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b34_result.json",
+      "committed": "INVALID__pipeline_broken",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b34v2_result.json",
+      "committed": "INVALID__pipeline_broken",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b36_result.json",
+      "committed": "READ_NEQ_WRITE_SURVIVES_CAPACITY",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/open_set_read_result.json",
+      "committed": "VOID__null_mapper_separates",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "frequency-resonance/efficiency_control_result.json",
+      "committed": "CAPACITY_IN_DISGUISE",
+      "v5": "RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result"
+    },
+    {
+      "result": "rhythm-rescue/untied_control_result.json",
+      "committed": "ROTATION_LOAD_BEARING__beyond_diversity",
+      "v5": "RAISED:GateSpecError:metric 'anchor_max_abs_dev' not present in result"
+    }
+  ],
+  "v4_pin": {
+    "commit": "98a5c368ba9ffa242c6862e021df7f8bad2ed8e6",
+    "sha256": "45da869e1571396589dc50ed75183de56055a846432ae43dde6aa7fac7519fdc"
+  },
+  "coverage_trace": {
+    "tracer": "styxx.protocol.coverage_trace/1",
+    "gates_sha256": "64c1577f7a08275d23e6dc80ffcae3e60fc7d2079fd71dcbc0442eb6def54d24",
+    "targets": {
+      "run_p1:degenerate": "dc5523e55d32dbcad53e6950f4be6777e07c594d018759e884afc0dda20bc867",
+      "styxx.protocol:Experiment._check_coverage": "b476c35559402345de766e749af72731b76cb77aad84dda2d725a0e7254f4b80",
+      "styxx.protocol:_CoverageTracer.__exit__": "ed35469836702fe61a857550fe7db9de71a02f37a6f2325cc0c1a54b55e0c79b",
+      "styxx.protocol:_CoverageTracer.record": "81cb181b184fc66abf27f1fe6ae3763050a6d92a066091c54a45e828b75a0331",
+      "styxx.protocol:_CoverageTracer.section": "75575743de763e6f00d9690662bdcb99f237adc0a822e2ed673848426290d510",
+      "styxx.protocol:_resolve_target": "3c3bc3f6e62f718194454e1f39491226e1c78d7995fd3ac53fd45cacdd6fea98"
+    },
+    "sections": {
+      "G0_mutants_refused_for_their_reason": {
+        "styxx.protocol:Experiment._check_coverage": 33,
+        "styxx.protocol:_CoverageTracer.__exit__": 40,
+        "styxx.protocol:_CoverageTracer.record": 31,
+        "styxx.protocol:_CoverageTracer.section": 82,
+        "styxx.protocol:_resolve_target": 60
+      },
+      "G1_valid_cases_score_with_their_property": {
+        "styxx.protocol:Experiment._check_coverage": 19,
+        "styxx.protocol:_CoverageTracer.__exit__": 17,
+        "styxx.protocol:_CoverageTracer.record": 17,
+        "styxx.protocol:_CoverageTracer.section": 37,
+        "styxx.protocol:_resolve_target": 19
+      },
+      "G2_p1_retro_refused_as_coverage_violation": {
+        "run_p1:degenerate": 1,
+        "styxx.protocol:Experiment._check_coverage": 1,
+        "styxx.protocol:_CoverageTracer.__exit__": 1,
+        "styxx.protocol:_CoverageTracer.record": 1,
+        "styxx.protocol:_CoverageTracer.section": 3,
+        "styxx.protocol:_resolve_target": 5
+      }
+    },
+    "after_close": {},
+    "ambiguous": {},
+    "impostors": {},
+    "unsectioned": {
+      "styxx.protocol:_CoverageTracer.__exit__": 1,
+      "styxx.protocol:_CoverageTracer.section": 3
+    },
+    "close_refusals": [],
+    "scope_note": "calls observed by code-object identity AND frame identity (the declared function's globals and closure) in threads started while tracing, attributed to the section open where the call's context (or its thread's start) began, and counted only while that section is open and, for thread-inherited attribution, the only one open. Not observed: child processes, threads that predate the trace or bypass threading.Thread.start. Target sha256 values are provenance only (marshal includes the file path) and are not checked at scoring."
+  },
+  "runner_sha256": "ae6ac686c174435e3f0d7e5eca3af7fe24fa7df5a10240e05efbf6ab3a135a37",
+  "exam_runner_frozen": 1.0,
+  "impl_sha256": "9a3d3492e5c766720939f4b04a030de42235a5264468aba43a2c8e8879c07e1c",
+  "metric_check": {
+    "G_EXAM_FROZEN": {
+      "path": "exam_runner_frozen",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G0_mutants_refused_for_their_reason": {
+      "path": "frac_violation_mutants_refused_with_expected_code",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_cases_score_with_their_property": {
+      "path": "frac_valid_cases_scored_with_property",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G2_p1_retro_refused_as_coverage_violation": {
+      "path": "p1_retro_exact",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G3_no_v4_v5_disagreement": {
+      "path": "n_v4_v5_outcome_disagreements",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G4_population_reached": {
+      "path": "n_results_v5_scored",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G0_mutants_refused_for_their_reason:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_cases_score_with_their_property:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G2_p1_retro_refused_as_coverage_violation:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    }
+  },
+  "verdict": "PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable",
+  "gates": {
+    "G_EXAM_FROZEN": true,
+    "G0_mutants_refused_for_their_reason": true,
+    "G1_valid_cases_score_with_their_property": true,
+    "G2_p1_retro_refused_as_coverage_violation": true,
+    "G3_no_v4_v5_disagreement": true,
+    "G4_population_reached": true
+  },
+  "coverage": {
+    "G0_mutants_refused_for_their_reason": {
+      "styxx.protocol:Experiment._check_coverage": 33,
+      "styxx.protocol:_resolve_target": 60,
+      "styxx.protocol:_CoverageTracer.section": 82,
+      "styxx.protocol:_CoverageTracer.__exit__": 40
+    },
+    "G1_valid_cases_score_with_their_property": {
+      "styxx.protocol:Experiment._check_coverage": 19,
+      "styxx.protocol:_CoverageTracer.section": 37,
+      "styxx.protocol:_CoverageTracer.record": 17
+    },
+    "G2_p1_retro_refused_as_coverage_violation": {
+      "run_p1:degenerate": 1
+    }
+  },
+  "prereg_commit": "342ab9c7213a25c70d767629feae33b707dca627",
+  "gates_sha256": "64c1577f7a08275d23e6dc80ffcae3e60fc7d2079fd71dcbc0442eb6def54d24"
+}

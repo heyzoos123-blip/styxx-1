@@ -379,7 +379,9 @@ class Experiment:
         """
         import math
         out = {}
-        smoke = bool(result.get("smoke"))
+        # Round 2 R2-D6: a non-dict result used to raise AttributeError here; the pre-run safety
+        # tool reports, it does not crash (every path below already refuses a non-dict).
+        smoke = bool(result.get("smoke")) if isinstance(result, dict) else False
         for name, path in self.metric_paths.items():
             try:
                 val = _resolve(result, path)
@@ -636,10 +638,47 @@ class Experiment:
 # per execution context, not per process; foreign profilers and out-of-order use refuse.
 
 _THREAD_START_CODE = threading.Thread.start.__code__
+_EMPTY = object()
 
 
-def _resolve_target(target: str) -> types.CodeType:
-    """``"module:qualname"`` -> the one code object that runs when it is called, or a refusal."""
+def _code_holders(code) -> list:
+    return [r for r in gc.get_referrers(code) if isinstance(r, types.FunctionType)]
+
+
+def _wrappers_of(fn) -> list:
+    """Functions whose ``__wrapped__`` is *fn* (functools.wraps). Two hops: the wrapper's
+    ``__dict__`` refers to fn, and the wrapper refers to that dict."""
+    out = []
+    for d in gc.get_referrers(fn):
+        if isinstance(d, dict) and d.get("__wrapped__") is fn:
+            out.extend(r for r in gc.get_referrers(d)
+                       if isinstance(r, types.FunctionType) and r.__dict__ is d)
+    return out
+
+
+def _sharing_problem(target: str, fn, code) -> str | None:
+    holders = _code_holders(code)
+    if len(holders) > 1:
+        return (f"[V5:SHARED_CODE] declared target {target!r}: its code object is shared by "
+                f"{len(holders)} live functions ({sorted({h.__qualname__ for h in holders})}), "
+                f"so a call to any of them is indistinguishable from a call to it. Declare a "
+                f"function with its own code (a decorator without functools.wraps, or a factory, "
+                f"cannot be declared through).")
+    wrappers = _wrappers_of(fn)
+    if len(wrappers) > 1:
+        # Round 2 R2-D2: run_fast and run_safe both @functools.wraps(_run); declaring run_fast
+        # unwrapped to _run, and calling only run_safe satisfied it.
+        return (f"[V5:SHARED_CODE] declared target {target!r} unwraps to {fn.__qualname__}, "
+                f"which {len(wrappers)} wrappers share "
+                f"({sorted({w.__qualname__ for w in wrappers})}) — a call through any of them "
+                f"reaches the same code. Declare the inner function's callers individually "
+                f"only if each has its own code.")
+    return None
+
+
+def _resolve_target(target: str):
+    """``"module:qualname"`` -> (function, code) for the one function that runs when it is
+    called, or a refusal."""
     mod_name, qual = target.split(":", 1)
     try:
         obj = importlib.import_module(mod_name)
@@ -655,8 +694,15 @@ def _resolve_target(target: str) -> types.CodeType:
                             f"would satisfy this declaration. Declare the defining class.")
                     raise AttributeError(f"{obj.__qualname__} has no attribute {part!r}")
                 obj = vars(obj)[part]
-            else:
+            elif isinstance(obj, types.ModuleType):
                 obj = inspect.getattr_static(obj, part)
+            else:
+                # Round 2 R2-D1: "default_model.fit" stepped through an instance into the MRO
+                # and reached Base.fit, reopening the INHERITED hole by another door.
+                raise GateSpecError(
+                    f"[V5:INSTANCE_PATH] declared target {target!r}: {part!r} is reached through "
+                    f"a {type(obj).__name__}, not a module or class — an instance's attribute is "
+                    f"whatever its class hierarchy says today. Declare the defining class.")
         if isinstance(obj, (staticmethod, classmethod)):
             obj = obj.__func__
         if callable(obj):
@@ -671,22 +717,27 @@ def _resolve_target(target: str) -> types.CodeType:
             f"({type(e).__name__}: {e}) — a declaration naming nothing would read as "
             f"unexercised forever, or worse, as a typo nobody notices") from e
     code = getattr(obj, "__code__", None)
-    if not isinstance(code, types.CodeType):
+    if not isinstance(code, types.CodeType) or not isinstance(obj, types.FunctionType):
         raise GateSpecError(
             f"[V5:NO_CODE] declared target {target!r} resolves to {type(obj).__name__}, which has "
             f"no Python code object to observe (builtins, C extensions and properties cannot be "
             f"traced). Declare the Python function that calls it instead.")
-    # Round 1 B1: factory closures, and every function behind a decorator without
-    # functools.wraps, share ONE code object; a call to any of them was a call to all of them.
-    holders = [r for r in gc.get_referrers(code) if isinstance(r, types.FunctionType)]
-    if len(holders) > 1:
-        raise GateSpecError(
-            f"[V5:SHARED_CODE] declared target {target!r}: its code object is shared by "
-            f"{len(holders)} live functions ({sorted({h.__qualname__ for h in holders})}), so a "
-            f"call to any of them is indistinguishable from a call to it. Declare a function "
-            f"with its own code (a decorator without functools.wraps, or a factory, cannot be "
-            f"declared through).")
-    return code
+    gc.collect()      # round 2 nit: dead-but-uncollected closures must not count as holders
+    problem = _sharing_problem(target, obj, code)
+    if problem:
+        raise GateSpecError(problem)
+    return obj, code
+
+
+def _identity(fn):
+    """What a frame running *fn* itself — not another function sharing its code — must show."""
+    cells = []
+    for c in fn.__closure__ or ():
+        try:
+            cells.append(c.cell_contents)
+        except ValueError:
+            cells.append(_EMPTY)
+    return fn.__globals__, fn.__code__.co_freevars, tuple(cells)
 
 
 class _Hook:
@@ -697,8 +748,24 @@ class _Hook:
         self.tracer, self.prev = tracer, prev
 
     def __call__(self, frame, event, arg):
-        if event == "call" and self.tracer._active:
-            self.tracer._on_call(frame)
+        t = self.tracer
+        if t._exited:
+            # Round 2 R2-B3: threads started during the trace kept this inert hook for life.
+            # The first event after exit removes it from whichever thread is running it.
+            nxt = _skip_exited(self.prev)
+            if sys.getprofile() is self:
+                sys.setprofile(nxt)
+            if nxt is not None:
+                nxt(frame, event, arg)
+            return
+        if event == "call" and t._active:
+            try:
+                t._on_call(frame)
+            except Exception:
+                # Round 2 R2-D4: an exception escaping a profile function makes CPython drop
+                # the profiler; the section then refused with the wrong reason. Caught here, the
+                # hook stays installed and the section refuses HOOK_FAILED instead.
+                t._hook_failed = True
         if self.prev is not None:
             self.prev(frame, event, arg)
 
@@ -716,7 +783,7 @@ def _thread_profile():
 
 
 class _CoverageTracer:
-    """Records calls to declared targets' code objects, attributed to their open section."""
+    """Records calls to declared targets, attributed to their open section."""
 
     def __init__(self, experiment: "Experiment"):
         if not isinstance(experiment, Experiment):
@@ -728,15 +795,17 @@ class _CoverageTracer:
                 "trace with nothing declared would record nothing and could be mistaken for a "
                 "check that passed")
         self._exp = experiment
-        self._codes: dict = {}          # id(code) -> (code, [targets]); the reference pins the id
+        self._codes: dict = {}      # id(code) -> (code, [targets], identity); the ref pins the id
+        self._fns: dict = {}        # target -> (fn, code), re-checked at every section close
         self._code_sha: dict = {}
         for t in experiment.coverage_targets:
-            code = _resolve_target(t)
+            fn, code = _resolve_target(t)
             if id(code) in self._codes:
                 raise GateSpecError(
                     f"[V5:SHARED_CODE] declared targets {self._codes[id(code)][1] + [t]} resolve "
                     f"to one code object — a single call would count for all of them")
-            self._codes[id(code)] = (code, [t])
+            self._codes[id(code)] = (code, [t], _identity(fn))
+            self._fns[t] = (fn, code)
             self._code_sha[t] = hashlib.sha256(marshal.dumps(code)).hexdigest()
         self._lock = threading.Lock()
         self._cv = contextvars.ContextVar(f"styxx_v5_section_{id(self)}", default=None)
@@ -744,17 +813,27 @@ class _CoverageTracer:
         self._open: dict = {}            # section -> number of open entries
         self._sections: dict = {}
         self._after_close: dict = {}
+        self._ambiguous: dict = {}
+        self._impostors: dict = {}
         self._unsectioned: dict = {}
+        self._close_refusals: list = []
+        self._hook_failed = False
         self._active = False
         self._exited = False
 
     # -- attribution --------------------------------------------------------------------------
 
-    def _effective_section(self):
+    def _effective(self):
+        """(section, via) — via is "context" when this context opened it, "thread" when it is
+        inherited from where this thread was started."""
         sec = self._cv.get()
         if sec is not None:
-            return sec
-        return self._thread_section.get(threading.current_thread())
+            return sec, "context"
+        sec = self._thread_section.get(threading.current_thread())
+        return sec, "thread" if sec is not None else None
+
+    def _effective_section(self):
+        return self._effective()[0]
 
     def _on_call(self, frame) -> None:
         code = frame.f_code
@@ -765,18 +844,31 @@ class _CoverageTracer:
             if isinstance(th, threading.Thread):
                 with self._lock:
                     self._thread_section[th] = self._effective_section()
-            return
         hit = self._codes.get(id(code))
         if hit is None or hit[0] is not code:        # identity, never equality (round 1 B2)
             return
-        sec = self._effective_section()
+        g, freevars, cells = hit[2]
+        genuine = frame.f_globals is g
+        if genuine and freevars:
+            # Round 2 R2-B1: a function made at runtime from the same code (a decorator without
+            # functools.wraps applied later) runs this code object with ITS closure. The call
+            # is the declared function's only if the frame's free variables are its objects.
+            loc = frame.f_locals
+            genuine = all(loc.get(n, _EMPTY) is c for n, c in zip(freevars, cells))
+        sec, via = self._effective()
         with self._lock:
-            if sec is None:
+            if not genuine:
+                bucket = self._impostors.setdefault(sec or "", {})
+            elif sec is None:
                 bucket = self._unsectioned
-            elif self._open.get(sec, 0) > 0:
-                bucket = self._sections[sec]
-            else:
+            elif self._open.get(sec, 0) <= 0:
                 bucket = self._after_close.setdefault(sec, {})
+            elif via == "thread" and sum(1 for n in self._open.values() if n > 0) > 1:
+                # Round 2 R2-B2: a pool worker started in A, running B's work while both are
+                # open, credited A. Inherited attribution counts only when it is unambiguous.
+                bucket = self._ambiguous.setdefault(sec, {})
+            else:
+                bucket = self._sections[sec]
             for t in hit[1]:
                 bucket[t] = bucket.get(t, 0) + 1
 
@@ -806,17 +898,24 @@ class _CoverageTracer:
 
     def __exit__(self, exc_type, exc, tb):
         self._active = False
+        # Ownership is read BEFORE marking the tracer exited: once _exited is set, the next
+        # Python-level call reaching the hook removes it (the R2-B3 repair), and this check
+        # would then see a profiler it did not install.
+        owns_thr = _thread_profile() is self._thr_hook
+        owns_sys = sys.getprofile() is self._sys_hook
         self._exited = True
-        if sys.getprofile() is self._sys_hook and _thread_profile() is self._thr_hook:
-            sys.setprofile(_skip_exited(self._prev_sys))
+        # Round 2 R2-D5: on every path, stop handing this tracer's hook to new threads.
+        if owns_thr:
             threading.setprofile(_skip_exited(self._prev_thr))
+        if owns_sys:
+            sys.setprofile(_skip_exited(self._prev_sys))
             return False
         if exc_type is not None:
             return False           # never mask the exception already explaining the failure
         raise GateSpecError(
             "[V5:EXIT_ORDER] coverage_trace exited while another profiler is installed — "
             "tracers were exited out of order, or the harness replaced the profiler. Nothing was "
-            "restored; this tracer's hook is inert and will not be reinstalled.")
+            "restored in this thread; this tracer's hook is inert and removes itself.")
 
     def _hook_chain_has_self(self) -> bool:
         h = sys.getprofile()
@@ -825,6 +924,11 @@ class _CoverageTracer:
                 return True
             h = h.prev
         return False
+
+    def _refuse_at_close(self, msg: str):
+        with self._lock:
+            self._close_refusals.append(msg)
+        raise GateSpecError(msg)
 
     @contextlib.contextmanager
     def section(self, name: str):
@@ -844,46 +948,76 @@ class _CoverageTracer:
         with self._lock:
             self._open[name] = self._open.get(name, 0) + 1
             self._sections.setdefault(name, {})
+
+        def close() -> bool:
+            with self._lock:
+                self._open[name] -= 1
+            try:
+                self._cv.reset(token)
+                return True
+            except ValueError:
+                return False
+
         try:
             yield self
         except BaseException:
-            with self._lock:
-                self._open[name] -= 1
-            self._cv.reset(token)
+            close()
             raise
+        same_context = close()
+        if not same_context:
+            # Round 2 R2-D6: exited from another Context (an ExitStack or fixture run elsewhere),
+            # ContextVar.reset raised ValueError straight through the public API.
+            self._refuse_at_close(
+                f"[V5:SECTION_CONTEXT] section {name!r} was exited in a different context from "
+                f"the one that opened it, so this tracer cannot tell which calls were its own")
         with self._lock:
-            self._open[name] -= 1
             alive = [th.name for th, s in self._thread_section.items()
                      if s == name and th.is_alive()]
-        self._cv.reset(token)
         if alive:
-            raise GateSpecError(
+            self._refuse_at_close(
                 f"[V5:THREAD_OUTLIVES] section {name!r} closed with threads started inside it "
                 f"still running ({alive}) — their later work could not be told apart from this "
                 f"section's. Join them (or shut the pool down) before the section ends.")
+        if self._hook_failed:
+            self._refuse_at_close(
+                f"[V5:HOOK_FAILED] the coverage hook raised while section {name!r} was open "
+                f"(e.g. RecursionError at the recursion limit); a call may have gone unrecorded")
         if self._active and not self._hook_chain_has_self():
-            raise GateSpecError(
+            self._refuse_at_close(
                 f"[V5:PROFILER_REPLACED] section {name!r} closed with this tracer no longer "
-                f"installed — the harness replaced the profiler (sys.setprofile, cProfile) and "
-                f"the calls after that point were not observed")
+                f"installed — the harness replaced the profiler (sys.setprofile, cProfile), or a "
+                f"RecursionError raised while CPython was entering the hook made it drop the "
+                f"profiler; calls after that point were not observed")
+        # Round 2 R2-B1: holders are re-counted at every close, so a function created at runtime
+        # from a declared target's code (and still alive) is caught even if never called.
+        gc.collect()
+        for t, (fn, code) in self._fns.items():
+            problem = _sharing_problem(t, fn, code)
+            if problem:
+                self._refuse_at_close(problem + f" (found at the close of section {name!r})")
 
     def record(self) -> dict:
         """The trace to store in the result under ``coverage_trace``."""
+        def dump(d):
+            return {k: dict(sorted(v.items())) for k, v in sorted(d.items())}
         with self._lock:
             return {"tracer": _TRACER_ID,
                     "gates_sha256": self._exp.gates_sha256,
                     "targets": dict(sorted(self._code_sha.items())),
-                    "sections": {k: dict(sorted(v.items()))
-                                 for k, v in sorted(self._sections.items())},
-                    "after_close": {k: dict(sorted(v.items()))
-                                    for k, v in sorted(self._after_close.items())},
+                    "sections": dump(self._sections),
+                    "after_close": dump(self._after_close),
+                    "ambiguous": dump(self._ambiguous),
+                    "impostors": dump(self._impostors),
                     "unsectioned": dict(sorted(self._unsectioned.items())),
-                    "scope_note": ("calls observed by code-object identity in threads started "
-                                   "while tracing, attributed to the section open where the "
-                                   "call's context (or its thread's start) began, and counted "
-                                   "only while that section is open. Not observed: child "
-                                   "processes, threads that predate the trace or bypass "
-                                   "threading.Thread.start. Target sha256 values are "
+                    "close_refusals": list(self._close_refusals),
+                    "scope_note": ("calls observed by code-object identity AND frame identity "
+                                   "(the declared function's globals and closure) in threads "
+                                   "started while tracing, attributed to the section open where "
+                                   "the call's context (or its thread's start) began, and "
+                                   "counted only while that section is open and, for "
+                                   "thread-inherited attribution, the only one open. Not "
+                                   "observed: child processes, threads that predate the trace "
+                                   "or bypass threading.Thread.start. Target sha256 values are "
                                    "provenance only (marshal includes the file path) and are "
                                    "not checked at scoring.")}
 

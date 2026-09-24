@@ -1,0 +1,242 @@
+{
+  "generator": "papers/first-afference/mutation_gate.py",
+  "generator_sha256": "d4836aa889146bf880eef62ff47e4590efeece2943da478b148dc8c68fd4c1e9",
+  "runner": "_scratch_v5d_envpatched.py",
+  "runner_sha256": "c4ad6911655e7f625ea44d7a5b0c67bbba993fb953bc29c69129f20bebb4de3f",
+  "impl_sha256": "9a3d3492e5c766720939f4b04a030de42235a5264468aba43a2c8e8879c07e1c",
+  "baseline_clean": true,
+  "baseline": {
+    "detected": false,
+    "how": "exam passed: SURVIVED"
+  },
+  "n_refusal_sites": 29,
+  "n_mutants_detected": 28,
+  "frac_refusal_mutants_detected": 0.9655,
+  "n_hygiene_violations": 2,
+  "hygiene_violations": [
+    [
+      728,
+      "raise GateSpecError(problem)"
+    ],
+    [
+      931,
+      "raise GateSpecError(msg)"
+    ]
+  ],
+  "survivors": [
+    {
+      "line": 982,
+      "kind": "refusal_call",
+      "statement": "self._refuse_at_close(",
+      "detected": false,
+      "how": "exam passed: SURVIVED"
+    }
+  ],
+  "mutants": [
+    {
+      "line": 304,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['section_without_exercises']; 1 crashes"
+    },
+    {
+      "line": 309,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['exercises_empty_beside_declaring', 'exercises_not_list']"
+    },
+    {
+      "line": 314,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['exercises_no_colon', 'exercises_non_string', 'exercises_trailing_newline', 'x2_non_ascii_target']; 2 crashes"
+    },
+    {
+      "line": 318,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['exercises_duplicate']"
+    },
+    {
+      "line": 322,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['section_non_string']"
+    },
+    {
+      "line": 534,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['no_trace', 'x2_check_metrics_reports_non_dict_result']; 2 crashes"
+    },
+    {
+      "line": 539,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['trace_wrong_tracer_id']"
+    },
+    {
+      "line": 544,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['stale_gates_sha']"
+    },
+    {
+      "line": 552,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['rt_check_metrics_non_string_key_reports', 'rt_non_string_trace_key', 'x2_check_metrics_reports_none_key', 'x2_non_string_key_under_sections']; 3 crashes"
+    },
+    {
+      "line": 556,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['trace_target_set_differs']"
+    },
+    {
+      "line": 562,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['section_absent']"
+    },
+    {
+      "line": 567,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['x2_check_metrics_reports_list_section', 'x2_list_valued_section', 'x2_non_string_key_inside_section']; 2 crashes"
+    },
+    {
+      "line": 572,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['count_bool', 'count_float', 'count_negative', 'count_zero', 'x2_forged_undeclared_key_in_section']"
+    },
+    {
+      "line": 577,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "exit 1:  line 578, in _check_coverage\n    return {t: sec[t] for t in c[\"exercises\"]}\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/v5mut_muf3bmui/styxx/protocol.py\", line 578, in <dictcomp>\n    return {t: sec[t] for t in c[\"exercises\"]}\n               ~~~^^^\nKeyError: 'styxx.power:effective_n'"
+    },
+    {
+      "line": 691,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['rt_inherited_method']"
+    },
+    {
+      "line": 702,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['rt2_instance_path']"
+    },
+    {
+      "line": 715,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['rt_import_raises', 'rt_import_syntax_error', 'rt_unwrap_loop', 'target_unresolvable_attr', 'target_unresolvable_module']; 3 crashes"
+    },
+    {
+      "line": 721,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['target_builtin']"
+    },
+    {
+      "line": 793,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['nothing_declared']"
+    },
+    {
+      "line": 804,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['x2_alias_targets_one_function']"
+    },
+    {
+      "line": 879,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['rt_reentry', 'x2_reenter_exited_tracer']"
+    },
+    {
+      "line": 888,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['rt_c_profiler_present', 'x2_c_profiler_refused_and_kept', 'x2_foreign_threading_profiler']; 2 crashes"
+    },
+    {
+      "line": 915,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['rt_out_of_order_exit']"
+    },
+    {
+      "line": 938,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['undeclared_section_opened']"
+    },
+    {
+      "line": 944,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['nested_sections']"
+    },
+    {
+      "line": 970,
+      "kind": "refusal_call",
+      "statement": "self._refuse_at_close(",
+      "detected": true,
+      "how": "violation cases ['rt2_section_exited_in_other_context']"
+    },
+    {
+      "line": 977,
+      "kind": "refusal_call",
+      "statement": "self._refuse_at_close(",
+      "detected": true,
+      "how": "violation cases ['rt_thread_outlives_section']"
+    },
+    {
+      "line": 982,
+      "kind": "refusal_call",
+      "statement": "self._refuse_at_close(",
+      "detected": false,
+      "how": "exam passed: SURVIVED"
+    },
+    {
+      "line": 986,
+      "kind": "refusal_call",
+      "statement": "self._refuse_at_close(",
+      "detected": true,
+      "how": "violation cases ['rt_cprofile_inside_section']"
+    }
+  ],
+  "what": "POSITIVE CONTROL for mutation_gate.py, smoke-labelled, not a scored result: the gate run against the v5d implementation (not shippable after red-team round 3) with the v5d exam patched only to honour STYXX_V5_IMPORT_ROOT / STYXX_V5_RESULT_OUT (runner file renamed afterwards to mutation_gate_control_v5d_runner.py; runner_sha256 is of those bytes). Expected from the round-3 exam audit, found by hand: the HOOK_FAILED close refusal survives (no case), and the two shared-code refusals built from a message variable are invisible to the mutator. Observed: exactly those.",
+  "scope_note": "refusal deletion is a floor: round 3 also found non-refusal survivors (gc.collect removal, threading-hook reset on error paths, Thread.start early return, close_refusals recording) that this operator does not generate"
+}

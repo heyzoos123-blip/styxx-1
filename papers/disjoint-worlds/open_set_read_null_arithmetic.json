@@ -1,0 +1,26 @@
+{
+  "script": "papers/disjoint-worlds/open_set_read_null_arithmetic.py",
+  "assumptions": [
+    "IN and OOV null margins exchangeable (AUROC centred on 0.5)",
+    "Mann-Whitney variance without ties",
+    "normal approximation",
+    "any-of-three figure assumes independent targets; they share one split"
+  ],
+  "n_candidates": 35,
+  "n_oov": 35,
+  "bar": 0.55,
+  "null_auroc_sd": 0.0695,
+  "bar_in_null_sd_units": 0.7194,
+  "false_alarm_rate_single_target": 0.2359,
+  "false_alarm_rate_any_of_three_if_independent": 0.5539,
+  "substituted_null_auroc": {
+    "gemma_2b": 0.5584,
+    "llama_1b": 0.5861,
+    "qwen_1p5b": 0.5012
+  },
+  "substituted_null_mean_all_three_targets": 0.5486,
+  "substituted_null_targets_above_bar": [
+    "gemma_2b",
+    "llama_1b"
+  ]
+}

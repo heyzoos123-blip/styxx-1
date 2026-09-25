@@ -1,0 +1,4 @@
+3.12.3 spec         A {'f': 1} MONITOR_LOST True (fault-free; S was never cleared under a live section)
+3.12.3 events-first A {'f': 1} MONITOR_LOST False (fault-free; S was never cleared under a live section)
+3.13.12 spec         A {'f': 1} MONITOR_LOST True (fault-free; S was never cleared under a live section)
+3.13.12 events-first A {'f': 1} MONITOR_LOST False (fault-free; S was never cleared under a live section)

@@ -1,0 +1,2 @@
+3.12.3 fault-free: pending entries left on the held mint: 1 | anchors 0 events 0
+3.13.12 fault-free: pending entries left on the held mint: 1 | anchors 0 events 0

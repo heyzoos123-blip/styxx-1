@@ -1,0 +1,6 @@
+3.12.3 deterministic: A None MONITOR_LOST True (U1 claims A {t:1}, no MONITOR_LOST)
+3.12.3 natural, closers under a pure-Python profiler=False: A calls 1196, t credited 1196, lost 0, MONITOR_LOST False
+3.12.3 natural, closers under a pure-Python profiler=True: A calls 491, t credited 491, lost 0, MONITOR_LOST False
+3.13.12 deterministic: A None MONITOR_LOST True (U1 claims A {t:1}, no MONITOR_LOST)
+3.13.12 natural, closers under a pure-Python profiler=False: A calls 1081, t credited 1081, lost 0, MONITOR_LOST False
+3.13.12 natural, closers under a pure-Python profiler=True: A calls 476, t credited 476, lost 0, MONITOR_LOST False

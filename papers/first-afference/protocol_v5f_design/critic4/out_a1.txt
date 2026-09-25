@@ -1,0 +1,28 @@
+3.12.3   none                                                 split 0/5
+3.12.3   sys.setprofile(pure Python fn)  [V48 shape]          split 5/5
+3.12.3   threading.setprofile_all_threads(pure Python fn)     split 5/5
+3.12.3   cProfile.Profile(timer=<python fn>)                  split 5/5
+3.12.3   sys.settrace, line events                            split 0/5
+3.12.3   sys.settrace + f_trace_opcodes [spec: acknowledged]  split 4/5
+3.12.3   sys.monitoring tool 2, local LINE                    split 0/5
+3.12.3   sys.monitoring tool 2, global LINE                   split 0/5
+3.12.3   sys.monitoring tool 2, local CALL                    split 5/5
+3.12.3   sys.monitoring tool 2, global CALL                   split 5/5
+3.12.3   sys.monitoring tool 2, local C_RETURN (global, CALL enabled with no CALL callback) split 0/5
+3.12.3   sys.monitoring tool 2, local BRANCH                  split 5/5
+3.12.3   sys.monitoring tool 2, local JUMP                    split 0/5
+3.12.3   sys.monitoring tool 2, local INSTRUCTION [spec: acknowledged] split 5/5
+3.13.12  none                                                 split 0/5
+3.13.12  sys.setprofile(pure Python fn)  [V48 shape]          split 5/5
+3.13.12  threading.setprofile_all_threads(pure Python fn)     split 5/5
+3.13.12  cProfile.Profile(timer=<python fn>)                  split 5/5
+3.13.12  sys.settrace, line events                            split 0/5
+3.13.12  sys.settrace + f_trace_opcodes [spec: acknowledged]  split 5/5
+3.13.12  sys.monitoring tool 2, local LINE                    split 0/5
+3.13.12  sys.monitoring tool 2, global LINE                   split 0/5
+3.13.12  sys.monitoring tool 2, local CALL                    split 5/5
+3.13.12  sys.monitoring tool 2, global CALL                   split 5/5
+3.13.12  sys.monitoring tool 2, local C_RETURN (global, CALL enabled with no CALL callback) split 0/5
+3.13.12  sys.monitoring tool 2, local BRANCH                  split 0/5
+3.13.12  sys.monitoring tool 2, local JUMP                    split 0/5
+3.13.12  sys.monitoring tool 2, local INSTRUCTION [spec: acknowledged] split 5/5

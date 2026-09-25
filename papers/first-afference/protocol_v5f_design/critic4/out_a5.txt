@@ -1,0 +1,2 @@
+3.12.3 use_tool_id accepted a str subclass: N | get_tool(3) == "styxx.protocol/abc" -> True
+3.13.12 use_tool_id accepted a str subclass: N | get_tool(3) == "styxx.protocol/abc" -> True

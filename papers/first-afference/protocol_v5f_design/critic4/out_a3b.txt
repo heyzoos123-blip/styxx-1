@@ -1,0 +1,2 @@
+3.12.3 revision 2 natural: anchor leaked after exit in 39 of 20000 races, key types ['frame']
+3.13.12 revision 2 natural: anchor leaked after exit in 43 of 20000 races, key types ['frame']

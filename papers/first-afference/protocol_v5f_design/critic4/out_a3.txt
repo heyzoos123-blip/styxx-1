@@ -1,0 +1,14 @@
+3.12.3 commit:0  mech3    run(): 1 | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.12.3 commit:1  mech3    run(): 1 | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.12.3 on:read   mech3    run(): 1 | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.12.3 commit:0  step8    run(): RuntimeError('[V5:TRACE_INACTIVE]') | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.12.3 commit:1  step8    run(): RuntimeError('[V5:TRACE_INACTIVE]') | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.12.3 on:read   step8    run(): RuntimeError('[V5:TRACE_INACTIVE]') | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.12.3 natural (no hooks): _ANCHORS[None] leaked in 47 of 20000 enter/open/exit races
+3.13.12 commit:0  mech3    run(): 1 | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.13.12 commit:1  mech3    run(): 1 | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.13.12 on:read   mech3    run(): 1 | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.13.12 commit:0  step8    run(): RuntimeError('[V5:TRACE_INACTIVE]') | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.13.12 commit:1  step8    run(): RuntimeError('[V5:TRACE_INACTIVE]') | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.13.12 on:read   step8    run(): RuntimeError('[V5:TRACE_INACTIVE]') | after exit: anchors 1 key types ['NoneType'] events 4096 | after a later clean trace: anchors 1 events 4096
+3.13.12 natural (no hooks): _ANCHORS[None] leaked in 55 of 20000 enter/open/exit races

@@ -302,6 +302,10 @@
   "closure_audit": "every round-1..3 blocker and its variants rebuilt against v5e: 41/41 held on 3.10.20, 3.11.15, 3.12.3, 3.13.12 (round4/closure-audit/r1/held_battery.py). Reopened only: R1-D2 (resolution runs user code: resolution-isinstance-runs-user-code) and R1-D3/R2-D6 (unhashable 'end': unhashable-end-typeerror), both DEFECT.",
   "semantic_mutation_census": "27/63 hand-aimed weakened-rule mutants detected by the frozen exam (baseline clean); refusal deletion was 57/57. round4_exam_mutation/semantic_mutation_census.json",
   "dry": false,
-  "stopping": "The pass stopped after one finder round because its first round already decides the ship question (six confirmed blockers). It is not dry. The next red team runs against the repair, not against v5e."
+  "stopping": "The pass stopped after one finder round because its first round already decides the ship question (six confirmed blockers). It is not dry. The next red team runs against the repair, not against v5e.",
+  "surfaced_during_verification": {
+   "yappi-silently-replaced": "Found by the scope judge of profile-module-refuses-on-312 (round4/verdicts.json): yappi's profiler is not refused at open; styxx replaces it, yappi records nothing from the section onward, and the verdict is still PASS. The judge wrote that it 'deserves its own DEFECT finding'. NOT independently verified; recorded so the repair cycle and round 5 carry it."
+  },
+  "n_surfaced_unverified": 1
  }
 }

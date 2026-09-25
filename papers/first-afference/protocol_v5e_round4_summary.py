@@ -75,6 +75,23 @@ def main() -> int:
     rounds = {r: {"n_blockers": len(audit[r]["module_red_team"]["blockers"]),
                   "n_defects": len(audit[r]["module_red_team"]["defects"])}
               for r in ("round_1", "round_2", "round_3")}
+    rounds["round_1"]["n_exam_defects"] = len(audit["round_1"]["exam_audit"]["defects"])
+    for r in ("round_2", "round_3"):
+        ex = audit[r]["exam_mutation_audit"]
+        rounds[r]["n_exam_survivors_blocker_class"] = len(ex["survivors_blocker_class"])
+        rounds[r]["n_exam_defects"] = len(ex["defects"])
+    names = re.findall(r'@case\("([^"]+)"', BATTERY.read_text(encoding="utf-8"))
+    blocker_rows = [n for n in names if re.match(r"R[123]-B\d", n)]
+    battery_composition = {
+        "n_cases": len(names), "n_blocker_cases": len(blocker_rows),
+        "n_other_cases": len(names) - len(blocker_rows),
+        "n_blocker_classes_covered": len({n.split()[0] for n in blocker_rows}),
+        "blockers_with_variants": sorted({n.split()[0] for n in blocker_rows if n.split()[1] == "v:"}),
+    }
+    battery_composition["n_blockers_with_variants"] = len(battery_composition["blockers_with_variants"])
+    fi = load("fault_injection_v5_result.json")
+    cr = json.loads((HERE / "protocol_v5_redteam" / "round4" / "capture_recapture.json").read_text(encoding="utf-8"))
+    bn = json.loads((HERE / "protocol_v5_redteam" / "round4" / "blockers_against_nversion.json").read_text(encoding="utf-8"))
     bat = battery()
     held_everywhere = all(b["held"] == b["cases"] and b["cases"] > 0 for b in bat.values())
     res = {
@@ -105,7 +122,8 @@ def main() -> int:
                 "fuzz_control_no_cut_disagreements": aux["fuzz_control_no_cut_disagreements"],
                 "nversion_trace_diffs": aux["nversion_trace_diffs"],
                 "crossversion_n_versions": aux["crossversion_n_versions"],
-                "crossversion_diffs": aux["crossversion_diffs"]},
+                "crossversion_diffs": aux["crossversion_diffs"],
+                "crossversion_n_version_keyed_cases_skipped": len(aux["crossversion_detail"]["version_keyed_skipped"])},
         "all_frozen_gates": {"n": len(e["gates"]) + len(aux["gates"]),
                              "passed": sum(bool(v) for v in e["gates"].values()) +
                                        sum(bool(v) for v in aux["gates"].values())},
@@ -131,6 +149,20 @@ def main() -> int:
                     "n_after_dedup": r4["method"]["n_after_dedup"], "n_confirmed": r4["n_confirmed"],
                     "n_not_confirmed": r4["n_not_confirmed"], **{f"n_{k.lower()}": v for k, v in r4["counts_confirmed"].items()},
                     "dry": r4["dry"]},
+        "closure_battery_composition": battery_composition,
+        "fault_injection": {"n_fault_points": fi["n_fault_points"], "n_not_clean": fi["n_not_clean"],
+                            "n_scenarios": len(fi["scenarios"]), **{f"n_{k.lower()}": v for k, v in fi["totals"].items()},
+                            "python": fi["python"]},
+        "capture_recapture": {k: {"s_obs": cr[k]["s_obs"], "chao2": cr[k]["chao2"],
+                                  "estimated_unfound": cr[k]["estimated_unfound"],
+                                  "ci95_low": cr[k]["ci95"][0], "ci95_high": cr[k]["ci95"][1],
+                                  "share_found": cr[k]["share_found"]}
+                              for k in ("all_clusters", "confirmed_only", "confirmed_module_findings", "confirmed_exam_holes")},
+        "blockers_vs_nversion": {"n_blockers": bn["n_blockers"],
+                                 "n_reproduced_on_primary": bn["n_blockers_reproduced_on_primary"],
+                                 "n_reproduced_on_nversion": bn["n_blockers_reproduced_on_nversion"],
+                                 "same_versions_every_blocker": all(v["primary"] == v["nversion"] for v in bn["reproduced_on"].values())},
+        "round_4_surfaced_unverified": r4.get("n_surfaced_unverified", 0),
         "closure_battery": bat,
         "closure_battery_n_versions": len(bat),
         "closure_battery_cases": max((b["cases"] for b in bat.values()), default=0),

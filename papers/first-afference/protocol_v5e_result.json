@@ -1,0 +1,4408 @@
+{
+  "prereg": "PREREG_protocol_v5e_mint_anchor_2026_09_24.md",
+  "smoke": false,
+  "mode": "scored",
+  "python": "3.11.15",
+  "impl_path": "/home/user/styxx-1/styxx/protocol.py",
+  "impl_sha256": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
+  "runner_sha256": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+  "exam_frozen": 1.0,
+  "frozen_files": {
+    "RUNNER": {
+      "path": "papers/first-afference/run_protocol_v5e.py",
+      "sha256": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+      "expected": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+      "match": true,
+      "note": null
+    },
+    "MUTATION_GATE": {
+      "path": "papers/first-afference/mutation_gate.py",
+      "sha256": "bd7769125fe836c7df6d031f1b6dbe189fc52f87158b067ac4aee23781546e72",
+      "expected": "bd7769125fe836c7df6d031f1b6dbe189fc52f87158b067ac4aee23781546e72",
+      "match": true,
+      "note": null
+    },
+    "RUN_PROTOCOL_V5": {
+      "path": "papers/first-afference/run_protocol_v5.py",
+      "sha256": "02a8286efc2217bec6ba4d788b701d6170d87f039b85934fa7763792919dc003",
+      "expected": "02a8286efc2217bec6ba4d788b701d6170d87f039b85934fa7763792919dc003",
+      "match": true,
+      "note": null
+    },
+    "RUN_P1": {
+      "path": "papers/first-afference/run_p1.py",
+      "sha256": "656eb5ad047ea44eb63fdf10af83bd0947a18f1b84363c1a55576ffc0c81736d",
+      "expected": "656eb5ad047ea44eb63fdf10af83bd0947a18f1b84363c1a55576ffc0c81736d",
+      "match": true,
+      "note": null
+    },
+    "P1_PREREG": {
+      "path": "papers/first-afference/PREREG_p1_power_refusal_2026_08_08.md",
+      "sha256": "ef0f12f4426b31f17b7e82f85a8a872657a076c16dc8a6f7e0929524b45ddaeb",
+      "expected": "ef0f12f4426b31f17b7e82f85a8a872657a076c16dc8a6f7e0929524b45ddaeb",
+      "match": true,
+      "note": null
+    },
+    "P1_RESULT": {
+      "path": "papers/first-afference/p1_result.json",
+      "sha256": "3b252f1dd2d61db12bbbbf1e9ff5b62efa1b6e528a0a2ca378972624801ce73b",
+      "expected": "3b252f1dd2d61db12bbbbf1e9ff5b62efa1b6e528a0a2ca378972624801ce73b",
+      "match": true,
+      "note": null
+    },
+    "POWER_QUARANTINED": {
+      "path": "styxx/power_QUARANTINED.py.txt",
+      "sha256": "00eacad5eadf50a80ebc16cd77417421e8c95966cd7609d0afe70964395227be",
+      "expected": "00eacad5eadf50a80ebc16cd77417421e8c95966cd7609d0afe70964395227be",
+      "match": true,
+      "note": null
+    },
+    "CORPUS_PROVENANCE_RESCORE": {
+      "path": "papers/first-afference/corpus_provenance_rescore.json",
+      "sha256": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118",
+      "expected": "0646caf89813815d0f36f83a1cb2832e657ea426532cca387759c305e7e1d118",
+      "match": true,
+      "note": null
+    },
+    "V5D_RESULT": {
+      "path": "papers/first-afference/protocol_v5d_result.json",
+      "sha256": "26422974b8aae027286b41f48e32519f890b96973805a564b6819ceb8aaedfb4",
+      "expected": "26422974b8aae027286b41f48e32519f890b96973805a564b6819ceb8aaedfb4",
+      "match": true,
+      "note": null
+    },
+    "V5D_PREREG": {
+      "path": "papers/first-afference/PREREG_protocol_v5d_repair_2026_09_24.md",
+      "sha256": "1e579f582a448fc9d715d87eb0ac71ec8dacd0a01b00a4e6bacc599396cb694d",
+      "expected": "1e579f582a448fc9d715d87eb0ac71ec8dacd0a01b00a4e6bacc599396cb694d",
+      "match": true,
+      "note": null
+    }
+  },
+  "freeze": {
+    "prereg_first_commit": "84f5391f221b9a2c8e027b1d1d0e6abb58b1a79e",
+    "prereg_unchanged_since_first_commit": true,
+    "first_implementation_commit": "8b805e26ca2b24e05891d05aa86781b7366cc153",
+    "prereg_committed_before_implementation": true
+  },
+  "gate_sections": {
+    "frac_violation_cases_refused_with_expected_code": "G0_violations_refused_for_their_reason",
+    "frac_valid_cases_exact": "G1_valid_cases_exact",
+    "p1_retro_exact": "G2_p1_retro_exact",
+    "frac_residuals_as_documented": "G5_residuals_as_documented"
+  },
+  "violation_cases": {
+    "X01": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got []. An empty declaration would pass every harness.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X02": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got '_v5e_fx:f'. An empty declaration would pass every harness.",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X03": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused ['_v5e_fx:f\\n']",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X04": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' entries must be ASCII \"module:qualname\" strings (e.g. \"styxx.power:reachable\"); refused ['_v5e_fx:f\u0430']",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X05": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' names a target twice: ['_v5e_fx:f', '_v5e_fx:f']",
+      "leftover": null,
+      "seconds": 0.013
+    },
+    "X02b": {
+      "expected": "DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:DECL] gate 'G': 'exercises' must be a non-empty list of \"module:qualname\" strings, got {'_v5e_fx:f': 1}. An empty declaration would pass every harness.",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X06": {
+      "expected": "SECTION_DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SECTION_DECL] gate 'G': 'section' without 'exercises' declares a place and nothing to find in it \u2014 half a declaration checks nothing while looking like a check",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X07": {
+      "expected": "SECTION_DECL",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SECTION_DECL] gate 'G': 'section' must be a non-empty ASCII string, got 5",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X08": {
+      "expected": "NOTHING_DECLARED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOTHING_DECLARED] no gate in this prereg declares 'exercises' -- a coverage trace with nothing declared would record nothing and could be mistaken for a check that passed",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X10": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5e_broken:f': importing '_v5e_broken' raised RuntimeError: optional backend not configured",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X11": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5e_syntax:f': importing '_v5e_syntax' raised SyntaxError: invalid syntax (_v5e_syntax.py, line 1)",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X12": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5e_plain:nope': '_v5e_plain' has no attribute 'nope' and no module __getattr__ (an unimported submodule is not an attribute)",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X13": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5e_ga_raise:lazy': _v5e_ga_raise.__getattr__('lazy') raised RuntimeError: lazy loader failed for lazy",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X12b": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5e_fx:Base.nope_x12b': class Base has no attribute 'nope_x12b' in its own or any base's __dict__",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X14": {
+      "expected": "INHERITED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:INHERITED] declared target '_v5e_fx:Sub.fit': 'fit' is inherited by Sub, not defined on it -- declare the defining class",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X15": {
+      "expected": "INSTANCE_PATH",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:INSTANCE_PATH] declared target '_v5e_fx:default_model.fit': 'fit' is not in the own __dict__ of the Sub it is reached through -- an attribute that comes from a class is declared on the class (Sub)",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X16": {
+      "expected": "INSTANCE_PATH",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:INSTANCE_PATH] declared target '_v5e_pkg:sub.fn': 'fn' is reached through the module '_v5e_pkg.sub' after the colon -- put the full module path before it",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X17": {
+      "expected": "INSTANCE_PATH",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:INSTANCE_PATH] declared target '_v5e_fx:SL.fn': 'fn' is not in the own __dict__ of the Slots it is reached through -- an attribute that comes from a class is declared on the class (Slots)",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X18": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:P' resolves to partial: only Python functions, staticmethod/classmethod of one, and C cache wrappers (through their body) can be observed",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X19": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:K.p' resolves to property: only Python functions, staticmethod/classmethod of one, and C cache wrappers (through their body) can be observed",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X20": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:tb_fast' resolves to Timed: only Python functions, staticmethod/classmethod of one, and C cache wrappers (through their body) can be observed",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X21": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target 'builtins:len' resolves to builtin_function_or_method: only Python functions, staticmethod/classmethod of one, and C cache wrappers (through their body) can be observed",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X22": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:bound_run' resolves to method: only Python functions, staticmethod/classmethod of one, and C cache wrappers (through their body) can be observed",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X23": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:m23' resolves to MagicMock: only Python functions, staticmethod/classmethod of one, and C cache wrappers (through their body) can be observed",
+      "leftover": null,
+      "seconds": 0.026
+    },
+    "X24": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:cabs': a cache wrapper whose body is builtin_function_or_method, not a Python function",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X25": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:fast': the cache wrapper's body is also bound by name in the namespace -- declare that name instead",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X25b": {
+      "expected": "NOT_A_FUNCTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_A_FUNCTION] declared target '_v5e_fx:CacheHolder.fast': the cache wrapper's body is also bound by name in the namespace -- declare that name instead",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X26": {
+      "expected": "FOREIGN_DEFINITION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_DEFINITION] declared target '_v5e_fx:h26': neither it nor its __wrapped__ chain was defined in '_v5e_fx' (its code comes from /tmp/v5efix_vz3yim_n/_v5e_other.py) -- a re-export, a stub or a mock bound at the name is not the function the declaration names",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X27": {
+      "expected": "FOREIGN_DEFINITION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_DEFINITION] declared target '_v5e_fx:g27': neither it nor its __wrapped__ chain was defined in '_v5e_fx' (its code comes from <string>) -- a re-export, a stub or a mock bound at the name is not the function the declaration names",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X28": {
+      "expected": "FOREIGN_DEFINITION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_DEFINITION] declared target '_v5e_dec:nowraps_entry': neither it nor its __wrapped__ chain was defined in '_v5e_dec' (its code comes from /tmp/v5efix_vz3yim_n/_v5e_other.py) -- a re-export, a stub or a mock bound at the name is not the function the declaration names",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X29": {
+      "expected": "FOREIGN_DEFINITION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_DEFINITION] declared target '_v5e_re:f': neither it nor its __wrapped__ chain was defined in '_v5e_re' (its code comes from /tmp/v5efix_vz3yim_n/_v5e_fx.py) -- a re-export, a stub or a mock bound at the name is not the function the declaration names",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X30": {
+      "expected": "FOREIGN_DEFINITION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_DEFINITION] declared target '_v5e_fx:made': neither it nor its __wrapped__ chain was defined in '_v5e_fx' (its code comes from <string>) -- a re-export, a stub or a mock bound at the name is not the function the declaration names",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X30b": {
+      "expected": "FOREIGN_DEFINITION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_DEFINITION] declared target '_v5e_dec:deep17': neither it nor its __wrapped__ chain was defined in '_v5e_dec' (its code comes from /tmp/v5efix_vz3yim_n/_v5e_other.py) -- a re-export, a stub or a mock bound at the name is not the function the declaration names",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X30c": {
+      "expected": "FOREIGN_DEFINITION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_DEFINITION] declared target '_v5e_dec:cyc': neither it nor its __wrapped__ chain was defined in '_v5e_dec' (its code comes from /tmp/v5efix_vz3yim_n/_v5e_other.py) -- a re-export, a stub or a mock bound at the name is not the function the declaration names",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X31": {
+      "expected": "CODE_SWAPPED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CODE_SWAPPED] declared target '_v5e_fx:x31_t': an enclosing trace minted it and its __code__ has since been replaced -- the trace cannot tell its calls apart",
+      "leftover": null,
+      "seconds": 0.039
+    },
+    "X31b": {
+      "expected": "CODE_SWAPPED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CODE_SWAPPED] declared target '_v5e_fx:x31_t': an enclosing trace minted it and its __code__ has since been replaced -- the trace cannot tell its calls apart",
+      "leftover": null,
+      "seconds": 0.035
+    },
+    "X32": {
+      "expected": "REENTRY",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:REENTRY] gate 'G': [V5:REENTRY] this coverage_trace is active; a tracer is entered exactly once -- nested use needs a second tracer; every recorded problem: ['[V5:REENTRY] this coverage_trace is active; a tracer is entered exactly once -- nested use needs a second tracer']",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X32b": {
+      "expected": "REENTRY",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:REENTRY] gate 'G': [V5:REENTRY] this coverage_trace is exited; a tracer is entered exactly once -- nested use needs a second tracer; every recorded problem: ['[V5:REENTRY] this coverage_trace is exited; a tracer is entered exactly once -- nested use needs a second tracer']",
+      "leftover": null,
+      "seconds": 0.019
+    },
+    "X33": {
+      "expected": "UNRESOLVED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNRESOLVED] declared target '_v5e_fx:z33_nope': '_v5e_fx' has no attribute 'z33_nope' and no module __getattr__ (an unimported submodule is not an attribute)",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X40": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:check_low'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X41": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:entry_a'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X42": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:score_all'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X43": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:double'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X44": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:score_lenient'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X45": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_impl_new:score_null'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X46": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_impl_new:score_null'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X47": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:DA.__init__'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X48": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f48'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X49": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:run_fast'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X50": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:run_fast'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.021
+    },
+    "X51": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:public'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X52": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_dec:wrapped_entry'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.02
+    },
+    "X53": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f53'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X54": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:cached54'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X55": {
+      "expected": "CLONE_CALLED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CLONE_CALLED] gate 'G': [V5:CLONE_CALLED] the minted code of f55 ran under globals that are not its function's: a function was built from its code object, or it was exec'd; every recorded problem: [\"[V5:CLONE_CALLED] the minted code of f55 ran under globals that are not its function's: a function was built from its code object, or it was exec'd\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X56": {
+      "expected": "CLONE_CALLED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CLONE_CALLED] gate 'G': [V5:CLONE_CALLED] the minted code of f56 ran under globals that are not its function's: a function was built from its code object, or it was exec'd; every recorded problem: [\"[V5:CLONE_CALLED] the minted code of f56 ran under globals that are not its function's: a function was built from its code object, or it was exec'd\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X55b": {
+      "expected": "CLONE_CALLED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CLONE_CALLED] gate 'G': [V5:CLONE_CALLED] the minted code of f55 ran under globals that are not its function's: a function was built from its code object, or it was exec'd; every recorded problem: [\"[V5:CLONE_CALLED] the minted code of f55 ran under globals that are not its function's: a function was built from its code object, or it was exec'd\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X55c": {
+      "expected": "CLONE_CALLED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CLONE_CALLED] gate 'G': [V5:CLONE_CALLED] the minted code of f55 ran under globals that are not its function's: a function was built from its code object, or it was exec'd; every recorded problem: [\"[V5:CLONE_CALLED] the minted code of f55 ran under globals that are not its function's: a function was built from its code object, or it was exec'd\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X57": {
+      "expected": "CLONE_ALIVE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CLONE_ALIVE] gate 'G': [V5:CLONE_ALIVE] 1 live function(s) other than f57 hold its minted code (['f57']) -- a clone built during the trace would be credited as it; every recorded problem: [\"[V5:CLONE_ALIVE] 1 live function(s) other than f57 hold its minted code (['f57']) -- a clone built during the trace would be credited as it\"]",
+      "leftover": null,
+      "seconds": 0.019
+    },
+    "X58": {
+      "expected": "CLONE_ALIVE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CLONE_ALIVE] gate 'G': [V5:CLONE_ALIVE] 1 live function(s) other than f58 hold its minted code (['u58']) -- a clone built during the trace would be credited as it; every recorded problem: [\"[V5:CLONE_ALIVE] 1 live function(s) other than f58 hold its minted code (['u58']) -- a clone built during the trace would be credited as it\"]",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X59": {
+      "expected": "CODE_SWAPPED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CODE_SWAPPED] gate 'G': [V5:CODE_SWAPPED] f59.__code__ was replaced during the trace -- calls through the replacement were not observed; every recorded problem: ['[V5:CODE_SWAPPED] f59.__code__ was replaced during the trace -- calls through the replacement were not observed']",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X59b": {
+      "expected": "CODE_SWAPPED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:CODE_SWAPPED] gate 'G': [V5:CODE_SWAPPED] f59.__code__ was replaced during the trace -- calls through the replacement were not observed; every recorded problem: ['[V5:CODE_SWAPPED] f59.__code__ was replaced during the trace -- calls through the replacement were not observed']",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X60": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'A': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {'_v5e_fx:f': 1}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.033
+    },
+    "X61": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'A': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {'_v5e_fx:f': 2}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.033
+    },
+    "X62": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'A': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 1}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X63": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'A': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {'_v5e_fx:f': 1}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.032
+    },
+    "X64": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'A': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 1}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X65": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'A': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 2}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.025
+    },
+    "X66": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {'_v5e_fx:f': 1}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.031
+    },
+    "X67": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 1}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X68": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {'_v5e_fx:f': 1}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.033
+    },
+    "X69": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {'_v5e_fx:f': 1}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X70": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'A': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'A': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X71": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends ['open']; notes [\"[V5:OPEN_AT_EXIT] section 'G' was still open when the trace exited; only calls made before the exit count\"]. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X71c": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends ['open']; notes [\"[V5:OPEN_AT_EXIT] section 'G' was still open when the trace exited; only calls made before the exit count\"]. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.031
+    },
+    "X72": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 2}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X73": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 1}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X74": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes [\"[V5:LAZY_RESULT] section 'G': fn returned a coroutine; its body runs after the section closed, so none of it counts\"]. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X74b": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes [\"[V5:LAZY_RESULT] section 'G': fn returned a generator; its body runs after the section closed, so none of it counts\"]. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X74c": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes [\"[V5:LAZY_RESULT] section 'G': fn returned a async_generator; its body runs after the section closed, so none of it counts\"]. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names.",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X75": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes [\"[V5:PROFILER_LOST] section 'G': the profile hook was replaced or dropped while it was open; calls after that on this thread were not observed\"]. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied without running what it names",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X76": {
+      "expected": "NESTED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NESTED_SECTION] gate 'G': [V5:NESTED_SECTION] section 'H' opened on the stack of an open opening of section 'G' of the same trace -- one call would count for two gates; every recorded problem: [\"[V5:NESTED_SECTION] section 'H' opened on the stack of an open opening of section 'G' of the same trace -- one call would count for two gates\"]",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X77": {
+      "expected": "NESTED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NESTED_SECTION] gate 'A': [V5:NESTED_SECTION] section 'B' opened on the stack of an open opening of section 'A' of the same trace -- one call would count for two gates; every recorded problem: [\"[V5:NESTED_SECTION] section 'B' opened on the stack of an open opening of section 'A' of the same trace -- one call would count for two gates\"]",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X78": {
+      "expected": "UNDECLARED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNDECLARED_SECTION] gate 'G': [V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G']); every recorded problem: [\"[V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G'])\"]",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X79": {
+      "expected": "TRACE_INACTIVE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TRACE_INACTIVE] gate 'G': [V5:TRACE_INACTIVE] section 'G': the trace is exited, not active; every recorded problem: [\"[V5:TRACE_INACTIVE] section 'G': the trace is exited, not active\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X78b": {
+      "expected": "UNDECLARED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNDECLARED_SECTION] gate 'G': [V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G']); every recorded problem: [\"[V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G'])\", \"[V5:CLONE_CALLED] the minted code of f55 ran under globals that are not its function's: a function was built from its code object, or it was exec'd\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X78c": {
+      "expected": "UNDECLARED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNDECLARED_SECTION] gate 'G': [V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G']); every recorded problem: [\"[V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G'])\"]",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X78d": {
+      "expected": "UNDECLARED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:UNDECLARED_SECTION] gate 'G': [V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G']); every recorded problem: [\"[V5:UNDECLARED_SECTION] section 'NOT_A_GATE' is not declared by any gate (declared: ['G'])\"]",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X79b": {
+      "expected": "TRACE_INACTIVE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TRACE_INACTIVE] section 'G': the trace is new, not active",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X79c": {
+      "expected": "TRACE_INACTIVE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TRACE_INACTIVE] gate 'G': [V5:TRACE_INACTIVE] section 'NOT_A_GATE': the trace is exited, not active; every recorded problem: [\"[V5:TRACE_INACTIVE] section 'NOT_A_GATE': the trace is exited, not active\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X80b": {
+      "expected": "NESTED_SECTION",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NESTED_SECTION] gate 'G': [V5:NESTED_SECTION] section 'H' opened on the stack of an open opening of section 'G' of the same trace -- one call would count for two gates; every recorded problem: [\"[V5:NESTED_SECTION] section 'H' opened on the stack of an open opening of section 'G' of the same trace -- one call would count for two gates\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X80": {
+      "expected": "FOREIGN_PROFILER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_PROFILER] gate 'G': [V5:FOREIGN_PROFILER] section 'G': a function is already installed as this thread's profiler; it is left untouched, and a section cannot be observed alongside it; every recorded problem: [\"[V5:FOREIGN_PROFILER] section 'G': a function is already installed as this thread's profiler; it is left untouched, and a section cannot be observed alongside it\"]",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X81": {
+      "expected": "FOREIGN_PROFILER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:FOREIGN_PROFILER] gate 'G': [V5:FOREIGN_PROFILER] section 'G': a Profile is already installed as this thread's profiler; it is left untouched, and a section cannot be observed alongside it; every recorded problem: [\"[V5:FOREIGN_PROFILER] section 'G': a Profile is already installed as this thread's profiler; it is left untouched, and a section cannot be observed alongside it\"]",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X90": {
+      "expected": "TRACE_ACTIVE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TRACE_ACTIVE] record() on a active trace -- take it after the trace exits",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X91": {
+      "expected": "TRACE_ACTIVE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TRACE_ACTIVE] record() on a new trace -- take it after the trace exits",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X92": {
+      "expected": "TRACE_INCOMPLETE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TRACE_INCOMPLETE] the trace's exit did not complete, so its checks and its restorations did not all run",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X93": {
+      "expected": "NO_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NO_TRACE] gate 'G' declares 'exercises' but the result carries no 'coverage_trace' dict -- run the harness inside styxx.protocol.coverage_trace() and store its record(). A declared coverage with no trace is unverified, not met.",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X93b": {
+      "expected": "NO_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NO_TRACE] gate 'G' declares 'exercises' but the result carries no 'coverage_trace' dict -- run the harness inside styxx.protocol.coverage_trace() and store its record(). A declared coverage with no trace is unverified, not met.",
+      "leftover": null,
+      "seconds": 0.014
+    },
+    "X94": {
+      "expected": "NO_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NO_TRACE] gate 'G' declares 'exercises' but the result carries no 'coverage_trace' dict -- run the harness inside styxx.protocol.coverage_trace() and store its record(). A declared coverage with no trace is unverified, not met.",
+      "leftover": null,
+      "seconds": 0.015
+    },
+    "X95": {
+      "expected": "WRONG_TRACER",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:WRONG_TRACER] gate 'G0_mutants_refused_for_their_reason': coverage_trace.tracer is 'styxx.protocol.coverage_trace/1', not 'styxx.protocol.coverage_trace/2' -- this trace was not written by the machinery that can read it",
+      "leftover": null,
+      "seconds": 0.371
+    },
+    "X96": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': the trace's keys are ['extra', 'gates_sha256', 'problems', 'sections', 'targets', 'tracer', 'uncredited'], not exactly ['gates_sha256', 'problems', 'sections', 'targets', 'tracer', 'uncredited']",
+      "leftover": null,
+      "seconds": 0.019
+    },
+    "X97": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': targets must be a dict of str to str",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X98": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': targets must be a dict of str to str",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X99": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': sections must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X100": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': section 'G' must be a non-empty list of openings",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X101": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': section 'Z' must be a non-empty list of openings",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X102": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' must be a dict with exactly ['ambiguous', 'calls', 'end', 'notes']",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X103": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' has end 'finished'",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X104": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' has notes ['[V5:MADE_UP] x']; each note is a str beginning with a known note code",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X105": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': problems must be a list of str, each beginning with a known recorded code",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X106": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': problems must be a list of str, each beginning with a known recorded code",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X107": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X108": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening's calls must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X96b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': the trace's keys are ['gates_sha256', 'sections', 'targets', 'tracer', 'uncredited'], not exactly ['gates_sha256', 'problems', 'sections', 'targets', 'tracer', 'uncredited']",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X97b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': targets must be a dict of str to str",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X99b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': sections must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.02
+    },
+    "X101b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' must be a dict with exactly ['ambiguous', 'calls', 'end', 'notes']",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X104b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' has notes (); each note is a str beginning with a known note code",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X104c": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' has notes ['[V5:LAZY_RESULT] a str subclass']; each note is a str beginning with a known note code",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X104d": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' has notes ['no code here']; each note is a str beginning with a known note code",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X105b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': problems must be a list of str, each beginning with a known recorded code",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X106b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': problems must be a list of str, each beginning with a known recorded code",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X107b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X108b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening's ambiguous must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X97c": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': targets must be a dict of str to str",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X98b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': targets must be a dict of str to str",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X99c": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': sections must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X100b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': section 'G' must be a non-empty list of openings",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X100c": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': section 'G' must be a non-empty list of openings",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X102b": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' must be a dict with exactly ['ambiguous', 'calls', 'end', 'notes']",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X104e": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening of 'G' has notes []; each note is a str beginning with a known note code",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X105c": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': problems must be a list of str, each beginning with a known recorded code",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X107c": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "X108c": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening's calls must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X108d": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X108e": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening's calls must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X108f": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening's ambiguous must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X108g": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': an opening's ambiguous must be a dict with str keys",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X108h": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.021
+    },
+    "X108i": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X108j": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X108k": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.019
+    },
+    "X108m": {
+      "expected": "BAD_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_TRACE] gate 'G': uncredited must be a dict of exactly dispatched and unattributed, each a dict with str keys",
+      "leftover": null,
+      "seconds": 0.024
+    },
+    "X109": {
+      "expected": "STALE_TRACE",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:STALE_TRACE] gate 'G': the trace was taken against gates block 3ed693c319c7..., not this one (3fa41eee6aaf...). A trace of a different declaration is not evidence about this one.",
+      "leftover": null,
+      "seconds": 0.043
+    },
+    "X110": {
+      "expected": "TARGET_SET",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TARGET_SET] gate 'G': the trace's target set ['_v5e_fx:f'] differs from the declared set ['_v5e_fx:f', '_v5e_fx:g']",
+      "leftover": null,
+      "seconds": 0.021
+    },
+    "X111": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': sections['G'][0].calls holds '_v5e_fx:f': True; counts are declared targets with integer values >= 1",
+      "leftover": null,
+      "seconds": 0.02
+    },
+    "X112": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': sections['G'][0].calls holds '_v5e_fx:f': 0; counts are declared targets with integer values >= 1",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X113": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': sections['G'][0].calls holds '_v5e_fx:h': 1; counts are declared targets with integer values >= 1",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X114": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': sections['G'][0].ambiguous holds '_v5e_fx:h': 1; counts are declared targets with integer values >= 1",
+      "leftover": null,
+      "seconds": 0.023
+    },
+    "X115": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': uncredited.dispatched holds '_v5e_fx:h': 1; counts are declared targets with integer values >= 1",
+      "leftover": null,
+      "seconds": 0.019
+    },
+    "X115b": {
+      "expected": "BAD_COUNT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:BAD_COUNT] gate 'G': uncredited.unattributed holds '_v5e_fx:h': 1; counts are declared targets with integer values >= 1",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X110b": {
+      "expected": "TARGET_SET",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:TARGET_SET] gate 'G': the trace's target set ['_v5e_fx:f', '_v5e_fx:h'] differs from the declared set ['_v5e_fx:f']",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X116": {
+      "expected": "SECTION_ABSENT",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:SECTION_ABSENT] gate 'G': section 'G' was never opened -- nothing the harness ran can be attributed to this gate",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "X117": {
+      "expected": "REPORTED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:REPORTED] check_metrics(None / [] / 's' / 5) reported usable: False without raising",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "X118": {
+      "expected": "NOT_EXERCISED",
+      "outcome": "refused",
+      "ok": true,
+      "detail": "[V5:NOT_EXERCISED] gate 'G4_refuses_degenerate': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G4_refuses_degenerate': ['styxx.power:effective_n', 'styxx.power:order_stat_bar', 'styxx.power:false_positive_rate', 'styxx.power:min_detectable_bar'] (did execute ['styxx.power:reachable']). Uncredited calls of those targets: dispatched {}, unattributed {}; openings' non-returned ends []; notes []. Note: work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself. This is the P1 defect (cycle 158): a gate satisfied withou",
+      "leftover": null,
+      "seconds": 0.027
+    }
+  },
+  "valid_cases": {
+    "V01": {
+      "expected": "{f:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V02": {
+      "expected": "{f:1, alias_f:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:alias_f\": 1, \"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V03": {
+      "expected": "{double:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:double\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V04": {
+      "expected": "{entry_a:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:entry_a\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V05": {
+      "expected": "{DA.__init__:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:DA.__init__\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V06": {
+      "expected": "{dispatch:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:dispatch\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V07": {
+      "expected": "{cached:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:cached\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V08": {
+      "expected": "{NS.handler:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:NS.handler\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V09": {
+      "expected": "{Base.fit:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:Base.fit\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V10": {
+      "expected": "{lazy_fn:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_lazy:lazy_fn\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V11": {
+      "expected": "{wrapped_entry:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_dec:wrapped_entry\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V11b": {
+      "expected": "{wrapped2:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_dec:wrapped2\": 1}}}",
+      "leftover": null,
+      "seconds": 0.035
+    },
+    "V12": {
+      "expected": "{K.s:1, K.c:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:K.c\": 1, \"_v5e_fx:K.s\": 1}}}",
+      "leftover": null,
+      "seconds": 0.03
+    },
+    "V13": {
+      "expected": "{score:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:score\": 1}}}",
+      "leftover": null,
+      "seconds": 0.026
+    },
+    "V14": {
+      "expected": "{gen:3}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:gen\": 3}}}",
+      "leftover": null,
+      "seconds": 0.03
+    },
+    "V15": {
+      "expected": "outer {f:1}, inner {f:1}; code restored",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"outer\": {\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}, \"inner\": {\"verdict\": \"PASS\", \"unions\": {\"H\": {\"_v5e_fx:f\": 1}}}}",
+      "leftover": null,
+      "seconds": 0.054
+    },
+    "V16": {
+      "expected": "t1 {f:1}, t2 {f:1, g:1}; code restored",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"t1\": {\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}, \"t2\": {\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1, \"_v5e_fx:g\": 1}}}}",
+      "leftover": null,
+      "seconds": 0.05
+    },
+    "V17": {
+      "expected": "{f:3} and {f:5}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"a\": {\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 3}}}, \"b\": {\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 5}}}}",
+      "leftover": null,
+      "seconds": 0.049
+    },
+    "V18": {
+      "expected": "{f:1, g:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1, \"_v5e_fx:g\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V19": {
+      "expected": "A {f:1}, B {g:2}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"A\": {\"_v5e_fx:f\": 1}, \"B\": {\"_v5e_fx:g\": 2}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V20": {
+      "expected": "{g:5}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:g\": 5}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V21": {
+      "expected": "{f:9}; no hooked threads left",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 9}}}",
+      "leftover": null,
+      "seconds": 0.021
+    },
+    "V22": {
+      "expected": "{f:7} (3 + 4)",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 7}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V23": {
+      "expected": "{f:4}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 4}}}",
+      "leftover": null,
+      "seconds": 0.026
+    },
+    "V24": {
+      "expected": "{f:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V25": {
+      "expected": "{f:3, g:3}; ends raised",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 3, \"_v5e_fx:g\": 3}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V25b": {
+      "expected": "{f:3}; ends raised (run_async)",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 3}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "V25c": {
+      "expected": "{f:1}; end raised (run_async cancelled)",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V26": {
+      "expected": "{f:1}; PROFILER_LOST note",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.019
+    },
+    "V27": {
+      "expected": "{f:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V28": {
+      "expected": "{f:1}; THREAD_HOP note",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V29": {
+      "expected": "{f:1}; end open; OPEN_AT_EXIT",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V30": {
+      "expected": "A {f:1} with PROFILER_LOST; B {g:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"A\": {\"_v5e_fx:f\": 1}, \"B\": {\"_v5e_fx:g\": 1}}}",
+      "leftover": null,
+      "seconds": 0.038
+    },
+    "V31": {
+      "expected": "sys.getprofile() is None after one event",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.018
+    },
+    "V32": {
+      "expected": "recorded equals expected, 0 cross-credit, no leftovers, 3 runs",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"runs\": [{\"seed\": 1, \"expected\": {\"A\": 3531, \"B\": 4174}, \"recorded\": {\"A\": 3531, \"B\": 4174}, \"cross\": 0}, {\"seed\": 2, \"expected\": {\"A\": 6545, \"B\": 2635}, \"recorded\": {\"A\": 6545, \"B\": 2635}, \"cross\": 0}, {\"seed\": 3, \"expected\": {\"A\": 6132, \"B\": 3476}, \"recorded\": {\"A\": 6132, \"B\": 3476}, \"cross\": 0}]}",
+      "leftover": null,
+      "seconds": 0.108
+    },
+    "V34": {
+      "expected": "machinery targets >= 1 and _CoverageTracer.run == inner runs (nested machinery tracer); the outer self-trace: every declared target >= 1, one returned opening per case run, no problems, nothing left after exit",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"nested_union\": {\"styxx.protocol:Experiment._check_coverage\": 3, \"styxx.protocol:_CoverageTracer.__enter__\": 3, \"styxx.protocol:_CoverageTracer.__exit__\": 3, \"styxx.protocol:_CoverageTracer._close\": 7, \"styxx.protocol:_CoverageTracer._open\": 6, \"styxx.protocol:_CoverageTracer.record\": 3, \"styxx.protocol:_CoverageTracer.run\": 6, \"styxx.protocol:_resolve_target\": 3}}",
+      "leftover": null,
+      "seconds": 0.04,
+      "outer_self_trace": "ok"
+    }
+  },
+  "residual_cases": {
+    "R01": {
+      "expected": "A PASS {f:1}",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"A\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.019
+    },
+    "R02": {
+      "expected": "A PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"A\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "R03": {
+      "expected": "PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "R04": {
+      "expected": "PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:f_r04\": 1}}}",
+      "leftover": null,
+      "seconds": 0.016
+    },
+    "R05": {
+      "expected": "PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:r05_real\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "R06": {
+      "expected": "PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:r06_real\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "R07": {
+      "expected": "PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"G\": {\"_v5e_fx:cached_r07\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "R08": {
+      "expected": "A PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"A\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.03
+    },
+    "R09": {
+      "expected": "credited to A",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"A\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "R10": {
+      "expected": "A PASS",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PASS\", \"unions\": {\"A\": {\"_v5e_fx:f\": 1}}}",
+      "leftover": null,
+      "seconds": 0.017
+    },
+    "R11": {
+      "expected": "order_stat_bar:1",
+      "outcome": "returned",
+      "ok": true,
+      "detail": "{\"verdict\": \"PROCEED_TO_RED_TEAM__not_yet_shippable\", \"union\": {\"styxx.power:order_stat_bar\": 1}}",
+      "leftover": null,
+      "seconds": 0.041
+    }
+  },
+  "version_or_mode_skipped": [
+    "V33",
+    "X82"
+  ],
+  "n_violation_cases": 155,
+  "n_valid_cases": 36,
+  "n_residual_cases": 11,
+  "frac_violation_cases_refused_with_expected_code": 1.0,
+  "frac_valid_cases_exact": 1.0,
+  "frac_residuals_as_documented": 1.0,
+  "p1_retro_exact": 1.0,
+  "n_crashes": 0,
+  "n_watchdog_expiries": 0,
+  "hazards": {
+    "H1": {
+      "hangs": 0,
+      "errors": 0,
+      "hang_points": [],
+      "error_points": [],
+      "hangs_per_site": {},
+      "child_runs": 1,
+      "points": 400
+    },
+    "H1_control": {
+      "hangs": 0,
+      "errors": 0,
+      "hang_points": [],
+      "error_points": [],
+      "hangs_per_site": {},
+      "child_runs": 1,
+      "points": 400
+    },
+    "H1_mutant": {
+      "hangs": 1,
+      "errors": 0,
+      "hang_points": [
+        {
+          "point": [
+            false,
+            "open",
+            14
+          ],
+          "exit": 1,
+          "timed_out": false,
+          "innermost": "run_protocol_v5e.py:3139 in _h1_mutant_hook",
+          "stack_head": [
+            "run_protocol_v5e.py:3139 in _h1_mutant_hook",
+            "_v5e_fx.py:7 in f",
+            "run_protocol_v5e.py:3049 in __del__",
+            "protocol.py:1053 in _open",
+            "run_protocol_v5e.py:3126 in w",
+            "protocol.py:997 in run",
+            "run_protocol_v5e.py:3063 in point",
+            "run_protocol_v5e.py:3084 in _h1_child"
+          ],
+          "stderr_tail": "h1_child\n  File \"/home/user/styxx-1/papers/first-afference/run_protocol_v5e.py\", line 3153 in hazard_child\n  File \"/home/user/styxx-1/papers/first-afference/run_protocol_v5e.py\", line 3705 in <module>"
+        }
+      ],
+      "error_points": [],
+      "hangs_per_site": {
+        "open": 1
+      },
+      "child_runs": 1,
+      "points": 400
+    },
+    "H1_mutant_detection": {
+      "control_clean": true,
+      "mutant_hangs_in_the_mutant_hook": 1
+    },
+    "H2": {
+      "n": 20,
+      "propagated": 20,
+      "passed": 20,
+      "handler_ran": 20,
+      "ok": 20,
+      "leftovers": []
+    },
+    "H3": {
+      "n": 5,
+      "propagated": 5,
+      "ok": 5,
+      "leftovers": []
+    },
+    "H2_mutant": {
+      "n": 20,
+      "propagated": 8,
+      "passed": 20,
+      "handler_ran": 20,
+      "ok": 8,
+      "leftovers": []
+    },
+    "seconds": 17.43
+  },
+  "h4_reported": {
+    "one_open_run_close_ms_on_1M_heap": 0.049,
+    "under_1ms": true,
+    "gc_collections_during_enter": 0,
+    "gc_collections_during_run": 0,
+    "gc_collections_during_exit": 0,
+    "exit_getrefcount_calls": 1,
+    "exit_gc_get_referrers_calls_with_no_live_clone": 0
+  },
+  "h1_hangs": 0,
+  "h1_mutant_detected": 1,
+  "h2_propagated": 20,
+  "h2_mutant_detected": 1,
+  "h3_ok": 5,
+  "n_pairable_results": 86,
+  "n_v5_raised_on": 47,
+  "n_v4_v5_outcome_disagreements": 0,
+  "v4_v5_disagreements": [],
+  "n_results_v5_scored": 39,
+  "n_results_v5_scored_computed": 39,
+  "nested_metrics_rule_applied_to": [
+    "closed-model-frontier/handedness_accusations_result.json",
+    "closed-model-frontier/handedness_v2_result.json",
+    "closed-model-frontier/handedness_v3_result.json",
+    "closed-model-frontier/range_sanity_report_ab_result.json",
+    "frequency-resonance/efficiency_control_result.json",
+    "rhythm-rescue/untied_control_result.json"
+  ],
+  "nested_metrics_rule_exact": true,
+  "population": {
+    "rule": "committed at HEAD, prereg exists, not a v5 exam's own prereg, and a row of the frozen census",
+    "n_census_rows": 86,
+    "n_pairable_at_head": 86,
+    "census_rows_missing_at_head": [],
+    "at_head_not_in_census_not_scored": [],
+    "complete": true,
+    "problem": null
+  },
+  "ungated_n_v5_differs_from_committed_verdict": 27,
+  "ungated_v5_differs_from_committed_verdict": [
+    {
+      "result": "agent-conscience/belief_asymptote_result.json",
+      "committed": "CLOSED_NEGATIVE__belief_asymptote_below_floor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/combined_signal_result.json",
+      "committed": "CLOSED_NEGATIVE__combined_signal_does_not_predict_correctness",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/cot_inward_powered_result.json",
+      "committed": "CLOSED_NEGATIVE__reasoned_cave_has_reach",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/cot_inward_result.json",
+      "committed": "INVALID__probe_cells_underpowered__CG1_reasoning_does_not_immunize_the_report",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/coupling_battery_result.json",
+      "committed": "SURVIVED__belief_rewrite_coupled_to_capability_damage",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/coupling_resolution_result.json",
+      "committed": "SURVIVED__coupling_replicates__NO_MATERIAL_RESIDUAL__BROAD",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_freetext_result.json",
+      "committed": "INVALID__underpowered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_freetext_v9_result.json",
+      "committed": "SURVIVED__frontier_caves_free_text",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_incontext_oof_result.json",
+      "committed": "CLOSED_NEGATIVE__cave_persists_out_of_frame",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_knowsay_result.json",
+      "committed": "SURVIVED__frontier_caves__recovery_underpowered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/frontier_recovery_result.json",
+      "committed": "SURVIVED__frontier_beliefs_recover_powered",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/kp_recovery_result.json",
+      "committed": "SURVIVED__knowledge_preserving_attack_spares_the_belief",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/kp_replication_result.json",
+      "committed": "SURVIVED__kp_dose_result_replicates",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/poisoned_recovery_result.json",
+      "committed": "CLOSED_NEGATIVE__weight_attack_reaches_the_belief",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/scale3b_result.json",
+      "committed": "SURVIVED__weight_channel_holds_at_3B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/scale_test_result.json",
+      "committed": "SURVIVED__vulnerability_and_recovery_hold_at_7B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/self_verification_result.json",
+      "committed": "CLOSED_NEGATIVE__belief_divergence_does_not_predict_correctness",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/thirdframe_result.json",
+      "committed": "SURVIVED__kp_sparing_is_frame_invariant",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/two_channel_result.json",
+      "committed": "CLOSED_NEGATIVE__two_channel_misses_instrument_floor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/vendor3b_result.json",
+      "committed": "SURVIVED__weight_channel_holds_at_second_vendor",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "agent-conscience/verifier_7b_result.json",
+      "committed": "CLOSED_NEGATIVE__not_useful_as_a_selective_instrument_at_7B",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "anchored-validity/buried_judge_result.json",
+      "committed": "SURVIVED__prices_where_covered_refuses_below_gate",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b31v2_result.json",
+      "committed": "DOOR_OPENS__content_capacity_limited",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b34_result.json",
+      "committed": "INVALID__pipeline_broken",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b34v2_result.json",
+      "committed": "INVALID__pipeline_broken",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/b36_result.json",
+      "committed": "READ_NEQ_WRITE_SURVIVES_CAPACITY",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    },
+    {
+      "result": "disjoint-worlds/open_set_read_result.json",
+      "committed": "VOID__null_mapper_separates",
+      "v5": "RAISED:GateSpecError:prereg has no ```gates block \u2014 nothing frozen to score against"
+    }
+  ],
+  "v4_pin": {
+    "commit": "98a5c368ba9ffa242c6862e021df7f8bad2ed8e6",
+    "sha256": "45da869e1571396589dc50ed75183de56055a846432ae43dde6aa7fac7519fdc"
+  },
+  "mutation_gate": {
+    "path": "papers/first-afference/run_protocol_v5e_mutation_gate.json",
+    "mutation_frac_detected": 1.0,
+    "mutation_hygiene_violations": 0,
+    "checks": {
+      "impl_sha256": true,
+      "runner_sha256": true,
+      "generator_sha256": true
+    },
+    "baseline_clean": true,
+    "survivors": []
+  },
+  "mutation_frac_detected": 1.0,
+  "mutation_hygiene_violations": 0,
+  "timings": {
+    "battery_seconds": 4.62,
+    "total_seconds": 66.48
+  },
+  "coverage_trace": {
+    "tracer": "styxx.protocol.coverage_trace/2",
+    "gates_sha256": "dc3d57aff2091edea770dd1567ad7df1e622dc74624367179624909628409057",
+    "targets": {
+      "run_p1:degenerate": "/home/user/styxx-1/papers/first-afference/run_p1.py:121",
+      "styxx.protocol:Experiment._check_coverage": "/home/user/styxx-1/styxx/protocol.py:522",
+      "styxx.protocol:_CoverageTracer.__exit__": "/home/user/styxx-1/styxx/protocol.py:940",
+      "styxx.protocol:_CoverageTracer._open": "/home/user/styxx-1/styxx/protocol.py:1021",
+      "styxx.protocol:_CoverageTracer.record": "/home/user/styxx-1/styxx/protocol.py:1082",
+      "styxx.protocol:_resolve_target": "/home/user/styxx-1/styxx/protocol.py:792"
+    },
+    "sections": {
+      "G0_violations_refused_for_their_reason": [
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {},
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 3,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 3,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 3,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 3
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 3,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 7,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 7,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 4,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 4,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 3
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 3,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_CoverageTracer._open": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_CoverageTracer.record": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:_CoverageTracer.record": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 4
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        }
+      ],
+      "G1_valid_cases_exact": [
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 2,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 2,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 2,
+            "styxx.protocol:_resolve_target": 3
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 3,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 6,
+            "styxx.protocol:_CoverageTracer.__exit__": 3,
+            "styxx.protocol:_CoverageTracer.record": 3,
+            "styxx.protocol:_resolve_target": 6
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 4,
+            "styxx.protocol:_CoverageTracer.__exit__": 4,
+            "styxx.protocol:_CoverageTracer._open": 7,
+            "styxx.protocol:_CoverageTracer.record": 4,
+            "styxx.protocol:_resolve_target": 11
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        }
+      ],
+      "G2_p1_retro_exact": [
+        {
+          "calls": {
+            "run_p1:degenerate": 1,
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 5
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        }
+      ],
+      "G5_residuals_as_documented": [
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 2,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 2,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 2
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        },
+        {
+          "calls": {
+            "styxx.protocol:Experiment._check_coverage": 1,
+            "styxx.protocol:_CoverageTracer.__exit__": 1,
+            "styxx.protocol:_CoverageTracer._open": 1,
+            "styxx.protocol:_CoverageTracer.record": 1,
+            "styxx.protocol:_resolve_target": 1
+          },
+          "ambiguous": {},
+          "end": "returned",
+          "notes": []
+        }
+      ]
+    },
+    "uncredited": {
+      "dispatched": {
+        "styxx.protocol:_CoverageTracer._open": 138
+      },
+      "unattributed": {
+        "styxx.protocol:_CoverageTracer._open": 1
+      }
+    },
+    "problems": []
+  },
+  "metric_check": {
+    "G_EXAM_FROZEN": {
+      "path": "exam_frozen",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G0_violations_refused_for_their_reason": {
+      "path": "frac_violation_cases_refused_with_expected_code",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_cases_exact": {
+      "path": "frac_valid_cases_exact",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G2_p1_retro_exact": {
+      "path": "p1_retro_exact",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G3_no_v4_v5_disagreement": {
+      "path": "n_v4_v5_outcome_disagreements",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G4_population_reached": {
+      "path": "n_results_v5_scored",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G5_residuals_as_documented": {
+      "path": "frac_residuals_as_documented",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G6_mutation_every_emission_observable": {
+      "path": "mutation_frac_detected",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G7_mutation_hygiene": {
+      "path": "mutation_hygiene_violations",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G8_h1_no_hang": {
+      "path": "h1_hangs",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G9_h1_sweep_can_see_a_hang": {
+      "path": "h1_mutant_detected",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G10_h2_signal_exceptions_propagate": {
+      "path": "h2_propagated",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G11_h2_sweep_can_see_swallowing": {
+      "path": "h2_mutant_detected",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G12_h3_keyboard_interrupt": {
+      "path": "h3_ok",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G13_no_crash": {
+      "path": "n_crashes",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G0_violations_refused_for_their_reason:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G1_valid_cases_exact:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G2_p1_retro_exact:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    },
+    "G5_residuals_as_documented:exercises": {
+      "path": "coverage_trace",
+      "present": true,
+      "usable": true,
+      "note": null
+    }
+  },
+  "verdict": "PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable",
+  "gates": {
+    "G_EXAM_FROZEN": true,
+    "G0_violations_refused_for_their_reason": true,
+    "G1_valid_cases_exact": true,
+    "G2_p1_retro_exact": true,
+    "G3_no_v4_v5_disagreement": true,
+    "G4_population_reached": true,
+    "G5_residuals_as_documented": true,
+    "G6_mutation_every_emission_observable": true,
+    "G7_mutation_hygiene": true,
+    "G8_h1_no_hang": true,
+    "G9_h1_sweep_can_see_a_hang": true,
+    "G10_h2_signal_exceptions_propagate": true,
+    "G11_h2_sweep_can_see_swallowing": true,
+    "G12_h3_keyboard_interrupt": true,
+    "G13_no_crash": true
+  },
+  "coverage": {
+    "G0_violations_refused_for_their_reason": {
+      "styxx.protocol:Experiment._check_coverage": 143,
+      "styxx.protocol:_resolve_target": 159,
+      "styxx.protocol:_CoverageTracer._open": 117,
+      "styxx.protocol:_CoverageTracer.__exit__": 120
+    },
+    "G1_valid_cases_exact": {
+      "styxx.protocol:Experiment._check_coverage": 49,
+      "styxx.protocol:_CoverageTracer._open": 32,
+      "styxx.protocol:_CoverageTracer.record": 42
+    },
+    "G2_p1_retro_exact": {
+      "run_p1:degenerate": 1
+    },
+    "G5_residuals_as_documented": {
+      "styxx.protocol:_CoverageTracer._open": 14
+    }
+  },
+  "prereg_commit": "84f5391f221b9a2c8e027b1d1d0e6abb58b1a79e",
+  "gates_sha256": "dc3d57aff2091edea770dd1567ad7df1e622dc74624367179624909628409057"
+}

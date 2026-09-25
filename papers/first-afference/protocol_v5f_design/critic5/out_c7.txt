@@ -1,0 +1,4 @@
+3.12.3 {'other_section_in_between': False, 'calls_G': {'f': 1}, 'MONITOR_LOST': True}
+3.12.3 {'other_section_in_between': True, 'calls_G': {'f': 1}, 'MONITOR_LOST': False}
+3.13.12 {'other_section_in_between': False, 'calls_G': {'f': 1}, 'MONITOR_LOST': True}
+3.13.12 {'other_section_in_between': True, 'calls_G': {'f': 1}, 'MONITOR_LOST': False}

@@ -1,0 +1,4 @@
+3.12.3 {'rev': 3, 'run_A': 1, 't1_open_wait': 0.0, 't2_lock_wait': 0.0, 'problems': []}
+3.12.3 {'rev': 4, 'run_A': 'MACHINERY_BUSY', 't1_open_wait': 2.0, 't2_lock_wait': 2.0, 'problems': []}
+3.13.12 {'rev': 3, 'run_A': 1, 't1_open_wait': 0.0, 't2_lock_wait': 0.0, 'problems': []}
+3.13.12 {'rev': 4, 'run_A': 'MACHINERY_BUSY', 't1_open_wait': 2.0, 't2_lock_wait': 2.0, 'problems': []}

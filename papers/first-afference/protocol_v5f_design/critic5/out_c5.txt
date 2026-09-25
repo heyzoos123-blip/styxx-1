@@ -1,0 +1,2 @@
+3.12.3 _txn(): ['sys._getframe'] | _alive(): ['sys._current_frames'] | _current_frames us: 1 thread 0.42, 51 threads 3.75
+3.13.12 _txn(): ['sys._getframe'] | _alive(): ['sys._current_frames'] | _current_frames us: 1 thread 0.34, 51 threads 3.05

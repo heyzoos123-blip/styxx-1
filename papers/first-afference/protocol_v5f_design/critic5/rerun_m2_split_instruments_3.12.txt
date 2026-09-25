@@ -1,0 +1,8 @@
+3.12.3 rev 3  sys.setprofile (pure Python)     A None       MONITOR_LOST True  | after exit anchors 0 events 0 clearing 0
+3.12.3 rev 4  sys.setprofile (pure Python)     A {'t': 1}   MONITOR_LOST False | after exit anchors 0 events 0 clearing 0
+3.12.3 rev 3  sys.settrace + f_trace_opcodes   A None       MONITOR_LOST True  | after exit anchors 0 events 0 clearing 0
+3.12.3 rev 4  sys.settrace + f_trace_opcodes   A {'t': 1}   MONITOR_LOST False | after exit anchors 0 events 0 clearing 0
+3.12.3 rev 3  monitoring CALL + C_RETURN       A None       MONITOR_LOST True  | after exit anchors 0 events 0 clearing 0
+3.12.3 rev 4  monitoring CALL + C_RETURN       A {'t': 1}   MONITOR_LOST False | after exit anchors 0 events 0 clearing 0
+3.12.3 rev 3  monitoring INSTRUCTION           A None       MONITOR_LOST True  | after exit anchors 0 events 0 clearing 0
+3.12.3 rev 4  monitoring INSTRUCTION           A {'t': 1}   MONITOR_LOST False | after exit anchors 0 events 0 clearing 0

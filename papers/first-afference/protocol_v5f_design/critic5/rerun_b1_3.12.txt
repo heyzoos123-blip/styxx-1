@@ -1,0 +1,9 @@
+3.12.3 rev 3  commit:0      run(): TraceInactive | after exit: anchors 1 ['NoneType'] events 4096 clearing 0 | after a later clean trace: anchors 1 events 4096 | problems ['[V5:TRACE_INACTIVE]'] MONITOR_LOST False
+3.12.3 rev 3  commit:1      run(): TraceInactive | after exit: anchors 1 ['NoneType'] events 4096 clearing 0 | after a later clean trace: anchors 1 events 4096 | problems ['[V5:TRACE_INACTIVE]'] MONITOR_LOST False
+3.12.3 rev 3  on:read       run(): TraceInactive | after exit: anchors 1 ['NoneType'] events 4096 clearing 0 | after a later clean trace: anchors 1 events 4096 | problems ['[V5:TRACE_INACTIVE]'] MONITOR_LOST False
+3.12.3 rev 4  commit:0      run(): TraceInactive | after exit: anchors 0 [] events 0 clearing 0 | after a later clean trace: anchors 0 events 0 | problems ['[V5:TRACE_INACTIVE]'] MONITOR_LOST False
+3.12.3 rev 4  commit:stored run(): TraceInactive | after exit: anchors 0 [] events 0 clearing 0 | after a later clean trace: anchors 0 events 0 | problems ['[V5:TRACE_INACTIVE]'] MONITOR_LOST False
+3.12.3 rev 4  on:read       run(): 1             | after exit: anchors 0 [] events 0 clearing 0 | after a later clean trace: anchors 0 events 0 | problems [] MONITOR_LOST False
+3.12.3 rev 2 natural, 5000 races: anchor left after exit and join in 8 (key types ['frame']); event set with no anchor 0; clearing left 0; outcomes {'ran': 5000}; UNWIND_LOST (false: f returns) 15
+3.12.3 rev 3 natural, 5000 races: anchor left after exit and join in 20 (key types ['NoneType']); event set with no anchor 0; clearing left 0; outcomes {'TRACE_INACTIVE': 55, 'ran': 4945}; UNWIND_LOST (false: f returns) 6
+3.12.3 rev 4 natural, 5000 races: anchor left after exit and join in 0 (key types []); event set with no anchor 0; clearing left 0; outcomes {'TRACE_INACTIVE': 111, 'ran': 4889}; UNWIND_LOST (false: f returns) 0

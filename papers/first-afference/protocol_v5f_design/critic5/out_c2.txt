@@ -1,0 +1,6 @@
+3.12.3 {'point': 'off:announced', 'S_after_open': True, 'S_before_resume': True, 'anchors_before_resume': 1, 'ret': 'done', 'calls_A': {'t': 1}, 'MONITOR_LOST': False}
+3.12.3 {'point': 'off:tested', 'S_after_open': True, 'S_before_resume': False, 'anchors_before_resume': 1, 'ret': 'done', 'calls_A': None, 'MONITOR_LOST': True}
+3.12.3 {'point': 'off:cleared', 'S_after_open': True, 'S_before_resume': True, 'anchors_before_resume': 1, 'ret': 'done', 'calls_A': {'t': 1}, 'MONITOR_LOST': False}
+3.13.12 {'point': 'off:announced', 'S_after_open': True, 'S_before_resume': True, 'anchors_before_resume': 1, 'ret': 'done', 'calls_A': {'t': 1}, 'MONITOR_LOST': False}
+3.13.12 {'point': 'off:tested', 'S_after_open': True, 'S_before_resume': False, 'anchors_before_resume': 1, 'ret': 'done', 'calls_A': None, 'MONITOR_LOST': True}
+3.13.12 {'point': 'off:cleared', 'S_after_open': True, 'S_before_resume': True, 'anchors_before_resume': 1, 'ret': 'done', 'calls_A': {'t': 1}, 'MONITOR_LOST': False}

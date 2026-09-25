@@ -1,0 +1,16 @@
+3.12.3 T1=main       mutant=spec        
+    20 x {'same_ident': False, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'calls': {'t': 1}, 'clearing_after_A': 0}
+3.12.3 T1=main       mutant=no_liveness 
+    20 x {'same_ident': False, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': 'MACHINERY_BUSY', 'calls': None, 'clearing_after_A': 1}
+3.12.3 T1=new-thread mutant=spec        
+    20 x {'same_ident': True, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'calls': {'t': 1}, 'clearing_after_A': 1}
+3.12.3 T1=new-thread mutant=no_liveness 
+    20 x {'same_ident': True, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'calls': {'t': 1}, 'clearing_after_A': 1}
+3.13.12 T1=main       mutant=spec        
+    20 x {'same_ident': False, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'calls': {'t': 1}, 'clearing_after_A': 0}
+3.13.12 T1=main       mutant=no_liveness 
+    20 x {'same_ident': False, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': 'MACHINERY_BUSY', 'calls': None, 'clearing_after_A': 1}
+3.13.12 T1=new-thread mutant=spec        
+    20 x {'same_ident': True, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'calls': {'t': 1}, 'clearing_after_A': 1}
+3.13.12 T1=new-thread mutant=no_liveness 
+    20 x {'same_ident': True, 'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'calls': {'t': 1}, 'clearing_after_A': 1}

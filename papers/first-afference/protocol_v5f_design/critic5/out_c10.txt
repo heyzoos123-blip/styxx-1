@@ -1,0 +1,4 @@
+3.12.3 {'mutant': False, 'inner': 1, 's': 0.0}
+3.12.3 {'mutant': True, 'inner': 'MACHINERY_BUSY', 's': 1.0}
+3.13.12 {'mutant': False, 'inner': 1, 's': 0.0}
+3.13.12 {'mutant': True, 'inner': 'MACHINERY_BUSY', 's': 1.0}

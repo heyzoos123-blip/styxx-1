@@ -1,0 +1,2 @@
+3.12.3 control (loop in the try body): back-edge fired 1, finally ran: False
+3.12.3 rev 4 shape (loop in a callee with no try): back-edge fired 1, run finally ran: True

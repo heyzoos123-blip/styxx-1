@@ -1,0 +1,4 @@
+3.12.3 {'point': 'off:tested', 'run': 1, 'err': None, 'id4_name': 'other-tool', 'id4_events_after': 0, 'other_tool_had': 9216}
+3.12.3 {'point': 'on:read', 'run': 1, 'err': None, 'id4_name': 'other-tool', 'id4_events_after': 4096, 'other_tool_had': 9216}
+3.13.12 {'point': 'off:tested', 'run': 1, 'err': None, 'id4_name': 'other-tool', 'id4_events_after': 0, 'other_tool_had': 9216}
+3.13.12 {'point': 'on:read', 'run': 1, 'err': None, 'id4_name': 'other-tool', 'id4_events_after': 4096, 'other_tool_had': 9216}

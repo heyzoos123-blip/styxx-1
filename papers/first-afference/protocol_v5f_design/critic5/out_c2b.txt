@@ -1,0 +1,4 @@
+3.12.3 {'other_section_before_A_closes': False, 'calls_A': None, 'MONITOR_LOST': True}
+3.12.3 {'other_section_before_A_closes': True, 'calls_A': None, 'MONITOR_LOST': False}
+3.13.12 {'other_section_before_A_closes': False, 'calls_A': None, 'MONITOR_LOST': True}
+3.13.12 {'other_section_before_A_closes': True, 'calls_A': None, 'MONITOR_LOST': False}

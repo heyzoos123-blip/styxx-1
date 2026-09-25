@@ -19,8 +19,8 @@ Red-team round 4 then returned **NOT SHIPPABLE**:
 - 6 of them are blockers. Two of these hold only on 3.10 or 3.11, which contradicts the second verdict.
 - 29 are holes in the frozen exam.
 
-It was also the first round in which every earlier blocker, rebuilt, held. The round-4 battery rebuilt all 10 blockers
-from rounds 1–3, with variants for round 1's, alongside earlier defects: 41 of 41 cases held on each of 4 Python
+Every earlier blocker it rebuilt held, as round 2 had reported for round 1's. Here that meant all 10 blockers from
+rounds 1–3, with variants for round 1's, rebuilt alongside earlier defects: 41 of 41 cases held on each of 4 Python
 versions. That did not make the classes closed. Round 4 found new failures inside both classes the redesign targeted:
 
 - **Identity:** a stub swapped in before the trace, a shape the spec had marked closed, and a restamped cache wrapper.

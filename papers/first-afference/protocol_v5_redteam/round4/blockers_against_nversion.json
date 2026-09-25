@@ -1,7 +1,7 @@
 {
  "what": "EXPLORATORY: round 4's blocker repros run against the primary and the independent N-version implementation on each available interpreter",
  "generator": "papers/first-afference/protocol_v5_redteam/round4/blockers_against_nversion.py",
- "generator_sha256": "bf92d5b01bb7bced44ac92ad79a5edd694540a2b0d6f4fbb91677412e633a78a",
+ "generator_sha256": "41120f27a2e89f9580a1e3337c1908fe612ca2cf67d1a336984bec98e3dd2afb",
  "nversion_sha256": "efa9a3ff59d3485545b37340f1bd83bd3e7a94846f5c0ceb622e9647e7946216",
  "primary_sha256": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
  "reproduced_on": {
@@ -78,52 +78,82 @@
    "nversion": [
     "3.10.20"
    ]
+  },
+  "unstarted-generator-credited-py310-311:throw_in": {
+   "primary": [
+    "3.10.20",
+    "3.11.15",
+    "3.12.3",
+    "3.13.12"
+   ],
+   "nversion": [
+    "3.10.20",
+    "3.11.15",
+    "3.12.3",
+    "3.13.12"
+   ]
+  },
+  "stale-stop-after-mint-of-handle-run:before_exit": {
+   "primary": [
+    "3.10.20",
+    "3.11.15",
+    "3.12.3",
+    "3.13.12"
+   ],
+   "nversion": [
+    "3.10.20",
+    "3.11.15",
+    "3.12.3",
+    "3.13.12"
+   ]
   }
  },
  "n_blockers": 6,
- "n_blockers_reproduced_on_nversion": 6,
- "n_blockers_reproduced_on_primary": 6,
+ "n_variants": 2,
+ "n_variants_reproduced_on_nversion": 2,
+ "n_blockers_reproduced_on_nversion": 8,
+ "n_blockers_reproduced_on_primary": 8,
  "rows": {
   "pretrace-code-swap-stub-passes-provenance": {
    "primary@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_ou67rp3m/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_tapr5sc7/rt4_teststubs.py:2)"
    },
    "primary@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_cpl8_gsn/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_hdwen4k7/rt4_teststubs.py:2)"
    },
    "primary@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_l8z00z33/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_af5pu87p/rt4_teststubs.py:2)"
    },
    "primary@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_drcsba19/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_qet7_4rr/rt4_teststubs.py:2)"
    },
    "nversion@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_yk0600qs/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id__6sgdkxk/rt4_teststubs.py:2)"
    },
    "nversion@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_lofkw_4b/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_u831gusm/rt4_teststubs.py:2)"
    },
    "nversion@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_9a1fnj67/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_x8pt1ozj/rt4_teststubs.py:2)"
    },
    "nversion@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_xbyshh5_/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_m4kcwg9p/rt4_teststubs.py:2)"
    }
   },
   "cache-wrapper-body-from-writable-wrapped": {
@@ -256,42 +286,42 @@
    "primary@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 740 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "ter cycle 1480 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "primary@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 405 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 197 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "primary@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 263 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 406 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "primary@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "ter cycle 514 a Timeout raised inside _hook (handler:82 <- __exit__:949 <- main:104) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "after cycle 57 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 204 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "after cycle 57 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 684 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 734 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 136 a Timeout raised inside _hook (handler:82 <- _hook:776 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 864 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "r cycle 1856 a Timeout raised inside _hook (handler:82 <- __exit__:1065 <- main:104) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "after cycle 78 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    }
   },
   "py310-hook-reverts-closure-writes": {
@@ -303,7 +333,7 @@
    "primary@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "e revert to False: untraced 0, in a section 250; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (55274 lost updates; 250 reverted done-flags); untraced runs lose none"
+    "tail": "e revert to False: untraced 0, in a section 243; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (67449 lost updates; 243 reverted done-flags); untraced runs lose none"
    },
    "primary@3.12.3": {
     "reproduced": false,
@@ -323,7 +353,7 @@
    "nversion@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "e revert to False: untraced 0, in a section 230; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (54468 lost updates; 230 reverted done-flags); untraced runs lose none"
+    "tail": "e revert to False: untraced 0, in a section 240; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (51036 lost updates; 240 reverted done-flags); untraced runs lose none"
    },
    "nversion@3.12.3": {
     "reproduced": false,
@@ -334,6 +364,90 @@
     "reproduced": false,
     "how": "no finding",
     "tail": "[3.13.12] lost counter updates: untraced 0, in a section 0; flag trials that saw done revert to False: untraced 0, in a section 0; verdict PASS\nno finding: on 3.13.12 the section did not change the program's closure writes"
+   }
+  },
+  "unstarted-generator-credited-py310-311:throw_in": {
+   "primary@3.11.15": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "primary@3.10.20": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "primary@3.12.3": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "primary@3.13.12": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "nversion@3.11.15": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "nversion@3.10.20": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "nversion@3.12.3": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "nversion@3.13.12": {
+    "reproduced": true,
+    "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   }
+  },
+  "stale-stop-after-mint-of-handle-run:before_exit": {
+   "primary@3.11.15": {
+    "reproduced": true,
+    "how": "3.11.15 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.11.15 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
+   },
+   "primary@3.10.20": {
+    "reproduced": true,
+    "how": "3.10.20 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.10.20 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
+   },
+   "primary@3.12.3": {
+    "reproduced": true,
+    "how": "3.12.3 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.12.3 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
+   },
+   "primary@3.13.12": {
+    "reproduced": true,
+    "how": "3.13.12 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.13.12 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
+   },
+   "nversion@3.11.15": {
+    "reproduced": true,
+    "how": "3.11.15 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.11.15 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
+   },
+   "nversion@3.10.20": {
+    "reproduced": true,
+    "how": "3.10.20 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.10.20 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
+   },
+   "nversion@3.12.3": {
+    "reproduced": true,
+    "how": "3.12.3 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.12.3 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
+   },
+   "nversion@3.13.12": {
+    "reproduced": true,
+    "how": "3.13.12 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}",
+    "tail": "3.13.12 B-entered-inside-task-step -> PASS {\"A\": {\"vmod:f\": 1}}"
    }
   }
  }

@@ -31,6 +31,14 @@ BLOCKERS = {
     "hook-exception-leaves-lock-held": "lifecycle/r1/f12_hook_exception_leaves_lock_held.py",
     "py310-hook-reverts-closure-writes": "crossversion-spec/r1/f09_py310_closure_writes_lost.py",
 }
+# Sub-routes the reporters' repros do not cover, taken from the round-4 verifiers' own repros. Each is
+# judged by one output line: (script, line marker, text the line must contain to count as reproduced).
+VARIANTS = {
+    "unstarted-generator-credited-py310-311:throw_in": (
+        "verify/unstarted-generator-credited-py310-311/my_repro.py", "throw_in", "-> PASS"),
+    "stale-stop-after-mint-of-handle-run:before_exit": (
+        "verify/stale-stop-after-mint-of-handle-run/v_repro2.py", "B-entered-inside-task-step", "-> PASS"),
+}
 
 
 def main() -> int:
@@ -60,6 +68,25 @@ def main() -> int:
                 except subprocess.TimeoutExpired:
                     rep, how, out = None, "timeout", ""
                 rows[key][f"{impl}@{v}"] = {"reproduced": rep, "how": how, "tail": out.strip()[-240:]}
+    for key, (rel, marker, needle) in VARIANTS.items():
+        script = HERE / rel
+        rows[key] = {}
+        for impl, root in roots.items():
+            for py in PYS:
+                if not Path(py).exists():
+                    continue
+                v = subprocess.run([py, "-c", "import sys;print(sys.version.split()[0])"],
+                                   capture_output=True, text=True).stdout.strip()
+                env = dict(os.environ, PYTHONPATH=root, STYXX_ROOT=root, PYTHONDONTWRITEBYTECODE="1")
+                try:
+                    p = subprocess.run([py, str(script)], cwd=script.parent, env=env, capture_output=True,
+                                       text=True, timeout=180)
+                    line = next((ln for ln in p.stdout.splitlines() if marker in ln), "")
+                    rep_ = needle in line
+                    how = line.strip()[:200] or f"exit {p.returncode}: no '{marker}' line"
+                except subprocess.TimeoutExpired:
+                    rep_, how = None, "timeout"
+                rows[key][f"{impl}@{v}"] = {"reproduced": rep_, "how": how, "tail": how}
     shutil.rmtree(work, ignore_errors=True)
     summ = {k: {impl: sorted(c.split("@")[1] for c, r in v.items() if c.startswith(impl + "@") and r["reproduced"])
                 for impl in roots} for k, v in rows.items()}
@@ -71,6 +98,8 @@ def main() -> int:
            "primary_sha256": hashlib.sha256((ROOT / "styxx" / "protocol.py").read_bytes()).hexdigest(),
            "reproduced_on": summ,
            "n_blockers": len(BLOCKERS),
+           "n_variants": len(VARIANTS),
+           "n_variants_reproduced_on_nversion": sum(1 for k in VARIANTS if summ[k]["nversion"]),
            "n_blockers_reproduced_on_nversion": sum(1 for s in summ.values() if s["nversion"]),
            "n_blockers_reproduced_on_primary": sum(1 for s in summ.values() if s["primary"]),
            "rows": rows}

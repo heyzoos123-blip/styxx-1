@@ -21,12 +21,28 @@ After each faulted run the invariants are checked, all before any repair:
 * CLEAN STATE: no profile function is installed; the module registries (``_MINTED``, ``_BY_FN``,
   ``_ANCHORS``, ``_THREADS``) are empty; ``_ACTIVE == 0``; ``_STOP is None``; the fixture functions' code
   is their original code; another thread can take ``_LOCK`` within 2 s.
-* NEXT TRACE OK: a fresh, clean trace of the same target scores PASS with the exact count and leaves
-  clean state. A failure here is POISON: one bad moment breaks every later trace in the process.
+* NEXT TRACE: a fresh, clean trace of the same target, run on the damaged state without a reset, must
+  score PASS with the exact count. Afterwards the state is checked again.
 
-Each point gets the worst class that applies: HANG (the lock cannot be taken), then POISON, then LEAK
-(state left behind, although the next trace still works), then SWALLOWED (the exception did not reach
-the harness as itself, for example because it was converted into a refusal), then CLEAN.
+Each point gets the worst class that applies, in this order:
+
+  HANG        another thread cannot take ``_LOCK`` within 2 s
+  BREAKS_NEXT the next clean trace raises or scores anything but PASS with the exact count
+  PERSISTS    state was left behind and is still there after a clean next trace
+  CLEARED     state was left behind, and the next clean trace cleared it
+  CONVERTED   state is clean, but the exception reached the harness as something else, e.g. as a
+              coded refusal (``chained`` records whether the injected exception is its ``__cause__``)
+  CLEAN       the exception propagated as itself, the state is clean, and the next trace is exact
+
+Scope, stated so no one reads more into the map than it holds. It is exhaustive only for the
+exception class it raises (``--exc``: an ``Exception`` subclass, or ``KeyboardInterrupt``), at every
+opcode that these scenarios execute, on the interpreter it runs on. Opcode streams differ by CPython
+version. A point is a dynamic opcode execution, so the same source line recurs across scenarios; the
+receipt also counts distinct (function, line) sites. It also tags each point as ``stateful`` (the
+tracer's lifecycle and target resolution) or ``stateless`` (score-time trace validation), because
+stateless code cannot leave state behind. It cannot see which opcodes a real exception source can
+reach: a signal handler runs only at the interpreter's eval-breaker checks, so points such as a
+``LOAD_CONST`` are reachable in practice only through a callback, such as the profile hook.
 
 A fault point is CLEAN only if the exception propagated, the state is clean and the next trace is OK.
 Between points the state is forcibly reset, so each point is judged on its own.
@@ -66,6 +82,14 @@ FIXTURE = "def f(x=0):\n    return x + 1\n\n\ndef g(x=0):\n    return x + 2\n"
 
 class Injected(Exception):
     pass
+
+
+class InjectedInterrupt(KeyboardInterrupt):
+    pass
+
+
+EXC = {"exception": Injected, "keyboardinterrupt": InjectedInterrupt}
+CLASSES = ("CLEAN", "CONVERTED", "CLEARED", "PERSISTS", "BREAKS_NEXT", "HANG")
 
 
 # -- the machinery's code objects -------------------------------------------------------------
@@ -195,8 +219,8 @@ SCENARIOS = {"sync": s_sync, "two_sections": s_two_sections, "raising_section": 
 # -- injection ----------------------------------------------------------------------------------
 
 class Injector:
-    def __init__(self, codes, fire_at=None):
-        self.codes, self.fire_at, self.count, self.fired_where = codes, fire_at, 0, None
+    def __init__(self, codes, fire_at=None, exc=Injected):
+        self.codes, self.fire_at, self.count, self.fired_where, self.exc = codes, fire_at, 0, None, exc
 
     def global_trace(self, frame, event, arg):
         if event == "call" and frame.f_code in self.codes:
@@ -210,12 +234,12 @@ class Injector:
             if self.fire_at is not None and self.count == self.fire_at:
                 self.fired_where = (frame.f_code.co_qualname if hasattr(frame.f_code, "co_qualname")
                                     else frame.f_code.co_name, frame.f_lineno, frame.f_lasti)
-                raise Injected(f"fault point {self.fire_at}")
+                raise self.exc(f"fault point {self.fire_at}")
         return self.local_trace
 
 
-def run_injected(fn, env, codes, fire_at):
-    inj = Injector(codes, fire_at)
+def run_injected(fn, env, codes, fire_at, exc=Injected):
+    inj = Injector(codes, fire_at, exc)
     sys.settrace(inj.global_trace)
     try:
         out = fn(env)
@@ -289,12 +313,22 @@ def next_trace_ok(env) -> str | None:
     return f"next trace left state: {p}" if p else None
 
 
+STATELESS = {"_check_trace_shape", "_count_dicts", "Experiment._check_coverage", "Experiment.check_metrics",
+             "_check_coverage", "check_metrics"}
+
+
+def stateful(where) -> bool:
+    return bool(where) and where[0] not in STATELESS and not where[0].startswith(tuple(s + "." for s in STATELESS))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--scenario", action="append", default=[])
     ap.add_argument("--out", default=str(HERE / "fault_injection_v5_result.json"))
     ap.add_argument("--max-points", type=int, default=0, help="0 = every point")
+    ap.add_argument("--exc", choices=sorted(EXC), default="exception")
     a = ap.parse_args()
+    exc_cls = EXC[a.exc]
     env = Env()
     codes = machinery_codes()
     names = a.scenario or list(SCENARIOS)
@@ -303,15 +337,16 @@ def main() -> int:
     for name in names:
         fn = SCENARIOS[name]
         force_reset(env)
-        inj, clean_out, exc = run_injected(fn, env, codes, None)
+        inj, clean_out, exc = run_injected(fn, env, codes, None, exc_cls)
         base_bad = state_problems(env)
         n = inj.count
-        rows, tally = [], {"CLEAN": 0, "SWALLOWED": 0, "LEAK": 0, "POISON": 0, "HANG": 0}
+        rows, tally = [], {k: 0 for k in CLASSES}
+        split = {"stateful": {k: 0 for k in CLASSES}, "stateless": {k: 0 for k in CLASSES}}
         pts = range(1, n + 1) if not a.max_points else range(1, min(n, a.max_points) + 1)
         for k in pts:
             force_reset(env)
-            inj, out, exc = run_injected(fn, env, codes, k)
-            propagated = isinstance(exc, Injected)
+            inj, out, exc = run_injected(fn, env, codes, k, exc_cls)
+            propagated = isinstance(exc, exc_cls)
             other_exc = exc is not None and not propagated
             bad = state_problems(env)
             hang = any("_LOCK" in b for b in bad)
@@ -320,17 +355,22 @@ def main() -> int:
                 nxt = next_trace_ok(env)
             if hang:
                 kind = "HANG"
+            elif nxt and not nxt.startswith("next trace left state"):
+                kind = "BREAKS_NEXT"       # the next clean trace raised or mis-scored
             elif nxt:
-                kind = "POISON"            # the next, clean trace in this process is broken
+                kind = "PERSISTS"          # the next trace was exact, but the damage outlived it
             elif bad:
-                kind = "LEAK"
+                kind = "CLEARED"           # damage the next clean trace repaired
             elif not propagated:
-                kind = "SWALLOWED"
+                kind = "CONVERTED"
             else:
                 kind = "CLEAN"
             tally[kind] += 1
+            split["stateful" if stateful(inj.fired_where) else "stateless"][kind] += 1
             if kind != "CLEAN":
                 rows.append({"k": k, "kind": kind, "where": inj.fired_where,
+                             "stateful": stateful(inj.fired_where),
+                             "chained": bool(exc is not None and isinstance(exc.__cause__, exc_cls)),
                              "escaped": None if exc is None else f"{type(exc).__name__}: {str(exc)[:120]}",
                              "state": bad, "next": nxt, "other_exception": other_exc,
                              "completed_normally": exc is None, "result_if_completed": repr(out)[:160]})
@@ -347,12 +387,20 @@ def main() -> int:
             where[key][r["kind"]] += 1
         results[name] = {"clean_run": {"out": repr(clean_out)[:200], "raised": repr(exc)[:200] if exc else None,
                                        "state_after": base_bad},
-                         "n_fault_points": n, "n_run": len(pts), "tally": tally,
+                         "n_fault_points": n, "n_run": len(pts), "tally": tally, "by_region": split,
                          "n_not_clean": sum(v for k, v in tally.items() if k != "CLEAN"),
                          "by_source_line": dict(sorted(where.items())), "not_clean": rows}
         print(f"{name:16s} points {n:5d}  " + "  ".join(f"{k} {v}" for k, v in tally.items()), flush=True)
     force_reset(env)
-    tot = {k: sum(r["tally"][k] for r in results.values()) for k in ("CLEAN", "SWALLOWED", "LEAK", "POISON", "HANG")}
+    tot = {k: sum(r["tally"][k] for r in results.values()) for k in CLASSES}
+    region = {reg: {k: sum(r["by_region"][reg][k] for r in results.values()) for k in CLASSES}
+              for reg in ("stateful", "stateless")}
+    sites = {}
+    for r in results.values():
+        for row in r["not_clean"]:
+            w = row["where"]
+            sites.setdefault(row["kind"], set()).add(f"{w[0]}:{w[1]}" if w else "?")
+    n_sites_all = len(set().union(*sites.values())) if sites else 0
     res = {
         "what": "exhaustive fault injection: an Injected exception at every opcode the v5 tracer's machinery "
                 "executes (outside the profile hook), one point per run, with state invariants and a follow-up "
@@ -362,11 +410,18 @@ def main() -> int:
         "impl_path": P.__file__,
         "impl_sha256": hashlib.sha256(Path(P.__file__).read_bytes()).hexdigest(),
         "python": sys.version.split()[0],
+        "exception_class": exc_cls.__mro__[1].__name__ + " subclass",
         "n_machinery_code_objects": len(codes),
         "scenarios": results,
         "n_fault_points": sum(r["n_run"] for r in results.values()),
         "totals": tot,
+        "totals_by_region": region,
         "n_not_clean": sum(v for k, v in tot.items() if k != "CLEAN"),
+        "n_damaging": sum(tot[k] for k in ("HANG", "BREAKS_NEXT", "PERSISTS", "CLEARED")),
+        "n_stateful_points": sum(region["stateful"].values()),
+        "n_stateful_damaging": sum(region["stateful"][k] for k in ("HANG", "BREAKS_NEXT", "PERSISTS", "CLEARED")),
+        "distinct_sites_by_class": {k: len(v) for k, v in sorted(sites.items())},
+        "n_distinct_not_clean_sites": n_sites_all,
         "seconds": round(time.time() - t0, 1),
     }
     Path(a.out).write_text(json.dumps(res, indent=1, default=str) + "\n", encoding="utf-8")

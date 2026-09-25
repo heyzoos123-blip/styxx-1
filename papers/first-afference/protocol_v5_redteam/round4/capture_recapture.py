@@ -10,15 +10,22 @@ Q1 (found by exactly one lens) and Q2 (found by exactly two):
 
 The 95% interval uses Chao's (1987) log-normal construction around the undiscovered part f0.
 
-Assumptions, and why the number is a LOWER bound:
+Assumptions, and why the direction of the error is UNKNOWN (a first version of this script called the
+estimate a lower bound; a verified attack on the round-4 finding showed that is not supported):
   * Closed population: v5e did not change during round 4. This holds.
-  * Occasions sample the same population: they do NOT. Each lens was told to aim at its own region
-    (identity, lifecycle, exam mutation, ...). That makes catchability heterogeneous, and under
-    heterogeneity Chao-type estimators are lower bounds, not unbiased estimates.
+  * Exchangeable occasions: they are NOT. Each lens was told to aim at its own region (identity,
+    lifecycle, exam mutation, ...). A finding in a lens's home region is then caught mostly by that lens,
+    which inflates singletons (Q1) relative to doubletons (Q2) and pushes the estimate UP.
+  * Heterogeneity across findings, with exchangeable occasions, would make Chao2 a lower bound. That is
+    the textbook case, and it is not this one.
   * Correct clustering: the dedup was an agent's judgement (candidates_and_dedup.json). A wrong merge
-    turns a singleton into a doubleton and biases the estimate down.
-  * Findings, not verified findings: incidence is counted over all 60 clusters. A second estimate
-    restricted to the 58 confirmed ones is reported as well.
+    turns a singleton into a doubleton and pushes the estimate DOWN.
+  * Two populations: the confirmed findings are implementation findings AND exam holes (defects of the
+    frozen exam, not of v5e). The pooled estimate mixes them, so each is also reported on its own; the
+    implementation findings are the ones that decide shipping.
+  * Findings, not verified findings: incidence is also counted over all 60 clusters.
+The estimate is therefore a rough size for "not dry", not a bound, and not yet a stopping rule. A rule built
+on it would first need a defined threshold and a check of the estimator on rounds whose totals are known.
 
 Reads candidates_and_dedup.json and verdicts.json (next to this file). Writes capture_recapture.json.
 """
@@ -92,7 +99,7 @@ def main() -> int:
     inc_exam = [len(v) for k, v in clusters.items() if k in confirmed and sev[k] == "EXAM_HOLE"]
     res = {
         "what": "EXPLORATORY capture-recapture (incidence-based Chao2) over red-team round 4's seven lenses: "
-                "a lower-bound estimate of how many distinct findings those lenses left unfound",
+                "a rough estimate, bias of unknown direction, of how many distinct findings those lenses left unfound",
         "generator": "papers/first-afference/protocol_v5_redteam/round4/capture_recapture.py",
         "generator_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "lenses": lenses,
@@ -101,9 +108,10 @@ def main() -> int:
         "confirmed_module_findings": chao2(inc_module, len(lenses)),
         "confirmed_exam_holes": chao2(inc_exam, len(lenses)),
         "per_cluster_lenses": {k: sorted(v) for k, v in sorted(clusters.items())},
-        "reading": ("A lower bound under lens heterogeneity. It says round 4 did not come close to exhausting "
-                    "v5e, which is consistent with the audit's own 'not dry' and supports running round 5 "
-                    "against the repair with a stopping rule frozen in advance."),
+        "reading": ("A rough size for 'not dry', with bias of unknown direction: specialised lenses push it up, "
+                    "wrong dedup merges push it down. The implementation findings (the ones that decide shipping) "
+                    "look less complete than the pooled number suggests. It is not a bound and not yet a stopping "
+                    "rule; a rule would need a frozen threshold and a check on rounds with known totals."),
     }
     (HERE / "capture_recapture.json").write_text(json.dumps(res, indent=1) + "\n", encoding="utf-8")
     for k in ("all_clusters", "confirmed_only", "confirmed_module_findings", "confirmed_exam_holes"):

@@ -1,7 +1,7 @@
 {
- "what": "EXPLORATORY capture-recapture (incidence-based Chao2) over red-team round 4's seven lenses: a lower-bound estimate of how many distinct findings those lenses left unfound",
+ "what": "EXPLORATORY capture-recapture (incidence-based Chao2) over red-team round 4's seven lenses: a rough estimate, bias of unknown direction, of how many distinct findings those lenses left unfound",
  "generator": "papers/first-afference/protocol_v5_redteam/round4/capture_recapture.py",
- "generator_sha256": "972812866d9fdb846b52f8ca23cec0eb888aaacea60581145a96bed88007ac99",
+ "generator_sha256": "6eb0af0d8558ffc3f146ff42f9116b706dd6e41135891eadfd4cb2afccf27bdb",
  "lenses": [
   "attribution",
   "closure-audit",
@@ -328,5 +328,5 @@
    "exam-mutation"
   ]
  },
- "reading": "A lower bound under lens heterogeneity. It says round 4 did not come close to exhausting v5e, which is consistent with the audit's own 'not dry' and supports running round 5 against the repair with a stopping rule frozen in advance."
+ "reading": "A rough size for 'not dry', with bias of unknown direction: specialised lenses push it up, wrong dedup merges push it down. The implementation findings (the ones that decide shipping) look less complete than the pooled number suggests. It is not a bound and not yet a stopping rule; a rule would need a frozen threshold and a check on rounds with known totals."
 }

@@ -1,0 +1,8 @@
+3.12.3 no other section   rev4 9.27 us  rev5 11.48 us  (+2.21 us per section)
+3.12.3 other section open rev4 5.17 us  rev5 7.79 us  (+2.63 us per section)
+3.12.3 no other section   rev4 9.03 us  rev5 10.76 us  (+1.73 us per section)
+3.12.3 other section open rev4 4.89 us  rev5 8.05 us  (+3.16 us per section)
+3.13.12 no other section   rev4 7.24 us  rev5 9.18 us  (+1.94 us per section)
+3.13.12 other section open rev4 5.35 us  rev5 7.80 us  (+2.45 us per section)
+3.13.12 no other section   rev4 7.53 us  rev5 9.16 us  (+1.62 us per section)
+3.13.12 other section open rev4 5.71 us  rev5 7.51 us  (+1.80 us per section)

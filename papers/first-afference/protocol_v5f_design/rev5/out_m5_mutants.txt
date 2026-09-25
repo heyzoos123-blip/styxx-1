@@ -1,0 +1,21 @@
+off_split            open(X) || exit(X) F0: STALE=124 | close(X) || exit(X) F0: STALE=66 | open(X) || open(X) F0: U1=10, A0=22, STALE=44, END=2  [LOST=1]
+popoff_split         open(X) || exit(X) F0: STALE=58 | close(X) || exit(X) F0: STALE=31 | open(X) || open(X) F0: STALE=15
+on_ungated_own       open(X) || exit(X) F0: STALE=180 | rec || open(X), X facade dead F0: STALE=160 | open(X) || exit(X) || rec F0: STALE=1290  [BUSY_TX=3410]
+on_no_capture        ext: open(X) || open(Y) F0: LOSTNOTE=6  [LOST=94, MASKED=16]
+on_capture_split     open(X) || exit(X) F0: STALE=180 | open(X) || open(X) F0: FALSEFLAG=18, END=1 | open(X) || open(Y) F0: FALSEFLAG=18, END=2
+on_capture_nogate    open(X) || open(X) F0: FALSEFLAG=18, END=1 | open(X) || open(Y) F0: FALSEFLAG=18, END=2 | close(X)+[open(Y)] || open(Y) F0: FALSEFLAG=585, END=4
+on_before_store      open(X) || exit(X) F0: STALE=48 | open(X) || open(X) F0: U1=10, A0=16, STALE=15, END=1  [LOST=1] | open(X) || open(Y) F0: U1=10, A0=16, STALE=15, END=2  [LOST=2]
+no_on                open(X) || exit(X) F0: U1=3, A0=5, END=4  [LOST=2] | open(X) || open(X) F0: U1=50, A0=84, END=1  [LOST=1] | open(X) || open(Y) F0: U1=74, A0=107, END=1  [LOST=2]
+blind_anchor_first   open(X) || exit(X) F0: FALSEFLAG=59, END=4 | close(X) || exit(X) F0: FALSEFLAG=42, END=4 | rec || open(X), X facade dead F0: FALSEFLAG=59, END=2
+blind_no_armed       open(X) || exit(X) F0: FALSEFLAG=80, END=3 | open(X) || open(X) F1: FALSEFLAG=46 | open(X) || open(Y) F1: FALSEFLAG=46
+blind_no_anchor      open(X) || exit(X) F0: FALSEFLAG=76, END=4 | close(X) || exit(X) F0: FALSEFLAG=42, END=4 | rec || open(X), X facade dead F0: FALSEFLAG=74, END=2
+no_rec_off           ext: open(X) || open(Y) F0: REPAIR=26  [LOST=84, MASKED=16] | ext: open(X) || exit(X) F0: REPAIR=34  [LOST=24, MASKED=2] | ext: close(X) || rec F0: REPAIR=2
+gate_split           ext: open(X) || open(Y) F0: CLOBBER=94, VALUEERROR=448  [LOST=114, MASKED=16] | ext: open(X) || exit(X) F0: CLOBBER=1040, VALUEERROR=4946  [LOST=38, MASKED=2] | ext: close(X) || rec F0: CLOBBER=11, VALUEERROR=11
+detach_nulls         open(X) || exit(X) F0: END=1 | rec || open(X), X facade dead F0: END=1 | open(X) || exit(X) || rec F0: END=3  [BUSY_TX=3696]
+no_recheck           open(X) || exit(X) F0: P8=102 | rec || open(X), X facade dead F0: P8=79 | open(X) || exit(X) || rec F0: P8=1069  [BUSY_TX=3938]
+no_fin_test          rec || open(X), X facade dead F0: P8=79
+no_exiting_test      open(X) || exit(X) F0: P8=84 | open(X) || exit(X) || rec F0: P8=778  [BUSY_TX=4598] | open(X)+[exit(X)] F0: P8=1
+no_anchor_prune      open(X) || exit(X) F2: REPAIR=3
+ensure_nocount       NOT DETECTED by any configuration
+prune_credit_stop    NOT DETECTED by any configuration
+take_split           ext: open(X) || exit(X) F0: VALUEERROR=258  [LOST=26, MASKED=2] | ext: close(X) || rec F0: VALUEERROR=15 | ext: enter(X) || open(Y) F0: VALUEERROR=74  [LOST=9]

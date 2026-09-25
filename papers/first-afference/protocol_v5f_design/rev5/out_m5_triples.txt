@@ -1,0 +1,4 @@
+open(X) || open(X) || exit(X)                  rev5 F0 I0 X0 W0    537217 states     16 ends  ok  (10s)
+open(X) || open(X) || exit(X)                  rev5 F1 I0 X0 W0   3081695 states    194 ends  ok  (58s)
+open(X) || exit(X) || exit(X)                  rev5 F0 I0 X0 W0     18848 states      8 ends  ok  (0s)
+open(X) || exit(X) || exit(X)                  rev5 F1 I0 X0 W0     73216 states     88 ends  ok  (1s)

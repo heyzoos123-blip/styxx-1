@@ -1,0 +1,2 @@
+3.12.3 {'get_events': ('ok', 4096), 'get_local_events': ('ok', 0), 'set_events': ('ValueError', 'tool 4 is not in use'), 'set_local_events': ('ValueError', 'tool 4 is not in use'), 'register_callback': ('ok', None), 'get_tool': ('ok', None)}
+3.13.12 {'get_events': ('ok', 4096), 'get_local_events': ('ok', 0), 'set_events': ('ValueError', 'tool 4 is not in use'), 'set_local_events': ('ValueError', 'tool 4 is not in use'), 'register_callback': ('ok', None), 'get_tool': ('ok', None)}

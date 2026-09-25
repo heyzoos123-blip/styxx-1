@@ -1,0 +1,16 @@
+3.12.3 IS-GATE on (X154)              spec: trials 156, failing 0
+3.12.3                                  gate_split         trials 122, failing 92  first: k=25 {'events': 4096, 'local': 32, 'name': 'other-tool', 'styxx_callbacks': 0}
+3.12.3 IS-GATE off (X154)             spec: trials 69, failing 0
+3.12.3                                  gate_split         trials 65, failing 31  first: k=28 {'events': 0, 'local': 32, 'name': 'other-tool', 'styxx_callbacks': 0}
+3.12.3 IS-GATE retire (X154)          spec: trials 26, failing 0
+3.12.3                                  gate_split         trials 25, failing 12  first: k=12 {'events': 1024, 'local': 0, 'name': 'other-tool', 'styxx_callbacks': 0}
+3.12.3 IS-GATE register (X154)        spec: trials 30, failing 0
+3.12.3                                  gate_split         trials 85, failing 67  first: k=12 {'events': 1024, 'local': 32, 'name': 'other-tool', 'styxx_callbacks': 5}
+3.13.12 IS-GATE on (X154)              spec: trials 156, failing 0
+3.13.12                                  gate_split         trials 123, failing 93  first: k=25 {'events': 4096, 'local': 32, 'name': 'other-tool', 'styxx_callbacks': 0}
+3.13.12 IS-GATE off (X154)             spec: trials 69, failing 0
+3.13.12                                  gate_split         trials 66, failing 32  first: k=28 {'events': 0, 'local': 32, 'name': 'other-tool', 'styxx_callbacks': 0}
+3.13.12 IS-GATE retire (X154)          spec: trials 26, failing 0
+3.13.12                                  gate_split         trials 25, failing 12  first: k=12 {'events': 1024, 'local': 0, 'name': 'other-tool', 'styxx_callbacks': 0}
+3.13.12 IS-GATE register (X154)        spec: trials 30, failing 0
+3.13.12                                  gate_split         trials 77, failing 59  first: k=12 {'events': 1024, 'local': 32, 'name': 'other-tool', 'styxx_callbacks': 5}

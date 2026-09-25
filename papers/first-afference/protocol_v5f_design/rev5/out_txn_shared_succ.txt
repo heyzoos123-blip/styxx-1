@@ -1,0 +1,2 @@
+3.12.3 fresh dict per token: ['transaction 1: acquired after 0 steps', 'transaction 2: acquired after 1 steps', 'transaction 3: acquired after 1 steps']
+3.12.3 one shared dict     : ['transaction 1: acquired after 0 steps', 'transaction 2: walk did not end (cycle)']

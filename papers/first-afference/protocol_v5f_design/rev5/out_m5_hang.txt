@@ -1,0 +1,21 @@
+close(X)+[open(Y)] || open(Y)                  rev4 no open bound          37952 states  ok  [STALE_rev4=4470]
+close(X)+[open(Y)] || open(Y)                  rev4 no tx bound            57311 states  ok  [BUSY_OPEN=353, STALE_rev4=7375]
+close(X)+[open(Y)] || open(Y)                  rev5 no tx bound             4750 states  ok
+c8: close(X)+[open(Y)] || close(X)+[open(Y)]   rev4 no open bound        3543834 states  HANG=28  [STALE_rev4=283670]
+c8: close(X)+[open(Y)] || close(X)+[open(Y)]   rev4 no tx bound          5546707 states  CYC_OPEN=28  [BUSY_OPEN=35752, STALE_rev4=473266]
+c8: close(X)+[open(Y)] || close(X)+[open(Y)]   rev5 no tx bound           320834 states  ok
+c3: with L: open(X) || close(Y)+[lock]         rev4 no open bound           2726 states  HANG=4  [STALE_rev4=470]
+c3: with L: open(X) || close(Y)+[lock]         rev4 no tx bound             3380 states  CYC_OPEN=4  [BUSY_OPEN=12, STALE_rev4=570]
+c3: with L: open(X) || close(Y)+[lock]         rev5 no tx bound              781 states  ok
+with L: exit(X) || exit(Y)+[lock]              rev4 no open bound           1447 states  ok  [CYC_TX=12, BUSY_TX=60]
+with L: exit(X) || exit(Y)+[lock]              rev4 no tx bound              977 states  HANG=12
+with L: exit(X) || exit(Y)+[lock]              rev5 no tx bound              795 states  HANG=10
+with L: open(X) || open(Y)+[lock]              rev4 no open bound           6927 states  HANG=4  [STALE_rev4=1025]
+with L: open(X) || open(Y)+[lock]              rev4 no tx bound             8299 states  CYC_OPEN=4  [BUSY_OPEN=20, STALE_rev4=1235]
+with L: open(X) || open(Y)+[lock]              rev5 no tx bound             1331 states  ok
+greenlet: [close(X), open(X)] || open(Y)       rev4 no open bound         124547 states  U1=678, A0=2203, LOSTNOTE=2, END=14  [LOST=11, STALE_rev4=14205]
+greenlet: [close(X), open(X)] || open(Y)       rev4 no tx bound           177464 states  U1=754, A0=2705, LOSTNOTE=2, END=16  [LOST=12, BUSY_OPEN=494, STALE_rev4=21668]
+greenlet: [close(X), open(X)] || open(Y)       rev5 no tx bound             9893 states  ok
+greenlet: [exit(X), rec] || open(X)            rev4 no open bound        1853676 states  ok  [STALE_rev4=126901]
+greenlet: [exit(X), rec] || open(X)            rev4 no tx bound          1853676 states  ok  [STALE_rev4=126901]
+greenlet: [exit(X), rec] || open(X)            rev5 no tx bound           407920 states  ok

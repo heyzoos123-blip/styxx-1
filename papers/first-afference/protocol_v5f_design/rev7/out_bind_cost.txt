@@ -1,0 +1,2 @@
+3.12.3 bind() check per coverage_trace(): 4.8 us
+3.13.12 bind() check per coverage_trace(): 4.9 us

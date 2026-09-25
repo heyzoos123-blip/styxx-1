@@ -1,0 +1,4 @@
+c2 cb/local: open(Y) || exit(X)              rev5 F0 X1     1277 states  LOSTNOTE=1  [LOST=2]
+c2 cb/local: open(Y) || exit(X)              rev6 F0 X1     1277 states  LOSTNOTE=1  [LOST=2]
+c2 cb/local: open(Y) || exit(X) [lclr]       rev5 F0 X1     1246 states  ok  [LOST=2]
+c2 cb/local: open(Y) || exit(X) [lclr]       rev6 F0 X1     1246 states  ok  [LOST=2]

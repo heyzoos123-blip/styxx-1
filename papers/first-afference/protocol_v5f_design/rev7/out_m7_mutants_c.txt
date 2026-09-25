@@ -1,0 +1,9 @@
+reg_rev5             ext: open(X) || exit(X) F0: CLOBBER=435, REGMULTI=145  [LOST=26, MASKED=2] | reg: exit(X) + outside free/take F0: CLOBBER=3, REGMULTI=1 | reg: open(Y) || exit(X) + free/take F0: CLOBBER=144, REGMULTI=48  [LOST=11]
+rebind_count_none    NOT DETECTED by any configuration
+rebind_no_local      NOT DETECTED by any configuration
+blind_read_gated     ext+greenlet: [exit(X), rec] || open(X) F0: LOSTNOTE=2  [LOST=23] | reg2: rec || open(Y) + free/take F1: LOSTNOTE=1  [LOST=31] | reg2: rec || open(Y) + free/free F1: LOSTNOTE=1  [LOST=41]
+ensure_nocount+blind_read_gated ext: enter(X) || open(Y) F0: LOSTNOTE=2  [LOST=20] | rebind: enter(X) || open(Y) + take F0: LOSTNOTE=1  [LOST=13] | ext+greenlet: [exit(X), rec] || open(X) F0: LOSTNOTE=2  [LOST=23]
+cbrep_nocount        cb2: open(Y) || exit(X) [cbrep] F0: LOSTNOTE=1  [LOST=2] | cb2: open(Y) || exit(X) [cbrep0] F0: LOSTNOTE=1  [LOST=2] | cb2: open(Y) || exit(X) [all, X2] F0: LOSTNOTE=3  [LOST=16]
+count_after_register cb2: open(Y) || exit(X) [cbrep, F1] F1: LOSTNOTE=1  [LOST=37]
+retake_nocount       NOT DETECTED by any configuration
+retake_nocount+blind_read_gated ext+greenlet: [exit(X), rec] || open(X) F0: LOSTNOTE=2  [LOST=23] | reg2: rec || open(Y) + free/take F1: LOSTNOTE=1  [LOST=31] | reg2: rec || open(Y) + free/free F1: LOSTNOTE=1  [LOST=41]

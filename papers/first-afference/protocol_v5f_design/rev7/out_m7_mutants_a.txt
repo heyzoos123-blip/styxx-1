@@ -1,0 +1,11 @@
+off_split            open(X) || exit(X) F0: STALE=124 | close(X) || exit(X) F0: STALE=66 | open(X) || open(X) F0: U1=10, A0=22, STALE=44, END=2  [LOST=1]
+popoff_split         open(X) || exit(X) F0: STALE=58 | close(X) || exit(X) F0: STALE=31 | open(X) || open(X) F0: STALE=15
+on_ungated_own       open(X) || exit(X) F0: STALE=220 | rec || open(X), X facade dead F0: STALE=160 | open(X) || exit(X) || rec F0: STALE=1370  [BUSY_TX=4030]
+on_no_capture        ext: open(X) || open(Y) F0: LOSTNOTE=6  [LOST=98, MASKED=16] | ext+re: close(X)+[open(Y)] || open(Y) F0: LOSTNOTE=11  [LOST=31] | ext+greenlet: [close(X), open(X)] || open(Y) F0: LOSTNOTE=25  [LOST=66]
+on_capture_split     open(X) || exit(X) F0: STALE=220 | open(X) || open(X) F0: FALSEFLAG=18, END=1 | open(X) || open(Y) F0: FALSEFLAG=18, END=2
+on_capture_nogate    open(X) || open(X) F0: FALSEFLAG=18, END=1 | open(X) || open(Y) F0: FALSEFLAG=18, END=2 | open(X) || open(X) || exit(Y) F0: FALSEFLAG=396, END=1
+on_before_store      open(X) || exit(X) F0: STALE=56 | open(X) || open(X) F0: U1=10, A0=16, STALE=15, END=1  [LOST=1] | open(X) || open(Y) F0: U1=10, A0=16, STALE=15, END=2  [LOST=2]
+no_on                open(X) || exit(X) F0: U1=3, A0=5, END=4  [LOST=2] | open(X) || open(X) F0: U1=50, A0=84, END=1  [LOST=1] | open(X) || open(Y) F0: U1=74, A0=107, END=1  [LOST=2]
+blind_anchor_first   open(X) || exit(X) F0: FALSEFLAG=71, END=4 | close(X) || exit(X) F0: FALSEFLAG=50, END=4 | rec || open(X), X facade dead F0: FALSEFLAG=59, END=2
+blind_no_armed       open(X) || exit(X) F0: FALSEFLAG=88, END=3 | open(X) || open(X) F1: FALSEFLAG=46 | open(X) || open(Y) F1: FALSEFLAG=46
+blind_no_anchor      open(X) || exit(X) F0: FALSEFLAG=92, END=4 | close(X) || exit(X) F0: FALSEFLAG=50, END=4 | rec || open(X), X facade dead F0: FALSEFLAG=74, END=2

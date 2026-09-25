@@ -1,0 +1,8 @@
+c2 cb/local: open(Y) || exit(X)              rev6+fix F0 X1     1277 states  ok  [LOST=2]
+reg: exit(X) + outside free/take             rev6+fix F0 X2      148 states  ok  [REGCLOB=2]
+reg: exit(X) + outside free/take             rev6+fix F1 X2      206 states  ok  [REGCLOB=2]
+reg: open(Y) || exit(X) + free/take          rev6+fix F0 X2     4795 states  ok  [LOST=11, REGCLOB=96]
+reg: first enter(X) + free/take              rev6+fix F0 X2      156 states  ok  [REGCLOB=2]
+reg: first enter(X) + free/take              rev6+fix F1 X2      248 states  ok  [REGCLOB=2]
+reg: rec || open(X) + free/take/free         rev6+fix F0 X3     7684 states  ok  [LOST=18, REGCLOB=96]
+cb/local: open(X) || exit(X)                 rev6+fix F0 X1    15197 states  ok  [LOST=4]

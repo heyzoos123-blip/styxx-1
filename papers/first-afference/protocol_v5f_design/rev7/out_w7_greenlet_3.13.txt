@@ -1,0 +1,2 @@
+3.13.12 X137f greenlet 3.5.6 spec {'order': ['Y enter start', 'X exit start', 'X exit done', 'Y enter done (reclaim counted)'], 'X_calls': {}, 'X_MONITOR_LOST': True, 'flag': True, 'reclaimed': 1, 'Y_calls': {'B': {'g': 1}}, 'Y_lost': False}
+3.13.12 X137f greenlet 3.5.6 blind_read_gated {'order': ['Y enter start', 'X exit start', 'X exit done', 'Y enter done (reclaim counted)'], 'X_calls': {}, 'X_MONITOR_LOST': False, 'flag': False, 'reclaimed': 1, 'Y_calls': {'B': {'g': 1}}, 'Y_lost': False}

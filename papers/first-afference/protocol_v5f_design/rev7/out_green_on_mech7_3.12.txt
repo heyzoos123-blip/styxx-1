@@ -1,0 +1,2 @@
+3.12.3 greenlet 3.5.6 spec {'order': ['rec start', 'X exit start', 'X exit done', 'rec done (counted)'], 'X_calls': {}, 'X_MONITOR_LOST': True, 'flag': True, 'reclaimed': 1, 'tool_ours': True}
+3.12.3 greenlet 3.5.6 blind_read_gated {'order': ['rec start', 'X exit start', 'X exit done', 'rec done (counted)'], 'X_calls': {}, 'X_MONITOR_LOST': False, 'flag': False, 'reclaimed': 2, 'tool_ours': True}

@@ -1,0 +1,10 @@
+no_rec_off           ext: open(X) || open(Y) F0: REPAIR=26  [LOST=88, MASKED=16] | ext: open(X) || exit(X) F0: REPAIR=34  [LOST=26, MASKED=2, REGCLOB=290] | ext: close(X) || rec F0: REPAIR=2  [LOST=1]
+gate_split           ext: open(X) || open(Y) F0: CLOBBER=100, VALUEERROR=448  [LOST=128, MASKED=16] | ext: open(X) || exit(X) F0: CLOBBER=1449, VALUEERROR=6064  [LOST=40, MASKED=2, REGCLOB=478] | ext: close(X) || rec F0: CLOBBER=11, VALUEERROR=11  [LOST=1]
+detach_nulls         open(X) || exit(X) F0: END=1 | rec || open(X), X facade dead F0: END=1 | open(X) || exit(X) || rec F0: END=3  [BUSY_TX=4368]
+no_recheck           open(X) || exit(X) F0: P8=122 | rec || open(X), X facade dead F0: P8=79 | open(X) || exit(X) || rec F0: P8=1109  [BUSY_TX=4654]
+no_fin_test          rec || open(X), X facade dead F0: P8=79
+no_exiting_test      open(X) || exit(X) F0: P8=100 | open(X) || exit(X) || rec F0: P8=810  [BUSY_TX=5434] | open(X) || open(X) || exit(X) F0: P8=38613
+no_anchor_prune      open(X) || exit(X) F2: REPAIR=3
+take_split           ext: open(X) || exit(X) F0: VALUEERROR=258  [LOST=28, MASKED=2, REGCLOB=290] | ext: close(X) || rec F0: VALUEERROR=26  [LOST=2] | ext: enter(X) || open(Y) F0: VALUEERROR=96  [LOST=14]
+ensure_nocount       NOT DETECTED by any configuration
+prune_credit_stop    NOT DETECTED by any configuration

@@ -1,0 +1,3 @@
+rebind_count_none  rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] F0: LOSTNOTE=3  [LOST=9]
+rebind_no_local    rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] F0: ok  [LOST=9]
+retake_nocount     rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] F0: ok  [LOST=9]

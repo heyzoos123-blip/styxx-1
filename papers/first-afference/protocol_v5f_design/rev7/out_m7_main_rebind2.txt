@@ -1,0 +1,2 @@
+rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] rev6 F0 I0 X2 W0      3481 states     20 ends  ok  [LOST=9]  (0s)
+rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] rev7 F0 I0 X2 W0      3481 states     20 ends  ok  [LOST=9]  (0s)

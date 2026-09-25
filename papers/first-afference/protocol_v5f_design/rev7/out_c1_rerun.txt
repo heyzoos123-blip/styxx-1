@@ -1,0 +1,4 @@
+3.12.3 P-first {'P_calls': {}, 'P_lost': True, 'Q_calls': {}, 'Q_lost': False}
+3.12.3 Q-first {'P_calls': {}, 'P_lost': False, 'Q_calls': {}, 'Q_lost': True}
+3.13.12 P-first {'P_calls': {}, 'P_lost': True, 'Q_calls': {}, 'Q_lost': False}
+3.13.12 Q-first {'P_calls': {}, 'P_lost': False, 'Q_calls': {}, 'Q_lost': True}

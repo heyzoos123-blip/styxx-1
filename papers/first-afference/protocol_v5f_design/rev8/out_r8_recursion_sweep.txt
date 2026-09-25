@@ -1,0 +1,6 @@
+3.12.3 {'_unwind_off': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30}), '_unwind_on': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30}), '_take': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30}), '_set_local': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30})}
+3.12.3 control K7 _unwind_off (4998, {(None, 'all'): 31, ('RecursionError', 'PARTIAL'): 1, ('RecursionError', 'none'): 29}) DETECTED
+3.12.3 part R (frozen rule: every trial full-effect-no-error or error-no-effect, both seen, per step): PASS
+3.13.12 {'_unwind_off': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30}), '_unwind_on': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30}), '_take': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30}), '_set_local': (4998, {(None, 'all'): 31, ('RecursionError', 'none'): 30})}
+3.13.12 control K7 _unwind_off (4998, {(None, 'all'): 31, ('RecursionError', 'PARTIAL'): 1, ('RecursionError', 'none'): 29}) DETECTED
+3.13.12 part R (frozen rule: every trial full-effect-no-error or error-no-effect, both seen, per step): PASS

@@ -1,0 +1,4 @@
+3.12.3 spec         1000 x {"anchors_after_A": 0, "calls": {}, "dispatched": {}, "event_after_A": false, "lost": false, "same_id": false, "unattributed": {}}
+3.12.3 pend_bare_id 1000 x {"anchors_after_A": 0, "calls": {}, "dispatched": {}, "event_after_A": false, "lost": false, "same_id": true, "unattributed": {"f": 1}}
+3.13.12 spec         1000 x {"anchors_after_A": 0, "calls": {}, "dispatched": {}, "event_after_A": false, "lost": false, "same_id": false, "unattributed": {}}
+3.13.12 pend_bare_id 1000 x {"anchors_after_A": 0, "calls": {}, "dispatched": {}, "event_after_A": false, "lost": false, "same_id": true, "unattributed": {"f": 1}}

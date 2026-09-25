@@ -1,0 +1,26 @@
+3.12.3 G_HYG steps (revision 8 prototype) on steps8.py: PASS
+3.12.3 control K4   REJECTED [('_register', 'S1', '2 statements')]
+3.12.3 control K5   REJECTED [('_unwind_off', 'S1', '1 statements')]
+3.12.3 control K6   REJECTED [('_unwind_off', 'S3', 'last statement is not `_CONSUME(...)`'), ('_unwind_off', 'S4', 'call of collections.deque'), ('_unwind_off', 'S4', 'attribute collections.deque')]
+3.12.3 control K7   REJECTED [('_unwind_off', 'S1', '3 statements')]
+3.12.3 control K8   NOT REJECTED
+3.12.3 control K9   REJECTED [('_take', 'S1', '3 statements')]
+3.12.3 control K10  REJECTED [('_register', 'S1', '4 statements')]
+3.12.3 control K11  REJECTED [('_register', 'S1', '4 statements')]
+3.12.3 control K12  REJECTED [('_unwind_on', 'S2', 'statement 1 binds o.frame in _ANCHORS and _ANCHORS[o.frame] is o'), ('_unwind_on', 'S2', 'statement 1 is not one assignment of _TOOL[0] and _MON[0][i]')]
+3.12.3 control K13  REJECTED [('_register', 'S2', "binds [('get_tool', 0), ('register_callback', 4), ('set_events', 2)]; frozen ['get_tool', 'register_callback']")]
+3.12.3 control K14  REJECTED [('_register', 'S1', '2 statements')]
+3.12.3 control K12b REJECTED [('_unwind_on', 'S4', 'Compare in a pipeline statement')]
+3.13.12 G_HYG steps (revision 8 prototype) on steps8.py: PASS
+3.13.12 control K4   REJECTED [('_register', 'S1', '2 statements')]
+3.13.12 control K5   REJECTED [('_unwind_off', 'S1', '1 statements')]
+3.13.12 control K6   REJECTED [('_unwind_off', 'S3', 'last statement is not `_CONSUME(...)`'), ('_unwind_off', 'S4', 'call of collections.deque'), ('_unwind_off', 'S4', 'attribute collections.deque')]
+3.13.12 control K7   REJECTED [('_unwind_off', 'S1', '3 statements')]
+3.13.12 control K8   NOT REJECTED
+3.13.12 control K9   REJECTED [('_take', 'S1', '3 statements')]
+3.13.12 control K10  REJECTED [('_register', 'S1', '4 statements')]
+3.13.12 control K11  REJECTED [('_register', 'S1', '4 statements')]
+3.13.12 control K12  REJECTED [('_unwind_on', 'S2', 'statement 1 binds o.frame in _ANCHORS and _ANCHORS[o.frame] is o'), ('_unwind_on', 'S2', 'statement 1 is not one assignment of _TOOL[0] and _MON[0][i]')]
+3.13.12 control K13  REJECTED [('_register', 'S2', "binds [('get_tool', 0), ('register_callback', 4), ('set_events', 2)]; frozen ['get_tool', 'register_callback']")]
+3.13.12 control K14  REJECTED [('_register', 'S1', '2 statements')]
+3.13.12 control K12b REJECTED [('_unwind_on', 'S4', 'Compare in a pipeline statement')]

@@ -1,0 +1,8 @@
+3.12.3 E  one-call (floor 50000 samples, 0 clear) {'samples': 50034, 'clear': 0, 'seconds': 2.25, 'result': 'PASS'}
+3.12.3 E  two-statement control (>= 1 clear) {'samples': 492, 'clear': 1, 'seconds': 0.02, 'result': 'PASS'}
+3.12.3 D2 one-call (floor 5000 closes and 5000 interrupts, 0 violations) {'closes': 5000, 'interrupts': 5776, 'violations': 0, 'seconds': 1.65, 'result': 'PASS'}
+3.12.3 D2 Python-call control (>= 1 violation) {'closes': 31, 'interrupts': 18, 'violations': 1, 'seconds': 0.0, 'result': 'PASS'}
+3.13.12 E  one-call (floor 50000 samples, 0 clear) {'samples': 50229, 'clear': 0, 'seconds': 2.21, 'result': 'PASS'}
+3.13.12 E  two-statement control (>= 1 clear) {'samples': 558, 'clear': 3, 'seconds': 0.02, 'result': 'PASS'}
+3.13.12 D2 one-call (floor 5000 closes and 5000 interrupts, 0 violations) {'closes': 5000, 'interrupts': 5682, 'violations': 0, 'seconds': 1.87, 'result': 'PASS'}
+3.13.12 D2 Python-call control (>= 1 violation) {'closes': 5, 'interrupts': 6, 'violations': 1, 'seconds': 0.0, 'result': 'PASS'}

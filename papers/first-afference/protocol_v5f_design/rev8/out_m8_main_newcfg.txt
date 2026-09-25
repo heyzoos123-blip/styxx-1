@@ -1,0 +1,2 @@
+cb2+greenlet: [exit(X), exit(Y)] || open(Y) [cbrep] rev6 F0 I0 X1 W2   2718792 states    131 ends  LOSTNOTE=14  [LOST=26]  (46s)
+cb2+greenlet: [exit(X), exit(Y)] || open(Y) [cbrep] rev7 F0 I0 X1 W2   2742680 states    149 ends  ok  [LOST=26]  (47s)

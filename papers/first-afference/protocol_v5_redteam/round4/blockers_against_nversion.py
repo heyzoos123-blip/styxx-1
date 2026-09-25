@@ -36,6 +36,8 @@ BLOCKERS = {
 VARIANTS = {
     "unstarted-generator-credited-py310-311:throw_in": (
         "verify/unstarted-generator-credited-py310-311/my_repro.py", "throw_in", "-> PASS"),
+    "unstarted-generator-credited-py310-311:close_at_bare_yield": (
+        "verify/unstarted-generator-credited-py310-311/my_repro.py", "close@bare-yield", "-> PASS"),
     "stale-stop-after-mint-of-handle-run:before_exit": (
         "verify/stale-stop-after-mint-of-handle-run/v_repro2.py", "B-entered-inside-task-step", "-> PASS"),
     "stale-stop-after-mint-of-handle-run:cross_thread_job": (

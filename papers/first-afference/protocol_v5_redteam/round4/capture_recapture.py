@@ -8,7 +8,8 @@ Q1 (found by exactly one lens) and Q2 (found by exactly two):
 
     S_chao2 = S_obs + ((m-1)/m) * Q1*(Q1-1) / (2*(Q2+1))      (bias-corrected, m occasions)
 
-The 95% interval uses Chao's (1987) log-normal construction around the undiscovered part f0.
+The 95% interval uses Chao's (1987) log-normal construction around the undiscovered part f0, with the
+bias-corrected estimator's own variance (Chao 2005).
 
 Assumptions, and why the direction of the error is UNKNOWN (a first version of this script called the
 estimate a lower bound; a verified attack on the round-4 finding showed that is not supported):
@@ -47,12 +48,11 @@ def chao2(incidence: list[int], m: int) -> dict:
     a = (m - 1) / m
     f0 = a * q1 * (q1 - 1) / (2 * (q2 + 1))
     est = s_obs + f0
-    # variance of the bias-corrected form (Chao 1987; Chao & Chiu 2016), q2 > 0 branch
-    if q2 > 0:
-        r = q1 / q2
-        var = q2 * (a / 2 * r ** 2 + a ** 2 * r ** 3 + a ** 2 / 4 * r ** 4)
-    else:
-        var = a * q1 * (q1 - 1) / 2 + a ** 2 * q1 * (2 * q1 - 1) ** 2 / 4 - a ** 2 * q1 ** 4 / (4 * est)
+    # Variance of the BIAS-CORRECTED estimator (Chao 2005; the form EstimateS uses). A first version paired the
+    # bias-corrected point estimate with the classic estimator's variance; a verified attack caught the mismatch.
+    var = (a * q1 * (q1 - 1) / (2 * (q2 + 1))
+           + a ** 2 * q1 * (2 * q1 - 1) ** 2 / (4 * (q2 + 1) ** 2)
+           + a ** 2 * q1 ** 2 * q2 * (q1 - 1) ** 2 / (4 * (q2 + 1) ** 4))
     if f0 > 0:
         c = math.exp(1.96 * math.sqrt(math.log(1 + var / f0 ** 2)))
         lo, hi = s_obs + f0 / c, s_obs + f0 * c

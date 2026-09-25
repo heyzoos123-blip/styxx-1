@@ -1,7 +1,7 @@
 {
  "what": "EXPLORATORY: round 4's blocker repros run against the primary and the independent N-version implementation on each available interpreter",
  "generator": "papers/first-afference/protocol_v5_redteam/round4/blockers_against_nversion.py",
- "generator_sha256": "b5cd7cf5b39efdae662068126469d53f0d730b8f7585fba53a814c2ad48532dc",
+ "generator_sha256": "33f34e5529ba4008213ee8e00be0f56ba68b3bb2b727f8f1b6a1e9b0780f44b4",
  "nversion_sha256": "efa9a3ff59d3485545b37340f1bd83bd3e7a94846f5c0ceb622e9647e7946216",
  "primary_sha256": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
  "reproduced_on": {
@@ -93,6 +93,18 @@
     "3.13.12"
    ]
   },
+  "unstarted-generator-credited-py310-311:close_at_bare_yield": {
+   "primary": [
+    "3.10.20",
+    "3.11.15",
+    "3.13.12"
+   ],
+   "nversion": [
+    "3.10.20",
+    "3.11.15",
+    "3.13.12"
+   ]
+  },
   "stale-stop-after-mint-of-handle-run:before_exit": {
    "primary": [
     "3.10.20",
@@ -123,8 +135,8 @@
   }
  },
  "n_blockers": 6,
- "n_variants": 3,
- "n_variants_reproduced_on_nversion": 3,
+ "n_variants": 4,
+ "n_variants_reproduced_on_nversion": 4,
  "n_blockers_reproduced_on_nversion": 6,
  "n_blockers_reproduced_on_primary": 6,
  "rows": {
@@ -132,42 +144,42 @@
    "primary@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_m2qej2em/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_3r3k86yi/rt4_teststubs.py:2)"
    },
    "primary@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_lsi41wxm/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_lbro8l_q/rt4_teststubs.py:2)"
    },
    "primary@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_bfjmzwbc/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_gy_2gnp2/rt4_teststubs.py:2)"
    },
    "primary@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_eh3fi55e/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_95eess6_/rt4_teststubs.py:2)"
    },
    "nversion@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_e67qwoc5/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_usgtniyu/rt4_teststubs.py:2)"
    },
    "nversion@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_6wyi76yf/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_qaw2ajan/rt4_teststubs.py:2)"
    },
    "nversion@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_8loahcqo/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_byjyjx96/rt4_teststubs.py:2)"
    },
    "nversion@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_zmbt76mn/rt4_teststubs.py:2)"
+    "tail": "DING-REPRODUCED: a stub from another module installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and the gate PASSES although the declared body never ran (targets provenance even names /tmp/rt4id_voib4vys/rt4_teststubs.py:2)"
    }
   },
   "cache-wrapper-body-from-writable-wrapped": {
@@ -300,42 +312,42 @@
    "primary@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "ter cycle 1685 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 406 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "primary@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "le \"<frozen importlib._bootstrap>\", line 207, in cb\n  File \"/home/user/styxx-1/papers/first-afference/protocol_v5_redteam/round4/lifecycle/r1/f12_hook_exception_leaves_lock_held.py\", line 82, in handler\n    raise Timeout()\n__main__.Timeout:"
+    "tail": "fter cycle 324 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "primary@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 686 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 824 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "primary@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "after cycle 57 a Timeout raised inside _hook (handler:82 <- _hook:721 <- _open:1041) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 17 a Timeout raised inside _hook (handler:82 <- __exit__:978 <- main:104) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.11.15": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "fter cycle 277 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 249 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "le \"<frozen importlib._bootstrap>\", line 198, in cb\n  File \"/home/user/styxx-1/papers/first-afference/protocol_v5_redteam/round4/lifecycle/r1/f12_hook_exception_leaves_lock_held.py\", line 82, in handler\n    raise Timeout()\n__main__.Timeout:"
+    "tail": "fter cycle 442 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.12.3": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "ter cycle 1211 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "fter cycle 222 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    },
    "nversion@3.13.12": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "after cycle 260 a Timeout raised inside _hook (handler:82 <- _open:1118 <- run:1178) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
+    "tail": "after cycle 61 a Timeout raised inside _hook (handler:82 <- _hook:768 <- _open:1106) left styxx.protocol._LOCK owned by the main thread; a later worker-thread section (cov.run) then blocked for 5 s in _open until the lock was force-released"
    }
   },
   "py310-hook-reverts-closure-writes": {
@@ -347,7 +359,7 @@
    "primary@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "e revert to False: untraced 0, in a section 233; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (52233 lost updates; 233 reverted done-flags); untraced runs lose none"
+    "tail": "e revert to False: untraced 0, in a section 242; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (75699 lost updates; 242 reverted done-flags); untraced runs lose none"
    },
    "primary@3.12.3": {
     "reproduced": false,
@@ -367,7 +379,7 @@
    "nversion@3.10.20": {
     "reproduced": true,
     "how": "reproduced",
-    "tail": "e revert to False: untraced 0, in a section 224; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (44582 lost updates; 224 reverted done-flags); untraced runs lose none"
+    "tail": "e revert to False: untraced 0, in a section 223; verdict PASS\nFINDING-REPRODUCED: on 3.10.20 an open section silently reverts closure variables written by another thread (42727 lost updates; 223 reverted done-flags); untraced runs lose none"
    },
    "nversion@3.12.3": {
     "reproduced": false,
@@ -420,6 +432,48 @@
     "reproduced": true,
     "how": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
     "tail": "throw_in         body_ran=[]                     -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   }
+  },
+  "unstarted-generator-credited-py310-311:close_at_bare_yield": {
+   "primary@3.11.15": {
+    "reproduced": true,
+    "how": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "primary@3.10.20": {
+    "reproduced": true,
+    "how": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "primary@3.12.3": {
+    "reproduced": false,
+    "how": "close@bare-yield scan lines in section=[] -> [V5:NOT_EXERCISED] gate 'G': COVERAGE VI",
+    "tail": "close@bare-yield scan lines in section=[] -> [V5:NOT_EXERCISED] gate 'G': COVERAGE VI"
+   },
+   "primary@3.13.12": {
+    "reproduced": true,
+    "how": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "nversion@3.11.15": {
+    "reproduced": true,
+    "how": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "nversion@3.10.20": {
+    "reproduced": true,
+    "how": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
+   },
+   "nversion@3.12.3": {
+    "reproduced": false,
+    "how": "close@bare-yield scan lines in section=[] -> [V5:NOT_EXERCISED] gate 'G': COVERAGE VI",
+    "tail": "close@bare-yield scan lines in section=[] -> [V5:NOT_EXERCISED] gate 'G': COVERAGE VI"
+   },
+   "nversion@3.13.12": {
+    "reproduced": true,
+    "how": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}",
+    "tail": "close@bare-yield scan lines in section=[] -> PASS {'_v_ugc_mod:scan': 1, '_v_ugc_mod:fetch': 1}"
    }
   },
   "stale-stop-after-mint-of-handle-run:before_exit": {

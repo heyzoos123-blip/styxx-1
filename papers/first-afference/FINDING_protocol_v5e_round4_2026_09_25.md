@@ -181,9 +181,10 @@ weakened-rule mutants, each paired with a witness program.
 ## Three measurements added after round 4 (exploratory, not preregistered)
 
 **The blockers are in the spec, not in one implementation.** Each of the six blocker repros was run against the primary
-and against the independent second implementation. So were 3 routes those repros skip. For blocker 3, throwing into an
-unstarted generator. For blocker 4, the cut failing before the declaring tracer exits, and another thread's job credited
-across the cut. All 6 blockers and all 3 routes reproduce on both implementations, on the same Python versions
+and against the independent second implementation. So were 4 routes those repros skip. For blocker 3: throwing into
+an unstarted generator, and closing one suspended at a bare yield. For blocker 4: the cut failing before the declaring
+tracer exits, and another thread's job credited across the cut. All 6 blockers and all 4 routes reproduce on both
+implementations, on the same Python versions
 (`protocol_v5_redteam/round4/blockers_against_nversion.json`). The two implementations agreed on every exam case and
 every fuzz program, and they share every blocker. As the aux prereg anticipated, this is common-mode failure: both follow
 the spec, including its code sketches. Agreement tested the design against itself. The red team tested it against seven
@@ -191,7 +192,9 @@ lenses of attack.
 
 **An exception at every opcode.** Rounds 3 and 4 found exception-safety failures one bytecode at a time.
 `fault_injection_v5.py` maps those outside the profile hook along the paths of 5 scenarios. In each scenario it raises
-one exception per run at each opcode it reaches in v5's code outside the hook. It then checks the invariants on the
+one exception per run at each opcode it reaches in the coverage-tracer machinery: the code after the
+`# -- v5: the coverage tracer` marker, outside the hook. Earlier v5 code, such as `Experiment._check_coverage`, runs in
+every scenario but is not injected. It then checks the invariants on the
 damaged state, before any repair, and runs one clean trace on top of it. On CPython 3.11, with an Exception subclass,
 10,371 points were run:
 
@@ -212,20 +215,24 @@ hook itself, or code that no scenario runs. That last category includes the site
 
 **On 3.13, a real signal hangs v5e with no hook involved.** The third attack pass on this finding turned up a seventh
 blocker-class failure, and `protocol_v5_redteam/round4/py313_signal_backedge.py` re-checks it on every interpreter. On
-3.13.12, a SIGALRM handler that raises KeyboardInterrupt during tracer exit left the lock held in 4 of 4 trials. It did not
-on 3.10, 3.11 or 3.12 in any trial. The cause is the upstream CPython issue numbered #130279 in its tracker. In a `while`
-loop, the closing jump where signal
-handlers run can fall outside the try body's exception-table range. An exception raised there then escapes without running
-`finally`, or a `with` block's exit: the probe's `finally` was skipped 5 of 5 times on 3.13.12. The interpreter bug is known
-upstream. Its consequence for v5e is new here: on 3.13, an ordinary Ctrl-C or timeout can hang every later trace in the
-process, and the repair must not hold a lock across a loop.
+3.13.12, a SIGALRM handler that raises KeyboardInterrupt during tracer exit is delivered at `__exit__` line 949 (a
+`for` loop whose body ends in an `if`, inside `with _LOCK:`). The lock stayed held against other threads in 4 of 4 trials.
+It did not on 3.10, 3.11 or 3.12 in any trial. The lock is re-entrant, so the interrupted thread can still take it and
+keeps tracing. Every trace on any other thread then hangs, and a single-threaded run hides the damage.
+
+The interpreter behaviour matches the upstream CPython issue numbered #130279 in its tracker. On 3.13.12 the probe's
+`finally` was skipped 5 of 5 times for a `while` condition and 5 of 5 for a `for` body ending in an `if`, and never for a
+plain `for` or a `while True` loop that ends with `break`. The exception-table layout alone does not explain it: 3.12 leaves
+the same closing jump outside the table and still runs `finally`. The difference is where 3.13 delivers a pending signal.
+The interpreter bug is known upstream. Its consequence for a checker like v5e is new here, and the repair must not hold a
+lock, or rely on `finally`, across such a loop.
 
 **How much round 4 left unfound.** Each lens is treated as a sampling occasion over one fixed implementation, and a finding
 reported by several lenses as a recapture. The incidence-based Chao2 estimator then puts the reachable total at 79.0
-distinct confirmed findings (95% interval 66.03 to 112.83), against 58 found: about 73% found, and about 21 unfound
+distinct confirmed findings (95% interval 66.59 to 109.25), against 58 found: about 73% found, and about 21 unfound
 (`protocol_v5_redteam/round4/capture_recapture.json`). The pooled figure mixes implementation findings with exam holes.
 For the implementation findings alone, which decide shipping, 29 were found out of an estimated 43.69, or 66%, with a
-95% interval of 32.44 to 91.71 for the total. The
+95% interval of 33.41 to 77.93 for the total. The
 direction of the error is unknown. Lenses that specialise by region inflate the singletons and push the estimate up, and
 wrong deduplication merges push it down. The estimate puts a rough number on "not dry". A stopping rule built on it still
 has to be defined, with a threshold, and checked on rounds whose totals are known.
@@ -242,4 +249,4 @@ has to be defined, with a threshold, and checked on rounds whose totals are know
   real.
 
 *Frozen before its implementation's first commit, scored by its own tables, attacked before it could be called done, and
-its draft attacked twice before it was certified. It did not ship; the receipts say why.*
+its draft attacked four times before it was certified. It did not ship; the receipts say why.*

@@ -1,19 +1,19 @@
 {
  "what": "does a signal exception at a while-loop back-edge skip finally (CPython #130279), and does it leave v5e's _LOCK held during tracer exit? one row per interpreter",
  "generator": "papers/first-afference/protocol_v5_redteam/round4/py313_signal_backedge.py",
- "generator_sha256": "4c1e595aeecea66bce2d68bdc9e1c125249a6ada4a66273d8a1fe9d64db2f24f",
+ "generator_sha256": "849220084cf056bf530e504bd9dd1e3765fbb3a1ece7583f30fdec11f9fdd309",
  "upstream_issue": "https://github.com/python/cpython/issues/130279",
  "per_version": {
   "3.11.15": {
    "interp": {
-    "finally_ran": [
-     true,
-     true,
-     true,
-     true,
-     true
-    ],
+    "finally_skipped_of_5_by_shape": {
+     "while_cond": 0,
+     "for_if": 0,
+     "for_plain": 0,
+     "while_true_break": 0
+    },
     "n_finally_skipped": 0,
+    "n_shapes_skipping": 0,
     "exception_table": [
      "6-44->90",
      "90-136->136"
@@ -23,86 +23,96 @@
    },
    "v5e": {
     "n_openings": 100000,
-    "exit_seconds": 0.0013,
+    "exit_seconds": 0.0012,
     "trials": [
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:None",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:None",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:None",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:None",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      }
     ],
     "n_interrupted": 4,
-    "n_lock_left_held": 0
+    "n_lock_left_held": 0,
+    "n_same_thread_can_retake": 4
    }
   },
   "3.10.20": {
    "interp": {
-    "finally_ran": [
-     true,
-     true,
-     true,
-     true,
-     true
-    ],
+    "finally_skipped_of_5_by_shape": {
+     "while_cond": 0,
+     "for_if": 0,
+     "for_plain": 0,
+     "while_true_break": 0
+    },
     "n_finally_skipped": 0,
+    "n_shapes_skipping": 0,
     "exception_table": [],
     "jump_backward_offsets": [],
     "jump_backward_outside_table": []
    },
    "v5e": {
     "n_openings": 100000,
-    "exit_seconds": 0.0032,
+    "exit_seconds": 0.0029,
     "trials": [
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      }
     ],
     "n_interrupted": 4,
-    "n_lock_left_held": 0
+    "n_lock_left_held": 0,
+    "n_same_thread_can_retake": 4
    }
   },
   "3.12.3": {
    "interp": {
-    "finally_ran": [
-     true,
-     true,
-     true,
-     true,
-     true
-    ],
+    "finally_skipped_of_5_by_shape": {
+     "while_cond": 0,
+     "for_if": 0,
+     "for_plain": 0,
+     "while_true_break": 0
+    },
     "n_finally_skipped": 0,
+    "n_shapes_skipping": 0,
     "exception_table": [
      "6-40->78",
      "78-116->116"
@@ -116,43 +126,48 @@
    },
    "v5e": {
     "n_openings": 100000,
-    "exit_seconds": 0.002,
+    "exit_seconds": 0.0018,
     "trials": [
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": true
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": true,
+      "same_thread_can_retake": true
      }
     ],
     "n_interrupted": 4,
-    "n_lock_left_held": 0
+    "n_lock_left_held": 0,
+    "n_same_thread_can_retake": 4
    }
   },
   "3.13.12": {
    "interp": {
-    "finally_ran": [
-     false,
-     false,
-     false,
-     false,
-     false
-    ],
+    "finally_skipped_of_5_by_shape": {
+     "while_cond": 5,
+     "for_if": 5,
+     "for_plain": 0,
+     "while_true_break": 0
+    },
     "n_finally_skipped": 5,
+    "n_shapes_skipping": 2,
     "exception_table": [
      "6-44->84",
      "84-122->122"
@@ -166,31 +181,36 @@
    },
    "v5e": {
     "n_openings": 100000,
-    "exit_seconds": 0.0024,
+    "exit_seconds": 0.0026,
     "trials": [
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": false
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": false,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": false
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": false,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": false
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": false,
+      "same_thread_can_retake": true
      },
      {
       "interrupted": true,
-      "at": "h:92",
-      "lock_free_for_other_thread": false
+      "v5e_frame": "__exit__:949",
+      "lock_free_for_other_thread": false,
+      "same_thread_can_retake": true
      }
     ],
     "n_interrupted": 4,
-    "n_lock_left_held": 4
+    "n_lock_left_held": 4,
+    "n_same_thread_can_retake": 4
    }
   }
  },

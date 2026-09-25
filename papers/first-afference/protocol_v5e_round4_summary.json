@@ -225,32 +225,32 @@
    "s_obs": 60,
    "chao2": 81.26,
    "estimated_unfound": 21.26,
-   "ci95_low": 68.27,
-   "ci95_high": 114.61,
+   "ci95_low": 68.81,
+   "ci95_high": 111.27,
    "share_found": 0.7384
   },
   "confirmed_only": {
    "s_obs": 58,
    "chao2": 78.98,
    "estimated_unfound": 20.98,
-   "ci95_low": 66.03,
-   "ci95_high": 112.83,
+   "ci95_low": 66.59,
+   "ci95_high": 109.25,
    "share_found": 0.7344
   },
   "confirmed_module_findings": {
    "s_obs": 29,
    "chao2": 43.69,
    "estimated_unfound": 14.69,
-   "ci95_low": 32.44,
-   "ci95_high": 91.71,
+   "ci95_low": 33.41,
+   "ci95_high": 77.93,
    "share_found": 0.6637
   },
   "confirmed_exam_holes": {
    "s_obs": 29,
    "chao2": 35.92,
    "estimated_unfound": 6.92,
-   "ci95_low": 30.75,
-   "ci95_high": 56.46,
+   "ci95_low": 30.98,
+   "ci95_high": 53.15,
    "share_found": 0.8073
   }
  },
@@ -258,8 +258,8 @@
   "n_blockers": 6,
   "n_reproduced_on_primary": 6,
   "n_reproduced_on_nversion": 6,
-  "n_variant_routes": 3,
-  "n_variant_routes_on_nversion": 3,
+  "n_variant_routes": 4,
+  "n_variant_routes_on_nversion": 4,
   "same_versions_every_blocker": true
  },
  "round_4_surfaced_unverified": 1,

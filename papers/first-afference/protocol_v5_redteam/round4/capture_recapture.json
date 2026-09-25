@@ -1,7 +1,7 @@
 {
  "what": "EXPLORATORY capture-recapture (incidence-based Chao2) over red-team round 4's seven lenses: a rough estimate, bias of unknown direction, of how many distinct findings those lenses left unfound",
  "generator": "papers/first-afference/protocol_v5_redteam/round4/capture_recapture.py",
- "generator_sha256": "6eb0af0d8558ffc3f146ff42f9116b706dd6e41135891eadfd4cb2afccf27bdb",
+ "generator_sha256": "cbeac662aa4e244ba16921600d57390aa9e05bc663419be81ac462b414770bf5",
  "lenses": [
   "attribution",
   "closure-audit",
@@ -26,12 +26,12 @@
   "chao2": 81.26,
   "estimated_unfound": 21.26,
   "ci95": [
-   68.27,
-   114.61
+   68.81,
+   111.27
   ],
   "estimated_unfound_ci95": [
-   8.27,
-   54.61
+   8.81,
+   51.27
   ],
   "share_found": 0.7384
  },
@@ -50,12 +50,12 @@
   "chao2": 78.98,
   "estimated_unfound": 20.98,
   "ci95": [
-   66.03,
-   112.83
+   66.59,
+   109.25
   ],
   "estimated_unfound_ci95": [
-   8.03,
-   54.83
+   8.59,
+   51.25
   ],
   "share_found": 0.7344
  },
@@ -74,12 +74,12 @@
   "chao2": 43.69,
   "estimated_unfound": 14.69,
   "ci95": [
-   32.44,
-   91.71
+   33.41,
+   77.93
   ],
   "estimated_unfound_ci95": [
-   3.44,
-   62.71
+   4.41,
+   48.93
   ],
   "share_found": 0.6637
  },
@@ -96,12 +96,12 @@
   "chao2": 35.92,
   "estimated_unfound": 6.92,
   "ci95": [
-   30.75,
-   56.46
+   30.98,
+   53.15
   ],
   "estimated_unfound_ci95": [
-   1.75,
-   27.46
+   1.98,
+   24.15
   ],
   "share_found": 0.8073
  },

@@ -6,8 +6,11 @@ and the machinery is left half-transitioned. Examples are a lock held for good, 
 never returns to zero, or a minted code object that is never restored. A red team finds such points by
 luck. This script finds all of them, for the scenarios it runs.
 
-Method. The script traces the machinery's own code objects (every function of the v5 region: the
-tracer's methods, target resolution and provenance) with ``sys.settrace`` and per-opcode events. For
+Method. The script traces the machinery's own code objects with ``sys.settrace`` and per-opcode events:
+every function defined after the ``# -- v5: the coverage tracer`` marker (the tracer's methods, target
+resolution, provenance, and the score-time trace validators). v5 code defined before the marker, such as
+``Experiment._check_coverage`` and the gates-block checks in ``Experiment.__init__``, runs in every
+scenario but gets no fault point. For
 each scenario it first runs the scenario twice without injecting: on 3.12+ settrace misses opcode
 events on a code object's first calls in a process, so the first run only warms the instrumentation.
 Then for k = 1, 2, ... it runs the scenario again and raises the injected exception at the k-th

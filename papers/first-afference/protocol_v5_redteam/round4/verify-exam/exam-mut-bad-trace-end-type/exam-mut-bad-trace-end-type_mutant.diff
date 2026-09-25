@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -1131,7 +1131,7 @@
+                 raise GateSpecError(
+                     f"[V5:BAD_TRACE] gate {name!r}: an opening of {s!r} must be a dict with exactly "
+                     f"{sorted(_OPENING_KEYS)}")
+-            if o["end"] not in _ENDS or type(o["end"]) is not str:
++            if o["end"] not in _ENDS:
+                 raise GateSpecError(
+                     f"[V5:BAD_TRACE] gate {name!r}: an opening of {s!r} has end {o['end']!r}")
+             notes = o["notes"]

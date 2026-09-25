@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -1099,7 +1099,7 @@
+         unat: dict = {}
+         for a, b in list(self._uncredited.values()):
+             for k, v in dict(a).items():
+-                disp[k] = disp.get(k, 0) + v
++                disp[k] = v
+             for k, v in dict(b).items():
+                 unat[k] = unat.get(k, 0) + v
+         return {"tracer": _TRACER_ID, "gates_sha256": self._exp.gates_sha256,

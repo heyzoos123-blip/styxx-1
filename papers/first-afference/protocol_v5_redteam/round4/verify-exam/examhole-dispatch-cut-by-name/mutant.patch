@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -738,7 +738,7 @@
+         return
+     found, cut, stop, f = [], False, _STOP, frame.f_back
+     while f is not None:
+-        if f.f_code is stop:
++        if f.f_code.co_name == "_run":
+             cut = True
+             break
+         o = _ANCHORS.get(id(f))

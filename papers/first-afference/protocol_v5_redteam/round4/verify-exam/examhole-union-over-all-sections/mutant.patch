@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -582,7 +582,7 @@
+                 f"[V5:SECTION_ABSENT] gate {name!r}: section {c['section']!r} was never opened -- "
+                 f"nothing the harness ran can be attributed to this gate")
+         union: dict = {}
+-        for o in openings:
++        for o in [o for ops in tr["sections"].values() for o in ops]:
+             for t, n in o["calls"].items():
+                 union[t] = union.get(t, 0) + n
+         missing = [t for t in c["exercises"] if t not in union]

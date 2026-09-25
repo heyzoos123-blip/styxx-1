@@ -1,196 +1,307 @@
 {
-  "round_1": {
-    "instrument": "styxx.protocol v5 (declared harness coverage)",
-    "audited_impl_sha256": "652dd0898570d04e9a4ad92e7fdd04d60e0ed5d5f130a49d060ed55ebda29a35",
-    "audited_exam": "run_protocol_v5.py at 13ae3fed; protocol_v5b_result.json",
-    "date": "2026-09-24",
-    "round": 1,
-    "verdict": "DO_NOT_SHIP -- four blockers in the module, reproduced by the author; the exam's gates count any refusal and cannot see a mutant refusing for the wrong reason",
-    "module_red_team": {
-      "scripts": "protocol_v5_redteam/round1_module/",
-      "blockers": {
-        "B1_shared_code_object": "functions sharing one code object pass for each other: factory closures (check_low/check_high from one _make), and every function behind a decorator without functools.wraps resolves to the same inner code. t01_shared_code.py: 'factory closure: VERDICT PASS' with only check_low called; 'no-wraps decorator: VERDICT PASS' with only entry_a called",
-        "B2_code_equality_not_identity": "calls matched with == on code objects, which ignores co_filename and qualname: a vendored copy in another module, a pinned exec'd copy of styxx.protocol (the pattern run_protocol_v5.py itself uses for v4), and two dataclasses' generated __init__ all satisfy each other. t02_code_equality.py, t03_generated.py",
-        "B3_global_section_slot": "the open section is one process-wide slot: a thread started in A (or outside any section) that calls while B is open credits B; an asyncio task created in A and run during B credits B. t04_thread_leak_section.py, t10_misc.py (a)",
-        "B4_c_profiler_crash": "under cProfile sys.getprofile() is a non-callable Profile object; the hook calls it -> TypeError escapes the harness, and exit reinstalls it so the user's profiler is destroyed. t06_under_cprofile.py"
-      },
-      "defects": {
-        "D1_non_lifo_and_reentry": "tracers exited out of LIFO order, or one tracer entered twice, leave a hook installed and blind the other; re-entry refuses a correct call. t07_state_leaks.py",
-        "D2_resolution_crashes": "a declared module raising RuntimeError or SyntaxError at import, or a __wrapped__ loop, escapes as that exception rather than GateSpecError. t08_crashes.py",
-        "D3_non_string_trace_keys": "coverage_trace.targets with an int/None key crashes score() and check_metrics() with TypeError in sorted(). t08_crashes.py",
-        "D4_undisclosed_overblocking": "threads existing before the trace, _thread-started threads, parallel sections in two threads, and a harness that calls sys.setprofile/cProfile inside a section are all refused or blinded; only child processes were disclosed. t05_false_refusals.py, t10_misc.py (b)"
-      },
-      "nits": {
-        "N1_reserved_keys": "'section' and 'exercises' used as free-text notes scored under v4 and refuse under v5; no committed prereg uses them (G3 honestly 0) but the prereg's 'adds only optional keys' should say they are now reserved",
-        "N2_looseness": "_TARGET_RE uses $ (matches before a trailing newline); Sub.fit resolves through the MRO to Base.fit so Other().fit() satisfies it; recorded code sha256 values are never checked"
-      }
-    },
-    "exam_audit": {
-      "scripts": "protocol_v5_redteam/round1_exam/",
-      "reproduced": "attempt B reproduces exactly: 24/24, 9/9, G4 refused with reachable x12, G1 not refused with order_stat_bar x1, 86 pairable / 0 disagreements / 53 raised, sha 652dd089, PROCEED_TO_RED_TEAM",
-      "false_claim": "commit 13ae3fed says the 53 identically-refused results refuse 'because their preregs predate the gates-block format'. False for 6 of 53: those preregs HAVE gates blocks and both versions refuse with 'metric not present in result' -- hand-scored verdicts the protocol cannot reproduce: closed-model-frontier/handedness_accusations_result.json, handedness_v2_result.json, handedness_v3_result.json, range_sanity_report_ab_result.json, frequency-resonance/efficiency_control_result.json, rhythm-rescue/untied_control_result.json. The verdict is unaffected.",
-      "defects": {
-        "D1_g0_counts_any_refusal": "frac_violation_mutants_refused counts any GateSpecError; with individual checks deleted from protocol.py, undeclared_section_opened, section_non_string, target_builtin, exercises_not_list, exercises_empty and section_absent still refuse for a later reason. With the non-empty check deleted, an empty 'exercises' beside a declaring gate SCORES PASS and no exam mutant can see it. In the committed run every detail string names the intended reason, so the result is truthful; the gate does not require it.",
-        "D2_g2_counts_any_refusal": "p1_retro_case_refused is 1.0 on any GateSpecError: misspelling one declared target ('reachabel') refuses at resolution with the P1 harness never run and G2 still passes",
-        "D3_valid_cases_insensitive": "nested_tracers passes with profiler chaining removed (outer count drops 2->1, unchecked); wraps_decorated passes with inspect.unwrap removed; without unwrap a sibling wraps-decorated function satisfies the declaration and no case covers it",
-        "D4_shared_code_uncovered": "independently confirms module B1",
-        "D5_self_coverage_floor_only": "one genuine case per section plus fabricated results reaches PROCEED; only coverage_trace (a one-line factory) and _check_coverage are declared",
-        "D6_population_overstated": "of 86 'pairable', 47 fail at construction before v5's new code runs; v5 reached score() on 39 and produced verdicts on 33. All 33 match their committed verdicts, so a correctly filtered attempt-A G3 would also have passed -- the outcome does not depend on the G3 rewrite",
-        "D7_attempt_a_undocumented": "no RESULT doc or CHANGELOG entry for attempt A's failure, unlike BC-1/BIN-1; the rename protocol_v5_result.json -> protocol_v5_result_run1.json is unexplained"
-      },
-      "nits": [
-        "code sha256 values in the trace are path-dependent (marshal includes co_filename) and never checked",
-        "retro G1's scored metric comes from the committed receipt, the traced re-run output is discarded",
-        "retro degenerate() uses a fresh rng, so its inputs differ from P1's original run (outcome structurally identical)",
-        "the pinned 'v4' 98a5c368 includes protocol.py changes of 08-23 and 08-26, after v4's own exam"
-      ],
-      "goalpost_assessment": "legitimate by the BIN-1 -> BIN-2 precedent (one gate changed, code under test identical, A's verdict left unedited); the open_set_read justification is true (its runner never imports styxx.protocol, hard-codes prereg_commit, builds gates by hand; its prereg has only a python fence). It brushes the no-weakening rail because the committed-verdict comparison became ungated; mitigated by D6."
-    },
-    "author_reproduction": "B1, B2, B3 and B4 re-run by the author from the red team's scripts before any repair; all four reproduced verbatim."
+ "round_1": {
+  "instrument": "styxx.protocol v5 (declared harness coverage)",
+  "audited_impl_sha256": "652dd0898570d04e9a4ad92e7fdd04d60e0ed5d5f130a49d060ed55ebda29a35",
+  "audited_exam": "run_protocol_v5.py at 13ae3fed; protocol_v5b_result.json",
+  "date": "2026-09-24",
+  "round": 1,
+  "verdict": "DO_NOT_SHIP -- four blockers in the module, reproduced by the author; the exam's gates count any refusal and cannot see a mutant refusing for the wrong reason",
+  "module_red_team": {
+   "scripts": "protocol_v5_redteam/round1_module/",
+   "blockers": {
+    "B1_shared_code_object": "functions sharing one code object pass for each other: factory closures (check_low/check_high from one _make), and every function behind a decorator without functools.wraps resolves to the same inner code. t01_shared_code.py: 'factory closure: VERDICT PASS' with only check_low called; 'no-wraps decorator: VERDICT PASS' with only entry_a called",
+    "B2_code_equality_not_identity": "calls matched with == on code objects, which ignores co_filename and qualname: a vendored copy in another module, a pinned exec'd copy of styxx.protocol (the pattern run_protocol_v5.py itself uses for v4), and two dataclasses' generated __init__ all satisfy each other. t02_code_equality.py, t03_generated.py",
+    "B3_global_section_slot": "the open section is one process-wide slot: a thread started in A (or outside any section) that calls while B is open credits B; an asyncio task created in A and run during B credits B. t04_thread_leak_section.py, t10_misc.py (a)",
+    "B4_c_profiler_crash": "under cProfile sys.getprofile() is a non-callable Profile object; the hook calls it -> TypeError escapes the harness, and exit reinstalls it so the user's profiler is destroyed. t06_under_cprofile.py"
+   },
+   "defects": {
+    "D1_non_lifo_and_reentry": "tracers exited out of LIFO order, or one tracer entered twice, leave a hook installed and blind the other; re-entry refuses a correct call. t07_state_leaks.py",
+    "D2_resolution_crashes": "a declared module raising RuntimeError or SyntaxError at import, or a __wrapped__ loop, escapes as that exception rather than GateSpecError. t08_crashes.py",
+    "D3_non_string_trace_keys": "coverage_trace.targets with an int/None key crashes score() and check_metrics() with TypeError in sorted(). t08_crashes.py",
+    "D4_undisclosed_overblocking": "threads existing before the trace, _thread-started threads, parallel sections in two threads, and a harness that calls sys.setprofile/cProfile inside a section are all refused or blinded; only child processes were disclosed. t05_false_refusals.py, t10_misc.py (b)"
+   },
+   "nits": {
+    "N1_reserved_keys": "'section' and 'exercises' used as free-text notes scored under v4 and refuse under v5; no committed prereg uses them (G3 honestly 0) but the prereg's 'adds only optional keys' should say they are now reserved",
+    "N2_looseness": "_TARGET_RE uses $ (matches before a trailing newline); Sub.fit resolves through the MRO to Base.fit so Other().fit() satisfies it; recorded code sha256 values are never checked"
+   }
   },
-  "round_2": {
-    "date": "2026-09-24",
-    "audited_impl_sha256": "81f6cad270595608ef843d854c20c39548765548c64824dfcd016ed829285cb2",
-    "audited_exam": "run_protocol_v5c.py at 3bdd5a22; protocol_v5c_result.json",
-    "verdict": "NOT SHIPPABLE -- three module blockers; five surviving mutants of named repairs in the exam",
-    "module_red_team": {
-      "scripts": "protocol_v5_redteam/round2_module/ (outputs: output_py311.txt; multi_version_output.txt -- identical on 3.10, 3.11, 3.12, 3.13)",
-      "round1_recheck": "every round-1 blocker closed as tested (SHARED_CODE, identity, THREAD_OUTLIVES, section attribution, FOREIGN_PROFILER, EXIT_ORDER, REENTRY, UNRESOLVED, BAD_TRACE, INHERITED); still open: thread-level hook persists after exit (round-1 t07 d), check_metrics(list) AttributeError (inherited from v4)",
-      "blockers": {
-        "R2_B1_shared_code_checked_once": "holders counted only at tracer construction; a no-wraps decorator applied at runtime (timed(cheap_path)), or a lazily imported plugin using it, is credited as the declared function: 'score_all never called -> VERDICT PASS'. a1_shared_after_entry.py",
-        "R2_B2_concurrent_sections_share_pool": "a pool worker started by section A is attributed to A permanently; B's pooled call is credited to A while both are open -> VERDICT PASS. a4_concurrent_pool_falsepass.py",
-        "R2_B3_thread_hook_persists": "__exit__ restores only the exiting thread's profiler; threads started during the trace keep the inert _Hook for life: fib(22) 8.2x slower in a worker on 3.11. a5_leaks.py"
-      },
-      "defects": {
-        "R2_D1_instance_path": "'fx2_inst:default_model.fit' reaches Base.fit through an instance; Other().fit() -> PASS",
-        "R2_D2_wraps_siblings": "run_fast and run_safe both @functools.wraps(_run); declaring run_fast unwraps to _run, calling only run_safe -> PASS",
-        "R2_D3_undisclosed_overblocking": "run_in_executor/to_thread inside a section, one pool across sequential sections, a pool warmed outside a section, multiprocessing.pool.ThreadPool (terminate without join), two threads sharing a section name",
-        "R2_D4_recursion_in_hook": "a RecursionError raised in the hook makes CPython drop the profiler; the section refuses PROFILER_REPLACED (wrong reason) and the thread hook leaks",
-        "R2_D5_thread_hook_leak_on_error_paths": "EXIT_ORDER and exception exits leave threading's profile hook set to the _Hook",
-        "R2_D6_escapes": "section() exited in another Context raises ValueError from ContextVar.reset; check_metrics(None|[]|'s'|5) AttributeError (v4-inherited)"
-      },
-      "nits": [
-        "SHARED_CODE counts dead-but-uncollected closures (gc timing)",
-        "declaring threading:Thread.start can never be satisfied",
-        "huge-int counts / non-sha target values accepted (provenance only)",
-        "a dict-subclass trace whose .get raises escapes (forged)",
-        "two tracers entered in two threads leave a hook (unlikely)",
-        "record() does not carry section-close refusals",
-        "construction 1.7s for 40 targets on a 3M-object heap"
-      ],
-      "held": [
-        "threading.Timer and Thread subclasses calling base start",
-        "call_later from A firing in B refused",
-        "copy_context() from A run in B refused",
-        "generator created in A resumed in B credited to B (correct)",
-        "grandchild thread after A exited -> after_close[A]",
-        "blind window -> refusal, never miscount",
-        "no finalizer deadlock",
-        "malformed traces refused by score and check_metrics",
-        "3.9 parse + threading._profile_hook fallback (not executed: no 3.9 interpreter)"
-      ]
-    },
-    "exam_mutation_audit": {
-      "scripts": "protocol_v5_redteam/round2_exam/ (mut.py driver, mutants.py, out/*.txt, results.txt, repro.py)",
-      "method": "53 mutants of styxx/protocol.py, each dry-run through run_protocol_v5c.py --smoke --full-battery in a clone",
-      "survivors_blocker_class": {
-        "R06_count_after_close": "counting calls after their section closed survives and FAILS OPEN: an asyncio task created in G and awaited after G closes scores PASS under the mutant; the only closed-section case lands its late call in a gate that never declared the target",
-        "R13b_R13c_non_string_keys": "only targets[1] was tested; a non-string key under sections scores PASS; inside a section it refuses BAD_COUNT (wrong code); a list-valued section crashes score() and check_metrics() with AttributeError",
-        "R13d_same_code_shadow": "the check_metrics case converts a reported BAD_TRACE into a raised one, so a check_metrics that RAISES [V5:BAD_TRACE] passes the case too -- 'reports, never raises' could not fail",
-        "R02b_alias_targets": "no case declares two names for one function (alias = target); removing that SHARED_CODE check refuses NOT_EXERCISED instead (fails closed, wrong code)"
-      },
-      "defects": [
-        "R04a detected only by deadlock: parallel case swallows worker exceptions and Barrier has no timeout, so a scored run would hang",
-        "B4 half tested: wiping the user's C profiler before refusing (R09b) and the threading-side foreign check (R09c) survive; committed result shows leaked_profiler true on the two cProfile cases, masked by _guarded",
-        "re-entering an EXITED tracer (R10b) untested; BAD_COUNT's undeclared-key clause untested (forged undeclared key -> PASS); grandchild thread (R05b) untested",
-        "PROCESS: run_protocol_v5c.py was first committed with the implementation and the scored result -- the spec was frozen, the cases were not"
-      ],
-      "nits": [
-        "non-ASCII target (R14b) untested",
-        "TARGET_SET weakened to subset survives but fails closed",
-        "R01b and 'hook ignores _active' effectively equivalent mutants"
-      ],
-      "verified_true": [
-        "protocol_v5c_result.json reproduces in a fresh clone: 46/46, 14/14, retro exact, 0 crashes, 86/0/33",
-        "impl_sha256 81f6cad2 equals protocol.py at 3bdd5a22 and da9a63ab",
-        "the profile.runcall correction is legitimate: 'Bad return' under any prior Python profiler with no styxx involved; the replacement case is sensitive (removing chaining fails it)",
-        "B1-B4 and D1/D2 repairs each genuinely tested"
-      ]
-    }
+  "exam_audit": {
+   "scripts": "protocol_v5_redteam/round1_exam/",
+   "reproduced": "attempt B reproduces exactly: 24/24, 9/9, G4 refused with reachable x12, G1 not refused with order_stat_bar x1, 86 pairable / 0 disagreements / 53 raised, sha 652dd089, PROCEED_TO_RED_TEAM",
+   "false_claim": "commit 13ae3fed says the 53 identically-refused results refuse 'because their preregs predate the gates-block format'. False for 6 of 53: those preregs HAVE gates blocks and both versions refuse with 'metric not present in result' -- hand-scored verdicts the protocol cannot reproduce: closed-model-frontier/handedness_accusations_result.json, handedness_v2_result.json, handedness_v3_result.json, range_sanity_report_ab_result.json, frequency-resonance/efficiency_control_result.json, rhythm-rescue/untied_control_result.json. The verdict is unaffected.",
+   "defects": {
+    "D1_g0_counts_any_refusal": "frac_violation_mutants_refused counts any GateSpecError; with individual checks deleted from protocol.py, undeclared_section_opened, section_non_string, target_builtin, exercises_not_list, exercises_empty and section_absent still refuse for a later reason. With the non-empty check deleted, an empty 'exercises' beside a declaring gate SCORES PASS and no exam mutant can see it. In the committed run every detail string names the intended reason, so the result is truthful; the gate does not require it.",
+    "D2_g2_counts_any_refusal": "p1_retro_case_refused is 1.0 on any GateSpecError: misspelling one declared target ('reachabel') refuses at resolution with the P1 harness never run and G2 still passes",
+    "D3_valid_cases_insensitive": "nested_tracers passes with profiler chaining removed (outer count drops 2->1, unchecked); wraps_decorated passes with inspect.unwrap removed; without unwrap a sibling wraps-decorated function satisfies the declaration and no case covers it",
+    "D4_shared_code_uncovered": "independently confirms module B1",
+    "D5_self_coverage_floor_only": "one genuine case per section plus fabricated results reaches PROCEED; only coverage_trace (a one-line factory) and _check_coverage are declared",
+    "D6_population_overstated": "of 86 'pairable', 47 fail at construction before v5's new code runs; v5 reached score() on 39 and produced verdicts on 33. All 33 match their committed verdicts, so a correctly filtered attempt-A G3 would also have passed -- the outcome does not depend on the G3 rewrite",
+    "D7_attempt_a_undocumented": "no RESULT doc or CHANGELOG entry for attempt A's failure, unlike BC-1/BIN-1; the rename protocol_v5_result.json -> protocol_v5_result_run1.json is unexplained"
+   },
+   "nits": [
+    "code sha256 values in the trace are path-dependent (marshal includes co_filename) and never checked",
+    "retro G1's scored metric comes from the committed receipt, the traced re-run output is discarded",
+    "retro degenerate() uses a fresh rng, so its inputs differ from P1's original run (outcome structurally identical)",
+    "the pinned 'v4' 98a5c368 includes protocol.py changes of 08-23 and 08-26, after v4's own exam"
+   ],
+   "goalpost_assessment": "legitimate by the BIN-1 -> BIN-2 precedent (one gate changed, code under test identical, A's verdict left unedited); the open_set_read justification is true (its runner never imports styxx.protocol, hard-codes prereg_commit, builds gates by hand; its prereg has only a python fence). It brushes the no-weakening rail because the committed-verdict comparison became ungated; mitigated by D6."
   },
-  "round_3": {
-    "date": "2026-09-24",
-    "audited_impl_sha256": "9a3d3492e5c7 (protocol.py at 1d6958c2)",
-    "audited_exam": "run_protocol_v5d.py, frozen sha ae6ac686 at 342ab9c7; protocol_v5d_result.json",
-    "verdict": "NOT SHIPPABLE -- three new module blockers; five exam-survivor groups against named repairs; and one repair shipped without being declared",
-    "module_red_team": {
-      "scripts": "protocol_v5_redteam/round3_module/ (outputs out_py3{10,11,12,13}.txt; round2_recheck/)",
-      "versions": "3.10.20, 3.11.15, 3.12.3, 3.13.12 -- all findings reproduce on all four unless noted",
-      "round2_recheck": "R2-B1 closed as tested (A1a-d refuse SHARED_CODE); R2-B2 closed for threads, REOPENED via asyncio; R2-B3 closed (worker profile None after exit, 1.0x); D1, D4, D5, D6 closed; D2 closed only in the tested shape; still undisclosed: same section name in two shards (A6b), singledispatch entry point refused (A2c). On 3.12/3.13 cProfile no longer uses sys.setprofile, so the cProfile case traces instead of refusing (harmless).",
-      "blockers": {
-        "R3_B1_factory_products": "declared double = make_mul(2) (lambda x, k=k: x*k); harness calls only make_mul(3)(5) -> VERDICT PASS, no impostors, no close refusals. Frame identity sees globals and closure cells, not defaults; the product is dead by close. t08_factory_products.py",
-        "R3_B2_asyncio_inherits_context": "section A lazily starts consumer TASKS; B's job runs on them while both are open; the tasks copied A's context, so attribution is 'via context' and the thread-only ambiguity rule never applies -> PASS with A credited for f it never called. The v5d sentence 'a context that opened its own section is unaffected' is false: a copied ContextVar opened nothing. t12_asyncio_shared_worker.py",
-        "R3_B3_hook_swallows_async_exceptions": "a SIGALRM handler raising Timeout(Exception) is delivered inside _on_call most of the time and 'except Exception' eats it: timeout lost in 13/20 (3.10), 16/20 (3.11), 10/20 (3.12), 11/20 (3.13); the guarded loop runs its full 5 s in 6/10 trials -- a hang in real use. t03_signal_timeout_swallowed.py, t03b"
-      },
-      "defects": {
-        "R3_D1_wraps_family": "T01a a plain function calling the inner satisfies the @wraps wrapper; T01b class-based update_wrapper siblings pass (FunctionType-only scan); T01c per-call @wraps sibling dead at close passes; T01d reverse over-block of an undecorated function with two @wraps aliases, message names wrappers by the copied qualname",
-        "R3_D2_close_checks_skipped_or_ignored": "a section exiting by exception runs none of the close checks; score() never reads close_refusals, so a battery that catches GateSpecError per item passes (T02a-d)",
-        "R3_D3_finalizer_deadlock": "a cyclic object whose __del__ calls a target, collected while record() holds the non-reentrant lock, deadlocks the hook on 3.10 (gen-0 threshold 18-32) and 3.11 (11-21); none on 3.12/3.13",
-        "R3_D4_close_cost": "gc.collect + full-heap get_referrers per target at every close: 21 ms at 0.1M objects, 117 ms at 1M, 476 ms at 3M; ~8 min of bookkeeping for a 1000-item per-item battery on a 3M heap; undisclosed",
-        "R3_D5_library_daemon_threads": "tqdm's monitor thread started inside a section -> THREAD_OUTLIVES, unjoinable, undisclosed",
-        "R3_D6": "A6b and A2c still undisclosed"
-      },
-      "nits": [
-        "INSTANCE_PATH refuses SimpleNamespace/registry namespaces with a message about class hierarchies; PEP 562 lazy attributes refuse UNRESOLVED",
-        "after SECTION_CONTEXT the opening context keeps the section set forever (later NESTED_SECTION, misleading)",
-        "_hook_failed is sticky across sections and names the wrong section",
-        "Ctrl-C inside the hook drops a chained user profiler (16-18/20 on 3.11/3.13)",
-        "closure targets cost 1-4 us per call for f_locals",
-        "a closure clone with identical cell contents counts -- say so in the stated limit"
-      ],
-      "held": [
-        "frame identity correct for super()/__class__ cells, generator/coroutine resumes, recursive closures, different cell objects",
-        "lazy nonlocal rebinding -> impostor (disclosed)",
-        "self-removing hook safe inside the profile callback on 3.10-3.13",
-        "KeyboardInterrupt reaches the harness, no threading hook left",
-        "no non-GateSpecError escaped any public call",
-        "no deadlock in section() bookkeeping or under default gc thresholds"
-      ]
-    },
-    "exam_mutation_audit": {
-      "scripts": "protocol_v5_redteam/round3_exam/ (mut.py, mut_b.py, mutants_r3.py, mutants_r3b.py, results.txt, out/, probe/, probe_mut.py)",
-      "method": "82 mutants (round 2's 53, 4 re-anchored, plus 29 for round-3 repairs), each through run_protocol_v5d.py --smoke --full-battery",
-      "totals": {
-        "detected": 63,
-        "survived": 19
-      },
-      "survivors_blocker_class": {
-        "N06_wraps_recount_at_close": "FAILS OPEN: a functools.wraps sibling created inside the section, alive past close, called instead of the declared wrapper: current code refuses SHARED_CODE, mutant scores PASS. The only wraps case is built at import time (caught at entry); the only runtime-decoration case uses a no-wraps decorator",
-        "N09_N09b_threading_hook_reset_on_error_paths": "no case checks the threading hook after a PROFILER_REPLACED or EXIT_ORDER exit; _guarded records leaked_profiler for violation cases but never counts it, and four violation cases leak by construction, saturating the signal",
-        "N12abc_N18_HOOK_FAILED": "no violation case expects HOOK_FAILED. The hook-body route IS deterministic: def rec(n): target(); return rec(n+1) inside a section refuses HOOK_FAILED 5/5; under the mutants it refuses PROFILER_REPLACED (the round-2 R2-D4 wrong reason)",
-        "N05_wraps_check_at_entry": "same-code shadow: the close-time recount produces the same SHARED_CODE after the work is spent; the runner truncates detail at 220 chars, removing the 'found at close' suffix",
-        "N04_gc_collect": "no case depends on gc.collect before counting holders: with gc disabled, a dead clone in a reference cycle -> current PASS, mutants refuse SHARED_CODE (over-block)"
-      },
-      "defects": {
-        "D1_undeclared_repair": "round 3 added 'not isinstance(obj, types.FunctionType)' to the NO_CODE check. It is in neither the v5d repair table nor the 1d6958c2 commit message, and no case covers it (O_NO_CODE_b survives). It closes a real hole v5c had: bound_fit = Sub().fit declared, harness calls only Other().fit() -> v5c scored PASS, current refuses NO_CODE, the mutant PASSes again.",
-        "D2_REPORTED_sentinel_checks_nothing": "x2_check_metrics_reports_non_dict_result raises the sentinel whenever check_metrics returns anything; returning {} survives (N13b)",
-        "D3_nits_claimed_taken_untested": "Thread.start declarable (N14) and close_refusals recorded (N15) have no case"
-      },
-      "nits": [
-        "R01b and S_count_ignores_active are effectively equivalent mutants",
-        "342ab9c7 said every surviving exam mutant became a case; O_TARGET_SET_subset_ok (fails closed) did not",
-        "N02b '==' for closure identity survives (fails open only for equal-but-not-identical closure values in a discarded clone)",
-        "rt_check_metrics_non_string_key_reports is still a same-code shadow (the x2 reports() cases cover it)",
-        "the freeze hashes only run_protocol_v5d.py, not run_protocol_v5.py, run_p1.py, power_QUARANTINED.py.txt or p1_result.json (none changed); G_EXAM_FROZEN is self-computed; git proves the freeze COMMIT preceded the implementation COMMIT (20:47:47 vs 20:52:51), not that it preceded the writing"
-      ],
-      "verified_true": [
-        "runner sha ae6ac686 at 342ab9c7, 1d6958c2 and HEAD equals FROZEN_RUNNER_SHA256 and runner_sha256",
-        "342ab9c7 does not touch protocol.py; protocol.py is v5c's 81f6cad2 there; only 1d6958c2 changes it",
-        "the pre-freeze control reproduces exactly (8 violation cases + the thread-hook valid case fail, nothing else)",
-        "a fresh non-smoke run gives 66/66, 16/16, retro exact, 0 crashes, 86/0/33, impl 9a3d3492, verdict PROCEED_TO_RED_TEAM_ROUND_3",
-        "every round-2 exam survivor of blocker and defect class is now detected"
-      ]
-    },
-    "author_note": "The 'undeclared repair' (exam audit D1) is accurate: the FunctionType guard was written during the round-3 implementation and not listed in the v5d repair table or the commit message. It is recorded here and in the RESULT as an undeclared change, not folded in silently."
+  "author_reproduction": "B1, B2, B3 and B4 re-run by the author from the red team's scripts before any repair; all four reproduced verbatim."
+ },
+ "round_2": {
+  "date": "2026-09-24",
+  "audited_impl_sha256": "81f6cad270595608ef843d854c20c39548765548c64824dfcd016ed829285cb2",
+  "audited_exam": "run_protocol_v5c.py at 3bdd5a22; protocol_v5c_result.json",
+  "verdict": "NOT SHIPPABLE -- three module blockers; five surviving mutants of named repairs in the exam",
+  "module_red_team": {
+   "scripts": "protocol_v5_redteam/round2_module/ (outputs: output_py311.txt; multi_version_output.txt -- identical on 3.10, 3.11, 3.12, 3.13)",
+   "round1_recheck": "every round-1 blocker closed as tested (SHARED_CODE, identity, THREAD_OUTLIVES, section attribution, FOREIGN_PROFILER, EXIT_ORDER, REENTRY, UNRESOLVED, BAD_TRACE, INHERITED); still open: thread-level hook persists after exit (round-1 t07 d), check_metrics(list) AttributeError (inherited from v4)",
+   "blockers": {
+    "R2_B1_shared_code_checked_once": "holders counted only at tracer construction; a no-wraps decorator applied at runtime (timed(cheap_path)), or a lazily imported plugin using it, is credited as the declared function: 'score_all never called -> VERDICT PASS'. a1_shared_after_entry.py",
+    "R2_B2_concurrent_sections_share_pool": "a pool worker started by section A is attributed to A permanently; B's pooled call is credited to A while both are open -> VERDICT PASS. a4_concurrent_pool_falsepass.py",
+    "R2_B3_thread_hook_persists": "__exit__ restores only the exiting thread's profiler; threads started during the trace keep the inert _Hook for life: fib(22) 8.2x slower in a worker on 3.11. a5_leaks.py"
+   },
+   "defects": {
+    "R2_D1_instance_path": "'fx2_inst:default_model.fit' reaches Base.fit through an instance; Other().fit() -> PASS",
+    "R2_D2_wraps_siblings": "run_fast and run_safe both @functools.wraps(_run); declaring run_fast unwraps to _run, calling only run_safe -> PASS",
+    "R2_D3_undisclosed_overblocking": "run_in_executor/to_thread inside a section, one pool across sequential sections, a pool warmed outside a section, multiprocessing.pool.ThreadPool (terminate without join), two threads sharing a section name",
+    "R2_D4_recursion_in_hook": "a RecursionError raised in the hook makes CPython drop the profiler; the section refuses PROFILER_REPLACED (wrong reason) and the thread hook leaks",
+    "R2_D5_thread_hook_leak_on_error_paths": "EXIT_ORDER and exception exits leave threading's profile hook set to the _Hook",
+    "R2_D6_escapes": "section() exited in another Context raises ValueError from ContextVar.reset; check_metrics(None|[]|'s'|5) AttributeError (v4-inherited)"
+   },
+   "nits": [
+    "SHARED_CODE counts dead-but-uncollected closures (gc timing)",
+    "declaring threading:Thread.start can never be satisfied",
+    "huge-int counts / non-sha target values accepted (provenance only)",
+    "a dict-subclass trace whose .get raises escapes (forged)",
+    "two tracers entered in two threads leave a hook (unlikely)",
+    "record() does not carry section-close refusals",
+    "construction 1.7s for 40 targets on a 3M-object heap"
+   ],
+   "held": [
+    "threading.Timer and Thread subclasses calling base start",
+    "call_later from A firing in B refused",
+    "copy_context() from A run in B refused",
+    "generator created in A resumed in B credited to B (correct)",
+    "grandchild thread after A exited -> after_close[A]",
+    "blind window -> refusal, never miscount",
+    "no finalizer deadlock",
+    "malformed traces refused by score and check_metrics",
+    "3.9 parse + threading._profile_hook fallback (not executed: no 3.9 interpreter)"
+   ]
+  },
+  "exam_mutation_audit": {
+   "scripts": "protocol_v5_redteam/round2_exam/ (mut.py driver, mutants.py, out/*.txt, results.txt, repro.py)",
+   "method": "53 mutants of styxx/protocol.py, each dry-run through run_protocol_v5c.py --smoke --full-battery in a clone",
+   "survivors_blocker_class": {
+    "R06_count_after_close": "counting calls after their section closed survives and FAILS OPEN: an asyncio task created in G and awaited after G closes scores PASS under the mutant; the only closed-section case lands its late call in a gate that never declared the target",
+    "R13b_R13c_non_string_keys": "only targets[1] was tested; a non-string key under sections scores PASS; inside a section it refuses BAD_COUNT (wrong code); a list-valued section crashes score() and check_metrics() with AttributeError",
+    "R13d_same_code_shadow": "the check_metrics case converts a reported BAD_TRACE into a raised one, so a check_metrics that RAISES [V5:BAD_TRACE] passes the case too -- 'reports, never raises' could not fail",
+    "R02b_alias_targets": "no case declares two names for one function (alias = target); removing that SHARED_CODE check refuses NOT_EXERCISED instead (fails closed, wrong code)"
+   },
+   "defects": [
+    "R04a detected only by deadlock: parallel case swallows worker exceptions and Barrier has no timeout, so a scored run would hang",
+    "B4 half tested: wiping the user's C profiler before refusing (R09b) and the threading-side foreign check (R09c) survive; committed result shows leaked_profiler true on the two cProfile cases, masked by _guarded",
+    "re-entering an EXITED tracer (R10b) untested; BAD_COUNT's undeclared-key clause untested (forged undeclared key -> PASS); grandchild thread (R05b) untested",
+    "PROCESS: run_protocol_v5c.py was first committed with the implementation and the scored result -- the spec was frozen, the cases were not"
+   ],
+   "nits": [
+    "non-ASCII target (R14b) untested",
+    "TARGET_SET weakened to subset survives but fails closed",
+    "R01b and 'hook ignores _active' effectively equivalent mutants"
+   ],
+   "verified_true": [
+    "protocol_v5c_result.json reproduces in a fresh clone: 46/46, 14/14, retro exact, 0 crashes, 86/0/33",
+    "impl_sha256 81f6cad2 equals protocol.py at 3bdd5a22 and da9a63ab",
+    "the profile.runcall correction is legitimate: 'Bad return' under any prior Python profiler with no styxx involved; the replacement case is sensitive (removing chaining fails it)",
+    "B1-B4 and D1/D2 repairs each genuinely tested"
+   ]
   }
+ },
+ "round_3": {
+  "date": "2026-09-24",
+  "audited_impl_sha256": "9a3d3492e5c7 (protocol.py at 1d6958c2)",
+  "audited_exam": "run_protocol_v5d.py, frozen sha ae6ac686 at 342ab9c7; protocol_v5d_result.json",
+  "verdict": "NOT SHIPPABLE -- three new module blockers; five exam-survivor groups against named repairs; and one repair shipped without being declared",
+  "module_red_team": {
+   "scripts": "protocol_v5_redteam/round3_module/ (outputs out_py3{10,11,12,13}.txt; round2_recheck/)",
+   "versions": "3.10.20, 3.11.15, 3.12.3, 3.13.12 -- all findings reproduce on all four unless noted",
+   "round2_recheck": "R2-B1 closed as tested (A1a-d refuse SHARED_CODE); R2-B2 closed for threads, REOPENED via asyncio; R2-B3 closed (worker profile None after exit, 1.0x); D1, D4, D5, D6 closed; D2 closed only in the tested shape; still undisclosed: same section name in two shards (A6b), singledispatch entry point refused (A2c). On 3.12/3.13 cProfile no longer uses sys.setprofile, so the cProfile case traces instead of refusing (harmless).",
+   "blockers": {
+    "R3_B1_factory_products": "declared double = make_mul(2) (lambda x, k=k: x*k); harness calls only make_mul(3)(5) -> VERDICT PASS, no impostors, no close refusals. Frame identity sees globals and closure cells, not defaults; the product is dead by close. t08_factory_products.py",
+    "R3_B2_asyncio_inherits_context": "section A lazily starts consumer TASKS; B's job runs on them while both are open; the tasks copied A's context, so attribution is 'via context' and the thread-only ambiguity rule never applies -> PASS with A credited for f it never called. The v5d sentence 'a context that opened its own section is unaffected' is false: a copied ContextVar opened nothing. t12_asyncio_shared_worker.py",
+    "R3_B3_hook_swallows_async_exceptions": "a SIGALRM handler raising Timeout(Exception) is delivered inside _on_call most of the time and 'except Exception' eats it: timeout lost in 13/20 (3.10), 16/20 (3.11), 10/20 (3.12), 11/20 (3.13); the guarded loop runs its full 5 s in 6/10 trials -- a hang in real use. t03_signal_timeout_swallowed.py, t03b"
+   },
+   "defects": {
+    "R3_D1_wraps_family": "T01a a plain function calling the inner satisfies the @wraps wrapper; T01b class-based update_wrapper siblings pass (FunctionType-only scan); T01c per-call @wraps sibling dead at close passes; T01d reverse over-block of an undecorated function with two @wraps aliases, message names wrappers by the copied qualname",
+    "R3_D2_close_checks_skipped_or_ignored": "a section exiting by exception runs none of the close checks; score() never reads close_refusals, so a battery that catches GateSpecError per item passes (T02a-d)",
+    "R3_D3_finalizer_deadlock": "a cyclic object whose __del__ calls a target, collected while record() holds the non-reentrant lock, deadlocks the hook on 3.10 (gen-0 threshold 18-32) and 3.11 (11-21); none on 3.12/3.13",
+    "R3_D4_close_cost": "gc.collect + full-heap get_referrers per target at every close: 21 ms at 0.1M objects, 117 ms at 1M, 476 ms at 3M; ~8 min of bookkeeping for a 1000-item per-item battery on a 3M heap; undisclosed",
+    "R3_D5_library_daemon_threads": "tqdm's monitor thread started inside a section -> THREAD_OUTLIVES, unjoinable, undisclosed",
+    "R3_D6": "A6b and A2c still undisclosed"
+   },
+   "nits": [
+    "INSTANCE_PATH refuses SimpleNamespace/registry namespaces with a message about class hierarchies; PEP 562 lazy attributes refuse UNRESOLVED",
+    "after SECTION_CONTEXT the opening context keeps the section set forever (later NESTED_SECTION, misleading)",
+    "_hook_failed is sticky across sections and names the wrong section",
+    "Ctrl-C inside the hook drops a chained user profiler (16-18/20 on 3.11/3.13)",
+    "closure targets cost 1-4 us per call for f_locals",
+    "a closure clone with identical cell contents counts -- say so in the stated limit"
+   ],
+   "held": [
+    "frame identity correct for super()/__class__ cells, generator/coroutine resumes, recursive closures, different cell objects",
+    "lazy nonlocal rebinding -> impostor (disclosed)",
+    "self-removing hook safe inside the profile callback on 3.10-3.13",
+    "KeyboardInterrupt reaches the harness, no threading hook left",
+    "no non-GateSpecError escaped any public call",
+    "no deadlock in section() bookkeeping or under default gc thresholds"
+   ]
+  },
+  "exam_mutation_audit": {
+   "scripts": "protocol_v5_redteam/round3_exam/ (mut.py, mut_b.py, mutants_r3.py, mutants_r3b.py, results.txt, out/, probe/, probe_mut.py)",
+   "method": "82 mutants (round 2's 53, 4 re-anchored, plus 29 for round-3 repairs), each through run_protocol_v5d.py --smoke --full-battery",
+   "totals": {
+    "detected": 63,
+    "survived": 19
+   },
+   "survivors_blocker_class": {
+    "N06_wraps_recount_at_close": "FAILS OPEN: a functools.wraps sibling created inside the section, alive past close, called instead of the declared wrapper: current code refuses SHARED_CODE, mutant scores PASS. The only wraps case is built at import time (caught at entry); the only runtime-decoration case uses a no-wraps decorator",
+    "N09_N09b_threading_hook_reset_on_error_paths": "no case checks the threading hook after a PROFILER_REPLACED or EXIT_ORDER exit; _guarded records leaked_profiler for violation cases but never counts it, and four violation cases leak by construction, saturating the signal",
+    "N12abc_N18_HOOK_FAILED": "no violation case expects HOOK_FAILED. The hook-body route IS deterministic: def rec(n): target(); return rec(n+1) inside a section refuses HOOK_FAILED 5/5; under the mutants it refuses PROFILER_REPLACED (the round-2 R2-D4 wrong reason)",
+    "N05_wraps_check_at_entry": "same-code shadow: the close-time recount produces the same SHARED_CODE after the work is spent; the runner truncates detail at 220 chars, removing the 'found at close' suffix",
+    "N04_gc_collect": "no case depends on gc.collect before counting holders: with gc disabled, a dead clone in a reference cycle -> current PASS, mutants refuse SHARED_CODE (over-block)"
+   },
+   "defects": {
+    "D1_undeclared_repair": "round 3 added 'not isinstance(obj, types.FunctionType)' to the NO_CODE check. It is in neither the v5d repair table nor the 1d6958c2 commit message, and no case covers it (O_NO_CODE_b survives). It closes a real hole v5c had: bound_fit = Sub().fit declared, harness calls only Other().fit() -> v5c scored PASS, current refuses NO_CODE, the mutant PASSes again.",
+    "D2_REPORTED_sentinel_checks_nothing": "x2_check_metrics_reports_non_dict_result raises the sentinel whenever check_metrics returns anything; returning {} survives (N13b)",
+    "D3_nits_claimed_taken_untested": "Thread.start declarable (N14) and close_refusals recorded (N15) have no case"
+   },
+   "nits": [
+    "R01b and S_count_ignores_active are effectively equivalent mutants",
+    "342ab9c7 said every surviving exam mutant became a case; O_TARGET_SET_subset_ok (fails closed) did not",
+    "N02b '==' for closure identity survives (fails open only for equal-but-not-identical closure values in a discarded clone)",
+    "rt_check_metrics_non_string_key_reports is still a same-code shadow (the x2 reports() cases cover it)",
+    "the freeze hashes only run_protocol_v5d.py, not run_protocol_v5.py, run_p1.py, power_QUARANTINED.py.txt or p1_result.json (none changed); G_EXAM_FROZEN is self-computed; git proves the freeze COMMIT preceded the implementation COMMIT (20:47:47 vs 20:52:51), not that it preceded the writing"
+   ],
+   "verified_true": [
+    "runner sha ae6ac686 at 342ab9c7, 1d6958c2 and HEAD equals FROZEN_RUNNER_SHA256 and runner_sha256",
+    "342ab9c7 does not touch protocol.py; protocol.py is v5c's 81f6cad2 there; only 1d6958c2 changes it",
+    "the pre-freeze control reproduces exactly (8 violation cases + the thread-hook valid case fail, nothing else)",
+    "a fresh non-smoke run gives 66/66, 16/16, retro exact, 0 crashes, 86/0/33, impl 9a3d3492, verdict PROCEED_TO_RED_TEAM_ROUND_3",
+    "every round-2 exam survivor of blocker and defect class is now detected"
+   ]
+  },
+  "author_note": "The 'undeclared repair' (exam audit D1) is accurate: the FunctionType guard was written during the round-3 implementation and not listed in the v5d repair table or the commit message. It is recorded here and in the RESULT as an undeclared change, not folded in silently."
+ },
+ "round_4": {
+  "date": "2026-09-25",
+  "audited_impl_sha256": "c720250c209b (styxx/protocol.py at 8b805e26, unchanged since)",
+  "audited_exam": "run_protocol_v5e.py, frozen sha ef4b4f66 at 84f5391f; protocol_v5e_result.json (15/15 gates) and protocol_v5e_aux_result.json (10/10 gates)",
+  "verdict": "NOT SHIPPABLE -- 6 confirmed blockers (false PASS, wrong-section credit, a hang, program corruption on 3.10), and 29 confirmed exam holes; the round-1..3 blocker classes held",
+  "method": {
+   "lenses": [
+    "identity",
+    "attribution",
+    "lifecycle",
+    "scoring",
+    "closure-audit",
+    "exam-mutation",
+    "crossversion-spec"
+   ],
+   "n_candidates": 104,
+   "n_after_dedup": 60,
+   "verification": "every non-exam finding: an independent reproducer (blind re-run on 3.10/3.11/3.12/3.13 plus its own minimal repro from the claim alone, told to refute) and an independent scope judge (stated limits, disclosed over-blocking, pinned residuals). Confirmed iff reproduced, wrong per spec, not refuted, and not accurately covered by a stated limit. Every exam hole: an independent verifier rebuilt the mutant, ran the frozen exam against it, and wrote its own witness program separating mutant from original; equivalent mutants refuted.",
+   "workflows": [
+    "wf_64475dcc-ef8 (finders + dedup)",
+    "wf_2afc0838-ea5, wf_ca4cd0f9-a84, wf_420c8e8b-457 (reproducer + scope judge)",
+    "wf_ade5f8e7-750 (exam holes)"
+   ],
+   "scripts": "protocol_v5_redteam/round4/ (finder repros by lens, verify/<key>/, verify-exam/<key>/ with mutant diffs and witnesses)"
+  },
+  "n_confirmed": 58,
+  "n_not_confirmed": 2,
+  "counts_confirmed": {
+   "BLOCKER": 6,
+   "DEFECT": 15,
+   "SPEC_FALSE": 7,
+   "EXAM_HOLE": 29,
+   "NOTE": 1
+  },
+  "blockers": {
+   "pretrace-code-swap-stub-passes-provenance": "A stub installed by pre-trace __code__ assignment passes FOREIGN_DEFINITION and is credited as the declared function [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: In `_defined_in`, a FunctionType link whose `__globals__ is mod_dict` should also have `__code__.co_filename` equal to the module's `__file__` (compared after realpath and normcase). Skip the check when `__file__` is absent or `co_filename` starts with '<'. Then fix the wording of L-STUB and the J1-",
+   "hook-exception-leaves-lock-held": "An exception raised inside _hook during _open's `with _LOCK` exit leaves _LOCK held for good, so other threads hang [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Make sure no profile hook is installed when a C lock method is called, and move the locked work into a helper function. In _open/_close/__enter__/__exit__: save prof = sys.getprofile(), call sys.setprofile(None) before `with _LOCK:`, and call a helper inside the with that does the locked work using ",
+   "cache-wrapper-body-from-writable-wrapped": "The cache-wrapper 'body' is read from the writable __wrapped__, not from the function the C wrapper calls: false PASS and false refusal [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: In the `_resolve_target` cache branch, take the wrapper's real callee as the only FunctionType in `gc.get_referents(obj)` (the C `func` slot). Either use that as F_T, or refuse NOT_A_FUNCTION unless it `is body`. Then fix the spec's step 4, L-CACHE and the \"nothing is unwrapped\" sentence to match. T",
+   "unstarted-generator-credited-py310-311": "A declared generator or coroutine whose body never runs is credited (false PASS) on 3.10/3.11; 3.12 differs again on close-at-yield [3.10.20, 3.11.15, 3.12.3 (throw() sub-case only), 3.13.12 (close-at-bare-yield and throw() sub-cases only); accidental-plausible] | fix sketch: In _hook, do not credit a 'call' for code whose co_flags include CO_GENERATOR, CO_COROUTINE or CO_ASYNC_GENERATOR until the frame shows executed body bytecode. One way: record f_lasti at the 'call', check it at the paired 'return', and credit nothing if it did not advance past the entry or suspensio",
+   "stale-stop-after-mint-of-handle-run": "A tracer that declares asyncio.events:Handle._run leaves _STOP as a dead mint for a surviving tracer; the dispatch cut is lost [3.10.20, 3.11.15, 3.12.3, 3.13.12; contrived] | fix sketch: Make the cut match every Handle._run code object in play, not a single snapshot. At each __enter__, collect by identity the unminted original (m.original when Handle._run is already minted) and the current Handle._run.__code__ (the mint). Keep that set while _ACTIVE > 0, reset it at 0, and test `f.f",
+   "py310-hook-reverts-closure-writes": "On 3.10 an open section corrupts the traced program: cell writes from other threads are reverted, and deleted locals stay alive [3.10.20; accidental-plausible] | fix sketch: No pure-Python profile function avoids the 3.10 call_trampoline. The smallest honest fix is to refuse at __enter__ when sys.version_info < (3, 11), with a recorded open-time code such as UNSUPPORTED_VERSION, and change Versions and Scope to 3.11–3.13, deleting the \"3.9 expected like 3.10\" line. Also"
+  },
+  "spec_false": {
+   "eager-task-child-section-nested-refusal": "With asyncio.eager_task_factory (3.12+), a child task that opens its own run_async section, per the spec's remedy, refuses NESTED_SECTION for the whole trace [3.12.3, 3.13.12; accidental-plausible] -- limit text inaccurate: Over-blocking #4 ('No same-tracer nesting on one stack above the cut', NESTED_SECTION) plus #5 (a swallowed or recorded refusal refuses every declaring gate), r | fix sketch: Disclose it as a limit. Change 'Sections are calls' and over-blocking #1/#4 to say that under eager_task_factory (3.12+), a child task created on the stack of an open opening runs its first synchronous step on that stack. Opening a section in that step therefore counts as same-stack nesting and refu",
+   "gc-freeze-hides-live-clone": "CLONE_ALIVE misses a live same-globals clone after gc.freeze(); the gate PASSES on a clone call only [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Fail closed: in __exit__, when the refcount gate fires, gc.get_referrers finds no FunctionType and gc.get_freeze_count() > 0, subtract the M_T references that visible referrers hold (excluding the _Mint and F_T), and record CLONE_ALIVE if any references are left unexplained. A prototype of this catc",
+   "pep562-message-no-module": "The PEP 562 lazy re-export refusal names a file path, not 'which module to declare' [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: In the FOREIGN_DEFINITION message, follow the own-dict __wrapped__ chain (the same bounded, cycle-detected walk as _defined_in) to its innermost FunctionType or cache body. Then name `inner.__globals__.get(\"__name__\")` + \":\" + `inner.__qualname__` as \"declare this instead\", with the file path kept a",
+   "call-tracing-credits-trace-callback-code": "Over-blocking #14 is false on 3.10/3.12/3.13: code run only inside a trace callback via sys.call_tracing is credited, so the same harness scores differently by version [3.10.20, 3.12.3, 3.13.12, 3.11.15 (only via pdb's debug command, not via plain sys.call_tracing); accidental-plausible] -- limit text inaccurate: Over-blocking #14 (\"Functions executed only inside profile or trace callbacks can never be credited\") is the disclosure that covers this case, but it states the | fix sketch: Disclose it as a limit. Rewrite #14 to say that code a trace callback runs directly is never credited, but code it runs through sys.call_tracing (for example pdb's `debug` command) is credited to the section whose stack it runs on, as under L-RUNTIME. Say this holds on all versions when the callback",
+   "check-metrics-overflow-raises": "check_metrics raises OverflowError (and score escapes with it) on a JSON-loaded huge-int metric; the spec says check_metrics never raises [3.10.20, 3.11.15, 3.12.3, 3.13.12; contrived] | fix sketch: In check_metrics, put the finiteness test in a helper that catches OverflowError (and, for smoke, use `result.get(\"smoke\") is True` or wrap bool() in a try) and report usable False with a \"too large for a float\" note. In score, catch OverflowError around float(_v) and raise GateSpecError. The altern",
+   "two-cache-wrappers-share-one-mint": "Two distinct cache wrappers of one body share one mint; the uncalled one's gate PASSES [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] -- limit text inaccurate: Partly covered. The rule itself is in Resolution step 4 (line 38: \"Then F_T = body. The target is defined as the cached body\"), in step 6 (line 48: \"If two decl | fix sketch: Disclose it as a limit. Widen L-CACHE to say that every execution of the body counts, whatever route reaches it: a direct call, `__wrapped__`, a reference captured before decoration, or a miss in another cache wrapper of the same body. Such wrappers are aliases and share one mint. Qualify the line-7",
+   "interrupted-exit-stays-active": "An exception at __exit__ entry leaves the tracer 'active' (record() says TRACE_ACTIVE, not TRACE_INCOMPLETE), and _ACTIVE never returns to 0 [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] -- limit text inaccurate: Stated limits, \"Interrupted exit. It yields TRACE_INCOMPLETE and may leave minted code installed (equal code)\". Also Mechanism, __exit__: \"If an exception inter | fix sketch: Make `self._state = \"exiting\"` the first statement of __exit__, before `with _LOCK`. That shrinks the window to the entry bytecode and removes the whole lock-wait window. Replace the `_ACTIVE` counter with a set of tracers that every __enter__/__exit__ prunes of members that are no longer active, so"
+  },
+  "defects": {
+   "fork-pool-child-nested-refusal-and-hook": "ProcessPoolExecutor (fork) workers spawned inside a section inherit the section's stack, hook and registries: a job that opens its own section raises NESTED_SECTION in the child, and workers keep the profile hook for life [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Register os.register_at_fork(after_in_child=_forget_in_child), where the handler rebinds _LOCK to a fresh RLock, restores m.fn.__code__ = m.original for each mint, clears _MINTED/_BY_FN/_ANCHORS/_THREADS, sets _ACTIVE=0 and _STOP=None, and removes the hook if it is ours. With that, cov.run in a chil",
+   "pretrace-generator-objects-never-credited": "Generator and coroutine objects created before the trace are never credited, although their whole body runs on the section's stack; no note or count records the loss [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Disclose it as over-blocking. For example, add to #12: 'a generator, coroutine or async-generator object of T created before the trace (or in an earlier trace) keeps T's original code, so its frames are never credited, even when resumed inside a section. Create it inside the trace; its callees are s",
+   "dict-subclass-result-no-trace": "A dict-subclass result (defaultdict/OrderedDict) carrying the exact-dict record() is refused NO_TRACE with the false message 'the result carries no coverage_trace dict' [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: At protocol.py:531, use `isinstance(result, dict)` and keep `dict.get`, so a subclass's own get/__missing__ is never called. Then split the NO_TRACE message: \"no 'coverage_trace' key\" versus \"'coverage_trace' is a <type>, not an exact dict (e.g. loaded with object_pairs_hook)\". Make check_metrics' `",
+   "hook-self-removal-uninstalls-chaining-profiler": "The hook's self-removal uninstalls a user profiler that chains to it [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Guard the self-removal branch of _hook with `if sys.getprofile() is _hook: sys.setprofile(None)`, and say the same in the spec's hook pseudocode. Reword the PROFILER_LOST note to \"may not have been observed\", and extend Over-blocking #6: a profiler that forwards to the hook keeps the section counted",
+   "wraps-over-class-wrapper-overblock": "`@logged @memoize def fit` (a wraps decorator over a class-based decorator) is refused FOREIGN_DEFINITION with no declarable alternative; the walk rule is also unpinned by the exam [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Preferred: let _defined_in step through the own-dict `__wrapped__` of any link (still bounded, cycle-detected, no getattr), which is the reporter's mutant. That adds no false-PASS route beyond L-STUB, because a foreign function stamped with `__wrapped__` is already admitted (R06), and the minted obj",
+   "str-subclass-section-bad-trace": "A str-subclass section name (StrEnum, str-mixin Enum, numpy.str_) is accepted at open and then refused BAD_TRACE on the tracer's own in-process trace [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: At the top of `_CoverageTracer._open` (styxx/protocol.py about line 1021), add `if isinstance(section, str) and type(section) is not str: section = str.__str__(section)` before the checks. Use `str.__str__`, not `str()`, because `str()` of a (str, Enum) member gives 'Sec.G'. With this change all fou",
+   "unhashable-end-typeerror": "An opening whose 'end' is unhashable makes score() and check_metrics() raise TypeError instead of refusing BAD_TRACE [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: In _check_trace_shape (styxx/protocol.py:1134), put the exact-type test before the frozenset lookup: `if type(o[\"end\"]) is not str or o[\"end\"] not in _ENDS:`. I verified this. Every variant now refuses [V5:BAD_TRACE] and check_metrics reports it. The frozen exam still passes 155/155, 35/35 and 11/11",
+   "interrupted-exit-poisons-later-entries": "An exit interrupted between restore and unregister makes every later trace of the target refuse CODE_SWAPPED at entry [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Make __enter__ refuse CODE_SWAPPED only when a live tracer still holds the mint (m.tracers is non-empty). Treat a registered mint with no tracers as stale: unregister it, restoring the original first if fn.__code__ is m.code, then mint again. Also fix the spec sentences at lines 262 and 504, and add",
+   "check-metrics-smoke-masks-refusal": "check_metrics on a smoke result replaces every coverage refusal text with 'smoke run', even when the trace is present and the refusal is NOT_EXERCISED [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: In check_metrics' coverage branch, protocol.py line 429, use \"smoke run\" only when the trace is absent, which mirrors the v3 rule of masking only a missing path. Otherwise report str(e), optionally prefixed with \"smoke run (score(smoke=True) does not read coverage): \". I checked this variant: it pas",
+   "resolution-swallows-signal-exception": "A signal-handler exception during resolution is swallowed and replaced by a false FOREIGN_DEFINITION / NOT_A_FUNCTION refusal [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: At the two sites that only see an exact FunctionType or _CACHE_WRAPPER (`_defined_in` and the cache-body read), read the own dict as plain `object.__getattribute__(cur, \"__dict__\")` with no try, so an asynchronous exception propagates. Keep the try only for the instance step, which the spec requires",
+   "async-exception-in-close-leaks-threads-registry": "A signal-handler exception landing inside _close (after the anchor is dropped) or inside _open (after the count is bumped) permanently leaks a _THREADS count past tracer exit into later tracers [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Make the per-thread bookkeeping idempotent and owned by the opening. Two ways:\n- Keep a set of openings per thread: `st[0].add(o)` in `_open` and `st[0].discard(o)` in `_close` and `__exit__`, each a single C call. `__exit__` discards all of its own openings whatever their `o.frame`, then deletes em",
+   "enter-failure-after-mint-leaks": "__enter__ failing after minting leaves __code__ minted forever, stops later tracers from restoring, and a retried tracer counts x4 with a spurious CODE_SWAPPED [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: 1. Read `asyncio.events.Handle._run.__code__` into a local before taking the lock and minting, so it can fail before anything is touched. 2. Wrap the mint loop and the state change in try/except BaseException. On failure, roll back: remove self from every m.tracers it joined; for each mint that is l",
+   "pep562-fresh-product-false-refusal": "A PEP 562 attribute that returns a fresh function on each access (a deprecation shim) is never credited [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: In _resolve_target's PEP 562 branch, call the module's __getattr__(part) a second time. If the two products are not the same object, refuse at entry, for example with NOT_A_FUNCTION or UNRESOLVED and the message \"module __getattr__ returns a new object on each access; declare the function it forward",
+   "reentry-race-double-entry": "REENTRY is racy: two threads entering one tracer object both get in; counts x4, false CODE_SWAPPED, _ACTIVE leaked [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Make the state check and the state claim atomic. At the top of __enter__, under _LOCK, refuse REENTRY unless _state == \"new\", then set _state = \"entering\". If resolution or minting raises, set it back to \"new\". Step 5 then sets \"active\". Do not hold _LOCK across the imports and the user __getattr__ ",
+   "resolution-isinstance-runs-user-code": "Resolution runs the step object's __getattribute__ via isinstance(); a raw KeyError escapes __enter__ (R1-D2 reopened) [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: In _resolve_target, pick the branch from the real type and never read obj.__class__. Use issubclass(type(obj), types.ModuleType), issubclass(type(obj), type) and type(obj) in (staticmethod, classmethod). Read class internals with type.__getattribute__(obj, \"__dict__\"/\"__mro__\"/\"__qualname__\") rather"
+  },
+  "exam_holes": {
+   "exam-mut-section-decl-clauses": "SECTION_DECL's ASCII clause and non-empty clause can each be deleted and the exam still passes [3.11.15, 3.10.20, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: Add two frozen violation cases, both expecting SECTION_DECL: `section: \"\"`, and a confusable `section: \"sеction\"` with a Cyrillic е. Add a row to the Mutation audit table: \"SECTION_DECL non-empty / ASCII clauses | X07b / X07c\". The runner's sha256 is frozen, so this needs a new exam freeze or prereg",
+   "examhole-clone-alive-single-tracer": "EXAM_HOLE: CLONE_ALIVE checked only by the tracer that releases the mint survives the exam [impact false-pass; accidental-plausible] | kill with: Nested tracers on f whose inner section calls only a same-globals clone of f's minted code, kept alive past the inner exit and dropped before the outer exit, with the inner trace expected to refuse CLONE_ALIVE.",
+   "examhole-clone-called-first-tracer": "EXAM_HOLE: CLONE_CALLED recorded only for the first tracer holding the mint survives the exam [impact false-pass; accidental-plausible] | kill with: Nested tracers on f where FunctionType(f.__code__, {})() runs while both tracers hold the mint (in either tracer's section), with the second-entered (inner) tracer expected to refuse CLONE_CALLED as well as the outer.",
+   "examhole-code-swapped-single-tracer": "EXAM_HOLE: exit-time CODE_SWAPPED checked only by the last holder survives the exam [impact false-pass; accidental-plausible] | kill with: Nested tracers on f whose inner section calls f and then sets f.__code__ to other code, left in place through the inner exit (restored before the outer exit), with the inner trace expected to refuse CODE_SWAPPED.",
+   "examhole-stop-read-before-mint": "EXAM_HOLE: reading _STOP before minting (spec: after) survives the exam [impact false-pass; accidental-plausible] | kill with: A gate that declares asyncio.events:Handle._run and f, traced with cov.run('A', asyncio.run, main()) where main calls f (X73's shape), expected to refuse NOT_EXERCISED with f under uncredited.dispatched; or simply assert P._STOP is asyncio.events.Handle._run.__code__ during the trace.",
+   "examhole-union-over-all-sections": "Exam never checks that a call credited to another gate's section cannot satisfy a gate; a scoring mutant that unions calls over ALL sections passes the full battery and gives a false PASS [impact false-pass; accidental-plausible] | kill with: A two-gate violation case where gate A declares f and gate B declares g, section A runs only g and section B runs f (and g), expecting A to refuse NOT_EXERCISED; add a valid case where two gates both declare f and each section calls f once, expecting union {f:1} per gate, not {f:2}.",
+   "examhole-declared-section-field-never-scored": "No exam case declares a `section` that differs from the gate name; a mutant that ignores the declared section passes, falsely refusing shared-section harnesses and falsely PASSing swapped ones [impact false-refusal; accidental-plausible] | kill with: A valid case with two gates sharing a declared section (G_fast[f] and G_slow[g], both \"section\": \"run\"; one cov.run(\"run\", ...) calls f and g), or one gate whose section differs from its name (\"section\": \"harness\"), expecting PASS with the listed unions; add a cross-named violation case (X[f] with s",
+   "examhole-dispatch-cut-by-name": "The dispatch cut's identity is not pinned: a mutant that cuts at any frame named `_run` passes the exam and falsely refuses harnesses with a `_run` helper [impact false-refusal; accidental-plausible] | kill with: A valid case whose section calls the target through an ordinary harness helper (or method) named `_run` between the cov.run anchor and the target, e.g. cov.run(\"G\", _run, 1) with `def _run(cfg): return f() + cfg`, expecting PASS {f:1}.",
+   "examhole-walk-bound-2-hops": "EXAM_HOLE: a provenance walk cut to 2 hops survives the exam (spec: at most 16) [impact false-refusal; accidental-plausible] | kill with: A valid case declaring a target that sits exactly 16 hops down a foreign functools.wraps chain (paired with X30b's 17), expecting PASS; this pins the bound exactly and kills both range(3) and the off-by-one range(16).",
+   "examhole-class-step-exact-type": "EXAM_HOLE: class step only for type(obj) is type survives the exam (every ABC/Enum/metaclass method refused) [impact false-refusal; accidental-plausible] | kill with: A valid case that declares a method of an abc.ABC subclass (and one of an Enum) and must PASS with {target: 1}, plus a violation case that declares an inherited method of an ABC subclass and must refuse INHERITED.",
+   "examhole-module-step-exact-type": "EXAM_HOLE: module step only for type(obj) is ModuleType survives the exam [impact false-refusal; accidental-plausible] | kill with: A V10 variant whose fixture module sets `sys.modules[__name__].__class__` to a types.ModuleType subclass and serves the target only through PEP 562 __getattr__, which must PASS with {target: 1}. Optionally add an X16 variant whose submodule has a ModuleType-subclass class, which must still refuse IN",
+   "examhole-inherited-direct-base-only": "EXAM_HOLE: INHERITED looked up only in the direct base survives the exam (wrong code for a grandparent method) [impact wrong-code-or-message; accidental-plausible] | kill with: An X14 variant where the declared method comes from a grandparent (Leaf(Mid(Base)).fit) or from the second base of a mixin-first class (Model(LoggingMixin, Base).fit), which must refuse INHERITED rather than UNRESOLVED.",
+   "examhole-cache-body-module-check": "EXAM_HOLE: dropping the vars(mod) clause of the cache-body rule survives the exam [impact false-pass; accidental-plausible] | kill with: An X25c case with a class-held cache wrapper (Scorer.fast = lru_cache(None)(_impl), bare or as a staticmethod) whose body _impl is bound at module level, or a wrapper served only through PEP 562 __getattr__ (holder None) whose body is module-level, which must refuse NOT_A_FUNCTION at entry.",
+   "exam-hole-coverage-on-failing-bar": "EXAM_HOLE: every scored exam case has a passing bar (m=1.0), so a score() mutant that checks coverage only for gates whose bar passed survives and seals FAIL for an unexercised harness [impact false-pass; accidental-plausible] | kill with: A declaring gate whose bar fails (m=0.0), or a kill gate whose table maps G false to PASS, run by a harness that never calls one declared target (and a second run with a swallowed NESTED_SECTION); score() must refuse with [V5:NOT_EXERCISED] (and [V5:NESTED_SECTION]), not return the table's FAIL or P",
+   "exam-hole-score-step-order": "EXAM_HOLE: two score() step-order boundaries are unpinned (a recorded problem vs SECTION_ABSENT; STALE vs BAD_TRACE), so reorder mutants pass and one of them crashes on a malformed trace [impact crash; accidental-plausible] | kill with: Two BAD_TRACE/order cases. First, a valid trace with 'gates_sha256' popped (like X96b but for that key) must refuse [V5:BAD_TRACE], not raise KeyError. Second, a harness that swallows cov.run('G_typo', f) and never opens G's section must refuse [V5:UNDECLARED_SECTION], not [V5:SECTION_ABSENT].",
+   "exam-hole-diagnostic-texts": "EXAM_HOLE: the NOT_EXERCISED bucket labels and every check_metrics coverage property except 'usable False on a non-dict' are unpinned, so three lying mutants pass [impact wrong-code-or-message; accidental-plausible] | kill with: On X72's trace (gather children inside run_async, dispatched {f:2}), assert that the NOT_EXERCISED message contains \"dispatched {'<fx>:f': 2}, unattributed {}\" with each count under its own label. Also assert that check_metrics on that result gives G:exercises usable False and a note starting with [",
+   "exam-mut-stop-cleared-by-inner-exit": "Clearing the dispatch cut _STOP on every exit (not only the last) survives the exam; after a nested tracer exits, jobs another thread submits into A's loop are credited to A [impact false-pass; accidental-plausible] | kill with: Take V15's shape (an inner coverage_trace entered and exited inside an outer one), then run X65's shape in the outer tracer: section A's loop serves another thread's run_coroutine_threadsafe and call_soon_threadsafe jobs, or just cov.run('A', asyncio.run, coro_calling_f()). A must refuse [V5:NOT_EXE",
+   "exam-mut-nested-by-section-name": "NESTED_SECTION widened to other tracers' same-named sections survives the exam; nested tracers whose preregs share a gate name are falsely refused [impact false-refusal; accidental-plausible] | kill with: A V15 variant in which the outer and the inner prereg both name their gate/section 'G', nested on one stack, requiring both to PASS with {f:1}; or any valid case whose own section name equals the enclosing self-trace section.",
+   "exam-mut-restore-over-swapped-code": "Restoring the original __code__ even after CODE_SWAPPED survives the exam; a hot reload made during the trace is silently reverted at exit [impact state-leak; accidental-plausible] | kill with: An X59 variant that checks, after the trace exits and before its own finally restores the code, that mod.f59.__code__ is still mod.u59.__code__ (f59() returns -59): the swap must be left in place.",
+   "exam-mut-close-removes-foreign-profiler": "Last close removing ANY profiler (not only the styxx hook) survives the exam; a profiler the harness starts inside a section is uninstalled [impact state-leak; accidental-plausible] | kill with: On a fresh thread the case owns: cov.run('G', body), where body calls f and then sys.setprofile(prof); after cov.run returns, require sys.getprofile() is prof (and the PROFILER_LOST note).",
+   "exam-mut-exit-removes-foreign-profiler": "Last exit removing ANY profiler survives the exam; the `_ACTIVE == 0` block in __exit__ is never exercised by any case [impact state-leak; accidental-plausible] | kill with: A main-thread case run before the self-trace (like the signal cases), where _ACTIVE can reach 0: a pure-Python profiler is installed on the main thread before `with coverage_trace(exp)`, the section runs on a worker thread, and after the exit the case requires sys.getprofile() is that profiler.",
+   "exam-mut-double-exit-state-leak": "Dropping __exit__'s 'not active -> return' guard survives the exam; a double exit records a false CODE_SWAPPED and drives _ACTIVE to -1, blinding every later tracer [impact state-leak; accidental-plausible] | kill with: A case that exits one tracer twice (an explicit cov.__exit__ on success plus one in a finally), or calls __exit__ in a finally after __enter__ raised UNRESOLVED, expecting PASS {f:1} for that trace and a clean leftover state (_ACTIVE == 0) so a later trace still passes.",
+   "exam-mut-hop-close-drops-closer-hook": "THREAD_HOP close removing the CLOSING thread's hook survives the exam; that thread's own open section goes blind [impact false-refusal; accidental-plausible] | kill with: A V28 variant in which the thread that closes the hopped coroutine section has its own section open: resume section B (opened and suspended on a worker thread) to completion inside section A on the main thread, then call A's target, expecting A {f:1} with no PROFILER_LOST and B's THREAD_HOP note.",
+   "exam-mut-foreign-profiler-first-open-only": "FOREIGN_PROFILER checked only at a thread's first open survives the exam; a later open under a foreign profiler is silently blind [impact wrong-code-or-message; accidental-plausible] | kill with: A case that installs a pure-Python profiler while another opening is open on the same thread (a task on the same asyncio loop, or inside another tracer's open section) and then opens a section, expecting [V5:FOREIGN_PROFILER] raised at that open and recorded.",
+   "exam-mut-target-set-before-stale": "Swapping score steps 4 and 5 (TARGET_SET before STALE_TRACE) survives the exam; an old trace scored against an edited prereg gets the wrong code [impact wrong-code-or-message; accidental-plausible] | kill with: An X109 variant whose second gates block also adds a declared target, so both gates_sha256 and the target set differ, expecting [V5:STALE_TRACE].",
+   "exam-mut-profiler-lost-only-if-none": "PROFILER_LOST weakened to `getprofile() is None` survives the exam; a profiler started inside a section leaves NOT_EXERCISED with no note [impact diagnostic-only; accidental-plausible] | kill with: Inside section G, call f, then install a pure-Python foreign profiler with sys.setprofile(p), then call g, and remove p after the section closes. Expect G's opening notes to contain PROFILER_LOST and the NOT_EXERCISED message for g to name it.",
+   "exam-mut-bad-trace-end-type": "Dropping BAD_TRACE's exact-type clause for `end` survives the exam (hand-built traces only) [impact false-pass; accidental-plausible] | kill with: Take a genuine one-opening trace and replace that opening's end with a str subclass equal to 'returned' (class S(str): pass; S('returned')). Expect BAD_TRACE.",
+   "exam-mut-problems-before-bad-count": "Reading recorded problems before BAD_COUNT survives the exam (hand-edited traces only) [impact wrong-code-or-message; deliberate-only] | kill with: Take a trace that carries a genuine recorded problem (for example a swallowed UNDECLARED_SECTION refusal) and set one calls count to 0. Expect BAD_COUNT, not the problem's code.",
+   "exam-mut-uncredited-last-thread-wins": "record() keeping only the last thread's uncredited count survives the exam (diagnostic only) [impact diagnostic-only; accidental-plausible] | kill with: Two threads, alive at once, each open a section and each dispatch g once through their own event loop's call_soon. Expect record()['uncredited']['dispatched'] == {g: 2}, and the NOT_EXERCISED message for a gate declaring g to print 2."
+  },
+  "notes": {
+   "nested-and-lazy-texts-misstate": "Two emitted texts misstate what happened: NESTED_SECTION of a section inside itself says 'one call would count for two gates'; LAZY_RESULT says 'none of it counts' beside credited calls [3.10.20, 3.11.15, 3.12.3, 3.13.12; accidental-plausible] | fix sketch: (a) Write the NESTED_SECTION reason clause per case. When o.section == section, say something like \"a call there would sit on the stack of two openings of this section\". Otherwise say \"one call would count for both sections\". Or use one neutral clause: \"one call would be on the stack of two openings"
+  },
+  "not_confirmed": {
+   "profile-module-refuses-on-312": "Over-blocking #6 says `profile` refuses only on <=3.11; it refuses FOREIGN_PROFILER on 3.12 and 3.13 too -- NOT CONFIRMED: reproduces=True, wrong_per_spec=False, refuted=True; The behavior reproduces, but it matches the spec. The finding is refuted as SPEC_FALSE and should be downgraded to a wording NOTE.\n\n1) Reporter's repro, run blind on all four interpreters. On 3.10.20 and 3.11.15, both profile.Profile and cProfile.Profile refuse with [V5:FOREIGN_PROFILER]. On 3.12.3 and 3.13.12, profile.Profile still refuses with [V5:FOREIGN_PROFILER] and cProfile.Profile gives PAS",
+   "recursion-walk-quadratic": "The per-hit f_back walk makes a declared recursive target quadratic in recursion depth (2.8-3.9 s at depth 8000 vs ~1-3 ms untraced) -- NOT CONFIRMED: reproduces=True, wrong_per_spec=False, refuted=False; The finding holds at NOTE severity. The code matches the spec, and no spec sentence is false. What the spec leaves unsaid is that a recursive target costs quadratic time in its recursion depth.\n\n(1) Blind repro. a06_recursion_quadratic.py reproduces on all four interpreters. Traced time rises x14.5 to x15.9 for 4x the depth. At depth 8000 it takes 2.70 s (3.11), 3.82 s (3.10), 3.67 s (3.12) and 3."
+  },
+  "closure_audit": "every round-1..3 blocker and its variants rebuilt against v5e: 41/41 held on 3.10.20, 3.11.15, 3.12.3, 3.13.12 (round4/closure-audit/r1/held_battery.py). Reopened only: R1-D2 (resolution runs user code: resolution-isinstance-runs-user-code) and R1-D3/R2-D6 (unhashable 'end': unhashable-end-typeerror), both DEFECT.",
+  "semantic_mutation_census": "27/63 hand-aimed weakened-rule mutants detected by the frozen exam (baseline clean); refusal deletion was 57/57. round4_exam_mutation/semantic_mutation_census.json",
+  "dry": false,
+  "stopping": "The pass stopped after one finder round because its first round already decides the ship question (six confirmed blockers). It is not dry. The next red team runs against the repair, not against v5e."
+ }
 }

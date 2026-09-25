@@ -1,0 +1,11 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ examhole-clone-called-first-tracer/styxx/protocol.py	2026-09-25 04:58:21.385355238 +0000
+@@ -733,7 +733,7 @@
+         return
+     tracers = m.tracers
+     if frame.f_globals is not m.globals:             # a clone under other globals: credits nothing
+-        for t in tracers:
++        for t in tracers[:1]:
+             t._clone_called.add(id(code))
+         return
+     found, cut, stop, f = [], False, _STOP, frame.f_back

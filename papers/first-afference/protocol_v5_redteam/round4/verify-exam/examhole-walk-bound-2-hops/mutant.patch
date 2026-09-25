@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -775,7 +775,7 @@
+     __globals__ IS the declared module's dict. The walk steps only through FunctionType and C cache
+     wrappers, at most 16 hops, cycle-detected, and never calls getattr."""
+     seen, cur = set(), obj
+-    for _ in range(17):
++    for _ in range(3):
+         if cur is None or id(cur) in seen:
+             return False
+         seen.add(id(cur))

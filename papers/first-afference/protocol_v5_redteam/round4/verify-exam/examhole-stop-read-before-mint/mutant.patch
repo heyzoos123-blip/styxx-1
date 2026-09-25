@@ -1,0 +1,18 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ examhole-stop-read-before-mint/styxx/protocol.py	2026-09-25 04:58:21.386102071 +0000
+@@ -910,6 +910,7 @@
+                 f"[V5:REENTRY] this coverage_trace is {self._state}; a tracer is entered exactly "
+                 f"once -- nested use needs a second tracer")
+         import asyncio.events
++        _STOP = asyncio.events.Handle._run.__code__
+         resolved = [(t, *_resolve_target(t)) for t in self._exp.coverage_targets]
+         with _LOCK:
+             for t, _declared, fn in resolved:
+@@ -932,7 +933,6 @@
+                     self._mints.append(m)
+                 self._by_code[id(m.code)] = self._by_code.get(id(m.code), ()) + (t,)
+                 self._prov[t] = f"{m.original.co_filename}:{m.original.co_firstlineno}"
+-            _STOP = asyncio.events.Handle._run.__code__
+             _ACTIVE += 1
+             self._state = "active"
+         return self

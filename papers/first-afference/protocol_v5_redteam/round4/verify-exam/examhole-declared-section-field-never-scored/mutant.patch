@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -576,7 +576,7 @@
+                 raise GateSpecError(f"[V5:CLONE_ALIVE] gate {name!r}: {problems[0]}{listed}")
+             if first == "CODE_SWAPPED":
+                 raise GateSpecError(f"[V5:CODE_SWAPPED] gate {name!r}: {problems[0]}{listed}")
+-        openings = tr["sections"].get(c["section"])
++        openings = tr["sections"].get(name)
+         if openings is None:
+             raise GateSpecError(
+                 f"[V5:SECTION_ABSENT] gate {name!r}: section {c['section']!r} was never opened -- "

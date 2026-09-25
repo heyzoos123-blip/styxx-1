@@ -1,0 +1,11 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/verify-exam/exam-mut-double-exit-state-leak/styxx/protocol.py	2026-09-25 05:11:20.172637701 +0000
+@@ -940,8 +940,6 @@
+     def __exit__(self, exc_type, exc, tb):
+         global _ACTIVE, _STOP
+         with _LOCK:
+-            if self._state != "active":
+-                return False
+             self._state = "exiting"
+             _ACTIVE -= 1
+             self._by_code = {}                       # first: nothing can credit this tracer now

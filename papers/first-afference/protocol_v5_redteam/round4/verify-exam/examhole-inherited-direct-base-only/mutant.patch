@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -824,7 +824,7 @@
+             own = vars(obj)
+             if part in own:
+                 holder, obj = own, own[part]
+-            elif any(part in vars(k) for k in obj.__mro__[1:]):
++            elif any(part in vars(k) for k in obj.__mro__[1:2]):
+                 raise GateSpecError(
+                     f"[V5:INHERITED] declared target {target!r}: {part!r} is inherited by "
+                     f"{obj.__qualname__}, not defined on it -- declare the defining class")

@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -1067,7 +1067,7 @@
+                 o.notes.append(
+                     f"[V5:THREAD_HOP] section {o.section!r} closed on another thread than it "
+                     f"opened on")
+-            elif sys.getprofile() is not _hook or st is None or st[1] != o.epoch:
++            elif sys.getprofile() is None or st is None or st[1] != o.epoch:
+                 o.notes.append(
+                     f"[V5:PROFILER_LOST] section {o.section!r}: the profile hook was replaced or "
+                     f"dropped while it was open; calls after that on this thread were not observed")

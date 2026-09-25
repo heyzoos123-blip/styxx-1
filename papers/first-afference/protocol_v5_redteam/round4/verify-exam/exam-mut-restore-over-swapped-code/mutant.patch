@@ -1,0 +1,11 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/verify-exam/exam-mut-restore-over-swapped-code/styxx/protocol.py	2026-09-25 05:09:54.340423407 +0000
+@@ -969,7 +969,7 @@
+                     self._problems.append(
+                         f"[V5:CODE_SWAPPED] {m.fn.__qualname__}.__code__ was replaced during the "
+                         f"trace -- calls through the replacement were not observed")
+-                elif not m.tracers:
++                if not m.tracers:
+                     m.fn.__code__ = m.original
+                 if not m.tracers:
+                     _MINTED.pop(id(m.code), None)

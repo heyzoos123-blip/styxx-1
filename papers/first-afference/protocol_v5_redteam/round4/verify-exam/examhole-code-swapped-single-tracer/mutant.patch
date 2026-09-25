@@ -1,0 +1,11 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ examhole-code-swapped-single-tracer/styxx/protocol.py	2026-09-25 04:58:21.385759821 +0000
+@@ -965,7 +965,7 @@
+                     f"function's: a function was built from its code object, or it was exec'd")
+             for m in self._mints:
+                 m.tracers = tuple(t for t in m.tracers if t is not self)
+-                if m.fn.__code__ is not m.code:
++                if not m.tracers and m.fn.__code__ is not m.code:
+                     self._problems.append(
+                         f"[V5:CODE_SWAPPED] {m.fn.__qualname__}.__code__ was replaced during the "
+                         f"trace -- calls through the replacement were not observed")

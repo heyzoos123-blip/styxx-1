@@ -1,0 +1,11 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/verify-exam/exam-mut-exit-removes-foreign-profiler/styxx/protocol.py	2026-09-25 05:09:54.341131086 +0000
+@@ -985,7 +985,7 @@
+                             f"-- a clone built during the trace would be credited as it")
+             if _ACTIVE == 0:
+                 _STOP = None
+-                if sys.getprofile() is _hook:
++                if True:
+                     sys.setprofile(None)
+             self._state = "exited"
+         return False

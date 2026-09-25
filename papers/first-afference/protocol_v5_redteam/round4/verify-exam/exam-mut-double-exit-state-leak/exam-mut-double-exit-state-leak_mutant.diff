@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -940,8 +940,6 @@
+     def __exit__(self, exc_type, exc, tb):
+         global _ACTIVE, _STOP
+         with _LOCK:
+-            if self._state != "active":
+-                return False
+             self._state = "exiting"
+             _ACTIVE -= 1
+             self._by_code = {}                       # first: nothing can credit this tracer now

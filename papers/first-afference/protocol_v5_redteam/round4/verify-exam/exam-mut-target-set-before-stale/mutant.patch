@@ -1,0 +1,22 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/verify-exam/exam-mut-target-set-before-stale/styxx/protocol.py	2026-09-25 05:11:20.173664069 +0000
+@@ -540,15 +540,15 @@
+                 f"{dict.get(tr, 'tracer')!r}, not {_TRACER_ID!r} -- this trace was not written by "
+                 f"the machinery that can read it")
+         _check_trace_shape(name, tr)
++        if sorted(tr["targets"]) != self.coverage_targets:
++            raise GateSpecError(
++                f"[V5:TARGET_SET] gate {name!r}: the trace's target set {sorted(tr['targets'])} "
++                f"differs from the declared set {self.coverage_targets}")
+         if tr["gates_sha256"] != self.gates_sha256:
+             raise GateSpecError(
+                 f"[V5:STALE_TRACE] gate {name!r}: the trace was taken against gates block "
+                 f"{str(tr['gates_sha256'])[:12]}..., not this one ({self.gates_sha256[:12]}...). "
+                 f"A trace of a different declaration is not evidence about this one.")
+-        if sorted(tr["targets"]) != self.coverage_targets:
+-            raise GateSpecError(
+-                f"[V5:TARGET_SET] gate {name!r}: the trace's target set {sorted(tr['targets'])} "
+-                f"differs from the declared set {self.coverage_targets}")
+         declared = set(self.coverage_targets)
+         for where, d in _count_dicts(tr):
+             for t, n in d.items():

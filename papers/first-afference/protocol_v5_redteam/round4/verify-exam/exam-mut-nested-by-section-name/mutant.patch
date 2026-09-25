@@ -1,0 +1,11 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ /tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt4/verify-exam/exam-mut-nested-by-section-name/styxx/protocol.py	2026-09-25 05:09:54.339888602 +0000
+@@ -1031,7 +1031,7 @@
+             if f.f_code is stop:
+                 break
+             o = _ANCHORS.get(id(f))
+-            if o is not None and o.frame is f and o.tracer is self:
++            if o is not None and o.frame is f and (o.tracer is self or o.section == section):
+                 self._refuse_recorded(
+                     f"[V5:NESTED_SECTION] section {section!r} opened on the stack of an open "
+                     f"opening of section {o.section!r} of the same trace -- one call would count "

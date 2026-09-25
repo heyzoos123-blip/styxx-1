@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -852,7 +852,7 @@
+             raise GateSpecError(
+                 f"[V5:NOT_A_FUNCTION] declared target {target!r}: a cache wrapper whose body is "
+                 f"{type(body).__name__}, not a Python function")
+-        if any(v is body for v in vars(mod).values()) or (
++        if (
+                 holder is not None and any(v is body for v in holder.values())):
+             raise GateSpecError(
+                 f"[V5:NOT_A_FUNCTION] declared target {target!r}: the cache wrapper's body is also "

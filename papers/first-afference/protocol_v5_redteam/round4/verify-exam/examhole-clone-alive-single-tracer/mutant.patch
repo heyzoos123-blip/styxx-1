@@ -1,0 +1,11 @@
+--- /home/user/styxx-1/styxx/protocol.py	2026-09-25 02:35:49.101149144 +0000
++++ examhole-clone-alive-single-tracer/styxx/protocol.py	2026-09-25 04:58:21.384746477 +0000
+@@ -975,7 +975,7 @@
+                     _MINTED.pop(id(m.code), None)
+                     _BY_FN.pop(id(m.fn), None)
+                 expected = 2 + (m.fn.__code__ is m.code)   # the mint's slot, the argument, the fn
+-                if sys.getrefcount(m.code) - expected > 0:
++                if not m.tracers and sys.getrefcount(m.code) - expected > 0:
+                     holders = [r for r in gc.get_referrers(m.code)
+                                if type(r) is types.FunctionType and r is not m.fn]
+                     if holders:

@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -1075,7 +1075,7 @@
+                 st[0] -= 1
+                 if st[0] <= 0:
+                     del _THREADS[o.tid]
+-                    if tid == o.tid and sys.getprofile() is _hook:
++                    if sys.getprofile() is _hook:
+                         sys.setprofile(None)
+             o.end = end
+ 

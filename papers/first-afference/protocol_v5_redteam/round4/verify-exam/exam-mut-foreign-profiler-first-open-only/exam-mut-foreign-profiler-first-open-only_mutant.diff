@@ -1,0 +1,11 @@
+--- a/styxx/protocol.py
++++ b/styxx/protocol.py
+@@ -1040,7 +1040,7 @@
+         tid = threading.get_ident()
+         with _LOCK:
+             prof = sys.getprofile()
+-            if prof is not None and prof is not _hook:
++            if prof is not None and prof is not _hook and tid not in _THREADS:
+                 self._refuse_recorded(
+                     f"[V5:FOREIGN_PROFILER] section {section!r}: a {type(prof).__name__} is already "
+                     f"installed as this thread's profiler; it is left untouched, and a section "

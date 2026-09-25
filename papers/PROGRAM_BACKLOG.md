@@ -1881,3 +1881,19 @@ is the operator-gated giant step.*
   false-alarm rate near 0.24 per target. A successor needs a fresh split, a named null construction,
   a combining rule and a bar derived from the null's distribution, all frozen in a gates block.
   `disjoint-worlds/CORRECTION_open_set_read_null_2026_09_24.md`.
+- **A sworn receipt names a commit this repository does not have (named 2026-09-25).**
+  `papers/sworn/RESULT_sidecar_battery_2026_09_06.sworn-receipt.json` names `bc74fcd8bc90`, which
+  `git cat-file` cannot find on a full, non-shallow clone. The receipt was last touched upstream
+  by `454cbf66`. `tests/test_receipts_name_reachable_commits.py` fails on pristine upstream
+  `98a5c368` as well, so this predates the v5 work. The likely cause is a rebase or squash that
+  rewrote the commit the receipt swore to. The fix is to re-issue the receipt against a reachable
+  commit, then re-certify and record it as a re-issue. It is not an edit in place, because a
+  receipt is history too.
+- **The mutation gate finds sites by statement shape (named 2026-09-25).** The gate is
+  `first-afference/mutation_gate.py`, frozen with PREREG v5e. It neither mutates nor flags 8 of 9
+  alternative emission shapes probed, among them a raise through a helper that returns the
+  exception, an attribute or alias of `GateSpecError`, an augmented assignment into `problems`,
+  and a code in a keyword argument. For the committed v5e implementation a census finds every
+  coded literal inside a mutated site, so its 57/57 is complete for that file. A successor gate
+  should enumerate sites by coded literal (the census), not by statement shape. Receipt:
+  `first-afference/mutation_gate_blindspots.json`.

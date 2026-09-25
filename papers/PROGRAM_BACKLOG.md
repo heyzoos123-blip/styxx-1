@@ -1897,3 +1897,15 @@ is the operator-gated giant step.*
   coded literal inside a mutated site, so its 57/57 is complete for that file. A successor gate
   should enumerate sites by coded literal (the census), not by statement shape. Receipt:
   `first-afference/mutation_gate_blindspots.json`.
+- **The fault injector's 3.12/3.13 maps are partial (named 2026-09-25).** `first-afference/fault_injection_v5.py`
+  drives injection with `sys.settrace` opcode events. On 3.13 it never reaches `_CoverageTracer._close`, and on 3.12 it
+  injects some opcodes twice, so only its 3.10/3.11 maps are complete for their scenarios. Port it to `sys.monitoring`
+  INSTRUCTION events on 3.12+. It also injects only along its five scenarios' paths, so code no scenario runs has no fault
+  point, including the site of the confirmed round-4 defect resolution-swallows-signal-exception.
+- **On CPython 3.13 a signal at a loop back-edge skips `finally` (named 2026-09-25).** This is upstream issue #130279.
+  `first-afference/protocol_v5_redteam/round4/py313_signal_backedge.json` shows v5e's `_LOCK` left held in 4/4 trials on
+  3.13.12 and 0 on 3.10-3.12. Any styxx code that holds a lock, or relies on `finally`, across a `while` loop is exposed on
+  3.13. v5f must not do that, and other modules should be audited for the same shape.
+- **yappi is silently replaced by the v5e tracer (named 2026-09-25, unverified).** A round-4 scope judge found it while
+  verifying another finding: yappi is not refused at open, and the verdict is still PASS. It is recorded in
+  `protocol_v5_redteam_audit.json` (round_4.surfaced_during_verification); round 5 should verify it.

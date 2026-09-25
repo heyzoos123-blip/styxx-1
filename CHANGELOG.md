@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased] — protocol v5e: every frozen gate passed, the red team still said no
+
+*Not shipped. Nothing in `styxx/` changes behaviour for released versions; v5e lives on the development branch until a
+repair survives its own red team.*
+
+- **Protocol v5e ("mint-and-anchor").** A gate declares `"exercises"` and optionally a `"section"`. `score()` refuses unless
+  each declared function ran on the stack of an opening of that section. Each declared function gets a freshly minted code
+  object, and a section is a call credited only while its opening frame is on the live stack above the asyncio dispatch cut.
+  The redesign came after three rounds had broken v5b, v5c and v5d.
+- **Examined before the red team saw it:**
+  - 15/15 frozen exam gates, including 57/57 in the mutation gate;
+  - 10/10 aux gates: an oracle fuzzer (3000 programs, 0 disagreements), an independent second implementation (0 trace
+    differences) and four CPython versions.
+- **Red-team round 4: NOT SHIPPABLE.** 58 of 60 findings were confirmed by independent reproducers and scope judges.
+  - 6 are blockers, and 29 are exam holes.
+  - Every rebuilt round-1..3 blocker held.
+  - All six blockers reproduce on the second implementation too: they are in the spec.
+  - A seventh blocker-class failure surfaced after the round. On CPython 3.13 an ordinary signal during tracer exit can
+    leave the lock held; the cause is CPython issue #130279.
+- **New instruments** (exploratory):
+  - `papers/first-afference/fault_injection_v5.py`: an exception at every opcode the machinery executes, along five
+    scenarios.
+  - `protocol_v5_redteam/round4/capture_recapture.py`: Chao2 over red-team lenses.
+  - `protocol_v5_redteam/round4_exam_mutation/semantic_mutation_census.py`: the frozen exam caught 27 of 63 weakened-rule mutants.
+  - `protocol_v5_redteam/round4/blockers_against_nversion.py`.
+  - `mutation_gate_blindspots.py`: 8 of 9 alternative emission shapes escape the frozen mutation gate.
+- **Self-corrections, certified:**
+  - `ERRATUM_v5_hand_scored_claim_2026_09_24.md`;
+  - `disjoint-worlds/CORRECTION_open_set_read_null_2026_09_24.md`;
+  - the round-4 finding, whose draft went through three attack passes before certification.
+
 ## [Unreleased] — the gate was pointed at itself, and the measurement is what came back
 
 *Staged for 7.48.0. Cutting the release also requires regenerating `conformance/sworn/` — the

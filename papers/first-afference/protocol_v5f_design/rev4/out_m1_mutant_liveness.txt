@@ -1,0 +1,1 @@
+no_liveness      open(X) || open(X) faults<=1: HANG=4 | open(X) || open(Y) faults<=1: HANG=4

@@ -1,0 +1,13 @@
+no_announce      open(X) || open(X) faults<=0: U1_ff=8, A0_ff=88, FLAG_ff=2 | open(X) || open(Y) faults<=0: U1_ff=8, A0_ff=88, FLAG_ff=2 | open(X) || open(X) || exit(Y) faults<=0: U1_ff=322, A0_ff=3542, FLAG_ff=8
+withdraw_early   open(X) || open(X) faults<=0: U1_ff=8, A0_ff=88, FLAG_ff=2 | open(X) || open(Y) faults<=0: U1_ff=8, A0_ff=88, FLAG_ff=2 | open(X) || open(X) || exit(Y) faults<=0: U1_ff=438, A0_ff=4818, FLAG_ff=12
+no_wait          open(X) || open(X) faults<=0: U1_ff=8, A0_ff=88, FLAG_ff=2 | open(X) || open(Y) faults<=0: U1_ff=8, A0_ff=88, FLAG_ff=2 | open(X) || open(X) || exit(Y) faults<=0: U1_ff=322, A0_ff=3542, FLAG_ff=8
+on_before_wait   open(X) || open(X) faults<=0: U1_ff=12, A0_ff=108, FLAG_ff=4 | open(X) || open(Y) faults<=0: U1_ff=12, A0_ff=108, FLAG_ff=4 | open(X) || open(X) || exit(Y) faults<=0: U1_ff=612, A0_ff=5508, FLAG_ff=28
+detach_nulls     open(X) || exit(X) faults<=0: END_A=2 | rec || open(X), X facade dead faults<=0: END_A=1 | open(X) || exit(X) || exit(X) faults<=0: END_A=4
+no_recheck       open(X) || exit(X) faults<=0: P8_ff=161 | rec || open(X), X facade dead faults<=0: P8_ff=217 | open(X) || exit(X) || exit(X) faults<=0: P8_ff=644
+no_fin_test      rec || open(X), X facade dead faults<=0: P8_ff=217
+no_exiting_test  open(X) || exit(X) faults<=0: P8_ff=117 | open(X) || exit(X) || exit(X) faults<=0: P8_ff=468 | open(X) || exit(X) || rec faults<=0: P8_ff=1433
+anchor_first     open(X) || exit(X) faults<=0: FLAG_ff=5 | close(X) || exit(X) faults<=0: FLAG_ff=4 | rec || open(X), X facade dead faults<=0: FLAG_ff=10
+no_anchor_sweep  open(X) || exit(X) faults<=2: REP_A=33
+no_token_sweep   open(X) || exit(X) faults<=1: REP_CLR=26 | close(X) || exit(X) faults<=1: REP_CLR=12 | open(X) || open(X) faults<=1: REP_CLR=30
+no_liveness      open(X) || open(X) faults<=1: HANG=4 | open(X) || open(Y) faults<=1: HANG=4 | open(X) || open(X) || exit(Y) faults<=1: HANG=22
+sweep_no_credit_stop open(X) || exit(X) || rec faults<=1: U1_f=31

@@ -1,0 +1,2 @@
+3.12.3 added: announce+withdraw 0.563 us, re-check and _CLEARING test 0.044 us; removed: one _unwind_on 0.228 us; net +0.379 us per section
+3.13.12 added: announce+withdraw 0.460 us, re-check and _CLEARING test 0.053 us; removed: one _unwind_on 0.221 us; net +0.292 us per section

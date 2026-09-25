@@ -1,0 +1,26 @@
+3.12.3 X144   spec: {'raised': 'Injected', 'anchors': 0, 'global_events': 0, 'calls': {}, 'MONITOR_LOST': False}
+3.12.3        commit_outside_try: {'raised': 'Injected', 'anchors': 0, 'global_events': 4096, 'calls': {}, 'MONITOR_LOST': False}  -> differs
+3.12.3 X143   spec: {'raised': 'no raise', 'calls': {'A': {'t': 1}}, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.12.3 X143b  spec: {'raised': 'Injected', 'calls': {}, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.12.3        no_armed          : {'raised': 'Injected', 'calls': {}, 'MONITOR_LOST': True, 'anchors': 0, 'global_events': 0}  -> differs
+3.12.3 X143c  spec: {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}
+3.12.3        no_anchor_test    : {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': True}  -> differs
+3.12.3 X143c  spec: {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}
+3.12.3        no_reconcile_off  : {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 4096, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}  -> differs
+3.12.3 X145a  spec: {'calls': {'A': {'t': 1}}, 'MONITOR_LOST': False}
+3.12.3        off_rev2_order    : {'calls': {}, 'MONITOR_LOST': True}  -> differs
+3.12.3 X145b  spec: {'calls': {'B': {'t': 1}}, 'MONITOR_LOST': False}
+3.12.3        step6_rev2        : {'calls': {}, 'MONITOR_LOST': True}  -> differs
+3.13.12 X144   spec: {'raised': 'Injected', 'anchors': 0, 'global_events': 0, 'calls': {}, 'MONITOR_LOST': False}
+3.13.12        commit_outside_try: {'raised': 'Injected', 'anchors': 0, 'global_events': 4096, 'calls': {}, 'MONITOR_LOST': False}  -> differs
+3.13.12 X143   spec: {'raised': 'no raise', 'calls': {'A': {'t': 1}}, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.13.12 X143b  spec: {'raised': 'Injected', 'calls': {}, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.13.12        no_armed          : {'raised': 'Injected', 'calls': {}, 'MONITOR_LOST': True, 'anchors': 0, 'global_events': 0}  -> differs
+3.13.12 X143c  spec: {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}
+3.13.12        no_anchor_test    : {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': True}  -> differs
+3.13.12 X143c  spec: {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}
+3.13.12        no_reconcile_off  : {'raised': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 4096, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}  -> differs
+3.13.12 X145a  spec: {'calls': {'A': {'t': 1}}, 'MONITOR_LOST': False}
+3.13.12        off_rev2_order    : {'calls': {}, 'MONITOR_LOST': True}  -> differs
+3.13.12 X145b  spec: {'calls': {'B': {'t': 1}}, 'MONITOR_LOST': False}
+3.13.12        step6_rev2        : {'calls': {}, 'MONITOR_LOST': True}  -> differs

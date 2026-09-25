@@ -1,0 +1,62 @@
+3.12.3 X146   spec: {'run': 'TRACE_INACTIVE', 'anchors': 0, 'global_events': 0, 'problems': ['[V5:TRACE_INACTIVE]']}
+3.12.3        detach_nulls      : {'run': 'TRACE_INACTIVE', 'anchors': 1, 'global_events': 0, 'problems': ['[V5:TRACE_INACTIVE]']}  -> differs
+3.12.3        no_recheck        : {'run': 1, 'anchors': 0, 'global_events': 0, 'problems': []}  -> differs
+3.12.3 X146b  spec: {'run': 'TRACE_INACTIVE', 'anchors': 0, 'global_events': 0, 'problems': ['[V5:TRACE_INACTIVE]']}
+3.12.3        no_exiting_test   : {'run': 1, 'anchors': 0, 'global_events': 0, 'problems': []}  -> differs
+3.12.3 X146c  spec: {'run': 'TRACE_INACTIVE', 'anchors': 0, 'global_events': 0}
+3.12.3        no_fin_test       : {'run': 1, 'anchors': 0, 'global_events': 0}  -> differs
+3.12.3 X146d  spec: {'run': 'Injected', 'anchors_after_faults': 1, 'anchors_after_next_transaction': 0, 'events_after_next_transaction': 0}
+3.12.3        no_anchor_sweep   : {'run': 'Injected', 'anchors_after_faults': 1, 'anchors_after_next_transaction': 1, 'events_after_next_transaction': 0}  -> differs
+3.12.3 X145a  spec: {'calls': {'t': 1}, 'MONITOR_LOST': False}
+3.12.3        no_announce       : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.12.3        withdraw_early    : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.12.3        no_wait           : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.12.3        on_before_wait    : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.12.3 X145b  spec: {'calls': {'B': {'t': 1}}, 'MONITOR_LOST': False}
+3.12.3        step6_rev2        : {'calls': {}, 'MONITOR_LOST': True}  -> differs
+3.12.3 X143   spec: {'calls': {'t': 1}, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.12.3        no_on             : {'calls': None, 'MONITOR_LOST': True, 'anchors': 0, 'global_events': 0}  -> differs
+3.12.3 X143b  spec: {'run': 'Injected', 'calls': None, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.12.3        no_armed          : {'run': 'Injected', 'calls': None, 'MONITOR_LOST': True, 'anchors': 0, 'global_events': 0}  -> differs
+3.12.3 X143c  spec: {'run': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}
+3.12.3        no_anchor_test    : {'run': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': True}  -> differs
+3.12.3        no_reconcile_off  : {'run': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 4096, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}  -> differs
+3.12.3 X144   spec: {'run': 'Injected', 'anchors': 0, 'global_events': 0, 'calls': {}, 'MONITOR_LOST': False}
+3.12.3        commit_outside_try: {'run': 'Injected', 'anchors': 0, 'global_events': 4096, 'calls': {}, 'MONITOR_LOST': False}  -> differs
+3.12.3 X148   spec: {'calls': {'f': 1}, 'MONITOR_LOST': False}
+3.12.3        anchor_first      : {'calls': {'f': 1}, 'MONITOR_LOST': True}  -> differs
+3.12.3 X149   spec: {'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'A_open_under_1s': True, 'calls': {'t': 1}, 'clearing_after_A': 0}
+3.12.3        no_liveness       : {'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': 'MACHINERY_BUSY', 'A_open_under_1s': False, 'calls': None, 'clearing_after_A': 1}  -> differs
+3.12.3 X149b  spec: {'clearing_after_fault': 1, 'clearing_after_transaction': 0}
+3.12.3        no_token_sweep    : {'clearing_after_fault': 1, 'clearing_after_transaction': 1}  -> differs
+3.13.12 X146   spec: {'run': 'TRACE_INACTIVE', 'anchors': 0, 'global_events': 0, 'problems': ['[V5:TRACE_INACTIVE]']}
+3.13.12        detach_nulls      : {'run': 'TRACE_INACTIVE', 'anchors': 1, 'global_events': 0, 'problems': ['[V5:TRACE_INACTIVE]']}  -> differs
+3.13.12        no_recheck        : {'run': 1, 'anchors': 0, 'global_events': 0, 'problems': []}  -> differs
+3.13.12 X146b  spec: {'run': 'TRACE_INACTIVE', 'anchors': 0, 'global_events': 0, 'problems': ['[V5:TRACE_INACTIVE]']}
+3.13.12        no_exiting_test   : {'run': 1, 'anchors': 0, 'global_events': 0, 'problems': []}  -> differs
+3.13.12 X146c  spec: {'run': 'TRACE_INACTIVE', 'anchors': 0, 'global_events': 0}
+3.13.12        no_fin_test       : {'run': 1, 'anchors': 0, 'global_events': 0}  -> differs
+3.13.12 X146d  spec: {'run': 'Injected', 'anchors_after_faults': 1, 'anchors_after_next_transaction': 0, 'events_after_next_transaction': 0}
+3.13.12        no_anchor_sweep   : {'run': 'Injected', 'anchors_after_faults': 1, 'anchors_after_next_transaction': 1, 'events_after_next_transaction': 0}  -> differs
+3.13.12 X145a  spec: {'calls': {'t': 1}, 'MONITOR_LOST': False}
+3.13.12        no_announce       : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.13.12        withdraw_early    : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.13.12        no_wait           : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.13.12        on_before_wait    : {'calls': None, 'MONITOR_LOST': True}  -> differs
+3.13.12 X145b  spec: {'calls': {'B': {'t': 1}}, 'MONITOR_LOST': False}
+3.13.12        step6_rev2        : {'calls': {}, 'MONITOR_LOST': True}  -> differs
+3.13.12 X143   spec: {'calls': {'t': 1}, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.13.12        no_on             : {'calls': None, 'MONITOR_LOST': True, 'anchors': 0, 'global_events': 0}  -> differs
+3.13.12 X143b  spec: {'run': 'Injected', 'calls': None, 'MONITOR_LOST': False, 'anchors': 0, 'global_events': 0}
+3.13.12        no_armed          : {'run': 'Injected', 'calls': None, 'MONITOR_LOST': True, 'anchors': 0, 'global_events': 0}  -> differs
+3.13.12 X143c  spec: {'run': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}
+3.13.12        no_anchor_test    : {'run': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 0, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': True}  -> differs
+3.13.12        no_reconcile_off  : {'run': 'Injected', 'events_after_fault': 4096, 'events_after_transaction': 4096, 'calls': {'A': {'f': 1}}, 'MONITOR_LOST': False}  -> differs
+3.13.12 X144   spec: {'run': 'Injected', 'anchors': 0, 'global_events': 0, 'calls': {}, 'MONITOR_LOST': False}
+3.13.12        commit_outside_try: {'run': 'Injected', 'anchors': 0, 'global_events': 4096, 'calls': {}, 'MONITOR_LOST': False}  -> differs
+3.13.12 X148   spec: {'calls': {'f': 1}, 'MONITOR_LOST': False}
+3.13.12        anchor_first      : {'calls': {'f': 1}, 'MONITOR_LOST': True}  -> differs
+3.13.12 X149   spec: {'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': None, 'A_open_under_1s': True, 'calls': {'t': 1}, 'clearing_after_A': 0}
+3.13.12        no_liveness       : {'closer': 'Injected', 'clearing_after_fault': 1, 'run_A': 'MACHINERY_BUSY', 'A_open_under_1s': False, 'calls': None, 'clearing_after_A': 1}  -> differs
+3.13.12 X149b  spec: {'clearing_after_fault': 1, 'clearing_after_transaction': 0}
+3.13.12        no_token_sweep    : {'clearing_after_fault': 1, 'clearing_after_transaction': 1}  -> differs

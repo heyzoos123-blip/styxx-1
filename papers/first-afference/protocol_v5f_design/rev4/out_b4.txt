@@ -1,0 +1,4 @@
+3.12.3 per section (open, commit, close, clear): rev 3 7.97 us, rev 4 9.06 us (+1.09 us)
+3.13.12 per section (open, commit, close, clear): rev 3 6.30 us, rev 4 7.73 us (+1.43 us)
+3.12.3 per section (open, commit, close, clear): rev 3 7.46 us, rev 4 9.71 us (+2.25 us)
+3.13.12 per section (open, commit, close, clear): rev 3 6.47 us, rev 4 7.81 us (+1.35 us)

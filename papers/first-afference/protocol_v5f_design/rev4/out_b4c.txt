@@ -1,0 +1,4 @@
+3.12.3 profiler on every thread: False sections 14859, counted 14859, MONITOR_LOST False | waits 27 (0.18% of opens), total 18.5 ms, longest 3.243 ms
+3.12.3 profiler on every thread: True  sections 13617, counted 13617, MONITOR_LOST False | waits 112 (0.82% of opens), total 68.7 ms, longest 1.978 ms
+3.13.12 profiler on every thread: False sections 16147, counted 16147, MONITOR_LOST False | waits 44 (0.27% of opens), total 30.7 ms, longest 2.169 ms
+3.13.12 profiler on every thread: True  sections 14071, counted 14071, MONITOR_LOST False | waits 98 (0.70% of opens), total 53.5 ms, longest 2.094 ms

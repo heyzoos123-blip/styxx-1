@@ -1,0 +1,419 @@
+{
+  "generator": "papers/first-afference/mutation_gate.py",
+  "generator_sha256": "bd7769125fe836c7df6d031f1b6dbe189fc52f87158b067ac4aee23781546e72",
+  "runner": "run_protocol_v5e.py",
+  "runner_sha256": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+  "impl_sha256": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
+  "baseline_clean": true,
+  "baseline": {
+    "detected": false,
+    "how": "exam passed: SURVIVED"
+  },
+  "n_refusal_sites": 57,
+  "n_mutants_detected": 57,
+  "frac_refusal_mutants_detected": 1.0,
+  "n_hygiene_violations": 0,
+  "hygiene_violations": [],
+  "survivors": [],
+  "mutants": [
+    {
+      "line": 302,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X06']; 1 crashes"
+    },
+    {
+      "line": 307,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X01', 'X02b']"
+    },
+    {
+      "line": 312,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X03', 'X04']"
+    },
+    {
+      "line": 316,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X05']"
+    },
+    {
+      "line": 320,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X07']"
+    },
+    {
+      "line": 533,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X117', 'X93', 'X93b', 'X94']; 3 crashes"
+    },
+    {
+      "line": 538,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X95']"
+    },
+    {
+      "line": 544,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X109']"
+    },
+    {
+      "line": 549,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X110', 'X110b']"
+    },
+    {
+      "line": 556,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X111', 'X112', 'X113', 'X114', 'X115', 'X115b']"
+    },
+    {
+      "line": 564,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:REENTRY] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X32', 'X32b']"
+    },
+    {
+      "line": 566,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:TRACE_INACTIVE] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X79', 'X79c']"
+    },
+    {
+      "line": 568,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:UNDECLARED_SECTION] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X78', 'X78b', 'X78c', 'X78d']"
+    },
+    {
+      "line": 570,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:NESTED_SECTION] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X76', 'X77', 'X80b']"
+    },
+    {
+      "line": 572,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:FOREIGN_PROFILER] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X80', 'X81']"
+    },
+    {
+      "line": 574,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:CLONE_CALLED] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X55', 'X55b', 'X55c', 'X56']"
+    },
+    {
+      "line": 576,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:CLONE_ALIVE] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X57', 'X58']"
+    },
+    {
+      "line": 578,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:CODE_SWAPPED] gate {name!r}: {problems[0]}{listed}\")",
+      "detected": true,
+      "how": "violation cases ['X59', 'X59b']"
+    },
+    {
+      "line": 581,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X116']; 1 crashes"
+    },
+    {
+      "line": 596,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X118', 'X40', 'X41', 'X42', 'X43', 'X44']; P1 retro not exact; 35 crashes"
+    },
+    {
+      "line": 799,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X10', 'X11']; 2 crashes"
+    },
+    {
+      "line": 806,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X16']"
+    },
+    {
+      "line": 816,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X13']"
+    },
+    {
+      "line": 820,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X12', 'X33']"
+    },
+    {
+      "line": 828,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X14']"
+    },
+    {
+      "line": 832,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X12b']"
+    },
+    {
+      "line": 838,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X15', 'X17']; 2 crashes"
+    },
+    {
+      "line": 852,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X24']; 1 crashes"
+    },
+    {
+      "line": 857,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X25', 'X25b']"
+    },
+    {
+      "line": 862,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X18', 'X19', 'X20', 'X21', 'X22', 'X23']; 6 crashes"
+    },
+    {
+      "line": 868,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X26', 'X27', 'X28', 'X29', 'X30', 'X30b']"
+    },
+    {
+      "line": 883,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X08']"
+    },
+    {
+      "line": 909,
+      "kind": "refusal_call",
+      "statement": "self._refuse_recorded(",
+      "detected": true,
+      "how": "violation cases ['X32', 'X32b']; valid cases ['V34']"
+    },
+    {
+      "line": 918,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X31', 'X31b']"
+    },
+    {
+      "line": 950,
+      "kind": "refusal_call",
+      "statement": "o.notes.append(",
+      "detected": true,
+      "how": "violation cases ['X71']; valid cases ['V29']"
+    },
+    {
+      "line": 963,
+      "kind": "refusal_call",
+      "statement": "self._problems.append(",
+      "detected": true,
+      "how": "violation cases ['X55', 'X55b', 'X55c', 'X56', 'X78b']"
+    },
+    {
+      "line": 969,
+      "kind": "refusal_call",
+      "statement": "self._problems.append(",
+      "detected": true,
+      "how": "violation cases ['X59', 'X59b']"
+    },
+    {
+      "line": 982,
+      "kind": "refusal_call",
+      "statement": "self._problems.append(",
+      "detected": true,
+      "how": "violation cases ['X57', 'X58']"
+    },
+    {
+      "line": 1005,
+      "kind": "refusal_call",
+      "statement": "o.notes.append(",
+      "detected": true,
+      "how": "violation cases ['X74', 'X74b', 'X74c']"
+    },
+    {
+      "line": 1023,
+      "kind": "refusal_call",
+      "statement": "self._refuse_recorded(",
+      "detected": true,
+      "how": "violation cases ['X79', 'X79b', 'X79c']"
+    },
+    {
+      "line": 1026,
+      "kind": "refusal_call",
+      "statement": "self._refuse_recorded(",
+      "detected": true,
+      "how": "violation cases ['X78', 'X78b', 'X78c', 'X78d']"
+    },
+    {
+      "line": 1035,
+      "kind": "refusal_call",
+      "statement": "self._refuse_recorded(",
+      "detected": true,
+      "how": "violation cases ['X76', 'X77', 'X80b']"
+    },
+    {
+      "line": 1044,
+      "kind": "refusal_call",
+      "statement": "self._refuse_recorded(",
+      "detected": true,
+      "how": "violation cases ['X80', 'X81']"
+    },
+    {
+      "line": 1067,
+      "kind": "refusal_call",
+      "statement": "o.notes.append(",
+      "detected": true,
+      "how": "valid cases ['V28']"
+    },
+    {
+      "line": 1071,
+      "kind": "refusal_call",
+      "statement": "o.notes.append(",
+      "detected": true,
+      "how": "violation cases ['X75']; valid cases ['V26', 'V30']"
+    },
+    {
+      "line": 1085,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X90', 'X91']"
+    },
+    {
+      "line": 1089,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X92']"
+    },
+    {
+      "line": 1116,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X96', 'X96b']; 1 crashes"
+    },
+    {
+      "line": 1121,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:BAD_TRACE] gate {name!r}: targets must be a dict of str to str\")",
+      "detected": true,
+      "how": "violation cases ['X97', 'X97b', 'X97c', 'X98', 'X98b']; 1 crashes"
+    },
+    {
+      "line": 1124,
+      "kind": "raise",
+      "statement": "raise GateSpecError(f\"[V5:BAD_TRACE] gate {name!r}: sections must be a dict with str keys\")",
+      "detected": true,
+      "how": "violation cases ['X99', 'X99b', 'X99c']"
+    },
+    {
+      "line": 1127,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X100b', 'X100c', 'X101']"
+    },
+    {
+      "line": 1131,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X101b', 'X102', 'X102b']; 1 crashes"
+    },
+    {
+      "line": 1135,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X103']"
+    },
+    {
+      "line": 1141,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X104', 'X104b', 'X104c', 'X104d', 'X104e']"
+    },
+    {
+      "line": 1146,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X108', 'X108b', 'X108c', 'X108e', 'X108f', 'X108g']"
+    },
+    {
+      "line": 1151,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X107', 'X107b', 'X107c', 'X108d', 'X108h', 'X108i']; 1 crashes"
+    },
+    {
+      "line": 1157,
+      "kind": "raise",
+      "statement": "raise GateSpecError(",
+      "detected": true,
+      "how": "violation cases ['X105', 'X105b', 'X105c', 'X106', 'X106b']; 1 crashes"
+    }
+  ]
+}

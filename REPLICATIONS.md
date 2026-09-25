@@ -30,7 +30,7 @@ audit does **not** come back clean, and the honest bar is that you reproduce the
 exceptions rather than zero:
 
 ```
-corpus papers: 208 certificates | HELD 200  FAILED 8  unresolved 0  verdict-drift 1  receipt-drift 0  incomplete 1  receipt-changed 1
+corpus papers: 210 certificates | HELD 202  FAILED 8  unresolved 0  verdict-drift 1  receipt-drift 0  incomplete 1  receipt-changed 1
   [OATH-HELD] INCOMPLETE-RECEIPTS(changed)  CAPSTONE_universal_mind_2026_06_10.md
   [OATH-FAILED]  ANALYSIS_base_rate_ceiling_2026_09_01.md
   [OATH-FAILED] verdict-CHANGED  FINDING_behavioral_sycophancy_blackbox_2026_06_09.md
@@ -41,6 +41,10 @@ corpus papers: 208 certificates | HELD 200  FAILED 8  unresolved 0  verdict-drif
   [OATH-FAILED]  RESULT_struct1_beats_the_null_2026_08_31.md
   [OATH-FAILED]  SYNTHESIS_mention_and_use_2026_08_26.md
 ```
+
+On 2026-09-24 the count moved 208 -> 210 and HELD 200 -> 202, deliberately: two self-corrections
+were published and certified OATH-HELD, `ERRATUM_v5_hand_scored_claim_2026_09_24.md` (first-afference)
+and `CORRECTION_open_set_read_null_2026_09_24.md` (disjoint-worlds). The exception list did not move.
 
 This block had itself gone stale, which is worth recording rather than quietly fixing. It
 listed six exceptions while the audit printed nine: `RESULT_obligate1_does_not_ship` and

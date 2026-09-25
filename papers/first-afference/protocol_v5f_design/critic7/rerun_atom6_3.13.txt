@@ -1,0 +1,21 @@
+3.13.12 member descriptors (armed, core, frame; flags): True
+3.13.12 _unwind_on   named=True own=True clear=True   PY_START inside -                        audit inside 0   PASS 
+3.13.12 _unwind_on   named=True own=True clear=False  PY_START inside -                        audit inside 0   PASS 
+3.13.12 _unwind_on   named=True own=False clear=True  PY_START inside -                        audit inside 0   PASS 
+3.13.12 _unwind_on   named=False own=True clear=True  PY_START inside -                        audit inside 0   PASS 
+3.13.12 _unwind_off  named=True last=True key=k       PY_START inside -                        audit inside 0   PASS 
+3.13.12 _unwind_off  named=True last=False key=k      PY_START inside -                        audit inside 0   PASS 
+3.13.12 _unwind_off  named=False last=True key=k      PY_START inside -                        audit inside 0   PASS 
+3.13.12 _unwind_off  named=True last=True key=None    PY_START inside -                        audit inside 0   PASS 
+3.13.12 _take        unowned                          PY_START inside -                        audit inside 0   PASS 
+3.13.12 _take        other                            PY_START inside -                        audit inside 0   PASS 
+3.13.12 _take        ours                             PY_START inside -                        audit inside 0   PASS 
+3.13.12 _set_local   named=True                       PY_START inside -                        audit inside 0   PASS 
+3.13.12 _set_local   named=False                      PY_START inside -                        audit inside 0   PASS 
+3.13.12 _register    named=True                       PY_START inside -                        audit inside 5   PASS (exchanges 5)
+3.13.12 _register    named=False                      PY_START inside -                        audit inside 0   PASS (exchanges 0)
+3.13.12 control K1 python set_events wrapper             PY_START inside ['py_set_events']            audit inside -                                        DETECTED
+3.13.12 control K2 attrgetter, Python __getattribute__   PY_START inside ['Slow.__getattribute__']    audit inside -                                        DETECTED
+3.13.12 control K3 sys._getframe in the pipeline         PY_START inside -                            audit inside ['sys._getframe']                        DETECTED
+3.13.12 control K4 revision 5 _register                  PY_START inside -                            audit inside ['sys.monitoring.register_callback']     DETECTED
+3.13.12 G_ATOM PASS (steps True, controls True)

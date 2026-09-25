@@ -1,0 +1,1 @@
+3.12.3 first reconciliation raises TypeError 'NoneType' object cannot be interpreted as an integer

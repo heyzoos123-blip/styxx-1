@@ -1,0 +1,17 @@
+3.13.12 switch rev5 hook 1 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['RETURN', 'START', 'UNWIND'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': '(none)', 'n': 5, 'reported_owner': None}
+3.13.12 switch rev5 hook 2 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['RETURN', 'UNWIND'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': '(none)', 'n': 5, 'reported_owner': None}
+3.13.12 switch rev5 hook 3 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['RETURN', 'UNWIND'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': '(none)', 'n': 5, 'reported_owner': None}
+3.13.12 switch rev5 hook 4 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['UNWIND'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': '(none)', 'n': 5, 'reported_owner': None}
+3.13.12 switch rev5 hook 5 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['UNWIND'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': '(none)', 'n': 5, 'reported_owner': None}
+3.13.12 switch rev6 hook 1 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['START'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': 'split', 'n': 1, 'reported_owner': 'foreign-profiler'}
+3.13.12 switch rev6 hook 2 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': [], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': 'split', 'n': 2, 'reported_owner': 'foreign-profiler'}
+3.13.12 switch rev6 hook 3 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['RETURN'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': 'split', 'n': 3, 'reported_owner': 'foreign-profiler'}
+3.13.12 switch rev6 hook 4 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': [], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': 'split', 'n': 4, 'reported_owner': 'foreign-profiler'}
+3.13.12 switch rev6 hook 5 {'owner_after': 'foreign-profiler', 'foreign_callbacks_replaced': ['UNWIND'], 'styxx_leftovers_on_foreign_id_from_before_the_free': ['RESUME', 'YIELD'], 'verdict': 'split', 'n': 5, 'reported_owner': 'foreign-profiler'}
+3.13.12 raise  rev5 hook 1 {'step': 'raised', 'registered': []}
+3.13.12 raise  rev5 hook 3 {'step': 'raised', 'registered': ['START', 'RESUME']}
+3.13.12 raise  rev5 hook 5 {'step': 'raised', 'registered': ['START', 'RESUME', 'RETURN', 'YIELD']}
+3.13.12 raise  rev6 hook 1 {'step': 'raised', 'registered': []}
+3.13.12 raise  rev6 hook 3 {'step': 'raised', 'registered': ['START', 'RESUME']}
+3.13.12 raise  rev6 hook 5 {'step': 'raised', 'registered': ['START', 'RESUME', 'RETURN', 'YIELD']}
+3.13.12 exit-raise {'exit': 'raised out of __exit__', 'exited_committed': False, 'anchors': 0, 'mutex_owner_dead': True, 'next_trace': {'B': {'<lambda>': 1}}, 'next_trace_lost': False}

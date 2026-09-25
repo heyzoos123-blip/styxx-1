@@ -1,0 +1,4 @@
+3.12.3 wrap_set_events rev6 -> refused at the first binding: [V5:UNSUPPORTED_VERSION] not the C builtin: set_events
+3.12.3 wrap_set_events no_builtin_check -> bound the wrapper; S inside armed body B: [False] | B counted t: None | MONITOR_LOST: True
+3.12.3 patched_chain rev6 -> refused at the first binding: [V5:UNSUPPORTED_VERSION] not the C builtin: itertools.chain
+3.12.3 patched_chain no_builtin_check -> bound; chain is <class '__main__.chain'>

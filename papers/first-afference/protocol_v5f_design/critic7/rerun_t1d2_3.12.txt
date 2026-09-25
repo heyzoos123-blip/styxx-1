@@ -1,0 +1,3 @@
+3.12.3 D2 gc+SIGALRM one-call {'iters': 10076, 'interrupts': 11449, 'violations': 0}
+3.12.3 D2 gc+SIGALRM two-statement (rev5 control) {'iters': 45641, 'interrupts': 16261, 'violations': 0}
+3.12.3 D2 gc+SIGALRM split by a Python call (D2 control) {'iters': 47108, 'interrupts': 18064, 'violations': 2715}

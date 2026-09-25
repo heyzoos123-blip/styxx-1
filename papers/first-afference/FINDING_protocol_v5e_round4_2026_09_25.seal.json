@@ -1,0 +1,61 @@
+{
+  "seal": "seal/v0",
+  "verdict": "SEALED",
+  "document": "FINDING_protocol_v5e_round4_2026_09_25.md",
+  "document_sha256": "7524e2677da2494cef3ae54c876303392c6cdc9ab64d80c77f6118ed7459b49e",
+  "oath": {
+    "counts": {
+      "VERIFIED": 143,
+      "ABSTAIN": 35,
+      "UNGROUNDED": 0
+    },
+    "verdict": "OATH-HELD"
+  },
+  "protocol": [
+    {
+      "prereg": "PREREG_protocol_v5e_mint_anchor_2026_09_24.md",
+      "result": "protocol_v5e_result.json",
+      "frozen_verdict": "PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable",
+      "gates": {
+        "G_EXAM_FROZEN": true,
+        "G0_violations_refused_for_their_reason": true,
+        "G1_valid_cases_exact": true,
+        "G2_p1_retro_exact": true,
+        "G3_no_v4_v5_disagreement": true,
+        "G4_population_reached": true,
+        "G5_residuals_as_documented": true,
+        "G6_mutation_every_emission_observable": true,
+        "G7_mutation_hygiene": true,
+        "G8_h1_no_hang": true,
+        "G9_h1_sweep_can_see_a_hang": true,
+        "G10_h2_signal_exceptions_propagate": true,
+        "G11_h2_sweep_can_see_swallowing": true,
+        "G12_h3_keyboard_interrupt": true,
+        "G13_no_crash": true
+      },
+      "gates_sha256": "dc3d57aff2091edea770dd1567ad7df1e622dc74624367179624909628409057",
+      "prereg_commit": "84f5391f221b9a2c8e027b1d1d0e6abb58b1a79e"
+    },
+    {
+      "prereg": "PREREG_protocol_v5e_aux_2026_09_24.md",
+      "result": "protocol_v5e_aux_result.json",
+      "frozen_verdict": "PROCEED__the_rule_holds_for_two_implementations_on_four_pythons",
+      "gates": {
+        "A_FROZEN": true,
+        "A1_fuzz_population": true,
+        "A2_fuzz_matches_oracle": true,
+        "A3_fuzz_no_leftovers": true,
+        "A4_fuzz_sees_a_missing_cut": true,
+        "A5_second_implementation_passes_the_exam": true,
+        "A6_second_implementation_matches_oracle": true,
+        "A7_two_implementations_agree": true,
+        "A8_four_pythons": true,
+        "A9_identical_across_pythons": true
+      },
+      "gates_sha256": "be90ba22cc6eee6a5b0cfcd86b42164f3e4925fc2e730913e76de54671666be5",
+      "prereg_commit": "84f5391f221b9a2c8e027b1d1d0e6abb58b1a79e"
+    }
+  ],
+  "refusals": [],
+  "seal_sha256": "4fce2063e904cc8cc8fbda3c1012d99e545c0248fdb982ffa9af3f5573e0a1ab"
+}

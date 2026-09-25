@@ -10,14 +10,14 @@ ratio is visible without reading 158 cycle entries.
 
 | | |
 |---|---|
-| cycles logged | **163** |
-| preregistrations frozen | **413** (53 carrying a machine-scored gates block) |
-| OATH certificates | **210** |
-| trust-stack seals | **34** |
-| cycles ending in a refusal, null, retraction or INVALID | **62** of 163 |
+| cycles logged | **164** |
+| preregistrations frozen | **415** (55 carrying a machine-scored gates block) |
+| OATH certificates | **211** |
+| trust-stack seals | **35** |
+| cycles ending in a refusal, null, retraction or INVALID | **62** of 164 |
 | verdicts that were literally `INVALID__*` — the machinery refusing its own run | **9** |
-| gates declaring a power basis | 21 of 53 gated preregs |
-| — of those frozen *since* the field existed | **20 of 21** |
+| gates declaring a power basis | 23 of 55 gated preregs |
+| — of those frozen *since* the field existed | **22 of 23** |
 
 **The negatives row is not yet a measurement, and is published anyway.** The
 62 is produced by matching a keyword list against each cycle's free-prose
@@ -27,7 +27,7 @@ identical keywords to the verdict's opening clause instead yields far fewer. Nei
 number is right: the field is prose, and no keyword test over prose is a classifier. The
 honest fix is a machine-readable verdict token per cycle. That mechanism now exists —
 `verdict_token` on a cycle record, carrying verbatim the string the scorer emitted — and
-**0 of 163** cycles carry one. Until those two
+**0 of 164** cycles carry one. Until those two
 numbers are equal the row above stays a keyword count, and this line is how a reader can
 tell which it is. An unadjudicated cycle is reported as unadjudicated rather than guessed:
 defaulting unknown tokens either way would flatter, in one direction or the other.
@@ -42,9 +42,9 @@ never acquire one and their denominator can never move; quoting only the first r
 understates the discipline, and quoting only the second hides how much of the corpus
 predates it.
 
-Certificate verdicts: `OATH-HELD` × 203, `OATH-FAILED` × 7
+Certificate verdicts: `OATH-HELD` × 204, `OATH-FAILED` × 7
 
-Seal verdicts: `SEALED` × 33, `REFUSED` × 1
+Seal verdicts: `SEALED` × 34, `REFUSED` × 1
 
 ## Every run the machinery refused
 

@@ -1,0 +1,3188 @@
+{
+  "oath": "styxx OATH v0 (numeric-claim certificate)",
+  "prereg": "papers/closed-model-frontier/PREREG_oath_v0_certify_doc_2026_06_09.md",
+  "document": "FINDING_protocol_v5e_round4_2026_09_25.md",
+  "document_sha256": "7524e2677da2494cef3ae54c876303392c6cdc9ab64d80c77f6118ed7459b49e",
+  "receipts_sha256": {
+    "protocol_v5e_result.json": "c7eebbe263bfc8014b7f8e64d044f4f4986a5b7fd9652749f60ed863b9bc9426",
+    "protocol_v5e_aux_result.json": "1909c72fcef80d096630e72112d053bf030f4e0bc65be1369dc5281c80993c9f",
+    "protocol_v5_redteam_audit.json": "9f1418dd160a159ca8cd4111eae4e0c24680acc01274da6815ca72306646bfeb",
+    "protocol_v5e_round4_summary.json": "0d9aa45ebc72d25cd2aeaae0be4c1e2be960c5a4b64164e62130e1d8abf10559",
+    "semantic_mutation_census.json": "a4cb861bd5515389cc0eb5ecd3a5ebcca251704f961011ec11ab2fa3661b78f8",
+    "fault_injection_v5_result.json": "067885f06753419b1b466925c043e16e12174ebde45d97f036648a2292d3838f",
+    "capture_recapture.json": "7c8f4a5b95f2b6256ffd0de811eb0d0f5537ad8538130190fad1c1a4aacbe79f",
+    "blockers_against_nversion.json": "47ce923671e4db8b12e20f3b136866b0f6f0e2b8da38414e1864b7f025baef4e",
+    "py313_signal_backedge.json": "72719286e4fb88ac2d6fa2b1ba5bdd8c6b52ddf6874bf84a13e08fe6d133f554"
+  },
+  "receipt_binding": {
+    "schema": "styxx-oath/receipt-binding/v1",
+    "content_rule": "sha256 over bytes with CRLF normalised to LF",
+    "head": "0514b0cb3a06fa8445e266491d56302270bb12c9",
+    "all_receipts_committed": true,
+    "receipts": [
+      {
+        "name": "protocol_v5e_result.json",
+        "path": "papers/first-afference/protocol_v5e_result.json",
+        "raw_sha256": "c7eebbe263bfc8014b7f8e64d044f4f4986a5b7fd9652749f60ed863b9bc9426",
+        "content_sha256": "c7eebbe263bfc8014b7f8e64d044f4f4986a5b7fd9652749f60ed863b9bc9426",
+        "blob": "379cf390aaf0e6cc9c61c789db1c6f2069e78172",
+        "committed": true
+      },
+      {
+        "name": "protocol_v5e_aux_result.json",
+        "path": "papers/first-afference/protocol_v5e_aux_result.json",
+        "raw_sha256": "1909c72fcef80d096630e72112d053bf030f4e0bc65be1369dc5281c80993c9f",
+        "content_sha256": "1909c72fcef80d096630e72112d053bf030f4e0bc65be1369dc5281c80993c9f",
+        "blob": "8a95cfea952dbaf713d0b1fd351868a16fd70ac7",
+        "committed": true
+      },
+      {
+        "name": "protocol_v5_redteam_audit.json",
+        "path": "papers/first-afference/protocol_v5_redteam_audit.json",
+        "raw_sha256": "9f1418dd160a159ca8cd4111eae4e0c24680acc01274da6815ca72306646bfeb",
+        "content_sha256": "9f1418dd160a159ca8cd4111eae4e0c24680acc01274da6815ca72306646bfeb",
+        "blob": "ab4613d0b165f43890e55e2e8b0501c63255472c",
+        "committed": true
+      },
+      {
+        "name": "protocol_v5e_round4_summary.json",
+        "path": "papers/first-afference/protocol_v5e_round4_summary.json",
+        "raw_sha256": "0d9aa45ebc72d25cd2aeaae0be4c1e2be960c5a4b64164e62130e1d8abf10559",
+        "content_sha256": "0d9aa45ebc72d25cd2aeaae0be4c1e2be960c5a4b64164e62130e1d8abf10559",
+        "blob": "e0a89fce2f96942dcfea896c7d83539084879a83",
+        "committed": true
+      },
+      {
+        "name": "semantic_mutation_census.json",
+        "path": "papers/first-afference/protocol_v5_redteam/round4_exam_mutation/semantic_mutation_census.json",
+        "raw_sha256": "a4cb861bd5515389cc0eb5ecd3a5ebcca251704f961011ec11ab2fa3661b78f8",
+        "content_sha256": "a4cb861bd5515389cc0eb5ecd3a5ebcca251704f961011ec11ab2fa3661b78f8",
+        "blob": "f90ffaa4dc02f82c5c849ac4438f8e031088fe5b",
+        "committed": true
+      },
+      {
+        "name": "fault_injection_v5_result.json",
+        "path": "papers/first-afference/fault_injection_v5_result.json",
+        "raw_sha256": "067885f06753419b1b466925c043e16e12174ebde45d97f036648a2292d3838f",
+        "content_sha256": "067885f06753419b1b466925c043e16e12174ebde45d97f036648a2292d3838f",
+        "blob": "9e1729ec5c8022d0a0df622054d02c5b61da998a",
+        "committed": true
+      },
+      {
+        "name": "capture_recapture.json",
+        "path": "papers/first-afference/protocol_v5_redteam/round4/capture_recapture.json",
+        "raw_sha256": "7c8f4a5b95f2b6256ffd0de811eb0d0f5537ad8538130190fad1c1a4aacbe79f",
+        "content_sha256": "7c8f4a5b95f2b6256ffd0de811eb0d0f5537ad8538130190fad1c1a4aacbe79f",
+        "blob": "e46dc7d1b789d78f89e5b05020f87e07f3c90de7",
+        "committed": true
+      },
+      {
+        "name": "blockers_against_nversion.json",
+        "path": "papers/first-afference/protocol_v5_redteam/round4/blockers_against_nversion.json",
+        "raw_sha256": "47ce923671e4db8b12e20f3b136866b0f6f0e2b8da38414e1864b7f025baef4e",
+        "content_sha256": "47ce923671e4db8b12e20f3b136866b0f6f0e2b8da38414e1864b7f025baef4e",
+        "blob": "3378705da27c26e1507f4204419005ef2af94302",
+        "committed": true
+      },
+      {
+        "name": "py313_signal_backedge.json",
+        "path": "papers/first-afference/protocol_v5_redteam/round4/py313_signal_backedge.json",
+        "raw_sha256": "72719286e4fb88ac2d6fa2b1ba5bdd8c6b52ddf6874bf84a13e08fe6d133f554",
+        "content_sha256": "72719286e4fb88ac2d6fa2b1ba5bdd8c6b52ddf6874bf84a13e08fe6d133f554",
+        "blob": "9883c3f2a0744395ad0160562ba929960727875a",
+        "committed": true
+      }
+    ]
+  },
+  "verifier_sha256": "c448ded108df0f54de7a68cb0755fd31f574e21d4ace8c6b6b4b427cd8e9ea59",
+  "counts": {
+    "VERIFIED": 143,
+    "ABSTAIN": 35,
+    "UNGROUNDED": 0
+  },
+  "epistemics_summary": {
+    "schema": "styxx-oath/epistemics-summary/v1",
+    "note": "attestation composition folded from this certificate's own ledger; counts which door each token came through; says nothing about whether any token is a true claim or a good one",
+    "by_branch": {
+      "row-ordinal-label": 0,
+      "formula-constant": 0,
+      "spec-or-historical": 2,
+      "notation": 0,
+      "derived": 0,
+      "unbound-field": 0,
+      "value-match": 143,
+      "ulp-neighbour": 0,
+      "obligated-accusation": 0,
+      "silent": 33
+    },
+    "verified": {
+      "total": 143,
+      "derived": {
+        "obligated": 0,
+        "unobligated": 0
+      },
+      "value_match": {
+        "obligated_integer_filter_ran": 23,
+        "obligated_integer_filter_na": 0,
+        "unobligated_integer_filter_ran": 114,
+        "unobligated_integer_filter_na": 6
+      }
+    },
+    "obligated_total": 23,
+    "obligation_sources": {
+      "vocabulary": 23,
+      "n-glued": 0,
+      "range-correlation": 0,
+      "precision": 0,
+      "range-sanity": 0
+    }
+  },
+  "uncovered": 0,
+  "uncovered_items": [],
+  "uncovered_excluded_by_rule": [
+    {
+      "line": 139,
+      "col": 0,
+      "token": "1",
+      "counted": false,
+      "reason": "ordered-list-marker",
+      "context": "1. **A stub installed before the trace by assigning `__code__` passes provenance.** The check ties a function to its"
+    },
+    {
+      "line": 141,
+      "col": 0,
+      "token": "2",
+      "counted": false,
+      "reason": "ordered-list-marker",
+      "context": "2. **A cache wrapper stamped by `functools.wraps` credits a function the wrapper never calls.** The body was read from the"
+    },
+    {
+      "line": 143,
+      "col": 0,
+      "token": "3",
+      "counted": false,
+      "reason": "ordered-list-marker",
+      "context": "3. **An unstarted generator is credited although its body never ran.** Throwing into it is enough on all four Pythons."
+    },
+    {
+      "line": 145,
+      "col": 0,
+      "token": "4",
+      "counted": false,
+      "reason": "ordered-list-marker",
+      "context": "4. **A tracer that declares `asyncio.events:Handle._run` breaks the dispatch cut for the other tracers.** Asyncio work in"
+    },
+    {
+      "line": 148,
+      "col": 0,
+      "token": "5",
+      "counted": false,
+      "reason": "ordered-list-marker",
+      "context": "5. **An exception raised inside the hook during `_open`'s lock exit leaves the lock held, and other threads hang.** The"
+    },
+    {
+      "line": 150,
+      "col": 0,
+      "token": "6",
+      "counted": false,
+      "reason": "ordered-list-marker",
+      "context": "6. **On 3.10, an open section can revert closure writes made by other threads.** CPython 3.10 copies locals back after a"
+    }
+  ],
+  "uncovered_policy": {
+    "schema": "styxx-oath/uncovered-band/v1",
+    "note": "numeric spans present in the document text that the extractor never examined \u2014 neither VERIFIED nor ABSTAIN nor UNGROUNDED. Reporting only: _NUM is unchanged and no token's status moves.",
+    "counted_reasons": [
+      "partial-extraction",
+      "trailing-period",
+      "unexplained"
+    ],
+    "excluded_reasons_note": "spans a NAMED rule already decided about (year, md-structure, formula-notation, range-second-half, compound-identifier, unparseable, ordered-list-marker, heading-ordinal); listed in uncovered_excluded_by_rule, not in the band",
+    "excluded_by_rule": 6,
+    "scope_limit": "this band detects ONE extractor blind spot \u2014 a numeric span followed by a period, which _NUM's right guard (?![\\w.]) rejects. It does NOT detect scientific notation, letter-glued numbers, non-ASCII digits, numerals in fenced code, or spans blanked by the sha/date/version scrub. uncovered=0 does NOT mean fully covered."
+  },
+  "verdict": "OATH-HELD",
+  "ungrounded": [],
+  "abstained": [
+    {
+      "line": 14,
+      "token": "25"
+    },
+    {
+      "line": 18,
+      "token": "60"
+    },
+    {
+      "line": 21,
+      "token": "3.13"
+    },
+    {
+      "line": 76,
+      "token": "57"
+    },
+    {
+      "line": 76,
+      "token": "57"
+    },
+    {
+      "line": 95,
+      "token": "3.10"
+    },
+    {
+      "line": 95,
+      "token": "3.13"
+    },
+    {
+      "line": 112,
+      "token": "3.10"
+    },
+    {
+      "line": 112,
+      "token": "3.10"
+    },
+    {
+      "line": 112,
+      "token": "3.11"
+    },
+    {
+      "line": 144,
+      "token": "3.10"
+    },
+    {
+      "line": 144,
+      "token": "3.11"
+    },
+    {
+      "line": 150,
+      "token": "3.10"
+    },
+    {
+      "line": 150,
+      "token": "3.10"
+    },
+    {
+      "line": 158,
+      "token": "20"
+    },
+    {
+      "line": 167,
+      "token": "1"
+    },
+    {
+      "line": 198,
+      "token": "3.11"
+    },
+    {
+      "line": 203,
+      "token": "3.11"
+    },
+    {
+      "line": 210,
+      "token": "3.10"
+    },
+    {
+      "line": 211,
+      "token": "3.12"
+    },
+    {
+      "line": 211,
+      "token": "3.13"
+    },
+    {
+      "line": 211,
+      "token": "3.13"
+    },
+    {
+      "line": 212,
+      "token": "3.12"
+    },
+    {
+      "line": 216,
+      "token": "3.13"
+    },
+    {
+      "line": 220,
+      "token": "3.10"
+    },
+    {
+      "line": 220,
+      "token": "3.11"
+    },
+    {
+      "line": 220,
+      "token": "3.12"
+    },
+    {
+      "line": 223,
+      "token": "130279"
+    },
+    {
+      "line": 225,
+      "token": "3.12"
+    },
+    {
+      "line": 226,
+      "token": "3.13"
+    },
+    {
+      "line": 232,
+      "token": "95"
+    },
+    {
+      "line": 232,
+      "token": "73"
+    },
+    {
+      "line": 232,
+      "token": "21"
+    },
+    {
+      "line": 234,
+      "token": "66"
+    },
+    {
+      "line": 235,
+      "token": "95"
+    }
+  ],
+  "ledger": [
+    {
+      "line": 1,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "# FINDING \u2014 protocol v5e: every rebuilt round 1\u20133 blocker held, round 4 found six new ones, and all six are in the spec",
+      "col": 46,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:hazards.H1_mutant_detection.mutant_hangs_in_the_mutant_hook",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 1,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "# FINDING \u2014 protocol v5e: every rebuilt round 1\u20133 blocker held, round 4 found six new ones, and all six are in the spec",
+      "col": 70,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 14,
+      "token": "25",
+      "value": 25.0,
+      "decimals": 0,
+      "context": "**v5e does not ship.** Every frozen gate passed, 25 of 25 across the two preregs. Their verdicts were",
+      "col": 49,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 14,
+      "token": "25",
+      "value": 25.0,
+      "decimals": 0,
+      "context": "**v5e does not ship.** Every frozen gate passed, 25 of 25 across the two preregs. Their verdicts were",
+      "col": 55,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:all_frozen_gates.n",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 16,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "Red-team round 4 then returned **NOT SHIPPABLE**:",
+      "col": 15,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 18,
+      "token": "58",
+      "value": 58.0,
+      "decimals": 0,
+      "context": "- 58 of 60 distinct findings were confirmed by independent verifiers.",
+      "col": 2,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.n_confirmed",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 18,
+      "token": "60",
+      "value": 60.0,
+      "decimals": 0,
+      "context": "- 58 of 60 distinct findings were confirmed by independent verifiers.",
+      "col": 8,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 20,
+      "token": "29",
+      "value": 29.0,
+      "decimals": 0,
+      "context": "- 29 are holes in the frozen exam.",
+      "col": 2,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.EXAM_HOLE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 21,
+      "token": "3.13",
+      "value": 3.13,
+      "decimals": 2,
+      "context": "- A seventh blocker-class failure surfaced after the round: on CPython 3.13, an ordinary signal during tracer exit can",
+      "col": 71,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 24,
+      "token": "2",
+      "value": 2.0,
+      "decimals": 0,
+      "context": "Every earlier blocker it rebuilt held, as round 2 had reported for round 1's. Here that meant all 10 blockers from",
+      "col": 48,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[34].calls.styxx.protocol:_resolve_target",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 24,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "Every earlier blocker it rebuilt held, as round 2 had reported for round 1's. Here that meant all 10 blockers from",
+      "col": 73,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:h4_reported.exit_getrefcount_calls",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 24,
+      "token": "10",
+      "value": 10.0,
+      "decimals": 0,
+      "context": "Every earlier blocker it rebuilt held, as round 2 had reported for round 1's. Here that meant all 10 blockers from",
+      "col": 98,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds_total_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 25,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "rounds 1\u20133, with variants for round 1's, rebuilt alongside earlier defects: 41 of 41 cases held on each of 4 Python",
+      "col": 7,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:frac_violation_cases_refused_with_expected_code",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 25,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "rounds 1\u20133, with variants for round 1's, rebuilt alongside earlier defects: 41 of 41 cases held on each of 4 Python",
+      "col": 36,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:frac_violation_cases_refused_with_expected_code",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 25,
+      "token": "41",
+      "value": 41.0,
+      "decimals": 0,
+      "context": "rounds 1\u20133, with variants for round 1's, rebuilt alongside earlier defects: 41 of 41 cases held on each of 4 Python",
+      "col": 76,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:closure_battery_composition.n_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 25,
+      "token": "41",
+      "value": 41.0,
+      "decimals": 0,
+      "context": "rounds 1\u20133, with variants for round 1's, rebuilt alongside earlier defects: 41 of 41 cases held on each of 4 Python",
+      "col": 82,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:closure_battery_composition.n_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 25,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "rounds 1\u20133, with variants for round 1's, rebuilt alongside earlier defects: 41 of 41 cases held on each of 4 Python",
+      "col": 107,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 26,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "versions. That did not make the classes closed. Round 4 found new failures inside both classes the redesign targeted:",
+      "col": 54,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:crossversion_n_versions",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 45,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "| v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "col": 57,
+      "binding_context": "| version | its frozen verdict | then | | v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:exam_frozen",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 45,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "| v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "col": 60,
+      "binding_context": "| version | its frozen verdict | then | | v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:crossversion_n_versions",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 45,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "| v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "col": 79,
+      "binding_context": "| version | its frozen verdict | then | | v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:crossversion_n_versions",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 45,
+      "token": "7",
+      "value": 7.0,
+      "decimals": 0,
+      "context": "| v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "col": 97,
+      "binding_context": "| version | its frozen verdict | then | | v5b | `PROCEED_TO_RED_TEAM__not_yet_shippable` | round 1: 4 module blockers, 4 module defects, 7 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.SPEC_FALSE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 46,
+      "token": "2",
+      "value": 2.0,
+      "decimals": 0,
+      "context": "| v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "col": 65,
+      "binding_context": "| version | its frozen verdict | then | | v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.n_not_confirmed",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 46,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "| v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "col": 68,
+      "binding_context": "| version | its frozen verdict | then | | v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_2.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 46,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "| v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "col": 87,
+      "binding_context": "| version | its frozen verdict | then | | v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.BLOCKER",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 46,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "| v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "col": 105,
+      "binding_context": "| version | its frozen verdict | then | | v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:crossversion_n_versions",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 46,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "| v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "col": 137,
+      "binding_context": "| version | its frozen verdict | then | | v5c | `PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable` | round 2: 3 module blockers, 6 module defects; 4 blocker-class exam survivors, 4 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:crossversion_n_versions",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 47,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "| v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "col": 65,
+      "binding_context": "| version | its frozen verdict | then | | v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_2.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 47,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "| v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "col": 68,
+      "binding_context": "| version | its frozen verdict | then | | v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_2.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 47,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "| v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "col": 87,
+      "binding_context": "| version | its frozen verdict | then | | v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.BLOCKER",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 47,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "| v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "col": 105,
+      "binding_context": "| version | its frozen verdict | then | | v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_3.n_exam_survivors_blocker_class",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 47,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "| v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "col": 143,
+      "binding_context": "| version | its frozen verdict | then | | v5d | `PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable` | round 3: 3 module blockers, 6 module defects; 5 blocker-class exam survivor groups, 3 exam defects |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_2.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 48,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "| v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "col": 65,
+      "binding_context": "| version | its frozen verdict | then | | v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:crossversion_n_versions",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 48,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "| v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "col": 68,
+      "binding_context": "| version | its frozen verdict | then | | v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.BLOCKER",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 48,
+      "token": "15",
+      "value": 15.0,
+      "decimals": 0,
+      "context": "| v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "col": 80,
+      "binding_context": "| version | its frozen verdict | then | | v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.DEFECT",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 48,
+      "token": "7",
+      "value": 7.0,
+      "decimals": 0,
+      "context": "| v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "col": 92,
+      "binding_context": "| version | its frozen verdict | then | | v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.SPEC_FALSE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 48,
+      "token": "29",
+      "value": 29.0,
+      "decimals": 0,
+      "context": "| v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "col": 106,
+      "binding_context": "| version | its frozen verdict | then | | v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.EXAM_HOLE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 48,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "| v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "col": 121,
+      "binding_context": "| version | its frozen verdict | then | | v5e | `PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable` | round 4: 6 blockers, 15 defects, 7 spec-false, 29 exam holes, 1 note |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:exam_frozen",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 50,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "Rounds 1\u20133 kept reopening **identity** (is this frame the declared function?) and **attribution** (which section does",
+      "col": 7,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:hazards.H1_mutant_detection.mutant_hangs_in_the_mutant_hook",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 52,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "exception-safety blocker: R1-B4, R2-B3 and R3-B3. After round 3, a design panel scored three redesigns against all 10 of",
+      "col": 62,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_2.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 52,
+      "token": "10",
+      "value": 10.0,
+      "decimals": 0,
+      "context": "exception-safety blocker: R1-B4, R2-B3 and R3-B3. After round 3, a design panel scored three redesigns against all 10 of",
+      "col": 115,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds_total_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 63,
+      "token": "155",
+      "value": 155.0,
+      "decimals": 0,
+      "context": "shows is an ancestor of the first implementation commit `8b805e26`. The exam has 155 violation cases, 36 valid cases and",
+      "col": 81,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:n_violation_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 63,
+      "token": "36",
+      "value": 36.0,
+      "decimals": 0,
+      "context": "shows is an ancestor of the first implementation commit `8b805e26`. The exam has 155 violation cases, 36 valid cases and",
+      "col": 102,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:n_valid_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 64,
+      "token": "11",
+      "value": 11.0,
+      "decimals": 0,
+      "context": "11 pinned residuals, and v5e met all three families exactly. v5e also passed three hazard sweeps. Two of them, H1 and H2,",
+      "col": 0,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:n_residual_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 67,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "- 0 hangs. Blocker 5, a hook exception that skips the lock's release, is outside H1's reach. It reproduced under H2's",
+      "col": 19,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_3.n_exam_survivors_blocker_class",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 69,
+      "token": "20",
+      "value": 20.0,
+      "decimals": 0,
+      "context": "- 20 of 20 signal exceptions propagated.",
+      "col": 2,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:hazards.H2.propagated",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 69,
+      "token": "20",
+      "value": 20.0,
+      "decimals": 0,
+      "context": "- 20 of 20 signal exceptions propagated.",
+      "col": 8,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:hazards.H2.propagated",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 70,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "- 5 of 5 KeyboardInterrupt cases held. This sweep had no mutant.",
+      "col": 7,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:v5e_exam.h3_keyboard_interrupt_ok",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 72,
+      "token": "0",
+      "value": 0.0,
+      "decimals": 0,
+      "context": "The corpus differential found 0 v4/v5 outcome disagreements over 86 pairable results, and scored 39 under v5.",
+      "col": 30,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:n_v4_v5_outcome_disagreements",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 72,
+      "token": "86",
+      "value": 86.0,
+      "decimals": 0,
+      "context": "The corpus differential found 0 v4/v5 outcome disagreements over 86 pairable results, and scored 39 under v5.",
+      "col": 65,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:n_pairable_results",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 72,
+      "token": "39",
+      "value": 39.0,
+      "decimals": 0,
+      "context": "The corpus differential found 0 v4/v5 outcome disagreements over 86 pairable results, and scored 39 under v5.",
+      "col": 97,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:n_results_v5_scored",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 76,
+      "token": "57",
+      "value": 57.0,
+      "decimals": 0,
+      "context": "57 of 57 deletions in v5e, with 0 hygiene violations.",
+      "col": 0,
+      "status": "ABSTAIN",
+      "receipt_ref": "spec-or-historical",
+      "epistemics": {
+        "branch": "spec-or-historical",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 76,
+      "token": "57",
+      "value": 57.0,
+      "decimals": 0,
+      "context": "57 of 57 deletions in v5e, with 0 hygiene violations.",
+      "col": 6,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 76,
+      "token": "0",
+      "value": 0.0,
+      "decimals": 0,
+      "context": "57 of 57 deletions in v5e, with 0 hygiene violations.",
+      "col": 32,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:h4_reported.exit_gc_get_referrers_calls_with_no_live_clone",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 78,
+      "token": "28",
+      "value": 28.0,
+      "decimals": 0,
+      "context": "version was tightened before the freeze and not re-run on v5d. Against v5d it caught 28 of 29 sites. The one survivor",
+      "col": 85,
+      "status": "VERIFIED",
+      "receipt_ref": "fault_injection_v5_result.json:scenarios.two_sections.not_clean[117].where[2]",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 78,
+      "token": "29",
+      "value": 29.0,
+      "decimals": 0,
+      "context": "version was tightened before the freeze and not re-run on v5d. Against v5d it caught 28 of 29 sites. The one survivor",
+      "col": 91,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:mutation_gate.v5d_control_sites",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 79,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "was HOOK_FAILED, the refusal round 3 had found had no case. The 2 hygiene violations were raises built from a message",
+      "col": 35,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[62].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 79,
+      "token": "2",
+      "value": 2.0,
+      "decimals": 0,
+      "context": "was HOOK_FAILED, the refusal round 3 had found had no case. The 2 hygiene violations were raises built from a message",
+      "col": 64,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[34].calls.styxx.protocol:_resolve_target",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 80,
+      "token": "8",
+      "value": 8.0,
+      "decimals": 0,
+      "context": "variable. A later probe measured the frozen gate's own blind spots: 8 of 9 alternative emission shapes escape both the",
+      "col": 68,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:nversion_exploratory.n_cells_clean_both_impls",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 80,
+      "token": "9",
+      "value": 9.0,
+      "decimals": 0,
+      "context": "variable. A later probe measured the frozen gate's own blind spots: 8 of 9 alternative emission shapes escape both the",
+      "col": 73,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:mutation_gate.shapes_probed",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 81,
+      "token": "57",
+      "value": 57.0,
+      "decimals": 0,
+      "context": "mutation and the hygiene check. A census of v5e found all 57 of its coded literals inside mutated sites.",
+      "col": 58,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:mutation_gate.n_sites",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 84,
+      "token": "3000",
+      "value": 3000.0,
+      "decimals": 0,
+      "context": "construction. On v5e it ran 3000 programs with 0 disagreements. Its first version was blind to the dispatch cut: with",
+      "col": 28,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:fuzz_primary.fuzz_n_programs",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 84,
+      "token": "0",
+      "value": 0.0,
+      "decimals": 0,
+      "context": "construction. On v5e it ran 3000 programs with 0 disagreements. Its first version was blind to the dispatch cut: with",
+      "col": 47,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:h4_reported.exit_gc_get_referrers_calls_with_no_live_clone",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 85,
+      "token": "0",
+      "value": 0.0,
+      "decimals": 0,
+      "context": "the cut removed on purpose, 0 of 300 programs disagreed. That positive control, run on the design prototype, caught the",
+      "col": 28,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:hazards.H1_control.hangs",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 85,
+      "token": "300",
+      "value": 300.0,
+      "decimals": 0,
+      "context": "the cut removed on purpose, 0 of 300 programs disagreed. That positive control, run on the design prototype, caught the",
+      "col": 33,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fuzzer_controls.v1_no_cut_programs",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 86,
+      "token": "44",
+      "value": 44.0,
+      "decimals": 0,
+      "context": "blindness before the freeze. With the cut removed, 44 of 600 programs now disagree, both on the prototype and on v5e (aux",
+      "col": 51,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_aux_result.json:fuzz_control_no_cut_disagreements",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 86,
+      "token": "600",
+      "value": 600.0,
+      "decimals": 0,
+      "context": "blindness before the freeze. With the cut removed, 44 of 600 programs now disagree, both on the prototype and on v5e (aux",
+      "col": 57,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fuzzer_controls.final_programs",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 87,
+      "token": "245",
+      "value": 245.0,
+      "decimals": 0,
+      "context": "gate A4). The other two controls were run on the prototype only. Crediting any open section showed up in 245 of 600",
+      "col": 105,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fuzzer_controls.final_credit_any_open",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 87,
+      "token": "600",
+      "value": 600.0,
+      "decimals": 0,
+      "context": "gate A4). The other two controls were run on the prototype only. Crediting any open section showed up in 245 of 600",
+      "col": 112,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fuzzer_controls.final_programs",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 88,
+      "token": "600",
+      "value": 600.0,
+      "decimals": 0,
+      "context": "programs, and removing the minted identity showed up in all 600 programs. Blockers 3 and 4 lie outside the fuzzer's",
+      "col": 60,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fuzzer_controls.final_programs",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 88,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "programs, and removing the minted identity showed up in all 600 programs. Blockers 3 and 4 lie outside the fuzzer's",
+      "col": 83,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_2.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 88,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "programs, and removing the minted identity showed up in all 600 programs. Blockers 3 and 4 lie outside the fuzzer's",
+      "col": 89,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 94,
+      "token": "0",
+      "value": 0.0,
+      "decimals": 0,
+      "context": "in 0 fuzz programs. Outside 3 version-keyed cases, the primary gave identical exam and fuzz outcomes on 4 CPython",
+      "col": 3,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:n_v4_v5_outcome_disagreements",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 94,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "in 0 fuzz programs. Outside 3 version-keyed cases, the primary gave identical exam and fuzz outcomes on 4 CPython",
+      "col": 28,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G1_valid_cases_exact[16].calls.styxx.protocol:_resolve_target",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 94,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "in 0 fuzz programs. Outside 3 version-keyed cases, the primary gave identical exam and fuzz outcomes on 4 CPython",
+      "col": 104,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G1_valid_cases_exact[35].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 95,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "versions (3.10 through 3.13).",
+      "col": 10,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 95,
+      "token": "3.13",
+      "value": 3.13,
+      "decimals": 2,
+      "context": "versions (3.10 through 3.13).",
+      "col": 23,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 97,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "## Round 4",
+      "col": 9,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 105,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "- a closure audit of every round 1\u20133 blocker and its variants",
+      "col": 33,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_1.round",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 109,
+      "token": "104",
+      "value": 104.0,
+      "decimals": 0,
+      "context": "They produced 104 candidate findings, which came to 60 after deduplication.",
+      "col": 14,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.method.n_candidates",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 109,
+      "token": "60",
+      "value": 60.0,
+      "decimals": 0,
+      "context": "They produced 104 candidate findings, which came to 60 after deduplication.",
+      "col": 52,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.method.n_after_dedup",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 112,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "interpreters. For one finding that only reproduces on 3.10, the main repro ran on 3.10 and 3.11 only. The reproducer then",
+      "col": 54,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 112,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "interpreters. For one finding that only reproduces on 3.10, the main repro ran on 3.10 and 3.11 only. The reproducer then",
+      "col": 82,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 112,
+      "token": "3.11",
+      "value": 3.11,
+      "decimals": 2,
+      "context": "interpreters. For one finding that only reproduces on 3.10, the main repro ran on 3.10 and 3.11 only. The reproducer then",
+      "col": 91,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 125,
+      "token": "58",
+      "value": 58.0,
+      "decimals": 0,
+      "context": "**Results.** 58 were confirmed. The other 2 were not, because the code matched the spec: a quadratic recursion cost the",
+      "col": 13,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.n_confirmed",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 125,
+      "token": "2",
+      "value": 2.0,
+      "decimals": 0,
+      "context": "**Results.** 58 were confirmed. The other 2 were not, because the code matched the spec: a quadratic recursion cost the",
+      "col": 42,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.n_not_confirmed",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 126,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "spec never states, and a profiler list the scope judge rated SPEC_FALSE. A verifier also surfaced 1 further defect that is",
+      "col": 98,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:hazards.H1_mutant_detection.mutant_hangs_in_the_mutant_hook",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 131,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "| blocker | 6 |",
+      "col": 12,
+      "binding_context": "| class | confirmed | | blocker | 6 |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.BLOCKER",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 132,
+      "token": "15",
+      "value": 15.0,
+      "decimals": 0,
+      "context": "| defect | 15 |",
+      "col": 11,
+      "binding_context": "| class | confirmed | | defect | 15 |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.DEFECT",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 133,
+      "token": "7",
+      "value": 7.0,
+      "decimals": 0,
+      "context": "| spec sentence false | 7 |",
+      "col": 24,
+      "binding_context": "| class | confirmed | | spec sentence false | 7 |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.SPEC_FALSE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 134,
+      "token": "29",
+      "value": 29.0,
+      "decimals": 0,
+      "context": "| exam hole | 29 |",
+      "col": 14,
+      "binding_context": "| class | confirmed | | exam hole | 29 |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.EXAM_HOLE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 135,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "| note | 1 |",
+      "col": 9,
+      "binding_context": "| class | confirmed | | note | 1 |",
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.NOTE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 144,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "On 3.10 and 3.11, dropping or closing it is enough.",
+      "col": 6,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 144,
+      "token": "3.11",
+      "value": 3.11,
+      "decimals": 2,
+      "context": "On 3.10 and 3.11, dropping or closing it is enough.",
+      "col": 15,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 150,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "6. **On 3.10, an open section can revert closure writes made by other threads.** CPython 3.10 copies locals back after a",
+      "col": 8,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 150,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "6. **On 3.10, an open section can revert closure writes made by other threads.** CPython 3.10 copies locals back after a",
+      "col": 89,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 155,
+      "token": "41",
+      "value": 41.0,
+      "decimals": 0,
+      "context": "The closure battery has 41 cases:",
+      "col": 24,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:closure_battery_composition.n_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 157,
+      "token": "21",
+      "value": 21.0,
+      "decimals": 0,
+      "context": "- 21 rebuild the 10 blockers from rounds 1\u20133, with variants for 4 of them.",
+      "col": 2,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:closure_battery_composition.n_blocker_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 157,
+      "token": "10",
+      "value": 10.0,
+      "decimals": 0,
+      "context": "- 21 rebuild the 10 blockers from rounds 1\u20133, with variants for 4 of them.",
+      "col": 17,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds_total_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 157,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "- 21 rebuild the 10 blockers from rounds 1\u20133, with variants for 4 of them.",
+      "col": 41,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:frac_violation_cases_refused_with_expected_code",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 157,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "- 21 rebuild the 10 blockers from rounds 1\u20133, with variants for 4 of them.",
+      "col": 64,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 158,
+      "token": "20",
+      "value": 20.0,
+      "decimals": 0,
+      "context": "- 20 rebuild earlier defects and design-panel attacks.",
+      "col": 2,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 160,
+      "token": "41",
+      "value": 41.0,
+      "decimals": 0,
+      "context": "All 41 held on each of 4 interpreters (`protocol_v5e_round4_summary.json` re-runs the battery). The same lens filed the",
+      "col": 4,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:closure_battery_composition.n_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 160,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "All 41 held on each of 4 interpreters (`protocol_v5e_round4_summary.json` re-runs the battery). The same lens filed the",
+      "col": 23,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 161,
+      "token": "41",
+      "value": 41.0,
+      "decimals": 0,
+      "context": "variants that broke as findings, so the battery was always going to read 41 of 41, and it means less than that number",
+      "col": 73,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:closure_battery_composition.n_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 161,
+      "token": "41",
+      "value": 41.0,
+      "decimals": 0,
+      "context": "variants that broke as findings, so the battery was always going to read 41 of 41, and it means less than that number",
+      "col": 79,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:closure_battery_composition.n_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 167,
+      "token": "1",
+      "value": 1.0,
+      "decimals": 0,
+      "context": "- J1-X1, now blocker 1;",
+      "col": 21,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 168,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "- J1-X2 / R3-B2, now blocker 4;",
+      "col": 29,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 169,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "- R3-D3, a lock hazard, now blocker 5;",
+      "col": 36,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:hazards.H3.n",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 174,
+      "token": "57",
+      "value": 57.0,
+      "decimals": 0,
+      "context": "The frozen exam detected 57 of 57 deletions of coded emissions. Round 4 then weakened rules instead of deleting them. It",
+      "col": 25,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:mutation_gate.n_detected",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 174,
+      "token": "57",
+      "value": 57.0,
+      "decimals": 0,
+      "context": "The frozen exam detected 57 of 57 deletions of coded emissions. Round 4 then weakened rules instead of deleting them. It",
+      "col": 31,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:mutation_gate.n_detected",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 174,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "The frozen exam detected 57 of 57 deletions of coded emissions. Round 4 then weakened rules instead of deleting them. It",
+      "col": 70,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 175,
+      "token": "27",
+      "value": 27.0,
+      "decimals": 0,
+      "context": "narrowed a condition, shrank a bound, relaxed an exact-type check, and reordered two scoring steps. The exam detected 27 of",
+      "col": 118,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:semantic_census.n_detected",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 176,
+      "token": "63",
+      "value": 63.0,
+      "decimals": 0,
+      "context": "63 of these hand-aimed mutants, and 36 survived (`semantic_mutation_census.json`). Of the 29 exam holes confirmed with",
+      "col": 0,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_3.exam_mutation_audit.totals.detected",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 176,
+      "token": "36",
+      "value": 36.0,
+      "decimals": 0,
+      "context": "63 of these hand-aimed mutants, and 36 survived (`semantic_mutation_census.json`). Of the 29 exam holes confirmed with",
+      "col": 36,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:v5e_exam.n_valid_cases",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 176,
+      "token": "29",
+      "value": 29.0,
+      "decimals": 0,
+      "context": "63 of these hand-aimed mutants, and 36 survived (`semantic_mutation_census.json`). Of the 29 exam holes confirmed with",
+      "col": 90,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.EXAM_HOLE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 177,
+      "token": "9",
+      "value": 9.0,
+      "decimals": 0,
+      "context": "witnesses, 9 are false-pass mutants: under them, a trace that should be refused is scored instead. **Adequacy against",
+      "col": 11,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:mutation_gate.shapes_probed",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 181,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "## Three measurements added after round 4 (exploratory, not preregistered)",
+      "col": 40,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 184,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "and against the independent second implementation. So were 4 routes those repros skip. For blocker 3: throwing into",
+      "col": 59,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 184,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "and against the independent second implementation. So were 4 routes those repros skip. For blocker 3: throwing into",
+      "col": 99,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[62].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 185,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "an unstarted generator, and closing one suspended at a bare yield. For blocker 4: the cut failing before the declaring",
+      "col": 79,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 186,
+      "token": "6",
+      "value": 6.0,
+      "decimals": 0,
+      "context": "tracer exits, and another thread's job credited across the cut. All 6 blockers and all 4 routes reproduce on both",
+      "col": 68,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G1_valid_cases_exact[34].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 186,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "tracer exits, and another thread's job credited across the cut. All 6 blockers and all 4 routes reproduce on both",
+      "col": 87,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 193,
+      "token": "3",
+      "value": 3.0,
+      "decimals": 0,
+      "context": "**An exception at every opcode.** Rounds 3 and 4 found exception-safety failures one bytecode at a time.",
+      "col": 41,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_2.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 193,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "**An exception at every opcode.** Rounds 3 and 4 found exception-safety failures one bytecode at a time.",
+      "col": 47,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 194,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "`fault_injection_v5.py` maps those outside the profile hook along the paths of 5 scenarios. In each scenario it raises",
+      "col": 79,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.n_scenarios",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 198,
+      "token": "3.11",
+      "value": 3.11,
+      "decimals": 2,
+      "context": "damaged state, before any repair, and runs one clean trace on top of it. On CPython 3.11, with an Exception subclass,",
+      "col": 84,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 199,
+      "token": "10,371",
+      "value": 10371.0,
+      "decimals": 0,
+      "context": "10,371 points were run:",
+      "col": 0,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_fault_points",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 201,
+      "token": "3,371",
+      "value": 3371.0,
+      "decimals": 0,
+      "context": "- 3,371 are in stateless score-time validators, and all of them are clean.",
+      "col": 2,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_stateless_points",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 202,
+      "token": "2,505",
+      "value": 2505.0,
+      "decimals": 0,
+      "context": "- 2,505 of the 7,000 stateful points damage v5e, at 67 distinct (function, line) sites:",
+      "col": 2,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_damaging",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 202,
+      "token": "7,000",
+      "value": 7000.0,
+      "decimals": 0,
+      "context": "- 2,505 of the 7,000 stateful points damage v5e, at 67 distinct (function, line) sites:",
+      "col": 15,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_stateful_points",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 202,
+      "token": "67",
+      "value": 67.0,
+      "decimals": 0,
+      "context": "- 2,505 of the 7,000 stateful points damage v5e, at 67 distinct (function, line) sites:",
+      "col": 52,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_distinct_damaging_sites",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 203,
+      "token": "130",
+      "value": 130.0,
+      "decimals": 0,
+      "context": "- 130 hang, all at 4 `with _LOCK:` exits. On 3.11 only a callback such as the hook can raise there, and that is",
+      "col": 4,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_hang",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 203,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "- 130 hang, all at 4 `with _LOCK:` exits. On 3.11 only a callback such as the hook can raise there, and that is",
+      "col": 21,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 203,
+      "token": "3.11",
+      "value": 3.11,
+      "decimals": 2,
+      "context": "- 130 hang, all at 4 `with _LOCK:` exits. On 3.11 only a callback such as the hook can raise there, and that is",
+      "col": 47,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 204,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "blocker 5's window.",
+      "col": 12,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_3.n_exam_survivors_blocker_class",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 205,
+      "token": "120",
+      "value": 120.0,
+      "decimals": 0,
+      "context": "- 120 break the next clean trace.",
+      "col": 4,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_breaks_next",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 206,
+      "token": "1,693",
+      "value": 1693.0,
+      "decimals": 0,
+      "context": "- 1,693 leave damage that a clean next trace does not clear.",
+      "col": 4,
+      "status": "VERIFIED",
+      "receipt_ref": "fault_injection_v5_result.json:scenarios.nested_tracers.not_clean[609].k",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 207,
+      "token": "562",
+      "value": 562.0,
+      "decimals": 0,
+      "context": "- 562 leave damage that the next clean trace clears.",
+      "col": 4,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_cleared",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 208,
+      "token": "42",
+      "value": 42.0,
+      "decimals": 0,
+      "context": "- 42 more become the UNRESOLVED refusal the spec requires, with the exception chained as its cause.",
+      "col": 2,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_converted",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 210,
+      "token": "2,505",
+      "value": 2505.0,
+      "decimals": 0,
+      "context": "A KeyboardInterrupt pass gives the same 2,505 damaging points and no conversions. On 3.10 the map shows 2,375 damaging",
+      "col": 40,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py311_exception.n_damaging",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 210,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "A KeyboardInterrupt pass gives the same 2,505 damaging points and no conversions. On 3.10 the map shows 2,375 damaging",
+      "col": 85,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 210,
+      "token": "2,375",
+      "value": 2375.0,
+      "decimals": 0,
+      "context": "A KeyboardInterrupt pass gives the same 2,505 damaging points and no conversions. On 3.10 the map shows 2,375 damaging",
+      "col": 104,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:fault_injection.py310_exception.n_damaging",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 211,
+      "token": "3.12",
+      "value": 3.12,
+      "decimals": 2,
+      "context": "points. The 3.12 and 3.13 maps are partial, because settrace-driven injection behaves differently there: on 3.13 it never",
+      "col": 12,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 211,
+      "token": "3.13",
+      "value": 3.13,
+      "decimals": 2,
+      "context": "points. The 3.12 and 3.13 maps are partial, because settrace-driven injection behaves differently there: on 3.13 it never",
+      "col": 21,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 211,
+      "token": "3.13",
+      "value": 3.13,
+      "decimals": 2,
+      "context": "points. The 3.12 and 3.13 maps are partial, because settrace-driven injection behaves differently there: on 3.13 it never",
+      "col": 108,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 212,
+      "token": "3.12",
+      "value": 3.12,
+      "decimals": 2,
+      "context": "reaches `_close`, and on 3.12 it injects some opcodes twice. Porting the injector to `sys.monitoring` is on the backlog. A",
+      "col": 25,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 216,
+      "token": "3.13",
+      "value": 3.13,
+      "decimals": 2,
+      "context": "**On 3.13, a real signal hangs v5e with no hook involved.** The third attack pass on this finding turned up a seventh",
+      "col": 5,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 218,
+      "token": "949",
+      "value": 949.0,
+      "decimals": 0,
+      "context": "3.13.12, a SIGALRM handler that raises KeyboardInterrupt during tracer exit is delivered at `__exit__` line 949 (a",
+      "col": 108,
+      "status": "VERIFIED",
+      "receipt_ref": "fault_injection_v5_result.json:scenarios.raising_section.not_clean[266].where[1]",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 219,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "`for` loop whose body ends in an `if`, inside `with _LOCK:`). The lock stayed held against other threads in 4 of 4 trials.",
+      "col": 108,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 219,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "`for` loop whose body ends in an `if`, inside `with _LOCK:`). The lock stayed held against other threads in 4 of 4 trials.",
+      "col": 113,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G0_violations_refused_for_their_reason[81].calls.styxx.protocol:Experiment._check_coverage",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 220,
+      "token": "3.10",
+      "value": 3.1,
+      "decimals": 2,
+      "context": "It did not on 3.10, 3.11 or 3.12 in any trial. The lock is re-entrant, so the interrupted thread can still take it and",
+      "col": 14,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 220,
+      "token": "3.11",
+      "value": 3.11,
+      "decimals": 2,
+      "context": "It did not on 3.10, 3.11 or 3.12 in any trial. The lock is re-entrant, so the interrupted thread can still take it and",
+      "col": 20,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 220,
+      "token": "3.12",
+      "value": 3.12,
+      "decimals": 2,
+      "context": "It did not on 3.10, 3.11 or 3.12 in any trial. The lock is re-entrant, so the interrupted thread can still take it and",
+      "col": 28,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 223,
+      "token": "130279",
+      "value": 130279.0,
+      "decimals": 0,
+      "context": "The interpreter behaviour matches the upstream CPython issue numbered #130279 in its tracker. On 3.13.12 the probe's",
+      "col": 71,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 224,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "`finally` was skipped 5 of 5 times for a `while` condition and 5 of 5 for a `for` body ending in an `if`, and never for a",
+      "col": 22,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:py313_signal_backedge.3.13.12.finally_skipped_of_5",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 224,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "`finally` was skipped 5 of 5 times for a `while` condition and 5 of 5 for a `for` body ending in an `if`, and never for a",
+      "col": 27,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:py313_signal_backedge.3.13.12.finally_skipped_of_5",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 224,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "`finally` was skipped 5 of 5 times for a `while` condition and 5 of 5 for a `for` body ending in an `if`, and never for a",
+      "col": 63,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:py313_signal_backedge.3.13.12.finally_skipped_of_5",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 224,
+      "token": "5",
+      "value": 5.0,
+      "decimals": 0,
+      "context": "`finally` was skipped 5 of 5 times for a `while` condition and 5 of 5 for a `for` body ending in an `if`, and never for a",
+      "col": 68,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:py313_signal_backedge.3.13.12.finally_skipped_of_5",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 225,
+      "token": "3.12",
+      "value": 3.12,
+      "decimals": 2,
+      "context": "plain `for` or a `while True` loop that ends with `break`. The exception-table layout alone does not explain it: 3.12 leaves",
+      "col": 113,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 226,
+      "token": "3.13",
+      "value": 3.13,
+      "decimals": 2,
+      "context": "the same closing jump outside the table and still runs `finally`. The difference is where 3.13 delivers a pending signal.",
+      "col": 90,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 230,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "**How much round 4 left unfound.** Each lens is treated as a sampling occasion over one fixed implementation, and a finding",
+      "col": 17,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": true,
+        "obligation_source": "vocabulary",
+        "path_checked": true
+      }
+    },
+    {
+      "line": 231,
+      "token": "79.0",
+      "value": 79.0,
+      "decimals": 1,
+      "context": "reported by several lenses as a recapture. The incidence-based Chao2 estimator then puts the reachable total at 79.0",
+      "col": 112,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:capture_recapture.confirmed_only.chao2",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 232,
+      "token": "95",
+      "value": 95.0,
+      "decimals": 0,
+      "context": "distinct confirmed findings (95% interval 66.59 to 109.25), against 58 found: about 73% found, and about 21 unfound",
+      "col": 29,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 232,
+      "token": "66.59",
+      "value": 66.59,
+      "decimals": 2,
+      "context": "distinct confirmed findings (95% interval 66.59 to 109.25), against 58 found: about 73% found, and about 21 unfound",
+      "col": 42,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:capture_recapture.confirmed_only.ci95_low",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 232,
+      "token": "109.25",
+      "value": 109.25,
+      "decimals": 2,
+      "context": "distinct confirmed findings (95% interval 66.59 to 109.25), against 58 found: about 73% found, and about 21 unfound",
+      "col": 51,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:capture_recapture.confirmed_only.ci95_high",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 232,
+      "token": "58",
+      "value": 58.0,
+      "decimals": 0,
+      "context": "distinct confirmed findings (95% interval 66.59 to 109.25), against 58 found: about 73% found, and about 21 unfound",
+      "col": 68,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.n_confirmed",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 232,
+      "token": "73",
+      "value": 73.0,
+      "decimals": 0,
+      "context": "distinct confirmed findings (95% interval 66.59 to 109.25), against 58 found: about 73% found, and about 21 unfound",
+      "col": 84,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 232,
+      "token": "21",
+      "value": 21.0,
+      "decimals": 0,
+      "context": "distinct confirmed findings (95% interval 66.59 to 109.25), against 58 found: about 73% found, and about 21 unfound",
+      "col": 105,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 234,
+      "token": "29",
+      "value": 29.0,
+      "decimals": 0,
+      "context": "For the implementation findings alone, which decide shipping, 29 were found out of an estimated 43.69, or 66%, with a",
+      "col": 62,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:capture_recapture.confirmed_module_findings.s_obs",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 234,
+      "token": "43.69",
+      "value": 43.69,
+      "decimals": 2,
+      "context": "For the implementation findings alone, which decide shipping, 29 were found out of an estimated 43.69, or 66%, with a",
+      "col": 96,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:capture_recapture.confirmed_module_findings.chao2",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 234,
+      "token": "66",
+      "value": 66.0,
+      "decimals": 0,
+      "context": "For the implementation findings alone, which decide shipping, 29 were found out of an estimated 43.69, or 66%, with a",
+      "col": 106,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 235,
+      "token": "95",
+      "value": 95.0,
+      "decimals": 0,
+      "context": "95% interval of 33.41 to 77.93 for the total. The",
+      "col": 0,
+      "status": "ABSTAIN",
+      "receipt_ref": null,
+      "epistemics": {
+        "branch": "silent",
+        "obligated": false,
+        "obligation_source": null
+      }
+    },
+    {
+      "line": 235,
+      "token": "33.41",
+      "value": 33.41,
+      "decimals": 2,
+      "context": "95% interval of 33.41 to 77.93 for the total. The",
+      "col": 16,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:capture_recapture.confirmed_module_findings.ci95_low",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 235,
+      "token": "77.93",
+      "value": 77.93,
+      "decimals": 2,
+      "context": "95% interval of 33.41 to 77.93 for the total. The",
+      "col": 25,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:capture_recapture.confirmed_module_findings.ci95_high",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": false
+      }
+    },
+    {
+      "line": 243,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "- Round 4 stopped after one finder round, because that round already decided the ship question. It is recorded as",
+      "col": 8,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_result.json:coverage_trace.sections.G1_valid_cases_exact[35].calls.styxx.protocol:_CoverageTracer.record",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 246,
+      "token": "4",
+      "value": 4.0,
+      "decimals": 0,
+      "context": "- Round 4 classed 7 findings SPEC_FALSE. Several of its blockers and defects also falsify spec sentences, including at",
+      "col": 8,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5e_round4_summary.json:prior_rounds.round_1.n_blockers",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    },
+    {
+      "line": 246,
+      "token": "7",
+      "value": 7.0,
+      "decimals": 0,
+      "context": "- Round 4 classed 7 findings SPEC_FALSE. Several of its blockers and defects also falsify spec sentences, including at",
+      "col": 18,
+      "status": "VERIFIED",
+      "receipt_ref": "protocol_v5_redteam_audit.json:round_4.counts_confirmed.SPEC_FALSE",
+      "epistemics": {
+        "branch": "value-match",
+        "obligated": false,
+        "obligation_source": null,
+        "path_checked": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+3.12.3 bound set_events is a C builtin? False
+ S seen inside armed body B: [False] | B counted t: None | MONITOR_LOST: True
+3.13.12 bound set_events is a C builtin? False
+ S seen inside armed body B: [False] | B counted t: None | MONITOR_LOST: True

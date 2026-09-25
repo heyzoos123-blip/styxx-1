@@ -1,0 +1,18 @@
+3.12.3 A per-event sweep (events fired inside off(), violations):
+   INSTRUCTION    one-call       fired  48  violations 0  (clears when undisturbed: True)
+   INSTRUCTION    two-statement  fired  15  violations 5  (clears when undisturbed: True)
+   CALL+C_RETURN  one-call       fired  32  violations 0  (clears when undisturbed: True)
+   CALL+C_RETURN  two-statement  fired  12  violations 1  (clears when undisturbed: True)
+   BRANCH         one-call       fired   0  violations 0  (clears when undisturbed: True)
+   BRANCH         two-statement  fired   1  violations 1  (clears when undisturbed: True)
+   setprofile     one-call       fired   3  violations 0  (clears when undisturbed: True)
+   setprofile     two-statement  fired   5  violations 1  (clears when undisturbed: True)
+   opcode-trace   one-call       fired  48  violations 0  (clears when undisturbed: True)
+   opcode-trace   two-statement  fired  15  violations 5  (clears when undisturbed: True)
+3.12.3 B {'profile_c_calls': ['deque.extend'], 'monitoring_CALLs': ['chain', 'compress', 'deque.extend', 'map', 'off_onecall'], 'inner_seen': [], 'cleared': True}
+3.12.3 C audit events during one-call steps: []
+3.12.3 D gc+SIGALRM one-call {'iters': 4455, 'interrupts': 27291, 'violations': 0}
+3.12.3 D gc+SIGALRM two-statement {'iters': 21261, 'interrupts': 68612, 'violations': 0}
+3.12.3 E threads+yielding profiler one-call {'samples': 75228, 'clear': 0, 'opens': 25076, 'S_left': False, 'anchors_left': 0}
+3.12.3 E threads+yielding profiler two-statement {'samples': 70086, 'clear': 169, 'opens': 23362, 'S_left': False, 'anchors_left': 0}
+3.12.3 F {'get_tool_is_name': True, 'get_events_us': 0.041, 'set_events_unchanged_us': 0.044, 'toggle_us': 0.345, 'on_onecall_S_set_us': 1.624, 'popoff_clear_plus_set_us': 2.601}

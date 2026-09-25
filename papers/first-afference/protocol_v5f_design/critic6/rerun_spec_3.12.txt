@@ -1,0 +1,9 @@
+3.12.3 backward jumps: {'_run': [], '_commit': [], '_unwind_on': [], '_unwind_off': [], '_detach': []}
+3.12.3 plain run: 7 S in body True after False anchors 0 flags {}
+3.12.3 inject _run          39 trials: {('KI', 'NOT CLAIMED', 'anchors=0 event=0'): 13, ('KI', 'finally ran', 'anchors=0 event=0'): 20, ('KI', 'NOT CLAIMED', 'anchors=1 event=1'): 6}
+3.12.3 inject _commit       24 trials: {('KI', 'finally ran', 'anchors=0 event=0'): 24}
+3.12.3 inject _unwind_on   117 trials: {('KI', 'finally ran', 'anchors=0 event=0'): 117}
+3.12.3 inject _unwind_off   53 trials: {('KI', 'finally ran', 'anchors=1 event=1'): 51, ('KI', 'finally ran', 'anchors=0 event=0'): 2}
+3.12.3 inject _detach       32 trials: {('KI', 'NOT CLAIMED', 'anchors=1 event=1'): 6, ('KI', 'finally ran', 'anchors=1 event=1'): 24, ('KI', 'finally ran', 'anchors=0 event=0'): 2}
+3.12.3 backward jumps (other steps): {'_named': [], '_take': [], '_register': [], '_set_local': []}
+3.12.3 take->named True register prev [True, True, True, True, True] again [True, True, True, True, True] local True | taken by another: named False register [] local untouched True

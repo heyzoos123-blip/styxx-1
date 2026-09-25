@@ -90,6 +90,10 @@ def main() -> int:
     }
     battery_composition["n_blockers_with_variants"] = len(battery_composition["blockers_with_variants"])
     fi = load("fault_injection_v5_result.json")
+    fi_runs = {"py311_exception": fi, "py311_keyboardinterrupt": load("fault_injection_v5_result_keyboardinterrupt.json"),
+               "py310_exception": load("fault_injection_v5_result_py310.json"),
+               "py312_exception": load("fault_injection_v5_result_py312.json"),
+               "py313_exception": load("fault_injection_v5_result_py313.json")}
     cr = json.loads((HERE / "protocol_v5_redteam" / "round4" / "capture_recapture.json").read_text(encoding="utf-8"))
     bn = json.loads((HERE / "protocol_v5_redteam" / "round4" / "blockers_against_nversion.json").read_text(encoding="utf-8"))
     bat = battery()
@@ -150,9 +154,23 @@ def main() -> int:
                     "n_not_confirmed": r4["n_not_confirmed"], **{f"n_{k.lower()}": v for k, v in r4["counts_confirmed"].items()},
                     "dry": r4["dry"]},
         "closure_battery_composition": battery_composition,
-        "fault_injection": {"n_fault_points": fi["n_fault_points"], "n_not_clean": fi["n_not_clean"],
-                            "n_scenarios": len(fi["scenarios"]), **{f"n_{k.lower()}": v for k, v in fi["totals"].items()},
-                            "python": fi["python"]},
+        "fault_injection": {
+            **{tag: {"python": d["python"], "exception_class": d["exception_class"],
+                     "n_fault_points": d["n_fault_points"], "n_stateful_points": d["n_stateful_points"],
+                     "n_stateless_points": d["n_fault_points"] - d["n_stateful_points"],
+                     "n_stateless_not_clean": sum(v for k, v in d["totals_by_region"]["stateless"].items() if k != "CLEAN"),
+                     "n_damaging": d["n_damaging"], "n_stateful_damaging": d["n_stateful_damaging"],
+                     "frac_stateful_damaging": round(d["n_stateful_damaging"] / d["n_stateful_points"], 4),
+                     "n_distinct_damaging_sites": len({f"{r['where'][0]}:{r['where'][1]}"
+                                                       for s in d["scenarios"].values() for r in s["not_clean"]
+                                                       if r["kind"] in ("HANG", "BREAKS_NEXT", "PERSISTS", "CLEARED")
+                                                       and r["where"]}),
+                     "n_hang_sites": d["distinct_sites_by_class"].get("HANG", 0),
+                     **{f"n_{k.lower()}": v for k, v in d["totals"].items()}}
+               for tag, d in fi_runs.items()},
+            "n_scenarios": len(fi["scenarios"]),
+            "n_configurations": len(fi_runs),
+            "every_configuration_damaged": all(d["n_damaging"] > 0 for d in fi_runs.values())},
         "capture_recapture": {k: {"s_obs": cr[k]["s_obs"], "chao2": cr[k]["chao2"],
                                   "estimated_unfound": cr[k]["estimated_unfound"],
                                   "ci95_low": cr[k]["ci95"][0], "ci95_high": cr[k]["ci95"][1],

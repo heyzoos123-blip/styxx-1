@@ -6,11 +6,14 @@ and the machinery is left half-transitioned. Examples are a lock held for good, 
 never returns to zero, or a minted code object that is never restored. A red team finds such points by
 luck. This script finds all of them, for the scenarios it runs.
 
-Method. For each scenario, the script first runs it clean under ``sys.settrace`` with opcode tracing
-on the machinery's own code objects (every function of the v5 region: the tracer's methods, target
-resolution and provenance), and counts the opcode events those frames execute. That count, N, is the
-scenario's fault space. Then, for each k in 1..N, it runs the scenario again and raises ``Injected``
-(an ``Exception`` subclass, which is what a signal handler usually raises) at the k-th machinery opcode.
+Method. The script traces the machinery's own code objects (every function of the v5 region: the
+tracer's methods, target resolution and provenance) with ``sys.settrace`` and per-opcode events. For
+each scenario it first runs the scenario twice without injecting: on 3.12+ settrace misses opcode
+events on a code object's first calls in a process, so the first run only warms the instrumentation.
+Then for k = 1, 2, ... it runs the scenario again and raises the injected exception at the k-th
+machinery opcode, and it stops at the first k that the run never reaches. Because the interpreter
+removes a trace function that raises, each injected run is preceded by one more warm-up run. The fault space is
+therefore enumerated by the runs themselves, not sized from one clean run.
 The profile hook itself is out of reach: CPython suspends tracing inside a profile callback. Its
 failure modes are the H1/H2 hazard sweeps' business.
 
@@ -90,6 +93,10 @@ class InjectedInterrupt(KeyboardInterrupt):
 
 EXC = {"exception": Injected, "keyboardinterrupt": InjectedInterrupt}
 CLASSES = ("CLEAN", "CONVERTED", "CLEARED", "PERSISTS", "BREAKS_NEXT", "HANG")
+# A trace function that raises is removed by the interpreter. On 3.12+ a re-installed one then misses
+# opcode events on each code object's first calls again, so every injected run is preceded by one
+# traced, uninjected run of the same scenario. On 3.10/3.11 this changes nothing but the runtime.
+WARM_EACH = True
 
 
 # -- the machinery's code objects -------------------------------------------------------------
@@ -337,15 +344,26 @@ def main() -> int:
     for name in names:
         fn = SCENARIOS[name]
         force_reset(env)
+        run_injected(fn, env, codes, None, exc_cls)          # warm-up: instruments code objects on 3.12+
+        force_reset(env)
         inj, clean_out, exc = run_injected(fn, env, codes, None, exc_cls)
         base_bad = state_problems(env)
         n = inj.count
         rows, tally = [], {k: 0 for k in CLASSES}
         split = {"stateful": {k: 0 for k in CLASSES}, "stateless": {k: 0 for k in CLASSES}}
-        pts = range(1, n + 1) if not a.max_points else range(1, min(n, a.max_points) + 1)
-        for k in pts:
+        k, n_run = 0, 0
+        while True:
+            k += 1
+            if a.max_points and k > a.max_points:
+                break
             force_reset(env)
+            if WARM_EACH:
+                run_injected(fn, env, codes, None, exc_cls)      # re-warm: see the docstring
+                force_reset(env)
             inj, out, exc = run_injected(fn, env, codes, k, exc_cls)
+            if inj.fired_where is None:                          # the run never reached point k: done
+                break
+            n_run += 1
             propagated = isinstance(exc, exc_cls)
             other_exc = exc is not None and not propagated
             bad = state_problems(env)
@@ -387,10 +405,11 @@ def main() -> int:
             where[key][r["kind"]] += 1
         results[name] = {"clean_run": {"out": repr(clean_out)[:200], "raised": repr(exc)[:200] if exc else None,
                                        "state_after": base_bad},
-                         "n_fault_points": n, "n_run": len(pts), "tally": tally, "by_region": split,
+                         "n_opcodes_clean_run": n, "n_fault_points": n_run, "n_run": n_run,
+                         "tally": tally, "by_region": split,
                          "n_not_clean": sum(v for k, v in tally.items() if k != "CLEAN"),
                          "by_source_line": dict(sorted(where.items())), "not_clean": rows}
-        print(f"{name:16s} points {n:5d}  " + "  ".join(f"{k} {v}" for k, v in tally.items()), flush=True)
+        print(f"{name:16s} points {n_run:5d} (clean run {n})  " + "  ".join(f"{c} {v}" for c, v in tally.items()), flush=True)
     force_reset(env)
     tot = {k: sum(r["tally"][k] for r in results.values()) for k in CLASSES}
     region = {reg: {k: sum(r["by_region"][reg][k] for r in results.values()) for k in CLASSES}

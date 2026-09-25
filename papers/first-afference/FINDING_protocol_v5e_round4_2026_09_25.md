@@ -16,7 +16,7 @@ Fathom Lab · 2026-09-25
 Red-team round 4 then returned **NOT SHIPPABLE**:
 
 - 58 of 60 distinct findings were confirmed by independent verifiers.
-- 6 of them are blockers. Two of these hold only on 3.10 or 3.11, which contradicts the second verdict.
+- 6 of them are blockers. Two of these depend on the Python version, which contradicts the second verdict.
 - 29 are holes in the frozen exam.
 
 Every earlier blocker it rebuilt held, as round 2 had reported for round 1's. Here that meant all 10 blockers from
@@ -62,8 +62,8 @@ shows is an ancestor of the first implementation commit `8b805e26`. The exam has
 11 pinned residuals, and v5e met all three families exactly. v5e also passed three hazard sweeps. Two of them, H1 and H2,
 were each paired with a mutant the sweep had to catch:
 
-- 0 hangs. The prereg disclosed that H1 cannot reach a lock shared only by the machinery and the hook, and that is the
-  class that blocker 5 belongs to.
+- 0 hangs. Blocker 5, a hook exception that skips the lock's release, is outside H1's reach. It reproduced under H2's
+  pattern, whose check ignores the lock.
 - 20 of 20 signal exceptions propagated.
 - 5 of 5 KeyboardInterrupt cases held. This sweep had no mutant.
 
@@ -83,8 +83,8 @@ construction. On v5e it ran 3000 programs with 0 disagreements. Its first versio
 the cut removed on purpose, 0 of 300 programs disagreed. That positive control, run on the design prototype, caught the
 blindness before the freeze. With the cut removed, 44 of 600 programs now disagree, both on the prototype and on v5e (aux
 gate A4). The other two controls were run on the prototype only. Crediting any open section showed up in 245 of 600
-programs, and removing the minted identity showed up in all 600 programs. The fuzzer did not find blockers 3 and 4, although both
-lie in its domain.
+programs, and removing the minted identity showed up in all 600 programs. Blockers 3 and 4 lie outside the fuzzer's
+domain, so it could not have found them.
 
 **A second implementation and four Pythons.** A second implementation was written from the frozen spec, on the freeze
 tree, which never contained the first implementation. It started from the v5d code, it could run the exam and the fuzzer,
@@ -143,8 +143,8 @@ recorded unverified: styxx silently replaces the yappi profiler and still gives 
 4. **A tracer that declares `asyncio.events:Handle._run` breaks the dispatch cut for the other tracers.** Asyncio work in
    their loops, including jobs submitted by another thread, is then credited across the cut, even before the declaring
    tracer exits. The declaration is contrived, but the effect is real.
-5. **An exception raised inside the hook during `_open`'s lock exit leaves the lock held, and other threads hang.** This is
-   the class of R3-B3, and the H1 sweep could not reach it.
+5. **An exception raised inside the hook during `_open`'s lock exit leaves the lock held, and other threads hang.** The
+   hazard sweeps could not see it: H1 cannot reach it, and H2's check ignores the lock.
 6. **On 3.10, an open section can revert closure writes made by other threads.** CPython 3.10 copies locals back after a
    Python-level profile callback. The traced program is corrupted, not just the verdict.
 
@@ -164,8 +164,8 @@ trace field crashes scoring instead of being refused. Other confirmed findings b
 
 - J1-X1, now blocker 1;
 - J1-X2 / R3-B2, now blocker 4;
-- the R3-B3 class, now blocker 5;
-- R1-B4, R2-B3, R2-D6 and R3-D3.
+- R3-D3, a lock hazard, now blocker 5;
+- and others the verifiers named, among them R1-B1, R1-B4, R1-D1, R2-B3 and R2-D6.
 
 ### The finding about our own method
 
@@ -179,31 +179,42 @@ weakened-rule mutants, each paired with a witness program.
 ## Three measurements added after round 4 (exploratory, not preregistered)
 
 **The blockers are in the spec, not in one implementation.** Each of the six blocker repros was run against the primary
-and against the independent second implementation. All 6 reproduce on both, on the same Python versions
+and against the independent second implementation. So were the two routes those repros skip: throwing into an unstarted
+generator (blocker 3) and the cut failing before the declaring tracer exits (blocker 4). All 6 blockers and both routes
+reproduce on both implementations, on the same Python versions
 (`protocol_v5_redteam/round4/blockers_against_nversion.json`). The two implementations agreed on every exam case and
-every fuzz program, and they share every blocker. This is a measured case of correlated failure across N-version
-implementations of one specification. Agreement between the two tested the design against itself. The red team tested
-it against the world.
+every fuzz program, and they share every blocker. As the aux prereg anticipated, this is common-mode failure: both follow
+the spec, including its code sketches. Agreement tested the design against itself. The red team tested it against seven
+lenses of attack.
 
-**An exception at every opcode.** Rounds 3 and 4 found exception-safety failures one lucky bytecode at a time.
-`fault_injection_v5.py` enumerates them instead. It runs 5 scenarios. In each, it raises an exception at every opcode
-that the tracer's own machinery executes, outside the profile hook, one point per run, and checks the invariants before
-any repair. On v5e, 2,547 of 10,371 fault points leave it broken:
+**An exception at every opcode.** Rounds 3 and 4 found exception-safety failures one bytecode at a time.
+`fault_injection_v5.py` maps those outside the profile hook exhaustively. It runs 5 scenarios. In each, it raises an
+exception at every opcode that v5's own code executes outside the hook, one point per run. It then checks the invariants
+on the damaged state, before any repair, and runs one clean trace on top of it. On CPython 3.11, with an Exception
+subclass, 10,371 points were run:
 
-- 1,813 break the next clean trace;
-- 562 leave state behind;
-- 130 hang, because another thread can never take the lock again;
-- 42 convert the exception into a false refusal.
+- 3,371 are in stateless score-time validators, and all of them are clean.
+- 2,505 of the 7,000 stateful points damage v5e, at 67 distinct source lines:
+  - 130 hang, all at 4 `with _LOCK:` exits. Those are the instructions blocker 5 reaches through the hook, and in
+    practice only such a callback can raise there.
+  - 120 break the next clean trace.
+  - 1,693 leave damage that a clean next trace does not clear.
+  - 562 leave damage that the next clean trace clears.
+- 42 more become the UNRESOLVED refusal the spec requires, with the exception chained as its cause.
 
-The map is exhaustive for single-threaded exceptions landing at an opcode in these scenarios. It does not cover fork,
-thread races, the hook itself, or version-specific runtime behaviour.
+A KeyboardInterrupt pass gives the same 2,505 damaging points and no conversions. Every Python from 3.10 to 3.13 shows
+damage: 2,375 points on 3.10, 2,358 on 3.12 and 1,999 on 3.13, all with an Exception subclass. A point is one opcode execution, so the same line recurs
+across scenarios. The map covers these scenarios and these exception classes. It does not cover fork, thread races, the
+hook itself, or which opcodes a real signal can reach.
 
 **How much round 4 left unfound.** Each lens is treated as a sampling occasion over one fixed implementation, and a finding
 reported by several lenses as a recapture. The incidence-based Chao2 estimator then puts the reachable total at 79.0
-distinct confirmed findings (95% interval 66.03 to 112.83), against 58 found. That is about 74% found and about 21
-unfound (`protocol_v5_redteam/round4/capture_recapture.json`). This is a lower bound, because the lenses aimed at different
-regions. It puts a number on "not dry", and it gives the next red team a stopping rule that can be frozen before the
-round starts.
+distinct confirmed findings (95% interval 66.03 to 112.83), against 58 found: about 73% found, and about 21 unfound
+(`protocol_v5_redteam/round4/capture_recapture.json`). The pooled figure mixes implementation findings with exam holes.
+For the implementation findings alone, which decide shipping, 29 were found out of an estimated 43.69, or 66%. The
+direction of the error is unknown. Lenses that specialise by region inflate the singletons and push the estimate up, and
+wrong deduplication merges push it down. The estimate puts a rough number on "not dry". A stopping rule built on it still
+has to be defined, with a threshold, and checked on rounds whose totals are known.
 
 ## Limits of this finding
 
@@ -211,10 +222,10 @@ round starts.
 - Round 4 stopped after one finder round, because that round already decided the ship question. It is recorded as
   **not dry**, and a stated limit it did not falsify is untested, not confirmed.
 - The semantic-mutation census covers a hand-aimed set. Its detection rate is not the exam's power over all faults.
-- Round 4 classed 7 findings SPEC_FALSE. Several of its blockers and defects also falsify spec sentences, including one
-  stated limit. All of them are in the audit.
+- Round 4 classed 7 findings SPEC_FALSE. Several of its blockers and defects also falsify spec sentences, including at
+  least three stated limits. All of them are in the audit.
 - The two implementations share one spec and one model family. The blocker receipt now shows that this correlation is
   real.
 
-*Frozen before it was implemented, scored by its own tables, attacked before it could be called done, and its draft
-attacked before it was certified. It did not ship, and the reasons are in the receipts.*
+*Frozen before its implementation's first commit, scored by its own tables, attacked before it could be called done, and
+its draft attacked twice before it was certified. It did not ship; the receipts say why.*

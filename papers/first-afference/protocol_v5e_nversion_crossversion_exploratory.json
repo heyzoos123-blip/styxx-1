@@ -1,0 +1,61 @@
+{
+ "generator": "papers/first-afference/nversion_crossversion_exploratory.py",
+ "generator_sha256": "960962c4eb4cbde6661659aea8ed9d62937d7c95e44ce1932649f56620206f60",
+ "what": "EXPLORATORY, not preregistered and not a gate: the N-version implementation (nversion_v5e/protocol_nv.py) run through the frozen exam (--smoke --full-battery) and the frozen fuzzer (--n 1000) on each of four CPython versions. The aux prereg gates the PRIMARY on four versions and the N-version on the scoring interpreter only; this fills the other three cells.",
+ "nversion_sha256": "efa9a3ff59d3485545b37340f1bd83bd3e7a94846f5c0ceb622e9647e7946216",
+ "runner_sha256": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+ "fuzzer_sha256": "29a371c54cc98c2d52174228b6b01bbac109fd21317a9a7ef5e63b28ef86c89b",
+ "per_version": {
+  "3.11.15": {
+   "exam_clean": true,
+   "n_cases": 202,
+   "failing": [],
+   "fuzz_n": 1000,
+   "fuzz_oracle_disagreements": 0,
+   "fuzz_leftovers": 0,
+   "runs": [
+    "exit 0",
+    "exit 0"
+   ]
+  },
+  "3.10.20": {
+   "exam_clean": true,
+   "n_cases": 202,
+   "failing": [],
+   "fuzz_n": 1000,
+   "fuzz_oracle_disagreements": 0,
+   "fuzz_leftovers": 0,
+   "runs": [
+    "exit 0",
+    "exit 0"
+   ]
+  },
+  "3.12.3": {
+   "exam_clean": true,
+   "n_cases": 203,
+   "failing": [],
+   "fuzz_n": 1000,
+   "fuzz_oracle_disagreements": 0,
+   "fuzz_leftovers": 0,
+   "runs": [
+    "exit 0",
+    "exit 0"
+   ]
+  },
+  "3.13.12": {
+   "exam_clean": true,
+   "n_cases": 203,
+   "failing": [],
+   "fuzz_n": 1000,
+   "fuzz_oracle_disagreements": 0,
+   "fuzz_leftovers": 0,
+   "runs": [
+    "exit 0",
+    "exit 0"
+   ]
+  }
+ },
+ "n_versions": 4,
+ "case_outcome_diffs_across_versions": [],
+ "n_versions_clean": 4
+}

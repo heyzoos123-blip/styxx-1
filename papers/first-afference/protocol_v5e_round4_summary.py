@@ -96,6 +96,7 @@ def main() -> int:
                "py313_exception": load("fault_injection_v5_result_py313.json")}
     cr = json.loads((HERE / "protocol_v5_redteam" / "round4" / "capture_recapture.json").read_text(encoding="utf-8"))
     bn = json.loads((HERE / "protocol_v5_redteam" / "round4" / "blockers_against_nversion.json").read_text(encoding="utf-8"))
+    sig = json.loads((HERE / "protocol_v5_redteam" / "round4" / "py313_signal_backedge.json").read_text(encoding="utf-8"))
     bat = battery()
     held_everywhere = all(b["held"] == b["cases"] and b["cases"] > 0 for b in bat.values())
     res = {
@@ -179,8 +180,16 @@ def main() -> int:
         "blockers_vs_nversion": {"n_blockers": bn["n_blockers"],
                                  "n_reproduced_on_primary": bn["n_blockers_reproduced_on_primary"],
                                  "n_reproduced_on_nversion": bn["n_blockers_reproduced_on_nversion"],
+                                 "n_variant_routes": bn.get("n_variants", 0),
+                                 "n_variant_routes_on_nversion": bn.get("n_variants_reproduced_on_nversion", 0),
                                  "same_versions_every_blocker": all(v["primary"] == v["nversion"] for v in bn["reproduced_on"].values())},
         "round_4_surfaced_unverified": r4.get("n_surfaced_unverified", 0),
+        "round_4_found_after": r4.get("n_found_after_round_4", 0),
+        "py313_signal_backedge": {v: {"finally_skipped_of_5": row["interp"].get("n_finally_skipped"),
+                                      "v5e_lock_left_held": row["v5e"].get("n_lock_left_held"),
+                                      "v5e_interrupted": row["v5e"].get("n_interrupted")}
+                                  for v, row in sig["per_version"].items()},
+        "py313_signal_n_versions_lock_held": len(sig["versions_leaving_lock_held"]),
         "closure_battery": bat,
         "closure_battery_n_versions": len(bat),
         "closure_battery_cases": max((b["cases"] for b in bat.values()), default=0),

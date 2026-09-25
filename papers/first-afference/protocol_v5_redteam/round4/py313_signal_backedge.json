@@ -1,0 +1,203 @@
+{
+ "what": "does a signal exception at a while-loop back-edge skip finally (CPython #130279), and does it leave v5e's _LOCK held during tracer exit? one row per interpreter",
+ "generator": "papers/first-afference/protocol_v5_redteam/round4/py313_signal_backedge.py",
+ "generator_sha256": "4c1e595aeecea66bce2d68bdc9e1c125249a6ada4a66273d8a1fe9d64db2f24f",
+ "upstream_issue": "https://github.com/python/cpython/issues/130279",
+ "per_version": {
+  "3.11.15": {
+   "interp": {
+    "finally_ran": [
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "n_finally_skipped": 0,
+    "exception_table": [
+     "6-44->90",
+     "90-136->136"
+    ],
+    "jump_backward_offsets": [],
+    "jump_backward_outside_table": []
+   },
+   "v5e": {
+    "n_openings": 100000,
+    "exit_seconds": 0.0013,
+    "trials": [
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     }
+    ],
+    "n_interrupted": 4,
+    "n_lock_left_held": 0
+   }
+  },
+  "3.10.20": {
+   "interp": {
+    "finally_ran": [
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "n_finally_skipped": 0,
+    "exception_table": [],
+    "jump_backward_offsets": [],
+    "jump_backward_outside_table": []
+   },
+   "v5e": {
+    "n_openings": 100000,
+    "exit_seconds": 0.0032,
+    "trials": [
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     }
+    ],
+    "n_interrupted": 4,
+    "n_lock_left_held": 0
+   }
+  },
+  "3.12.3": {
+   "interp": {
+    "finally_ran": [
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "n_finally_skipped": 0,
+    "exception_table": [
+     "6-40->78",
+     "78-116->116"
+    ],
+    "jump_backward_offsets": [
+     40
+    ],
+    "jump_backward_outside_table": [
+     40
+    ]
+   },
+   "v5e": {
+    "n_openings": 100000,
+    "exit_seconds": 0.002,
+    "trials": [
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": true
+     }
+    ],
+    "n_interrupted": 4,
+    "n_lock_left_held": 0
+   }
+  },
+  "3.13.12": {
+   "interp": {
+    "finally_ran": [
+     false,
+     false,
+     false,
+     false,
+     false
+    ],
+    "n_finally_skipped": 5,
+    "exception_table": [
+     "6-44->84",
+     "84-122->122"
+    ],
+    "jump_backward_offsets": [
+     44
+    ],
+    "jump_backward_outside_table": [
+     44
+    ]
+   },
+   "v5e": {
+    "n_openings": 100000,
+    "exit_seconds": 0.0024,
+    "trials": [
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": false
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": false
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": false
+     },
+     {
+      "interrupted": true,
+      "at": "h:92",
+      "lock_free_for_other_thread": false
+     }
+    ],
+    "n_interrupted": 4,
+    "n_lock_left_held": 4
+   }
+  }
+ },
+ "versions_skipping_finally": [
+  "3.13.12"
+ ],
+ "versions_leaving_lock_held": [
+  "3.13.12"
+ ]
+}

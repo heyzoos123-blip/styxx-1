@@ -38,6 +38,8 @@ VARIANTS = {
         "verify/unstarted-generator-credited-py310-311/my_repro.py", "throw_in", "-> PASS"),
     "stale-stop-after-mint-of-handle-run:before_exit": (
         "verify/stale-stop-after-mint-of-handle-run/v_repro2.py", "B-entered-inside-task-step", "-> PASS"),
+    "stale-stop-after-mint-of-handle-run:cross_thread_job": (
+        "verify/stale-stop-after-mint-of-handle-run/v_repro.py", "x65  lifo", "-> PASS"),
 }
 
 
@@ -100,8 +102,8 @@ def main() -> int:
            "n_blockers": len(BLOCKERS),
            "n_variants": len(VARIANTS),
            "n_variants_reproduced_on_nversion": sum(1 for k in VARIANTS if summ[k]["nversion"]),
-           "n_blockers_reproduced_on_nversion": sum(1 for s in summ.values() if s["nversion"]),
-           "n_blockers_reproduced_on_primary": sum(1 for s in summ.values() if s["primary"]),
+           "n_blockers_reproduced_on_nversion": sum(1 for k in BLOCKERS if summ[k]["nversion"]),
+           "n_blockers_reproduced_on_primary": sum(1 for k in BLOCKERS if summ[k]["primary"]),
            "rows": rows}
     (HERE / "blockers_against_nversion.json").write_text(json.dumps(res, indent=1) + "\n", encoding="utf-8")
     for k, s in summ.items():

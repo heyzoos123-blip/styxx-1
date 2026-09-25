@@ -18,6 +18,8 @@ Red-team round 4 then returned **NOT SHIPPABLE**:
 - 58 of 60 distinct findings were confirmed by independent verifiers.
 - 6 of them are blockers. Two of these depend on the Python version, which contradicts the second verdict.
 - 29 are holes in the frozen exam.
+- A seventh blocker-class failure surfaced after the round: on CPython 3.13, an ordinary signal during tracer exit can
+  leave the lock held.
 
 Every earlier blocker it rebuilt held, as round 2 had reported for round 1's. Here that meant all 10 blockers from
 rounds 1–3, with variants for round 1's, rebuilt alongside earlier defects: 41 of 41 cases held on each of 4 Python
@@ -165,7 +167,7 @@ trace field crashes scoring instead of being refused. Other confirmed findings b
 - J1-X1, now blocker 1;
 - J1-X2 / R3-B2, now blocker 4;
 - R3-D3, a lock hazard, now blocker 5;
-- and others the verifiers named, among them R1-B1, R1-B4, R1-D1, R2-B3 and R2-D6.
+- and others the verifiers named, among them R1-B1, R1-D1 and R2-B3.
 
 ### The finding about our own method
 
@@ -179,39 +181,51 @@ weakened-rule mutants, each paired with a witness program.
 ## Three measurements added after round 4 (exploratory, not preregistered)
 
 **The blockers are in the spec, not in one implementation.** Each of the six blocker repros was run against the primary
-and against the independent second implementation. So were the two routes those repros skip: throwing into an unstarted
-generator (blocker 3) and the cut failing before the declaring tracer exits (blocker 4). All 6 blockers and both routes
-reproduce on both implementations, on the same Python versions
+and against the independent second implementation. So were 3 routes those repros skip. For blocker 3, throwing into an
+unstarted generator. For blocker 4, the cut failing before the declaring tracer exits, and another thread's job credited
+across the cut. All 6 blockers and all 3 routes reproduce on both implementations, on the same Python versions
 (`protocol_v5_redteam/round4/blockers_against_nversion.json`). The two implementations agreed on every exam case and
 every fuzz program, and they share every blocker. As the aux prereg anticipated, this is common-mode failure: both follow
 the spec, including its code sketches. Agreement tested the design against itself. The red team tested it against seven
 lenses of attack.
 
 **An exception at every opcode.** Rounds 3 and 4 found exception-safety failures one bytecode at a time.
-`fault_injection_v5.py` maps those outside the profile hook exhaustively. It runs 5 scenarios. In each, it raises an
-exception at every opcode that v5's own code executes outside the hook, one point per run. It then checks the invariants
-on the damaged state, before any repair, and runs one clean trace on top of it. On CPython 3.11, with an Exception
-subclass, 10,371 points were run:
+`fault_injection_v5.py` maps those outside the profile hook along the paths of 5 scenarios. In each scenario it raises
+one exception per run at each opcode it reaches in v5's code outside the hook. It then checks the invariants on the
+damaged state, before any repair, and runs one clean trace on top of it. On CPython 3.11, with an Exception subclass,
+10,371 points were run:
 
 - 3,371 are in stateless score-time validators, and all of them are clean.
-- 2,505 of the 7,000 stateful points damage v5e, at 67 distinct source lines:
-  - 130 hang, all at 4 `with _LOCK:` exits. Those are the instructions blocker 5 reaches through the hook, and in
-    practice only such a callback can raise there.
+- 2,505 of the 7,000 stateful points damage v5e, at 67 distinct (function, line) sites:
+  - 130 hang, all at 4 `with _LOCK:` exits. On 3.11 only a callback such as the hook can raise there, and that is
+    blocker 5's window.
   - 120 break the next clean trace.
   - 1,693 leave damage that a clean next trace does not clear.
   - 562 leave damage that the next clean trace clears.
 - 42 more become the UNRESOLVED refusal the spec requires, with the exception chained as its cause.
 
-A KeyboardInterrupt pass gives the same 2,505 damaging points and no conversions. Every Python from 3.10 to 3.13 shows
-damage: 2,375 points on 3.10, 2,358 on 3.12 and 1,999 on 3.13, all with an Exception subclass. A point is one opcode execution, so the same line recurs
-across scenarios. The map covers these scenarios and these exception classes. It does not cover fork, thread races, the
-hook itself, or which opcodes a real signal can reach.
+A KeyboardInterrupt pass gives the same 2,505 damaging points and no conversions. On 3.10 the map shows 2,375 damaging
+points. The 3.12 and 3.13 maps are partial, because settrace-driven injection behaves differently there: on 3.13 it never
+reaches `_close`, and on 3.12 it injects some opcodes twice. Porting the injector to `sys.monitoring` is on the backlog. A
+point is one opcode execution, so the same line recurs across scenarios. The map does not cover fork, thread races, the
+hook itself, or code that no scenario runs. That last category includes the site of one confirmed round-4 defect.
+
+**On 3.13, a real signal hangs v5e with no hook involved.** The third attack pass on this finding turned up a seventh
+blocker-class failure, and `protocol_v5_redteam/round4/py313_signal_backedge.py` re-checks it on every interpreter. On
+3.13.12, a SIGALRM handler that raises KeyboardInterrupt during tracer exit left the lock held in 4 of 4 trials. It did not
+on 3.10, 3.11 or 3.12 in any trial. The cause is the upstream CPython issue numbered #130279 in its tracker. In a `while`
+loop, the closing jump where signal
+handlers run can fall outside the try body's exception-table range. An exception raised there then escapes without running
+`finally`, or a `with` block's exit: the probe's `finally` was skipped 5 of 5 times on 3.13.12. The interpreter bug is known
+upstream. Its consequence for v5e is new here: on 3.13, an ordinary Ctrl-C or timeout can hang every later trace in the
+process, and the repair must not hold a lock across a loop.
 
 **How much round 4 left unfound.** Each lens is treated as a sampling occasion over one fixed implementation, and a finding
 reported by several lenses as a recapture. The incidence-based Chao2 estimator then puts the reachable total at 79.0
 distinct confirmed findings (95% interval 66.03 to 112.83), against 58 found: about 73% found, and about 21 unfound
 (`protocol_v5_redteam/round4/capture_recapture.json`). The pooled figure mixes implementation findings with exam holes.
-For the implementation findings alone, which decide shipping, 29 were found out of an estimated 43.69, or 66%. The
+For the implementation findings alone, which decide shipping, 29 were found out of an estimated 43.69, or 66%, with a
+95% interval of 32.44 to 91.71 for the total. The
 direction of the error is unknown. Lenses that specialise by region inflate the singletons and push the estimate up, and
 wrong deduplication merges push it down. The estimate puts a rough number on "not dry". A stopping rule built on it still
 has to be defined, with a threshold, and checked on rounds whose totals are known.

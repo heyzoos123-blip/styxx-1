@@ -306,6 +306,10 @@
   "surfaced_during_verification": {
    "yappi-silently-replaced": "Found by the scope judge of profile-module-refuses-on-312 (round4/verdicts.json): yappi's profiler is not refused at open; styxx replaces it, yappi records nothing from the section onward, and the verdict is still PASS. The judge wrote that it 'deserves its own DEFECT finding'. NOT independently verified; recorded so the repair cycle and round 5 carry it."
   },
-  "n_surfaced_unverified": 1
+  "n_surfaced_unverified": 1,
+  "found_after_round_4": {
+   "py313-signal-at-backedge-leaves-lock-held": "BLOCKER-class, CPython 3.13 only. Found by the third attack pass on the round-4 finding (verifier reproduced it) and re-checked by protocol_v5_redteam/round4/py313_signal_backedge.py: on 3.13.12 a SIGALRM handler raising KeyboardInterrupt during cov.__exit__ leaves _LOCK held in 4/4 trials; 3.10, 3.11 and 3.12 leave it free. Cause: CPython issue #130279 -- a while loop's closing JUMP_BACKWARD, where signal handlers run, falls outside the try body's exception-table range, so the exception escapes without running finally or a with-block's exit (the probe's finally is skipped 5/5 on 3.13.12). The interpreter bug is upstream and known; its consequence for v5e -- an ordinary Ctrl-C or timeout can hang every later trace, no hook involved -- is new here, and the repair must not hold a lock across a loop on 3.13."
+  },
+  "n_found_after_round_4": 1
  }
 }

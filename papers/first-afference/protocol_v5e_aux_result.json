@@ -1,0 +1,91 @@
+{
+  "prereg": "PREREG_protocol_v5e_aux_2026_09_24.md",
+  "smoke": false,
+  "shas": {
+    "aux": "99283b8b26240371f25102efa164477ba3f646b141920b602d889b25c2b068b6",
+    "runner": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+    "fuzzer": "29a371c54cc98c2d52174228b6b01bbac109fd21317a9a7ef5e63b28ef86c89b",
+    "impl": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
+    "nversion_impl": "efa9a3ff59d3485545b37340f1bd83bd3e7a94846f5c0ceb622e9647e7946216"
+  },
+  "fuzz_primary": {
+    "fuzz_n_programs": 3000,
+    "modes": {
+      "sync": 2000,
+      "async": 525,
+      "async_in_section": 475
+    },
+    "fuzz_oracle_disagreements": 0,
+    "fuzz_leftovers": 0,
+    "seconds": 4.36,
+    "disagreements": []
+  },
+  "fuzz_n_programs": 3000,
+  "fuzz_oracle_disagreements": 0,
+  "fuzz_leftovers": 0,
+  "fuzz_control_no_cut_disagreements": 44,
+  "fuzz_control_detail": "exit 0",
+  "nversion_exam_clean": 1.0,
+  "nversion_exam_failures": "exit 0",
+  "nversion_fuzz_oracle_disagreements": 0,
+  "nversion_trace_diffs": 0,
+  "nversion_trace_diff_examples": [],
+  "crossversion_n_versions": 4,
+  "crossversion_versions": [
+    "3.10.20",
+    "3.11.15",
+    "3.12.3",
+    "3.13.12"
+  ],
+  "crossversion_diffs": 0,
+  "crossversion_detail": {
+    "case_diffs": [],
+    "per_version": {
+      "3.10.20": {
+        "exam_clean": true,
+        "exam_run": "exit 0",
+        "fuzz_oracle_disagreements": 0,
+        "fuzz_run": "exit 0"
+      },
+      "3.11.15": {
+        "exam_clean": true,
+        "exam_run": "exit 0",
+        "fuzz_oracle_disagreements": 0,
+        "fuzz_run": "exit 0"
+      },
+      "3.12.3": {
+        "exam_clean": true,
+        "exam_run": "exit 0",
+        "fuzz_oracle_disagreements": 0,
+        "fuzz_run": "exit 0"
+      },
+      "3.13.12": {
+        "exam_clean": true,
+        "exam_run": "exit 0",
+        "fuzz_oracle_disagreements": 0,
+        "fuzz_run": "exit 0"
+      }
+    },
+    "version_keyed_skipped": [
+      "valid_cases:V33",
+      "violation_cases:X81",
+      "violation_cases:X82"
+    ]
+  },
+  "aux_frozen": 1.0,
+  "verdict": "PROCEED__the_rule_holds_for_two_implementations_on_four_pythons",
+  "gates": {
+    "A_FROZEN": true,
+    "A1_fuzz_population": true,
+    "A2_fuzz_matches_oracle": true,
+    "A3_fuzz_no_leftovers": true,
+    "A4_fuzz_sees_a_missing_cut": true,
+    "A5_second_implementation_passes_the_exam": true,
+    "A6_second_implementation_matches_oracle": true,
+    "A7_two_implementations_agree": true,
+    "A8_four_pythons": true,
+    "A9_identical_across_pythons": true
+  },
+  "prereg_commit": "84f5391f221b9a2c8e027b1d1d0e6abb58b1a79e",
+  "gates_sha256": "be90ba22cc6eee6a5b0cfcd86b42164f3e4925fc2e730913e76de54671666be5"
+}

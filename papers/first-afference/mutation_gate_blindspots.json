@@ -1,0 +1,87 @@
+{
+ "what": "shapes of coded emission the frozen mutation gate neither mutates nor flags, and a census of coded literals in the real implementation",
+ "gate_file": "papers/first-afference/mutation_gate.py",
+ "gate_sha256": "bd7769125fe836c7df6d031f1b6dbe189fc52f87158b067ac4aee23781546e72",
+ "impl_sha256": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
+ "controls_ok": true,
+ "shapes": {
+  "control: raise GateSpecError(literal)": {
+   "sites": 1,
+   "hygiene_violations": 0,
+   "blind": false
+  },
+  "control: expression call with literal": {
+   "sites": 1,
+   "hygiene_violations": 0,
+   "blind": false
+  },
+  "control: raise GateSpecError(non-literal)": {
+   "sites": 0,
+   "hygiene_violations": 1,
+   "blind": false
+  },
+  "raise via a helper that returns the exception": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "raise GateSpecError through a module attribute": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "raise an alias of GateSpecError": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "recorded problem appended by augmented assignment": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "emission as the value of a return": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "emission assigned to a name": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "emission inside a conditional expression": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "code in a keyword argument": {
+   "sites": 0,
+   "hygiene_violations": 0,
+   "blind": true
+  },
+  "code not at the start of the literal": {
+   "sites": 0,
+   "hygiene_violations": 1,
+   "blind": false
+  }
+ },
+ "n_blind_shapes": 8,
+ "blind_shapes": [
+  "code in a keyword argument",
+  "emission as the value of a return",
+  "emission assigned to a name",
+  "emission inside a conditional expression",
+  "raise GateSpecError through a module attribute",
+  "raise an alias of GateSpecError",
+  "raise via a helper that returns the exception",
+  "recorded problem appended by augmented assignment"
+ ],
+ "census": {
+  "coded_literals": 57,
+  "sites": 57,
+  "coded_literals_outside_every_site": []
+ },
+ "n_coded_literals_outside_every_site": 0,
+ "reading": "The gate's guarantee holds for the implementation it was run on only if the census finds no coded literal outside a site. It does not hold for arbitrary future implementations: every blind shape listed here would escape both the mutation gate and the hygiene check. A successor gate should mutate by coded literal (the census), not by statement shape."
+}

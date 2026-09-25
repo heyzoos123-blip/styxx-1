@@ -1,0 +1,4 @@
+3.12.3 shared W (critic c8):  V61 ({'A': {'f': 1}}, False) -> X35c accepted | X141 no CUT_MOVED
+3.12.3 fresh W per case:      V61 ({'A': {'f': 1}}, False) -> X35c CUT_UNAVAILABLE | X141 CUT_MOVED
+3.13.12 shared W (critic c8):  V61 ({'A': {'f': 1}}, False) -> X35c accepted | X141 no CUT_MOVED
+3.13.12 fresh W per case:      V61 ({'A': {'f': 1}}, False) -> X35c CUT_UNAVAILABLE | X141 CUT_MOVED

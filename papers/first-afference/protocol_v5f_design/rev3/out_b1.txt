@@ -1,0 +1,2 @@
+3.12.3 per section: rev 2 8.11 us, rev 3 10.47 us (+2.36 us)
+3.13.12 per section: rev 2 6.09 us, rev 3 7.36 us (+1.27 us)

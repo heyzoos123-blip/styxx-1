@@ -1,0 +1,8 @@
+3.12.3 rev 2, C open at start False, X paused at retire:tested           : {'B calls': {}, 'MONITOR_LOST': True, 'PY_UNWIND set while B open': False, 'global_events after exit': 0}
+3.12.3 rev 3, C open at start False, X paused at off:read                : pause point not reached (step 6 returned before it: nothing to clear)
+3.12.3 rev 3, C open at start True , X paused at off:read                : {'B calls': {'t': 1}, 'MONITOR_LOST': False, 'PY_UNWIND set while B open': True, 'global_events after exit': 0}
+3.12.3 rev 3, C open at start True , X paused at off:read+off:cleared    : {'B calls': {'t': 1}, 'MONITOR_LOST': False, 'PY_UNWIND set while B open': True, 'global_events after exit': 0}
+3.13.12 rev 2, C open at start False, X paused at retire:tested           : {'B calls': {}, 'MONITOR_LOST': True, 'PY_UNWIND set while B open': False, 'global_events after exit': 0}
+3.13.12 rev 3, C open at start False, X paused at off:read                : pause point not reached (step 6 returned before it: nothing to clear)
+3.13.12 rev 3, C open at start True , X paused at off:read                : {'B calls': {'t': 1}, 'MONITOR_LOST': False, 'PY_UNWIND set while B open': True, 'global_events after exit': 0}
+3.13.12 rev 3, C open at start True , X paused at off:read+off:cleared    : {'B calls': {'t': 1}, 'MONITOR_LOST': False, 'PY_UNWIND set while B open': True, 'global_events after exit': 0}

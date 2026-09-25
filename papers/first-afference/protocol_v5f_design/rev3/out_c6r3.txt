@@ -1,0 +1,4 @@
+3.12.3 main thread, before the self-trace: {'spec': {'A': {'t': 1}}, 'mutant': {}}
+3.12.3 inside the self-trace (default)   : {'spec': {'A': {'t': 1}}, 'mutant': {'A': {'t': 1}}}
+3.13.12 main thread, before the self-trace: {'spec': {'A': {'t': 1}}, 'mutant': {}}
+3.13.12 inside the self-trace (default)   : {'spec': {'A': {'t': 1}}, 'mutant': {'A': {'t': 1}}}

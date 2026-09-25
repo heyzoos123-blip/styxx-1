@@ -1,0 +1,8 @@
+3.12.3 test; call                   : non-empty seen at the call 0 times in 1165334 empty tests (0.4 s)
+3.12.3 test; return-if; call         : non-empty seen at the call 0 times in 1234515 empty tests (0.6 s)
+3.12.3 test or call (spec, one line) : non-empty seen at the call 0 times in 1363122 empty tests (0.5 s)
+3.12.3 test; C call; call (control) : non-empty seen at the call 195 times in 959784 empty tests (0.4 s)
+3.13.12 test; call                   : non-empty seen at the call 0 times in 1306449 empty tests (0.5 s)
+3.13.12 test; return-if; call         : non-empty seen at the call 0 times in 1582383 empty tests (0.8 s)
+3.13.12 test or call (spec, one line) : non-empty seen at the call 0 times in 1562927 empty tests (0.7 s)
+3.13.12 test; C call; call (control) : non-empty seen at the call 268 times in 1298335 empty tests (0.6 s)

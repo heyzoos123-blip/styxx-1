@@ -1,0 +1,22 @@
+3.12.3 trace active, no section, fault-free: lost 0 (timeouts 8699)
+3.12.3 rev 2 fault at open:appended   fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9469) | A calls {} MONITOR_LOST True
+3.12.3 rev 2 fault at on:read         fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 10569) | A calls {} MONITOR_LOST True
+3.12.3 rev 2 fault at open:on1        fired 1: anchors=0 global_events=4096 | then no section: lost  48359 (timeouts 70335) | A calls {} MONITOR_LOST False
+3.12.3 rev 2 fault at open:committed  fired 1: anchors=1 global_events=4096 | then no section: lost  48189 (timeouts 71932) | A calls {} MONITOR_LOST False
+3.12.3 rev 2 fault at open:on2        fired 1: anchors=1 global_events=4096 | then no section: lost  51880 (timeouts 71443) | A calls {} MONITOR_LOST False
+3.12.3 rev 3 fault at commit:0        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9771) | A calls {} MONITOR_LOST False
+3.12.3 rev 3 fault at on:read         fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 10460) | A calls {} MONITOR_LOST False
+3.12.3 rev 3 fault at commit:1        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9980) | A calls {} MONITOR_LOST False
+3.12.3 rev 3 fault at commit:2        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 10001) | A calls {} MONITOR_LOST False
+3.12.3 rev 3 fault at commit:3        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9810) | A calls {} MONITOR_LOST False
+3.13.12 trace active, no section, fault-free: lost 0 (timeouts 9577)
+3.13.12 rev 2 fault at open:appended   fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 8606) | A calls {} MONITOR_LOST True
+3.13.12 rev 2 fault at on:read         fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9301) | A calls {} MONITOR_LOST True
+3.13.12 rev 2 fault at open:on1        fired 1: anchors=0 global_events=4096 | then no section: lost  35882 (timeouts 51204) | A calls {} MONITOR_LOST False
+3.13.12 rev 2 fault at open:committed  fired 1: anchors=1 global_events=4096 | then no section: lost  35356 (timeouts 50706) | A calls {} MONITOR_LOST False
+3.13.12 rev 2 fault at open:on2        fired 1: anchors=1 global_events=4096 | then no section: lost  33552 (timeouts 49003) | A calls {} MONITOR_LOST False
+3.13.12 rev 3 fault at commit:0        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 10822) | A calls {} MONITOR_LOST False
+3.13.12 rev 3 fault at on:read         fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 10447) | A calls {} MONITOR_LOST False
+3.13.12 rev 3 fault at commit:1        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9661) | A calls {} MONITOR_LOST False
+3.13.12 rev 3 fault at commit:2        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9708) | A calls {} MONITOR_LOST False
+3.13.12 rev 3 fault at commit:3        fired 1: anchors=0 global_events=0    | then no section: lost      0 (timeouts 9830) | A calls {} MONITOR_LOST False

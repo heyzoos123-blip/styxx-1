@@ -1,0 +1,24 @@
+rev2       faults<=0:   1444 states | U1 hits run with S clear: 46 fault-free, 0 on faulted paths | A0 (fault-free) VIOLATED | S0 (fault-free) ok | 4 end states: stale S with no anchor 0 fault-free, 0 faulted (each cleared by one _unwind_off); dead anchor 0 (S kept set in 0) | UNWIND_LOST: 3 fault-free, 0 faulted
+    first U1 trace: R0 R1 P20 P21 P22 P23 P24 P25 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P212 P15 P16
+    first A0 trace: R0 P20 P21 P22 P23 P24 R1 P25
+    first FLAGp trace: R0 R1 P20 P21 P22 P23 P24 P25 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P212 P15 P16 P17 P18 P213 P19 P110 P111 P112 P113
+rev2       faults<=1:   2999 states | U1 hits run with S clear: 46 fault-free, 36 on faulted paths | A0 (fault-free) VIOLATED | S0 (fault-free) ok | 28 end states: stale S with no anchor 0 fault-free, 4 faulted (each cleared by one _unwind_off); dead anchor 16 (S kept set in 8) | UNWIND_LOST: 3 fault-free, 18 faulted
+    first U1 trace: R0! P20 P21 P22 P23 P24 P25 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P212 P15 P16
+    first A0 trace: R0 P20 P21 P22 P23 P24 R1 P25
+    first FLAGp trace: R0! P20 P21 P22 P23 P24 P25 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P212 P15 P16 P17 P18 P213 P19 P110 P111 P112 P113
+rev2       faults<=2:   4050 states | U1 hits run with S clear: 46 fault-free, 50 on faulted paths | A0 (fault-free) VIOLATED | S0 (fault-free) ok | 59 end states: stale S with no anchor 0 fault-free, 8 faulted (each cleared by one _unwind_off); dead anchor 39 (S kept set in 19) | UNWIND_LOST: 3 fault-free, 41 faulted
+    first U1 trace: R0! P20 P21 P22 P23 P24 P25 P26! P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P212 P15 P16
+    first A0 trace: R0 P20 P21 P22 P23 P24 R1 P25
+    first FLAGp trace: R0! P20 P21 P22 P23 P24 P25 P26! P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P212 P15 P16 P17 P18 P213 P19 P110 P111 P112 P113
+rev3       faults<=0:   1223 states | U1 hits run with S clear: 0 fault-free, 0 on faulted paths | A0 (fault-free) ok | S0 (fault-free) ok | 1 end states: stale S with no anchor 0 fault-free, 0 faulted (each cleared by one _unwind_off); dead anchor 0 (S kept set in 0) | UNWIND_LOST: 0 fault-free, 0 faulted
+rev3       faults<=1:   4300 states | U1 hits run with S clear: 0 fault-free, 0 on faulted paths | A0 (fault-free) ok | S0 (fault-free) ok | 9 end states: stale S with no anchor 0 fault-free, 1 faulted (each cleared by one _unwind_off); dead anchor 4 (S kept set in 4) | UNWIND_LOST: 0 fault-free, 0 faulted
+rev3       faults<=2:   7216 states | U1 hits run with S clear: 0 fault-free, 0 on faulted paths | A0 (fault-free) ok | S0 (fault-free) ok | 30 end states: stale S with no anchor 0 fault-free, 4 faulted (each cleared by one _unwind_off); dead anchor 18 (S kept set in 16) | UNWIND_LOST: 0 fault-free, 0 faulted
+rev3-split faults<=0:   2632 states | U1 hits run with S clear: 54 fault-free, 0 on faulted paths | A0 (fault-free) ok | S0 (fault-free) ok | 4 end states: stale S with no anchor 0 fault-free, 0 faulted (each cleared by one _unwind_off); dead anchor 0 (S kept set in 0) | UNWIND_LOST: 3 fault-free, 0 faulted
+    first U1 trace: R0 P20 P21 P22 P23 P24 P25 P255 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P2110 P15 P155 P16
+    first FLAGp trace: R0 P20 P21 P22 P23 P24 P25 P255 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P2110 P15 P155 P16 P17 P18 P212 P19 P110 P111 P1110 P112
+rev3-split faults<=1:   9066 states | U1 hits run with S clear: 54 fault-free, 116 on faulted paths | A0 (fault-free) ok | S0 (fault-free) ok | 28 end states: stale S with no anchor 0 fault-free, 4 faulted (each cleared by one _unwind_off); dead anchor 12 (S kept set in 12) | UNWIND_LOST: 3 fault-free, 16 faulted
+    first U1 trace: R0! P20 P21 P22 P23 P24 P25 P255 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P2110 P15 P155 P16
+    first FLAGp trace: R0! P20 P21 P22 P23 P24 P25 P255 P26 P27 P28 P29 P210 P211 P10 P11 P12 P13 P14 P2110 P15 P155 P16 P17 P18 P212 P19 P110 P111 P1110 P112
+rev3-split faults<=2:  15307 states | U1 hits run with S clear: 54 fault-free, 192 on faulted paths | A0 (fault-free) ok | S0 (fault-free) ok | 84 end states: stale S with no anchor 0 fault-free, 12 faulted (each cleared by one _unwind_off); dead anchor 51 (S kept set in 39) | UNWIND_LOST: 3 fault-free, 49 faulted
+    first U1 trace: R0! P20 P21! P27 P28 P29 P10 P11 P12 P210 P211 P13 P14 P2110 P15 P155 P16
+    first FLAGp trace: R0! P20 P21! P27 P28 P29 P10 P11 P12 P210 P211 P13 P14 P2110 P15 P155 P16 P17 P18 P212 P19 P110 P111 P1110 P112

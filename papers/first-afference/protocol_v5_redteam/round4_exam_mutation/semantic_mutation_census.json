@@ -1,0 +1,498 @@
+{
+ "what": "semantic-mutation census of the frozen v5e exam: a hand-aimed set of weakened-rule mutants (round-4 red team, exam-mutation lens), each run through the exam in the mutation gate's mode",
+ "generator": "papers/first-afference/protocol_v5_redteam/round4_exam_mutation/semantic_mutation_census.py",
+ "generator_sha256": "99e3be63d3a61319b3d9128505f57d8b2844654235d7ada431958bf1cf069ed7",
+ "mutants_sha256": "1449ccf47536807e7c042f9adda2a94057a79ccbc93240939fbeac71de258102",
+ "runner_sha256": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+ "impl_sha256": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
+ "python": "3.11.15",
+ "baseline_clean": true,
+ "baseline": {
+  "mutant": "__baseline__",
+  "applied": true,
+  "detected": false,
+  "how": []
+ },
+ "n_mutants": 63,
+ "n_applied": 63,
+ "n_detected": 27,
+ "n_survived": 36,
+ "frac_detected": 0.4286,
+ "survivors": [
+  "B01_end_type_dropped",
+  "C01_hop_removes_closer_hook",
+  "C02_lost_only_if_none",
+  "C06_close_removes_foreign_profiler",
+  "D01_section_no_ascii",
+  "D02_section_empty_ok",
+  "E01_restore_even_if_swapped",
+  "E04_stop_cleared_always",
+  "E05_no_state_guard",
+  "E07_exit_removes_foreign_profiler",
+  "E09_clone_scan_only_last_tracer",
+  "E11_swapped_only_last_tracer",
+  "H01_no_active_check",
+  "H12_stop_by_name",
+  "H15_walk_from_frame",
+  "K01_record_disp_last_wins",
+  "O05_foreign_profiler_first_open_only",
+  "O07_nested_any_tracer_same_section",
+  "O08_foreign_profiler_outside_lock_after_register",
+  "P01_hops_3",
+  "P02_hops_16",
+  "P03_walk_any_type",
+  "P04_no_cycle_detection",
+  "R01_inherited_direct_bases",
+  "R02_class_exact_type",
+  "R03_module_exact_type",
+  "S01_targetset_before_stale",
+  "S02_problems_before_badcount",
+  "S03_absent_before_problems",
+  "S07_section_by_gate_name",
+  "S08_msg_counts_all_targets",
+  "S10_stale_before_shape",
+  "S15_union_over_all_sections",
+  "SC1_coverage_only_when_gate_fires",
+  "SC2_check_metrics_coverage_skipped_if_smoke",
+  "T01_clone_called_first_tracer_only"
+ ],
+ "not_applied": [],
+ "rows": [
+  {
+   "mutant": "B01_end_type_dropped",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "C01_hop_removes_closer_hook",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "C02_lost_only_if_none",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "C03_no_detached_guard",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X71', 'X71c']",
+    "valid_cases: ['V29']"
+   ]
+  },
+  {
+   "mutant": "C04_if_not_elif",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V28']"
+   ]
+  },
+  {
+   "mutant": "C05_hop_decrements_closer",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V28', 'V34']"
+   ]
+  },
+  {
+   "mutant": "C06_close_removes_foreign_profiler",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "C08_hop_no_decrement",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "exit 3: "
+   ]
+  },
+  {
+   "mutant": "D01_section_no_ascii",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "D02_section_empty_ok",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "E01_restore_even_if_swapped",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "E02_refcount_expect_const3",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X57', 'X58']"
+   ]
+  },
+  {
+   "mutant": "E03_clone_alive_counts_fn",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V34']"
+   ]
+  },
+  {
+   "mutant": "E04_stop_cleared_always",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "E05_no_state_guard",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "E06_restore_ignores_other_tracers",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V15', 'V16', 'V17', 'V34']"
+   ]
+  },
+  {
+   "mutant": "E07_exit_removes_foreign_profiler",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "E09_clone_scan_only_last_tracer",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "E11_swapped_only_last_tracer",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "E14_no_open_at_exit_note",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X71']",
+    "valid_cases: ['V29']"
+   ]
+  },
+  {
+   "mutant": "E18_by_code_emptied_after_detach",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X71c']"
+   ]
+  },
+  {
+   "mutant": "H01_no_active_check",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "H02_no_threads_check",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V31']"
+   ]
+  },
+  {
+   "mutant": "H03_count_c_call_too",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "exit 3: "
+   ]
+  },
+  {
+   "mutant": "H04_no_globals_check",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X55', 'X55b', 'X55c', 'X56', 'X78b']"
+   ]
+  },
+  {
+   "mutant": "H05_cut_no_break",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X65', 'X73']",
+    "valid_cases: ['V19']"
+   ]
+  },
+  {
+   "mutant": "H06_credit_innermost",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X70']"
+   ]
+  },
+  {
+   "mutant": "H07_credit_outermost",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X70']"
+   ]
+  },
+  {
+   "mutant": "H08_bucket_swap",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X60', 'X61', 'X62', 'X63', 'X64', 'X65', 'X66', 'X67', 'X68', 'X69']"
+   ]
+  },
+  {
+   "mutant": "H09_mine_all_tracers",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "exit 3: "
+   ]
+  },
+  {
+   "mutant": "H10_uncredited_all_unattributed",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X62', 'X64', 'X65', 'X67', 'X72', 'X73']"
+   ]
+  },
+  {
+   "mutant": "H12_stop_by_name",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "H15_walk_from_frame",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "H18_globals_equality",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X55b']"
+   ]
+  },
+  {
+   "mutant": "K01_record_disp_last_wins",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "K03_record_no_ambiguous",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X70']"
+   ]
+  },
+  {
+   "mutant": "O01_nested_same_section_only",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X76', 'X77', 'X80b']"
+   ]
+  },
+  {
+   "mutant": "O02_nested_no_cut",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V19']"
+   ]
+  },
+  {
+   "mutant": "O03_epoch_only_new_entry",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V30']"
+   ]
+  },
+  {
+   "mutant": "O05_foreign_profiler_first_open_only",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "O06_open_no_increment_nested",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "exit 3: "
+   ]
+  },
+  {
+   "mutant": "O07_nested_any_tracer_same_section",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "O08_foreign_profiler_outside_lock_after_register",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "P01_hops_3",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "P02_hops_16",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "P03_walk_any_type",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "P04_no_cycle_detection",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "R01_inherited_direct_bases",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "R02_class_exact_type",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "R03_module_exact_type",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "S01_targetset_before_stale",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "S02_problems_before_badcount",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "S03_absent_before_problems",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "S04_union_last_wins",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V19', 'V20', 'V21', 'V22', 'V23', 'V25', 'V25b']"
+   ]
+  },
+  {
+   "mutant": "S05_union_max",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "valid_cases: ['V19', 'V20', 'V21', 'V22', 'V23', 'V25', 'V25b']"
+   ]
+  },
+  {
+   "mutant": "S07_section_by_gate_name",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "S08_msg_counts_all_targets",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "S10_stale_before_shape",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "S14_union_counts_ambiguous",
+   "applied": true,
+   "detected": true,
+   "how": [
+    "violation_cases: ['X70']"
+   ]
+  },
+  {
+   "mutant": "S15_union_over_all_sections",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "SC1_coverage_only_when_gate_fires",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "SC2_check_metrics_coverage_skipped_if_smoke",
+   "applied": true,
+   "detected": false,
+   "how": []
+  },
+  {
+   "mutant": "T01_clone_called_first_tracer_only",
+   "applied": true,
+   "detected": false,
+   "how": []
+  }
+ ],
+ "reading": "Detection over a hand-aimed set, not the exam's power over all faults. A survivor is an exam hole only once a witness program separates it from the original; see the round-4 audit for which survivors were witnessed and which were judged equivalent."
+}

@@ -1,0 +1,2 @@
+retake_nocount       NOT DETECTED by any configuration
+rebind_count_none    rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] F0: LOSTNOTE=3  [LOST=9]

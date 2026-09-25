@@ -1,0 +1,4 @@
+3.12.3 spec r = ['None', 'None', 'styxx-sketch'] counts 2 len(_LOST) seen inside each finalizer [0, 1]
+3.12.3 tee r = ['None', 'None', 'styxx-sketch'] counts 2 len(_LOST) seen inside each finalizer [2, 2]
+3.13.12 spec r = ['None', 'None', 'styxx-sketch'] counts 2 len(_LOST) seen inside each finalizer [0, 1]
+3.13.12 tee r = ['None', 'None', 'styxx-sketch'] counts 2 len(_LOST) seen inside each finalizer [2, 2]

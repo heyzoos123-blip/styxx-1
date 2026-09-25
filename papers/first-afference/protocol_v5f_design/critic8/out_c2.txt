@@ -1,0 +1,8 @@
+3.12.3 ref  0 of 64 cases fail []
+3.12.3 K10  9 of 64 cases fail [['_register', 'owner=styxx', ["C calls outside the interval ['list.extend']"]]]
+3.12.3 K11  0 of 64 cases fail -> NOT DETECTED: G_ATOM passes this mutant []
+3.12.3 K12  0 of 64 cases fail -> NOT DETECTED: G_ATOM passes this mutant []
+3.13.12 ref  0 of 64 cases fail []
+3.13.12 K10  9 of 64 cases fail [['_register', 'owner=styxx', ["C calls outside the interval ['list.extend']"]]]
+3.13.12 K11  0 of 64 cases fail -> NOT DETECTED: G_ATOM passes this mutant []
+3.13.12 K12  0 of 64 cases fail -> NOT DETECTED: G_ATOM passes this mutant []

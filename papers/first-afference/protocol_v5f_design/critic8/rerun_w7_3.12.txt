@@ -1,0 +1,37 @@
+3.12.3 X158    spec            P-first  {"order": "P-first", "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {}, "Q_lost": true, "entry_cb_restored": true}
+3.12.3 X158    spec            Q-first  {"order": "Q-first", "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {}, "Q_lost": true, "entry_cb_restored": true}
+3.12.3 X158    cbrep_nocount   P-first  {"order": "P-first", "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {}, "Q_lost": false, "entry_cb_restored": true}
+3.12.3 X158    cbrep_nocount   Q-first  {"order": "Q-first", "P_calls": {"A": {"f": 1}}, "P_lost": false, "Q_calls": {}, "Q_lost": true, "entry_cb_restored": true}
+3.12.3 X158    count_after_register P-first  {"order": "P-first", "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {}, "Q_lost": true, "entry_cb_restored": true}
+3.12.3 X158    count_after_register Q-first  {"order": "Q-first", "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {}, "Q_lost": true, "entry_cb_restored": true}
+3.12.3 X158b   spec                     {"P_exit": "Injected propagated", "Q_calls": {}, "Q_lost": true, "entry_cb_restored": true}
+3.12.3 X158b   count_after_register          {"P_exit": "Injected propagated", "Q_calls": {}, "Q_lost": false, "entry_cb_restored": true}
+3.12.3 X158b   cbrep_nocount            {"P_exit": "Injected propagated", "Q_calls": {}, "Q_lost": false, "entry_cb_restored": true}
+3.12.3 RELOAD  spec                     {"P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"f": 1}}, "Q_lost": true, "tool": 4}
+3.12.3 RELOAD  cbrep_nocount            {"P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"f": 1}}, "Q_lost": false, "tool": 4}
+3.12.3 X137h7  spec                     {"tool_after": 4, "R_calls": {}, "R_lost": true, "registrations": [["exit", "ok", 0], ["exit", "ok", 0], ["exit", "ok", 0]]}
+3.12.3 X137h7  rebind_count_none          {"tool_after": 4, "R_calls": {}, "R_lost": false, "registrations": [["exit", "ok", 0], ["exit", "ok", 0], ["exit", "ok", 0]]}
+3.12.3 X154b   spec            1        {"k": 1, "exit": "returned", "owner": "other-tool", "other_replaced_at": [1], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   spec            2        {"k": 2, "exit": "returned", "owner": "other-tool", "other_replaced_at": [2], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   spec            3        {"k": 3, "exit": "returned", "owner": "other-tool", "other_replaced_at": [3], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   spec            4        {"k": 4, "exit": "returned", "owner": "other-tool", "other_replaced_at": [4], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   spec            5        {"k": 5, "exit": "returned", "owner": "other-tool", "other_replaced_at": [5], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   reg_rev5        1        {"k": 1, "exit": "returned", "owner": "other-tool", "other_replaced_at": [1, 2, 3, 4, 5], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   reg_rev5        2        {"k": 2, "exit": "returned", "owner": "other-tool", "other_replaced_at": [2, 3, 4, 5], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   reg_rev5        3        {"k": 3, "exit": "returned", "owner": "other-tool", "other_replaced_at": [3, 4, 5], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   reg_rev5        4        {"k": 4, "exit": "returned", "owner": "other-tool", "other_replaced_at": [4, 5], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154b   reg_rev5        5        {"k": 5, "exit": "returned", "owner": "other-tool", "other_replaced_at": [5], "calls": {"A": {"f": 1}}, "monitor_lost": true}
+3.12.3 X154d   spec            free     {"variant": "free", "registrations": [["ensure", "ok", 5], ["reclaim", "incomplete", 0], ["reclaim", "incomplete", 0], ["ensure", "ok", 0]], "tool_after_enter": 4, "reclaimed": 1, "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"g": 1}}, "Q_lost": false}
+3.12.3 X154d   retake_nocount  free     {"variant": "free", "registrations": [["ensure", "ok", 5], ["reclaim", "incomplete", 0], ["reclaim", "incomplete", 0], ["ensure", "ok", 0]], "tool_after_enter": 4, "reclaimed": 0, "P_calls": {"A": {"f": 1}}, "P_lost": false, "Q_calls": {"B": {"g": 1}}, "Q_lost": false}
+3.12.3 X154d   spec            take     {"variant": "take", "registrations": [["ensure", "ok", 5], ["reclaim", "incomplete", 1], ["ensure", "ok", 5]], "tool_after_enter": 3, "reclaimed": 1, "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"g": 1}}, "Q_lost": false}
+3.12.3 X154d   rebind_count_none take     {"variant": "take", "registrations": [["ensure", "ok", 5], ["reclaim", "incomplete", 1], ["ensure", "ok", 5]], "tool_after_enter": 3, "reclaimed": 0, "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"g": 1}}, "Q_lost": false}
+3.12.3 X157b   spec                     {"Q_enter": "Denied propagated", "after_Q": {"tool_ours": true, "reclaimed": 0, "guard_dead": true}, "P_calls": {"A": {"f": 1}}, "P_lost": false, "R_calls": {"C": {"g": 1}}, "R_lost": false, "state": {"tool_name": "styxx.protocol/model-rev7", "global_events": 0, "anchors": 0, "mints": 0}}
+3.12.3 X157c   spec                     {"Q_enter": "Denied propagated", "reclaimed": 0, "P_calls": {}, "P_lost": true, "P_flag": true}
+3.12.3 X157c   blind_read_gated          {"Q_enter": "Denied propagated", "reclaimed": 0, "P_calls": {}, "P_lost": false, "P_flag": false}
+3.12.3 X137g   spec                     {"tool_before": 4, "tool_after": 3, "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"f": 1, "g": 1}}, "Q_lost": false}
+3.12.3 X137g   rebind_no_local          {"tool_before": 4, "tool_after": 3, "P_calls": {}, "P_lost": true, "Q_calls": {"B": {"g": 1}}, "Q_lost": true}
+3.12.3 X156c   spec                     {"refused": "[V5:UNSUPPORTED_VERSION] not the C builtin: itertools.chain"}
+3.12.3 X156c   check_once               {"refused": null, "chain_bound": "__main__.child.<locals>.chain"}
+3.12.3 X156d   spec                     {"refused": "[V5:UNSUPPORTED_VERSION] not the C builtin: deque(maxlen=0).extend"}
+3.12.3 X156d   deque_by_name            {"refused": null, "maxlen": null}
+3.12.3 X37b    spec                     {"refused": "[V5:UNSUPPORTED_VERSION] CPython 3.12.99 is not a verified patch level"}

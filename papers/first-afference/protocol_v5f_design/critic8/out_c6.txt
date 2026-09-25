@@ -1,0 +1,8 @@
+3.12.3 spec P-first {"P": {"A": {"f": 1}}, "P_lost": true, "Q": {}, "Q_lost": true}
+3.12.3 spec Q-first {"P": {"A": {"f": 1}}, "P_lost": true, "Q": {}, "Q_lost": true}
+3.12.3 exclude_none P-first {"P": {"A": {"f": 1}}, "P_lost": false, "Q": {}, "Q_lost": false}
+3.12.3 exclude_none Q-first {"P": {"A": {"f": 1}}, "P_lost": false, "Q": {}, "Q_lost": false}
+3.13.12 spec P-first {"P": {"A": {"f": 1}}, "P_lost": true, "Q": {}, "Q_lost": true}
+3.13.12 spec Q-first {"P": {"A": {"f": 1}}, "P_lost": true, "Q": {}, "Q_lost": true}
+3.13.12 exclude_none P-first {"P": {"A": {"f": 1}}, "P_lost": false, "Q": {}, "Q_lost": false}
+3.13.12 exclude_none Q-first {"P": {"A": {"f": 1}}, "P_lost": false, "Q": {}, "Q_lost": false}

@@ -1,0 +1,2 @@
+3.12.3 frame id reused: 1000/1000 (gc disabled), 1000/1000 (gc enabled)
+3.13.12 frame id reused: 1000/1000 (gc disabled), 1000/1000 (gc enabled)

@@ -1,0 +1,2 @@
+cbrep_nocount        cb2: open(Y) || exit(X) [cbrep] F0: LOSTNOTE=1  [LOST=2] | cb2: open(Y) || exit(X) [cbrep0] F0: LOSTNOTE=1  [LOST=2] | cb2: open(Y) || exit(X) [all, X2] F0: LOSTNOTE=3  [LOST=16]
+rebind_count_none    rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] F0: LOSTNOTE=3  [LOST=9]

@@ -1,0 +1,2 @@
+count_after_register cb2: open(Y) || exit(X) [cbrep, F1] F1: LOSTNOTE=1  [LOST=37]
+rebind_count_none    rebind2: enter(X) || open(Y) + take [other id has styxx leftovers] F0: LOSTNOTE=3  [LOST=9]

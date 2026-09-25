@@ -1,0 +1,13 @@
+3.12.3 build ['3.12.3', ['main', 'Mar  3 2026 12:15:18'], 'GCC 13.3.0']
+3.12.3 reference: 64 cases, 0 failed, slots True
+3.12.3 instrument control K1 Python set_events wrapper                   DETECTED
+3.12.3 instrument control K2 attrgetter over a Python __getattribute__   DETECTED
+3.12.3 instrument control K3 sys._getframe in the pipeline               DETECTED
+3.12.3 hookup control K4: 9 of 64 cases fail -> DETECTED; first: [['_register', 'owner=styxx', ['registration result or callbacks wrong']]]
+3.12.3 hookup control K5: 24 of 64 cases fail -> DETECTED; first: [['_unwind_off', 'named=True key=registered left=False event=set', ['interval opened 0 closed 0', "PY_START outside the interval ['_off_helper']"]]]
+3.12.3 hookup control K6: 24 of 64 cases fail -> DETECTED; first: [['_unwind_off', 'named=True key=registered left=False event=set', ['interval opened 0 closed 0']]]
+3.12.3 hookup control K7: 24 of 64 cases fail -> DETECTED; first: [['_unwind_off', 'named=True key=registered left=False event=set', ["C calls outside the interval ['dict.pop']", 'state changed before the one call']]]
+3.12.3 hookup control K8: 3 of 64 cases fail -> DETECTED; first: [['_unwind_on', 'named=True own=False event=clear other=none', ["effect ((), 'styxx.protocol/366e30a51b8c', 4096, None, ((),), 0) != expected ((), 'styxx.protocol/366e30a51b8c', 0, None, ((),), 0)"]]]
+3.12.3 hookup control K9: 3 of 64 cases fail -> DETECTED; first: [['_take', 'owner=unowned', ["C calls outside the interval ['get_tool']"]]]
+3.12.3 hookup control K10: 9 of 64 cases fail -> DETECTED; first: [['_register', 'owner=styxx', ["C calls outside the interval ['list.extend']"]]]
+3.12.3 G_ATOM (revision 7 prototype) PASS

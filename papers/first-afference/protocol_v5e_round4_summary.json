@@ -1,0 +1,129 @@
+{
+ "what": "numbers for FINDING_protocol_v5e_round4, derived from the committed receipts; the closure battery is re-run here on every available interpreter",
+ "generator": "papers/first-afference/protocol_v5e_round4_summary.py",
+ "generator_sha256": "8f9496ac51e77cf314dc749a720abe6b398217b6b6907f950bc6a3255a488e41",
+ "arc_verdicts": {
+  "v5_attempt_a": "DO_NOT_SHIP__v5_rewrites_frozen_history",
+  "v5b": "PROCEED_TO_RED_TEAM__not_yet_shippable",
+  "v5c": "PROCEED_TO_RED_TEAM_ROUND_2__not_yet_shippable",
+  "v5d": "PROCEED_TO_RED_TEAM_ROUND_3__not_yet_shippable",
+  "v5e": "PROCEED_TO_RED_TEAM_ROUND_4__not_yet_shippable",
+  "v5e_aux": "PROCEED__the_rule_holds_for_two_implementations_on_four_pythons"
+ },
+ "prior_rounds": {
+  "round_1": {
+   "n_blockers": 4,
+   "n_defects": 4
+  },
+  "round_2": {
+   "n_blockers": 3,
+   "n_defects": 6
+  },
+  "round_3": {
+   "n_blockers": 3,
+   "n_defects": 6
+  }
+ },
+ "prior_rounds_total_blockers": 10,
+ "v5e_exam": {
+  "n_gates": 15,
+  "n_gates_passed": 15,
+  "n_violation_cases": 155,
+  "n_valid_cases": 36,
+  "n_residual_cases": 11,
+  "frac_violation_cases_refused_with_expected_code": 1.0,
+  "frac_valid_cases_exact": 1.0,
+  "frac_residuals_as_documented": 1.0,
+  "h2_propagated": 20,
+  "h2_n_cases": 20,
+  "h3_keyboard_interrupt_ok": 5,
+  "h3_keyboard_interrupt_n_cases": 5,
+  "h1_hangs": 0,
+  "n_pairable_results": 86,
+  "n_v4_v5_outcome_disagreements": 0,
+  "n_results_v5_scored": 39
+ },
+ "aux": {
+  "n_gates": 10,
+  "n_gates_passed": 10,
+  "fuzz_n_programs": 3000,
+  "fuzz_oracle_disagreements": 0,
+  "fuzz_control_no_cut_disagreements": 44,
+  "nversion_trace_diffs": 0,
+  "crossversion_n_versions": 4,
+  "crossversion_diffs": 0
+ },
+ "all_frozen_gates": {
+  "n": 25,
+  "passed": 25
+ },
+ "nversion_exploratory": {
+  "n_versions": 4,
+  "n_versions_clean": 4,
+  "n_cells_clean_both_impls": 8
+ },
+ "fuzzer_controls": {
+  "v1_no_cut_programs": 300,
+  "v1_no_cut_disagreements": 0,
+  "final_programs": 600,
+  "final_no_cut": 44,
+  "final_credit_any_open": 245,
+  "final_no_mint": 600
+ },
+ "mutation_gate": {
+  "n_sites": 57,
+  "n_detected": 57,
+  "n_hygiene_violations": 0,
+  "v5d_control_sites": 29,
+  "v5d_control_detected": 28,
+  "v5d_control_hygiene_violations": 2,
+  "blind_shapes": 8,
+  "shapes_probed": 9,
+  "coded_literals_in_impl": 57,
+  "coded_literals_outside_sites": 0
+ },
+ "semantic_census": {
+  "n_mutants": 63,
+  "n_detected": 27,
+  "n_survived": 36,
+  "baseline_clean": true
+ },
+ "round_4": {
+  "n_lenses": 7,
+  "n_candidates": 104,
+  "n_after_dedup": 60,
+  "n_confirmed": 58,
+  "n_not_confirmed": 2,
+  "n_blocker": 6,
+  "n_defect": 15,
+  "n_spec_false": 7,
+  "n_exam_hole": 29,
+  "n_note": 1,
+  "dry": false
+ },
+ "closure_battery": {
+  "3.11.15": {
+   "held": 41,
+   "cases": 41,
+   "exit": 0
+  },
+  "3.10.20": {
+   "held": 41,
+   "cases": 41,
+   "exit": 0
+  },
+  "3.12.3": {
+   "held": 41,
+   "cases": 41,
+   "exit": 0
+  },
+  "3.13.12": {
+   "held": 41,
+   "cases": 41,
+   "exit": 0
+  }
+ },
+ "closure_battery_n_versions": 4,
+ "closure_battery_cases": 41,
+ "closure_battery_held_on_every_version": true
+}

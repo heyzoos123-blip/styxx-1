@@ -1,0 +1,12 @@
+detach_nulls         open(X) || exit(X) F0: END=1 | rec || open(X), X facade dead F0: END=1 | open(X) || exit(X) || rec F0: END=3  [BUSY_TX=4368]
+no_recheck           open(X) || exit(X) F0: P8=122 | rec || open(X), X facade dead F0: P8=79 | open(X) || exit(X) || rec F0: P8=1109  [BUSY_TX=4654]
+no_fin_test          rec || open(X), X facade dead F0: P8=79
+no_exiting_test      open(X) || exit(X) F0: P8=100 | open(X) || exit(X) || rec F0: P8=810  [BUSY_TX=5434] | open(X) || open(X) || exit(X) F0: P8=38613
+no_anchor_prune      open(X) || exit(X) F2: REPAIR=3
+take_split           ext: open(X) || exit(X) F0: VALUEERROR=258  [LOST=28, MASKED=2, REGCLOB=290] | ext: close(X) || rec F0: VALUEERROR=26  [LOST=2] | ext: enter(X) || open(Y) F0: VALUEERROR=96  [LOST=14]
+ensure_nocount       NOT DETECTED by any configuration
+prune_credit_stop    NOT DETECTED by any configuration
+reg_rev5             ext: open(X) || exit(X) F0: CLOBBER=435, REGMULTI=145  [LOST=26, MASKED=2] | reg: exit(X) + outside free/take F0: CLOBBER=3, REGMULTI=1 | reg: open(Y) || exit(X) + free/take F0: CLOBBER=144, REGMULTI=48  [LOST=11]
+rebind_count_none    ext: enter(X) || open(Y) F0: LOSTNOTE=3  [LOST=12] | rebind: enter(X) || open(Y) + take F0: LOSTNOTE=3  [LOST=9]
+rebind_no_local      NOT DETECTED by any configuration
+blind_read_gated     ext+greenlet: [exit(X), rec] || open(X) F0: LOSTNOTE=2  [LOST=23]

@@ -1,0 +1,2 @@
+blind_read_gated     ext+greenlet: [exit(X), rec] || open(X) F0: LOSTNOTE=2  [LOST=23]
+done

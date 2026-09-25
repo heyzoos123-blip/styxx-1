@@ -1,0 +1,5 @@
+reg_rev5             ext: open(X) || exit(X) F0: CLOBBER=435, REGMULTI=145  [LOST=26, MASKED=2] | reg: exit(X) + outside free/take F0: CLOBBER=3, REGMULTI=1 | reg: open(Y) || exit(X) + free/take F0: CLOBBER=144, REGMULTI=48  [LOST=11]
+rebind_count_none    ext: enter(X) || open(Y) F0: LOSTNOTE=3  [LOST=12] | rebind: enter(X) || open(Y) + take F0: LOSTNOTE=3  [LOST=9]
+ensure_nocount+blind_read_gated ext: enter(X) || open(Y) F0: LOSTNOTE=2  [LOST=20] | rebind: enter(X) || open(Y) + take F0: LOSTNOTE=1  [LOST=13] | ext+greenlet: [exit(X), rec] || open(X) F0: LOSTNOTE=2  [LOST=23]
+rebind_no_local      NOT DETECTED by any configuration
+done

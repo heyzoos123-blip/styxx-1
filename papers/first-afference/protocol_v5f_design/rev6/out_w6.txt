@@ -1,0 +1,32 @@
+3.12.3 X137h spec {'tool_after': 3, 'P_calls': {}, 'P_lost': True}
+3.12.3 X137h rebind_count_none {'tool_after': 3, 'P_calls': {}, 'P_lost': False}
+3.12.3 X154b spec k=1 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [1], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b spec k=2 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [2], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b spec k=3 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [3], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b spec k=4 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [4], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b spec k=5 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b reg_rev5 k=1 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [1, 2, 3, 4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b reg_rev5 k=2 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [2, 3, 4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b reg_rev5 k=3 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [3, 4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b reg_rev5 k=4 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154b reg_rev5 k=5 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.12.3 X154c spec {'enter_error': None, 'tool': 3, 'owner_of_4': 'other-tool', 'calls': {'A': {'f': 1}}, 'monitor_lost': False}
+3.12.3 X154c reg_no_owner {'enter_error': None, 'tool': 4, 'owner_of_4': 'other-tool', 'calls': {}, 'monitor_lost': True}
+3.12.3 X137g spec {'tool_before': 4, 'tool_after': 3, 'P_calls': {'A': {'f': 1}}, 'P_lost': True, 'Q_calls': {'B': {'g': 1}}, 'Q_lost': False}
+3.12.3 X137g rebind_no_local {'tool_before': 4, 'tool_after': 3, 'P_calls': {}, 'P_lost': True, 'Q_calls': {'B': {'g': 1}}, 'Q_lost': False}
+3.13.12 X137h spec {'tool_after': 3, 'P_calls': {}, 'P_lost': True}
+3.13.12 X137h rebind_count_none {'tool_after': 3, 'P_calls': {}, 'P_lost': False}
+3.13.12 X154b spec k=1 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [1], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b spec k=2 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [2], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b spec k=3 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [3], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b spec k=4 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [4], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b spec k=5 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b reg_rev5 k=1 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [1, 2, 3, 4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b reg_rev5 k=2 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [2, 3, 4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b reg_rev5 k=3 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [3, 4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b reg_rev5 k=4 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [4, 5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154b reg_rev5 k=5 {'exit': 'returned', 'owner': 'other-tool', 'other_callbacks_replaced_at_events': [5], 'monitor_lost': True, 'calls': {'A': {'f': 1}}}
+3.13.12 X154c spec {'enter_error': None, 'tool': 3, 'owner_of_4': 'other-tool', 'calls': {'A': {'f': 1}}, 'monitor_lost': False}
+3.13.12 X154c reg_no_owner {'enter_error': None, 'tool': 4, 'owner_of_4': 'other-tool', 'calls': {}, 'monitor_lost': True}
+3.13.12 X137g spec {'tool_before': 4, 'tool_after': 3, 'P_calls': {'A': {'f': 1}}, 'P_lost': True, 'Q_calls': {'B': {'g': 1}}, 'Q_lost': False}
+3.13.12 X137g rebind_no_local {'tool_before': 4, 'tool_after': 3, 'P_calls': {}, 'P_lost': True, 'Q_calls': {'B': {'g': 1}}, 'Q_lost': False}

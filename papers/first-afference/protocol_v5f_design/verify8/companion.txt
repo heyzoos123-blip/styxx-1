@@ -1,0 +1,173 @@
+1062 L1942  - **G_FI (crash sweep, frozen).** Required on both verified interpreters (3.12.3 and 3.13.12), on two threads: every fault point is **clean**.
+1063 L1942  Clean is defined by outcome alone, so no window has to be mapped to implementation offsets.
+1064 L1944  **The invariants C1–C9 (revision 3, MF5; frozen with this spec).** They are stated only in terms of the public API, `_v5_state()` (M10) and I1–I6.
+1065 L1944  `crash_sweep_v5f.py` implements them as written here and reads no other private name.
+1066 L1944  D1's `crashcons/t_crash_sweep.py` was their source; its private reads (`reconcile_now()`, `leftovers()`, `_TH`, `sys.getprofile()` as a hook check) have no counterpart here.
+1067 L1947  It constructs tracers only through `coverage_trace()`, catches nothing, and so stops at the first exception that reaches it.
+1068 L1947  Revision 4 (MF3): every scenario joins every thread it started before any tracer's `__exit__`, so no open or close in it runs concurrently with an exit, and its baseline record is deterministic.
+1069 L1947  Every scenario orders its machinery calls across threads with frozen barriers, so no `coverage_trace()`, enter, exit, `run()`/`run_async()` open or close, or `record()` on one thread overlaps a machinery call on another.
+1070 L1947  The order in which opens and closes happen across threads is fixed by the scenario, so each machinery call finds the same registry state in every run: the same anchors, the same event, the same mutex owner.
+1071 L1947  So the instruction path of every call on the faulted thread, and with it the point set, is the same in every run.
+1072 L1947  Revision 5 has no such loop, and the mutex's wait loop is not reached in a sequential scenario.
+1073 L1948  Every scenario names the one thread the injector faults.
+1074 L1948  The injector's filter admits that thread's live ident only.
+1075 L1948  The fork scenario names the child's only thread.
+1076 L1949  `key` is a `_v5_faultpoints()` key, `offset` an instruction offset in that code object (it has no nested code objects: G_HYG, MF4), and k ≥ 1.
+1077 L1949  A scenario's point set is every triple with k ≤ K = 2 whose offset a *discovery run* executed at least k times on the faulted thread.
+1078 L1949  The discovery run is the baseline run with the injector armed in counting mode, raising nothing.
+1079 L1949  G_FI runs every point.
+1080 L1949  The *frozen stride*, used by SM2's instrument (b) and G_COVER's pass 2 only, is 3: the points whose index in that order is divisible by 3.
+1081 L1951  `EXP_PROBE` declares one function, in a probe module that nothing else uses.
+1082 L1952  In the background variant, the background thread is parked at a barrier outside its sections whenever a snapshot or check is taken; it runs only while the scenario runs.
+1083 L1956  `record()` of every faulted tracer is read.
+1084 L1959  Each faulted tracer whose `record()` refused TRACE_ACTIVE gets one more `__exit__(None, None, None)`, and its `record()` is read again.
+1085 L1960  Every reference to the faulted tracers is dropped (the scenario's result, the records, the tracers), then `gc.collect()` runs, then a second probe cycle.
+1086 L1964  - **C1, no over-credit.** In every record read at steps 2 and 5, no `calls` count exceeds the baseline record's count for the same section and target.
+1087 L1964  Each frozen sentinel gate declares a fixture function that the scenario calls only outside that gate's declared section.
+1088 L1964 [old] Every sentinel gate scores NOT_EXERCISED or a refusal, never PASS.
+1089 L1965  - **C2, no swallowing.** One of these holds:
+1090 L1969  The scenario's own thread then sees no exception, and the worker's openings are finalised by exit's X3.
+1091 L1972  - **C3, no hang and no held exclusion.** Step 3's probe cycle completes.
+1092 L1973  At the end of the sweep its record has exactly one count per call it made, no problem, and no note.
+1093 L1973 [old] Since the sweep covers every faultpoint code, that allowance was always granted (the fourth critic's N4).
+1094 L1973  Revision 4 removes it, because no instrument can cause MONITOR_LOST any more (M7, I6).
+1095 L1974  - **C5, nothing left once the faulted tracers are gone.** After step 6, `_v5_state()` equals `S0` except that `cut` may have grown, `tool` may have been set, and, in the background variant, the `pending` field of the background tracer's target mint is not compared.
+1096 L1974  If it raises after the last anchor closed, S is clear and nothing pops the entry until the mint retires, which the background tracer's hold prevents during the sweep (`critic4/a6_pending_left_fault_free.py`: 1 entry left with `anchors` 0 and `global_events` 0, both versions).
+1097 L1975  - `mints` lists only the background tracer's target, if any, with `holders` 1;
+1098 L1978  - `global_events` is 0, so no stale event (I3 at quiescence);
+1099 L1981  Also every fixture function's `__code__` is its original, except the background target's, which is its minted code.
+1100 L1982  - **C6, nothing else escapes.** No exception other than the injected one leaves the scenario, and no thread the scenario started ends with any exception other than the injected one (which C2's fourth alternative then accounts for).
+1101 L1983  - **C7, only live holders, while the faulted facades are alive.** At step 4, every entry of `_v5_state()["mints"]` has `holders` equal to the number of live tracers declaring that target.
+1102 L1983  A faulted tracer whose `record()` returned a record, or refused TRACE_INCOMPLETE, holds nothing.
+1103 L1983  No entry has `holders` 0, and `installed` is True for every entry.
+1104 L1984  - **C8, the envelope.** Every record read at step 2 is within I6 against its tracer's baseline record, or `record()` refused TRACE_INCOMPLETE or TRACE_ACTIVE.
+1105 L1987  - notes within the baseline notes plus OPEN_AT_EXIT (revision 4: no MONITOR_LOST allowance;
+1106 L1988  - problems equal to the baseline's, because no sweep scenario enters or exits a tracer from inside a transition.
+1107 L1990  Every record read at step 5 meets the same test, and there TRACE_ACTIVE is a failure.
+1108 L1991  - **C9, the forked child (fork scenario only).** Checked in the child and reported to the parent through a pipe:
+1109 L1992  - `run()` passes through, returning fn's value with no exception;
+1110 L1994  - every fixture function's `__code__` is its original, or is equal to it (`==`) and has no local events on `_v5_state()["tool"]`;
+1111 L2000  The scenario runs in a fresh subprocess that starts no thread before the fork (N10).
+1112 L2001  - *Callback-only functions (BF1, M8).* The injector faults the five callback-only functions at each instruction while the direct-call driver runs them.
+1113 L2002  - *Injector rules.* The Exam harness rules apply: code read at arming, a thread filter on a live ident, no settrace, `restart_events()` before each trial, and a self-check.
+1114 L2005  - a result value that differs on an iteration in which no asynchronous exception was delivered;
+1115 L2010  It is measured in the three L-DELIVERY cells (H10), and cell (a), outside every section, is gated at 0.
+1116 L2013  - no `with` statement, no `threading` lock and no `try … finally` in the v5 region, except `_run`/`_run_async`'s single `try/finally`;
+1117 L2014  - no loop in any `try` body (CPython #130279).
+1118 L2014  Each `finally` is exactly `_detach(o, (end, ()))` then `o.frame = None` (revision 4).
+1119 L2014  Revision 5: no function reachable from a `try` body or a `finally` has a loop, other than `_run_async`'s `await`.
+1120 L2014  The lint lists every backward jump in the code objects of `_commit`, `_detach`, `_unwind_on`, `_unwind_off`, `_take`, `_register`, `_set_local` and `_named`, and requires none (M7;
+1121 L2015  - (revision 4, MF4) no region code object has a code object among its `co_consts`: no nested function, lambda, class or generator expression.
+1122 L2016  - no `except` in the region other than the two chained user-code sites and `_exit`'s two `except GateSpecError` clauses around `_locked`.
+1123 L2016  In the scoring functions, the only ones allowed are check_metrics' existing `except GateSpecError` report loops and `except OverflowError` (`_finite` and score's metric guard);
+1124 L2017  - no `import` statement and no `importlib`/`__import__` call in the region, except `_resolve_target`'s single `importlib.import_module(module)` and `coverage_trace`'s `import asyncio`;
+1125 L2018  - no type test by tuple membership (`type(x) in (…)`, `in _LAZY_TYPES`) in the region;
+1126 L2019  - no `sys.monitoring` event other than PY_START, PY_RESUME, PY_RETURN, PY_YIELD and PY_UNWIND is named in the region;
+1127 L2021  - (revision 2) `_forget_in_child` writes `__code__` only in its last loop, after every registry and event step;
+1128 L2021  `_detach`'s only anchor pop is inside its `_unwind_off(fr)` call (revision 5);
+1129 L2022  `_open` stores no anchor and calls no `_unwind_on`.
+1130 L2022  `_unwind_on` is called only from `_commit`;
+1131 L2024  1. one assignment whose targets are locals and whose values are `_TOOL[0]` and items `_MON[0][i]` with literal i (in `_take`, `_register` and `_set_local`, `t` is a parameter and only `_MON[0]` items are read).
+1132 L2024 [old] So `set_events` is callable only in `_unwind_on` and `_unwind_off`, and `_register` cannot write S.
+1133 L2025  2. in `_register` only (revision 8, M1): `a, b = _tee(P)`, one assignment to two locals whose value is one `_tee` call.
+1134 L2025  The statement builds, and reads and writes nothing;
+1135 L2028  The statements after statement 1 (the *pipeline statements*) may name only: the M1 one-call vocabulary (`_map`, `_chain`, `_chain.from_iterable`, `_compress`, `_filter`, `_is`, `_not`, `_and`, `_setitem`, `_ARMED`, `_FLAGS`, `_VALUES`, `_CONSUME`, `_LOST_KEY`, `_TRUE`, `_PYU1`, `_ZERO1`, `_NONE1`, `_NAME1`, `_repeat`, `_list`, `
+1136 L2028  Every call in them is a call of one of those names or of a `_MON[0]` local.
+1137 L2028  No lambda, generator expression, comprehension, `def` or class appears in them.
+1138 L2028  **Revision 8 (M2): no operator other than a call, those attribute reads and a tuple display appears in them.** That excludes a subscript, a comparison (`in`, `is`, `==` and the rest), a boolean, unary or arithmetic operator, a conditional expression, an assignment expression and a starred argument.
+1139 L2028  `_CALLBACKS5` is data: its functions are arguments of `register_callback` and operands of `_is_not`, and the lint checks that `_CALLBACKS5` appears only as an argument of `_map` in `_register`.
+1140 L2028  The literal None may appear as `_filter`'s first argument (revision 7) and as `_repeat`'s argument (revision 8).
+1141 L2029  - (revision 6, M4 iv) `_Opening` and `_Core` each have a class body consisting of `__slots__ = (<string literals>)` listing exactly their M1 fields and one `def __init__`; nothing else, so no `__getattribute__`, `__getattr__`, property or other Python-level descriptor exists (M1);
+1142 L2030  Within the step functions, each is called only by the steps whose frozen set binds it (revision 8, M3, above).
+1143 L2030  `_retire` has no step 6.
+1144 L2030  `_reconcile` ends with the prune of cores reached from anchors and then `if _TOOL[0] is not None: _unwind_off(None)` (revision 6, F20), in that order.
+1145 L2031  - **Scope (revision 6).** This lint checks the pipelines' *shape* only.
+1146 L2036  - K13: `_register` binding `set_events` and clearing S, gated on the name, with its None swallowed by `_filter(None, …)` (the frozen index set);
+1147 L2040  `o.frame` is assigned only in `_open` and in `_run`'s and `_run_async`'s `finally`.
+1148 L2040  `_detach`'s `UNWIND_LOST` test reads `o.armed`, then `get_events`, then `_ANCHORS.get(fr) is o`, in that order, and then calls `_unwind_off(fr)`, which is the only pop of an anchor in `_detach`;
+1149 L2041  - (revision 5) `_TOOL_NAME` is tested only by identity: inside `_named`, whose test is `_MON[0][0](i) is _TOOL_NAME`, and in the one-call steps' `_is` gates;
+1150 L2042  - (revision 5, N3) `_acquire` reads the clock only through `_monotonic` and sleeps only through `_sleep`; no function in the region reads `time.monotonic` or `time.sleep` at call time;
+1151 L2043  - (revision 7, self-audit) no call of `sys.setprofile`, `sys.settrace`, `threading.setprofile`, `threading.settrace`, `threading.setprofile_all_threads` or `threading.settrace_all_threads`, and no read of those names, in the region.
+1152 L2043  "What is removed from v5e" and R1-B4 claim this, and the leftover checks see only a lasting change, not a set-and-restore;
+1153 L2044  - (revision 2; revision 6 names the list) exactly the names M1's reload paragraph lists are bound through `globals().get` (and `_TOOL_NAME` through `globals().get(...) or`); every other module-level name of the M1 block is a plain binding (N8; the sixth critic's M4 i, vi).
+1154 L2044  `_MON` is assigned only in `coverage_trace()`'s binding, after the M0 builtin check.
+1155 L2045  - **G_COVER.** Every executable line of the region runs in at least one of the four passes below.
+1156 L2045  No pragma exempts a line.
+1157 L2045 [old] A line that no pass reaches is dead code and must be deleted.
+1158 L2045  Revision 3 drops revision 2's "or folded onto its guard's line" (N12; see "Line coverage only").
+1159 L2046  - **Executable lines.** For each region code object, meaning the `_v5_faultpoints()` code objects read before any tracer exists plus the scoring functions of the SM2 region: `{line for _, _, line in code.co_lines() if line is not None} - {code.co_firstlineno}`.
+1160 L2046  Revision 4 (MF4): G_HYG guarantees these code objects have no nested code objects, so no line is counted through an enclosing function's line.
+1161 L2047 [old] It uses sys.monitoring tool id 0, which no exam tool or case uses, with global LINE events, because the self-trace mints some region functions and their minted copies must count.
+1162 L2047  Its callback records `(co_filename, line)` for code whose `co_filename` is `styxx/protocol.py`'s path and returns None there.
+1163 L2047  Revision 3 also needed its LINE events not to split `_unwind_off`'s one-line test-and-clear; from revision 4 nothing depends on that (M7).
+1164 L2047 [old] There is no settrace pass: settrace silences the id-5 injector (F1), so a crash sweep run under it never reaches the lines only a fault reaches.
+1165 L2048  - **The four passes.** The tool is enabled at the start of every process each pass creates.
+1166 L2049  **The exam's fast mode.** The frozen runner's `--fast` mode runs every exam case once, in its frozen placement (inside the self-trace, on the main thread before it, or in a fresh subprocess).
+1167 L2050  This run's G_FI verdicts are discarded: G_FI's verdict comes from a run with no coverage tool (the injector rules).
+1168 L2052  **The frozen direct-call driver `cover_driver_v5f.py`**, counted for the named list below only.
+1169 L2054  Lines that the spec requires and that run only in a subprocess are reached in pass 1's subprocess cases: `_reclaim`'s body (X137 free variant), MONITOR_BUSY's raise (X36), and `_ensure_tool`'s id-3 fallback (X142, X137b).
+1170 L2054  Revision 5: `_take`'s and `_register`'s lines are reached at every first enter, and in pass 1's subprocess cases X137, X137e and X155.
+1171 L2054  `_set_local`'s lines are reached at every mint and retire.
+1172 L2054  The one-call steps have no branch in bytecode, so line coverage reaches all of each; which of their inner outcomes happen is gated by the sweep witnesses (X143, X145, X152–X155), not by G_COVER.
+1173 L2055  - **Line coverage only (N12, accepted in writing).** G_COVER measures lines, not branches.
+1174 L2055  The machinery is written in that style throughout, so G_COVER shows only that no line of the region is dead.
+1175 L2055  The only branch-level instrument on 3.12, BRANCH events, creates the #130279 skip (p13), and a gate on it would have to be read against that.
+1176 L2056  - **The named list (revision 2, BF1), frozen here:** `_on_entry`, `_on_exit`, `_on_unwind`, `_outcome` and `_publish`, which run only inside sys.monitoring callbacks, and `_forget_in_child`, which runs only in a forked child's at-fork handler.
+1177 L2056  The reason is measured: code inside a monitoring callback raises no events for any tool, and legacy settrace is suppressed there too. coverage.py 7.16.1 reports such lines as missing under both its sysmon and ctrace cores (critic2/`covt`;
+1178 L2061  - no registered anchor;
+1179 L2070 [old] - **After the freeze.** An implementation line in a named function that no frozen driver scenario reaches is dead code, like any other, and must be deleted.
+1180 L2070  No exemption is granted after the freeze, and none is needed.
+1181 L2071  - **G_ATOM (revision 6, M4 and M5; rewritten in revision 7, M1; revision 8, M1–M4 and N3: the premise gate, dynamic, frozen and objective).** The one-call premise is a property of CPython, not of styxx's text, so it is gated by execution on every patch level in `_VERIFIED` (M0), on `ref_v5f.py` at the freeze and on the implement
+1182 L2071  It reads only the G_ATOM interface (M10) and `_v5_faultpoints()`.
+1183 L2071  Nothing in it is decided by judgement: every case, expected effect, threshold and control is listed here.
+1184 L2072  An audit hook records every audit event raised on the step's thread.
+1185 L2072  A `sys.setprofile` function records every `c_call` made from the step's own frame.
+1186 L2072  The CALL events on the step's code are all recorded, not only the consumer's, each with whether the interval had already closed (revision 8, M2).
+1187 L2072  Nothing else is.
+1188 L2074  The product of: the id named or held by another tool; o's anchor registered or not; the global event set or clear; and the other registered opening, none, one armed or one unarmed (each with its own core). o itself is unarmed, as it is at `_commit`'s call.
+1189 L2075  The product of: named or not; the key registered, a key not registered, or None; another anchor left after the pop or not; and the event set or clear.
+1190 L2078  The id held by styxx with its five callbacks; held by styxx with its PY_UNWIND callback replaced by another party's (the B1 shape); the same two with the global PY_UNWIND **set** (revision 8, M3: revision 7's nine cases all began with S clear, so a `_register` that cleared S was invisible); held by styxx with its PY_START and PY
+1191 L2081  - (b) *Inside:* no PY_START on the step's thread and no audit event.
+1192 L2082  - (c) *Outside:* between the step's start and its return, and outside the interval, no PY_START on the step's thread.
+1193 L2082  The only `c_call`s the profile function sees from the step's frame are the consumer's, `itertools.chain.from_iterable`'s and, in `_register`, `itertools.tee`'s (revision 8).
+1194 L2082  The latter two build lazy iterators and read nothing.
+1195 L2082  **Revision 8 (M2):** every CALL event on the step's code is a call of `map`, `filter`, `itertools.chain`, `itertools.compress`, `itertools.repeat`, `itertools.tee`, `itertools.chain.from_iterable` or the consumer, and none comes after the interval has closed.
+1196 L2082  So no Python function, C function, method descriptor or method-wrapper is called outside the one call.
+1197 L2082  **What (c) does not see (revision 8, M2).** `sys.setprofile` reports `c_call` only for builtin functions and method descriptors, and CALL events report calls only.
+1198 L2082  Revision 7 said that (c) established "no read or write of shared state happens outside the one call".
+1199 L2084  - `_unwind_on` sets the event and captures iff named and o registered, and captures (flags `UNWIND_LOST` on the core of every armed registered opening) iff the event was also clear;
+1200 L2085  - `_unwind_off` pops the key and clears iff named and no anchor is left;
+1201 L2090  - held by styxx with one callback replaced: 5 exchanges, returns `[None, _TOOL_NAME]`, `len(_LOST)` + 1, and styxx's five callbacks afterwards;
+1202 L2091  - held by another tool or unowned: no exchange; returns `[owner]`;
+1203 L2092  - split case k: k exchanges, returns `[None, <other>]` (the k-th exchange found the other tool's callback), `len(_LOST)` + 1, and afterwards exactly the other tool's k-th callback is styxx's;
+1204 L2094  - the finalizer case (revision 8, M1): 5 exchanges, returns `[None, None, _TOOL_NAME]`, `len(_LOST)` + 2, styxx's five callbacks afterwards, and the finalizer records required by (b).
+1205 L2098 [old] Each must be detected in the same run, or G_ATOM fails** (revision 8, M4: revision 7 said "the run is void" and gave no rule for what follows a void run; see "No void run" below).
+1206 L2104  - K4: `_register` in revision 5's form, one name gate before all five exchanges, no owner read and no count.
+1207 L2104  It fails all `_register` cases (9 of revision 7's matrix, 12 of revision 8's): in the split cases 6 − k of the other tool's callbacks are replaced, and its result has no owner element.
+1208 L2112  - K13 (revision 8, M3): `_register` binding `set_events` and clearing S when the id is named, its None swallowed by `_filter(None, …)` (`critic8/c5`).
+1209 L2115 [old] **Static-only controls (revision 8, M2), run and reported, not gated here.** K12 (`_unwind_on` with its own-anchor gate read by `in` and a subscript in statement 1, `critic8/c2`) and K12b (the same read as a tuple display in the pipeline statement) pass all 67 cases on both versions, because G_ATOM cannot see bytecode.
+1210 L2116  **Revision 8 (M4): every floor is a count, not a time.** Revision 7 ran part E for a fixed 3 s and part D2 for 3 s per form, and said a count below the floor voided the run.
+1211 L2116  A machine about 30% slower, or a loaded host, would then void G_ATOM, and nothing said whether a void run could be repeated or how often.
+1212 L2116  It fails G_ATOM if it reaches its own floor, or `T_MAX`, with none.
+1213 L2117  Part A's floors count events, and it has no time bound to change.
+1214 L2121  It passes iff every trial either completes with the full effect or raises RecursionError with no effect, and both outcomes occur for every step.
+1215 L2121 [old] Its control is K7's `_unwind_off`, which must show a trial that raises RecursionError after its pop (measured: n0 = 4,998 on both versions; 31 full and 30 none per step;
+1216 L2121  A14's recursion claim is then gate-witnessed, not probe-only.
+1217 L2123  - **No void run (revision 8, M4).** Every G_ATOM outcome is PASS or FAIL.
+1218 L2123  A floor not reached by `T_MAX`, a control not detected, a hookup control that passes, or a case that fails is a FAIL, and nothing is re-run.
+1219 L2124  The matrix checks the implementation's own five steps for Python code, audit events and calls outside their one C call, under the instruments above, in every listed gate outcome.
+1220 L2124  Gc, signals and threads are tested only by the frozen t1 and D2 parts, which run reference pipelines built like the steps, not the implementation's steps.
+1221 L2124  So G_ATOM shows that the implementation's steps have the construction, and that CPython runs nothing inside that construction under these conditions.
+1222 L2125  The hookup controls fail as required: K4 12 of 67 cases, K5, K6 and K7 24 each (every `_unwind_off` case), K8 3, K9 3, K10 12, K11 12, K13 2 and K14 1.
+1223 L2126  - **Would have caught.** Revision 5's premise, "no one-call step raises an audit event", fails criterion (b) on `_register` itself (B1).
+1224 L2133  - **G_EXAM_FROZEN.** Every `FROZEN_*_SHA256` in the prereg matches, read from the prereg as first committed.
+1225 L2133  The freeze commit contains the runner, `ref_v5f.py`, the SM1 catalog, `sm1_result.json` and every gate script.
+1226 L2137  - **G3.** No v4/v5 disagreement over the pairable committed results.
+1227 L2144  - **G_XVER.** Every case's outcome is identical on the two verified interpreters, 3.12.3 and 3.13.12 (revision 7, M2: revision 6 said "3.12 and 3.13").
+1228 L2144  On 3.10.20 and 3.11.15 (revision 8, N8), X37 refuses UNSUPPORTED_VERSION and every scoring-only case matches.
+1229 L2147 [old] - **G_ATOM (revision 6; revision 7 criteria; revision 8 matrix, floors and controls)** passes on every patch level in `_VERIFIED`, run on `ref_v5f.py` at the freeze and on the implementation before any scoring: all 67 cases pass, the t1, D2 and R parts meet their count floors within `T_MAX`, K1–K3 are detected in the same run, a
+1230 L2147  Every outcome is PASS or FAIL; no run is void or repeated (revision 8, M4).
+1231 L2147  A patch level is added to `_VERIFIED` only with a passing G_ATOM run committed beside it, naming its build.
+1232 L2148  - **G_COVER = 1.0**, with no pragmas; the callback-only functions are measured by the frozen direct-call driver (revision 2, BF1).
+1233 L2151  Every round-4 blocker and defect repro no longer reproduces, or ends in its documented refusal.
+1234 L2152  The shipping claim names every UNDISTINGUISHED mutant (as uncertified, not as equivalent) and every residual.

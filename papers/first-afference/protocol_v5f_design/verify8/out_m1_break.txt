@@ -1,0 +1,16 @@
+3.12.3 spec wrf {"shape": "wrf", "form": "spec", "before": 5, "fin_len": [6], "len_after": 6, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.12.3 spec closure {"shape": "closure", "form": "spec", "before": 5, "fin_len": [6], "len_after": 6, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.12.3 spec two {"shape": "two", "form": "spec", "before": 5, "fin_len": [7, 7], "len_after": 7, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.12.3 spec raise {"shape": "raise", "form": "spec", "before": 5, "fin_len": [6], "P_exit": "raised hook3", "len_after_except": 6, "len_after": 6, "Q_calls": {}, "Q_lost": true, "P_lost": "P not exited"}
+3.12.3 rev7 wrf {"shape": "wrf", "form": "rev7", "before": 5, "fin_len": [5], "len_after": 6, "Q_calls": {}, "Q_lost": false, "P_lost": true}
+3.12.3 rev7 closure {"shape": "closure", "form": "rev7", "before": 5, "fin_len": [5], "len_after": 6, "Q_calls": {}, "Q_lost": false, "P_lost": true}
+3.12.3 rev7 two {"shape": "two", "form": "rev7", "before": 5, "fin_len": [5, 5], "len_after": 7, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.12.3 rev7 raise {"shape": "raise", "form": "rev7", "before": 5, "fin_len": [5], "len_after_except": 6, "len_after": 6, "Q_calls": {}, "Q_lost": false, "P_lost": true}
+3.13.12 spec wrf {"shape": "wrf", "form": "spec", "before": 5, "fin_len": [6], "len_after": 6, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.13.12 spec closure {"shape": "closure", "form": "spec", "before": 5, "fin_len": [6], "len_after": 6, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.13.12 spec two {"shape": "two", "form": "spec", "before": 5, "fin_len": [7, 7], "len_after": 7, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.13.12 spec raise {"shape": "raise", "form": "spec", "before": 5, "fin_len": [6], "P_exit": "raised hook3", "len_after_except": 6, "len_after": 6, "Q_calls": {}, "Q_lost": true, "P_lost": "P not exited"}
+3.13.12 rev7 wrf {"shape": "wrf", "form": "rev7", "before": 5, "fin_len": [5], "len_after": 6, "Q_calls": {}, "Q_lost": false, "P_lost": true}
+3.13.12 rev7 closure {"shape": "closure", "form": "rev7", "before": 5, "fin_len": [5], "len_after": 6, "Q_calls": {}, "Q_lost": false, "P_lost": true}
+3.13.12 rev7 two {"shape": "two", "form": "rev7", "before": 5, "fin_len": [5, 5], "len_after": 7, "Q_calls": {}, "Q_lost": true, "P_lost": true}
+3.13.12 rev7 raise {"shape": "raise", "form": "rev7", "before": 5, "fin_len": [5], "len_after_except": 6, "len_after": 6, "Q_calls": {}, "Q_lost": false, "P_lost": true}

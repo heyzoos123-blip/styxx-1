@@ -1,0 +1,6 @@
+unclassified: []
+all sentences: 1241 {'H': 194, 'P': 300, 'S': 80, 'G': 317, 'C': 40, 'D': 62, 'old': 84, 'N': 164}
+new (not revision-7 hits): 1149 {'H': 191, 'P': 297, 'S': 80, 'G': 315, 'C': 40, 'D': 62, 'N': 164}
+P/D/C: 399 without witness: []
+resolved by revision 8 self-audit (FIX): [(205, 'L457', 'W3'), (265, 'L545', 'W4'), (273, 'L549', 'W1'), (485, 'L908', 'W2'), (493, 'L915', 'W2'), (531, 'L958', 'W7'), (544, 'L977', 'W7'), (556, 'L995', 'W5'), (686, 'L1283', 'W5'), (748, 'L1394', 'W6')]
+witness by reading or untestable: [(335, 'L713'), (336, 'L713'), (708, 'L1336')]

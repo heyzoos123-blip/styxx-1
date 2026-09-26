@@ -1,0 +1,38 @@
+# sentences with a wide keyword that the verifier's edits added (re-extraction of the edited text): 36
+# each is a W1-W7 correction or new case text; witnesses: X137i, X154e, X158e, V71 (verify8/out_w_new_cases.txt, out_v71.txt), G_ATOM (b), probe_open_audit.py
+205 L457 So that exit's trace and every trace live at that exit note MONITOR_LOST, including traces entered after the reload that lost nothing; traces entered after that exit do not (`rev7/w7_witnesses.py` RELOAD: two traces live across a reload both note it, and without the count only the first to exit does; revision 8 self-audit, W3: case X158e pins it, with a trace entered after the reload and one entered after the first exit).
+265 L545 With `_TOOL[0]` None (a first acquisition or an adoption), E4 makes no count of its own: no trace has entered, so none can be live.
+266 L545 (Revision 8 self-audit, W4: this said "nothing is counted", which the in-call count contradicts.
+267 L545 The registration still appends one entry per previous callback that is not styxx's, five on a fresh id (M7, "The registration"), and `core.lost0` is read after it, so no record sees them;
+268 L545 X154e.) A re-take happens when both of this transaction's reclaims (the reconciliation's and `_ensure_tool`'s) had their registration split with owner None, because an audit hook freed the id again.
+275 L549 If both ids then deliver an event of one minted frame, the pending entry is keyed by the frame, so the second delivery finds no entry and publishes nothing: no double count (revision 8 self-audit, W1: X137i, in which both ids deliver f's events).
+487 L908 Revision 5 (N2) lists every machinery site that raises an audit event, where a raising audit hook is such a source (revision 8's wider self-audit, W2, adds the sites it missed):
+491 L911 - (revision 8 self-audit, W2) `sys._getframe` in `_run` and `_run_async`, the argument of `_open` (M7), at every open;
+492 L912 - (revision 8 self-audit, W2) `builtins.id` at every `id()` call, and `object.__getattr__` at every read of a frame's `f_code` (both raised on 3.12.3 and 3.13.12: `verify8/probe_open_audit.py`, 23 events in one `run()` on `rev8/mech8.py`).
+493 L912 The machinery makes such calls in `_open`'s step-5 walk, in every callback (the `_MINTED` lookup, the hit's walk, the pending key and the publication's `id(code) in h.by_code` test), in `_alive`'s liveness test (so inside every reconciliation that tests a holder), and at the mint and retire keys inside E4 and X5.
+494 L912 Where they land: at open, all before `_open`'s append (steps 1–5), so a hook that raises there propagates out of `run()` (or the coroutine's first step) before any append or store, and fn does not run (V71); in a callback, a raising hook makes that hit raise out of its callback (L-DELIVERY), and one raised at publication loses that one credit, inside I6; inside a transaction, they are further sites of the kind "Audit hooks and slow owners" and I5 describe, which the model's lock-taking and greenlet configurations stand for, and G_FI faults every instruction that makes them;
+499 L917 So revision 5 removed revision 4's two open- and close-path sites, `_txn()` in every clearing `_unwind_off` and `_alive` in every waiting open (the fifth critic's `critic5/c5_audit_events.py`).
+500 L917 The close path raises no audit event.
+501 L917 The open path raises audit events only before `_open`'s append: `_run`'s `sys._getframe()`, and step 5's `f_code` reads and `id()` calls.
+502 L917 `_commit` and everything after the append raise none.
+503 L917 (Revision 8 self-audit, W2: this said "the open and close paths still raise no audit event", which `_run`'s frame read and the walk contradict;
+541 L960 If `_TOOL[0]` was None, the next enter adopts the id and registers again (Tool acquisition; revision 8 self-audit, W7: X154e).
+554 L979 A tool left named ours with missing callbacks (a fault, including a raising audit hook, inside `_register`) is adopted and re-registered at the next enter when `_TOOL[0]` is None (X154e, revision 8 self-audit, W7).
+566 L997 Audit hooks run inside a transaction at `__code__` writes (E4's install and `_retire`'s restore), and, from revision 6's correction, at the five `sys.monitoring.register_callback` events of `_register` at X5 on **every exit**, at E4 and at a reclaim (B1).
+567 L997 They also run at `_alive`'s `sys._current_frames`, `id()` and `f_code` reads in every reconciliation that tests a holder, which is the first step of every transaction, and at the `id()` of the mint and retire keys; see Sources.) If what the hook blocks on is a lock held by a thread that is itself waiting for the mutex, the two form a cycle.
+697 L1285 The audit-hook sites inside a transaction include `__code__` writes and, as revision 6 corrects (B1), `sys.monitoring.register_callback`, which X5 raises five times on every exit: a hook on that event that takes such a lock closes the cycle at every exit, not only at mints and retires.
+698 L1285 (Revision 8 self-audit, W5: the reconciliation's holder test, `_alive`, also raises `sys._current_frames`, `builtins.id` and `object.__getattr__` inside every transaction that has a holder to test;
+760 L1396 Greenlet switches are otherwise covered by the model check only (`rev5/m5_modelcheck.py` to `rev8/m8_modelcheck.py`; revision 8 self-audit, W6: this said "X137f's one shape" and "the model check only" after X158d was added).
+930 L1591 every trace PASS its one call;
+931 L1591 P, Q and R with MONITOR_LOST (P's exit registration finds five previous callbacks that are not the re-bound ones and counts them, and Q and R are live then, R although it lost nothing);
+932 L1591 S with none (entered after that exit).
+933 L1591 Without the in-call count (revision 6's registration), only P is noted (`verify8/x158e_reload.py` on `rev8/mech8.py`, mutant `cbrep_nocount`, both versions)
+934 L1592 X137g, except that the other tool takes the freed id 4 with `use_tool_id` only and registers nothing, so styxx's callbacks and f's local events stay on id 4 (p3).
+936 L1592 The pending entry is keyed by the frame and popped by the first confirmation, so the second finds nothing.
+937 L1592 the rebinding's "no double count" (E4; rev. 6; witnessed from rev. 8)
+938 L1593 the first `__enter__` raises the hook's RuntimeError, and then `sys.monitoring.get_tool(4)` begins with `styxx.protocol/` (the id is named styxx's) while `_v5_state()["tool"]` is None.
+939 L1593 The second tracer adopts id 4 and registers again: `tool == 4`, PASS `{f:1}`, no MONITOR_LOST (its `lost0` is read after the adoption's in-call count).
+940 L1593 With an adoption that does not register again, f's PY_RETURN has no callback: NOT_EXERCISED with MONITOR_LOST (`verify8/x154e_adoption.py` on `rev8/mech8.py`, mutant `adopt_no_register`, both versions)
+979 L1643 An audit hook raises `RuntimeError` at the first `sys._getframe` event on the case thread while armed; it is armed around one `cov.run('A', f)` only.
+980 L1643 `_v5_state()["anchors"]` is 0; the record has exactly one opening of A, from the second call, PASS `{f:1}`, no OPEN_AT_EXIT note and no problem.
+1065 L1864 - revision 8 self-audit: every row of the self-audit line of the Mutation-audit table, each with the witness named there.

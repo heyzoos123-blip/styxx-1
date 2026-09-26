@@ -1,0 +1,12 @@
+3.12.3 X137i spec {"mut": null, "tool_before": 4, "tool_after": 3, "local_events_on_each_id": {"4": 15, "3": 15}, "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"f": 1, "g": 1}}, "Q_lost": false}
+3.12.3 X137i pend_get {"mut": "pend_get", "tool_before": 4, "tool_after": 3, "local_events_on_each_id": {"4": 15, "3": 15}, "P_calls": {"A": {"f": 2}}, "P_lost": true, "Q_calls": {"B": {"f": 2, "g": 1}}, "Q_lost": false}
+3.12.3 X154e spec {"mut": null, "first_enter": "raised hook3", "after_first": {"tool": null, "id4_name_is_ours": true}, "tool": 4, "Q_calls": {"A": {"f": 1}}, "Q_lost": false}
+3.12.3 X154e adopt_no_register {"mut": "adopt_no_register", "first_enter": "raised hook3", "after_first": {"tool": null, "id4_name_is_ours": true}, "tool": 4, "Q_calls": {}, "Q_lost": true}
+3.12.3 X158e spec {"P": [{"A": {"f": 1}}, true], "Q": [{"B": {"f": 1}}, true], "R": [{"C": {"f": 1}}, true], "S": [{"D": {"f": 1}}, false]}
+3.12.3 X158e cbrep_nocount {"P": [{"A": {"f": 1}}, true], "Q": [{"B": {"f": 1}}, false], "R": [{"C": {"f": 1}}, false], "S": [{"D": {"f": 1}}, false]}
+3.13.12 X137i spec {"mut": null, "tool_before": 4, "tool_after": 3, "local_events_on_each_id": {"4": 15, "3": 15}, "P_calls": {"A": {"f": 1}}, "P_lost": true, "Q_calls": {"B": {"f": 1, "g": 1}}, "Q_lost": false}
+3.13.12 X137i pend_get {"mut": "pend_get", "tool_before": 4, "tool_after": 3, "local_events_on_each_id": {"4": 15, "3": 15}, "P_calls": {"A": {"f": 2}}, "P_lost": true, "Q_calls": {"B": {"f": 2, "g": 1}}, "Q_lost": false}
+3.13.12 X154e spec {"mut": null, "first_enter": "raised hook3", "after_first": {"tool": null, "id4_name_is_ours": true}, "tool": 4, "Q_calls": {"A": {"f": 1}}, "Q_lost": false}
+3.13.12 X154e adopt_no_register {"mut": "adopt_no_register", "first_enter": "raised hook3", "after_first": {"tool": null, "id4_name_is_ours": true}, "tool": 4, "Q_calls": {}, "Q_lost": true}
+3.13.12 X158e spec {"P": [{"A": {"f": 1}}, true], "Q": [{"B": {"f": 1}}, true], "R": [{"C": {"f": 1}}, true], "S": [{"D": {"f": 1}}, false]}
+3.13.12 X158e cbrep_nocount {"P": [{"A": {"f": 1}}, true], "Q": [{"B": {"f": 1}}, false], "R": [{"C": {"f": 1}}, false], "S": [{"D": {"f": 1}}, false]}

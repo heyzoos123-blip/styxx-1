@@ -1,10 +1,10 @@
 {
  "runner": "run_protocol_v5f_exam.py",
- "runner_sha256": "479a3fcf804e3f96f56fcc19eb2e722f06de8c2e4fbc73e8dd554db61aa4c4fe",
+ "runner_sha256": "104e18174a5690ed409dd356a279e1bac5294ab09a76c693c863f69232bea55d",
  "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "impl_module": "ref_v5f",
- "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
- "spec_sha256": "949c99da8752f7ba53c37f0a06bc619618846fbe513da9efa6051e7b8ea41d97",
+ "impl_sha256": "2a1781e66975a8aa82fd77f67bbfef6f8826a9f6651c098a2836229f983ed34f",
+ "spec_sha256": "6133695f14c0690153c132f301ba892a50b368cc63de5c897d62abb7a9aa5118",
  "python": "3.11.15",
  "build": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
  "python_build": [
@@ -21,7 +21,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.011
+   "seconds": 0.004
   },
   "X96d": {
    "table": "new violation cases",
@@ -39,7 +39,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.003
   },
   "X112b": {
    "table": "new violation cases",
@@ -48,7 +48,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.003
   },
   "X117b": {
    "table": "new violation cases",
@@ -57,7 +57,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "X117c": {
    "table": "new violation cases",
@@ -66,7 +66,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X95b": {
    "table": "new violation cases",
@@ -120,7 +120,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.007
   },
   "X95": {
    "table": "v5e cases whose outcome changes",
@@ -138,7 +138,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.009
   },
   "X103b": {
    "table": "new violation cases",
@@ -147,7 +147,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.003
   },
   "X105d": {
    "table": "new violation cases",
@@ -165,7 +165,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.008
   },
   "X117d": {
    "table": "new violation cases",
@@ -174,7 +174,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "V53": {
    "table": "new valid cases",
@@ -192,7 +192,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X37": {
    "table": "new violation cases",
@@ -201,7 +201,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.006
   }
  },
  "not_run": {
@@ -348,6 +348,7 @@
   "X154b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X154c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X154d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X154": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X154e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X155": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X157c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
@@ -396,6 +397,7 @@
   "R24": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X137j": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "R23": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R25": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X72b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X65b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X30b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
@@ -657,15 +659,15 @@
  "coverage_of_design_tables": {
   "new violation cases": {
    "rows_in_design": 140,
-   "cases_in_runner": 140
+   "cases_in_runner": 141
   },
   "new valid cases": {
    "rows_in_design": 46,
    "cases_in_runner": 46
   },
   "new documented residuals": {
-   "rows_in_design": 15,
-   "cases_in_runner": 15
+   "rows_in_design": 16,
+   "cases_in_runner": 16
   },
   "exam-hole kill cases": {
    "rows_in_design": 30,
@@ -1115,8 +1117,8 @@
    "X82"
   ]
  },
- "v5e_kept_sha256": "5160cecb4f0a3e8d888385b748f4526a21ded0ea62e898810aab460430aa4bf1",
- "v5e_port_sha256": "286d8b1bc914340406dc654d0a09ab4c979a72e4523f9e9aa3b52b4a7974ec79",
+ "v5e_kept_sha256": "77d31b0535afb3bb693c5cc4c8de8dbbffd8649d65dac82c1d91bc3dc54f86b4",
+ "v5e_port_sha256": "b78eb1123d23424816872c1bdf56f541022c9cf104d16f5242cd5db15748b2dc",
  "h2_report": {},
  "h4_performance_report": {},
  "h8_report": {},
@@ -1128,12 +1130,7 @@
  "n_cases_run": 21,
  "n_passed": 21,
  "n_failed_known_spec_gaps": 0,
- "known_spec_gaps": {
-  "X137h": "GAP-42 (P and S open no section, so SECTION_ABSENT precedes NOT_EXERCISED)",
-  "X158d": "GAP-44 (under greenlets the reference gives P CODE_SWAPPED, not PASS)",
-  "v5e:X72": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)",
-  "v5e:X73": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)"
- },
+ "known_spec_gaps": {},
  "verdict": "REFUSED_TRACING_UNSUPPORTED_INTERPRETER; scoring-only cases PASS",
  "seconds": 0.09
 }

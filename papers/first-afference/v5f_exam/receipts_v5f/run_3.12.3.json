@@ -1,10 +1,10 @@
 {
  "runner": "run_protocol_v5f_exam.py",
- "runner_sha256": "479a3fcf804e3f96f56fcc19eb2e722f06de8c2e4fbc73e8dd554db61aa4c4fe",
+ "runner_sha256": "104e18174a5690ed409dd356a279e1bac5294ab09a76c693c863f69232bea55d",
  "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "impl_module": "ref_v5f",
- "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
- "spec_sha256": "949c99da8752f7ba53c37f0a06bc619618846fbe513da9efa6051e7b8ea41d97",
+ "impl_sha256": "2a1781e66975a8aa82fd77f67bbfef6f8826a9f6651c098a2836229f983ed34f",
+ "spec_sha256": "6133695f14c0690153c132f301ba892a50b368cc63de5c897d62abb7a9aa5118",
  "python": "3.12.3",
  "build": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
  "python_build": [
@@ -21,7 +21,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.01
+   "seconds": 0.021
   },
   "V67": {
    "table": "new valid cases",
@@ -30,7 +30,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.015
   },
   "X143c": {
    "table": "new violation cases",
@@ -39,7 +39,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.015
   },
   "X59e": {
    "table": "new violation cases",
@@ -48,7 +48,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.013
+   "seconds": 0.025
   },
   "X59e-v": {
    "table": "new violation cases",
@@ -57,7 +57,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.013
+   "seconds": 0.024
   },
   "V73": {
    "table": "new valid cases",
@@ -66,7 +66,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.016
   },
   "R18a": {
    "table": "new documented residuals",
@@ -75,7 +75,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.016
   },
   "R18b": {
    "table": "new documented residuals",
@@ -84,7 +84,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.024
   },
   "R20": {
    "table": "new documented residuals",
@@ -93,7 +93,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.015
+   "seconds": 0.026
   },
   "X35": {
    "table": "new violation cases",
@@ -102,7 +102,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.029
   },
   "X35b": {
    "table": "new violation cases",
@@ -111,7 +111,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.021
   },
   "X35c": {
    "table": "new violation cases",
@@ -120,7 +120,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.021
   },
   "X65e": {
    "table": "new violation cases",
@@ -129,7 +129,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.016
   },
   "X65f": {
    "table": "new violation cases",
@@ -138,7 +138,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.015
   },
   "X65g": {
    "table": "new violation cases",
@@ -147,7 +147,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.016
   },
   "X139": {
    "table": "new violation cases",
@@ -156,7 +156,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.021
   },
   "X138": {
    "table": "new violation cases",
@@ -165,7 +165,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 11.029
+   "seconds": 11.034
   },
   "X138b": {
    "table": "new violation cases",
@@ -174,7 +174,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 11.052
+   "seconds": 11.074
   },
   "X141": {
    "table": "new violation cases",
@@ -183,7 +183,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.017
   },
   "X141b": {
    "table": "new violation cases",
@@ -192,7 +192,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.017
   },
   "X141c": {
    "table": "new violation cases",
@@ -201,7 +201,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.017
   },
   "X92b": {
    "table": "new violation cases",
@@ -210,7 +210,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.025
   },
   "X131": {
    "table": "new violation cases",
@@ -219,7 +219,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.015
   },
   "X132": {
    "table": "new violation cases",
@@ -228,7 +228,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.179
+   "seconds": 0.195
   },
   "X143": {
    "table": "new violation cases",
@@ -237,7 +237,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.173
+   "seconds": 0.195
   },
   "X143b": {
    "table": "new violation cases",
@@ -246,7 +246,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.019
   },
   "X144": {
    "table": "new violation cases",
@@ -255,7 +255,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.019
   },
   "X145": {
    "table": "new violation cases",
@@ -264,7 +264,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.388
+   "seconds": 0.398
   },
   "X146": {
    "table": "new violation cases",
@@ -273,7 +273,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.017
   },
   "X146b": {
    "table": "new violation cases",
@@ -282,7 +282,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.018
   },
   "X146c": {
    "table": "new violation cases",
@@ -291,7 +291,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.027
   },
   "X146d": {
    "table": "new violation cases",
@@ -300,7 +300,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.019
   },
   "X146e": {
    "table": "new violation cases",
@@ -309,7 +309,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.016
   },
   "X147": {
    "table": "new violation cases",
@@ -318,7 +318,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.698
+   "seconds": 0.678
   },
   "X148": {
    "table": "new violation cases",
@@ -327,7 +327,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.132
+   "seconds": 0.154
   },
   "X152": {
    "table": "new violation cases",
@@ -336,7 +336,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.359
+   "seconds": 0.344
   },
   "X153": {
    "table": "new violation cases",
@@ -345,7 +345,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.789
+   "seconds": 0.895
   },
   "X137d": {
    "table": "new violation cases",
@@ -354,7 +354,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.02
   },
   "V61": {
    "table": "new valid cases",
@@ -363,7 +363,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.021
   },
   "V62": {
    "table": "new valid cases",
@@ -372,7 +372,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.025
   },
   "V64": {
    "table": "new valid cases",
@@ -381,7 +381,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.023
   },
   "V65": {
    "table": "new valid cases",
@@ -390,7 +390,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 7.027
+   "seconds": 7.05
   },
   "V68": {
    "table": "new valid cases",
@@ -399,7 +399,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 3.041
+   "seconds": 3.036
   },
   "V70": {
    "table": "new valid cases",
@@ -408,7 +408,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.017
   },
   "X35e": {
    "table": "new violation cases",
@@ -417,7 +417,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.014
+   "seconds": 0.024
   },
   "X57d": {
    "table": "new violation cases",
@@ -426,7 +426,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.029
   },
   "R24": {
    "table": "new documented residuals",
@@ -435,7 +435,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.099
+   "seconds": 0.102
   },
   "H1": {
    "table": "hazard sweeps",
@@ -444,7 +444,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 7.149
+   "seconds": 7.105
   },
   "H2": {
    "table": "hazard sweeps",
@@ -453,7 +453,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.226
+   "seconds": 0.243
   },
   "H3": {
    "table": "hazard sweeps",
@@ -462,7 +462,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.085
+   "seconds": 0.095
   },
   "H4": {
    "table": "hazard sweeps",
@@ -471,7 +471,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.092
+   "seconds": 0.068
   },
   "H5": {
    "table": "hazard sweeps",
@@ -480,7 +480,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.016
   },
   "H7": {
    "table": "hazard sweeps",
@@ -489,7 +489,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 30.009
+   "seconds": 30.04
   },
   "H8": {
    "table": "hazard sweeps",
@@ -498,7 +498,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 9.915
+   "seconds": 10.227
   },
   "H10": {
    "table": "hazard sweeps",
@@ -507,7 +507,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 180.486
+   "seconds": 180.073
   },
   "H6": {
    "table": "hazard sweeps",
@@ -516,7 +516,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 57.33
+   "seconds": 57.66
   },
   "X140": {
    "table": "new violation cases",
@@ -525,7 +525,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 1.728
+   "seconds": 1.614
   },
   "X71c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -534,7 +534,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 2.765
+   "seconds": 2.518
   },
   "X140f": {
    "table": "new violation cases",
@@ -543,7 +543,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 83.586
+   "seconds": 88.178
   },
   "X137-free": {
    "table": "new violation cases",
@@ -552,7 +552,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.3
+   "seconds": 0.327
   },
   "M10-S0": {
    "table": "M10 property (not a table row): _v5_state() before any tracer",
@@ -561,7 +561,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.214,
+   "seconds": 0.279,
    "note": "the case body runs its own fresh subprocess"
   },
   "V69b": {
@@ -571,7 +571,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.274,
+   "seconds": 0.294,
    "note": "the case body runs its own fresh subprocess"
   },
   "V69b-v": {
@@ -581,7 +581,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.298,
+   "seconds": 0.278,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156f": {
@@ -591,7 +591,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.22,
+   "seconds": 0.314,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156g": {
@@ -601,7 +601,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.233,
+   "seconds": 0.291,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156g-ctl": {
@@ -611,7 +611,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.243,
+   "seconds": 0.3,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156h": {
@@ -621,7 +621,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.254,
+   "seconds": 0.283,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156i": {
@@ -631,7 +631,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.258,
+   "seconds": 0.301,
    "note": "the case body runs its own fresh subprocess"
   },
   "V72": {
@@ -641,7 +641,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.272,
+   "seconds": 0.309,
    "note": "the case body runs its own fresh subprocess"
   },
   "R21": {
@@ -651,7 +651,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.268,
+   "seconds": 0.269,
    "note": "the case body runs its own fresh subprocess"
   },
   "X157": {
@@ -661,7 +661,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.297,
+   "seconds": 0.29,
    "note": "the case body runs its own fresh subprocess"
   },
   "X157b": {
@@ -671,7 +671,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.307,
+   "seconds": 0.315,
    "note": "the case body runs its own fresh subprocess"
   },
   "X36": {
@@ -681,7 +681,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.237,
+   "seconds": 0.262,
    "note": "the case body runs its own fresh subprocess"
   },
   "X142": {
@@ -691,7 +691,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.288,
+   "seconds": 0.292,
    "note": "the case body runs its own fresh subprocess"
   },
   "X142b": {
@@ -701,7 +701,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.263,
+   "seconds": 0.312,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156": {
@@ -711,7 +711,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.262,
+   "seconds": 0.329,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156b": {
@@ -721,7 +721,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.241,
+   "seconds": 0.341,
    "note": "the case body runs its own fresh subprocess"
   },
   "X37b": {
@@ -731,7 +731,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.279,
+   "seconds": 0.29,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156c": {
@@ -741,7 +741,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.327,
+   "seconds": 0.395,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156d": {
@@ -751,7 +751,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.283,
+   "seconds": 0.367,
    "note": "the case body runs its own fresh subprocess"
   },
   "X137b": {
@@ -761,7 +761,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.379,
+   "seconds": 0.337,
    "note": "the case body runs its own fresh subprocess"
   },
   "X137e": {
@@ -771,7 +771,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.303,
+   "seconds": 0.321,
    "note": "the case body runs its own fresh subprocess"
   },
   "X137g": {
@@ -781,7 +781,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.27,
+   "seconds": 0.307,
    "note": "the case body runs its own fresh subprocess"
   },
   "X137i": {
@@ -791,19 +791,18 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.271,
+   "seconds": 0.295,
    "note": "the case body runs its own fresh subprocess"
   },
   "X137h": {
    "table": "new violation cases",
    "placement": "subprocess",
-   "row": "fresh subprocess, revision 7 form: U takes id 4 (RAISE only), Q rebinds to 3, V takes id 3 inside R's A (five callbacks, inherited PY_UNWIND), t raises; U frees 4; S rebinds to 4 -> tool 4; R NOT_EXERCISED for t with MONITOR_LOST; P and Q NOT_EXERCISED with MONITOR_LOST; S NOT_EXERCISED, no MONITOR_LOST",
-   "ok": false,
-   "detail": "AssertionError: P ['REFUSE', 'SECTION_ABSENT', False, False]",
+   "row": "fresh subprocess, revision 7 form with revision 12's empty sections (P, Q, S each open their section once, calling nothing): U takes id 4 (RAISE only), Q rebinds to 3, V takes id 3 inside R's A, t raises; U frees 4; S rebinds to 4 -> tool 4; P, Q, R NOT_EXERCISED with MONITOR_LOST; S NOT_EXERCISED, no MONITOR_LOST",
+   "ok": true,
+   "detail": "",
    "leftover": [],
-   "seconds": 0.318,
-   "note": "the case body runs its own fresh subprocess",
-   "known_spec_gap": "GAP-42 (P and S open no section, so SECTION_ABSENT precedes NOT_EXERCISED)"
+   "seconds": 0.329,
+   "note": "the case body runs its own fresh subprocess"
   },
   "X154b": {
    "table": "new violation cases",
@@ -812,7 +811,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 1.785,
+   "seconds": 1.525,
    "note": "the case body runs its own fresh subprocess"
   },
   "X154c": {
@@ -822,17 +821,27 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.301,
+   "seconds": 0.294,
    "note": "the case body runs its own fresh subprocess"
   },
   "X154d": {
    "table": "new violation cases",
    "placement": "subprocess",
-   "row": "fresh subprocess, variant (a): P runs A(f); styxx's id freed; an audit hook frees it again at the 1st and 2nd register_callback events of Q's enter -> tool unchanged; P PASS {f:1} with MONITOR_LOST; Q PASS {g:1}, no MONITOR_LOST (variant (b): GAP-41)",
+   "row": "fresh subprocess. (a): P runs A(f); styxx's id freed; an audit hook frees it again at the 1st and 2nd register_callback events of Q's enter -> tool unchanged; P PASS {f:1} with MONITOR_LOST; Q PASS {g:1}, no MONITOR_LOST. (b) (revision 12): at the 1st event only, the id is freed and taken by another tool -> tool 3; P PASS {f:1} with MONITOR_LOST; Q PASS {g:1}, no note",
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.292,
+   "seconds": 0.642,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X154": {
+   "table": "new violation cases",
+   "placement": "subprocess",
+   "row": "fresh subprocess per trial (revision 7, M4): four instruction sweeps (_unwind_on at the open of A, _unwind_off at its close, _set_local in the exit's _retire, _register in the exit's re-registration); the interference frees styxx's id, another tool takes it, registers None for styxx's five events (revision 12, GAP-40), a RAISE callback, global RAISE, local LINE on M_T -> every trial: global events exactly RAISE, local events on M_T exactly LINE, its RAISE callback its own, none of styxx's five callbacks on the id",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 83.544,
    "note": "the case body runs its own fresh subprocess"
   },
   "X154e": {
@@ -842,7 +851,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.282,
+   "seconds": 0.291,
    "note": "the case body runs its own fresh subprocess"
   },
   "X155": {
@@ -852,7 +861,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 9.653,
+   "seconds": 10.819,
    "note": "the case body runs its own fresh subprocess"
   },
   "X157c": {
@@ -862,7 +871,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.32,
+   "seconds": 0.332,
    "note": "the case body runs its own fresh subprocess"
   },
   "X158": {
@@ -872,7 +881,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.559,
+   "seconds": 0.625,
    "note": "the case body runs its own fresh subprocess"
   },
   "X158c": {
@@ -882,7 +891,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.573,
+   "seconds": 0.664,
    "note": "the case body runs its own fresh subprocess"
   },
   "X158b": {
@@ -892,7 +901,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.29,
+   "seconds": 0.307,
    "note": "the case body runs its own fresh subprocess"
   },
   "X158e": {
@@ -902,7 +911,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.321,
+   "seconds": 0.327,
    "note": "the case body runs its own fresh subprocess"
   },
   "X137f": {
@@ -912,19 +921,18 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.284,
+   "seconds": 0.297,
    "note": "the case body runs its own fresh subprocess"
   },
   "X158d": {
    "table": "new violation cases",
    "placement": "subprocess",
-   "row": "fresh subprocess, greenlet 3.5.6: X158 (a) where the replacement's __del__ switches to g2, which runs Q.__exit__ -> P PASS {f:1} with MONITOR_LOST; Q NOT_EXERCISED with MONITOR_LOST; the finalizer ran inside P's registration",
-   "ok": false,
-   "detail": "AssertionError: {'P': ['REFUSE', 'CODE_SWAPPED'], 'P_lost': True, 'Q': ['REFUSE', 'NOT_EXERCISED'], 'Q_lost': True, 'finalizer_ran': True}",
+   "row": "fresh subprocess, greenlet 3.5.6: X158 (a) where the replacement's __del__ switches to g2, which runs Q.__exit__ -> P CODE_SWAPPED, its opening with MONITOR_LOST (revision 12, GAP-44); Q NOT_EXERCISED with MONITOR_LOST; the finalizer ran inside P's registration",
+   "ok": true,
+   "detail": "",
    "leftover": [],
-   "seconds": 0.281,
-   "note": "the case body runs its own fresh subprocess",
-   "known_spec_gap": "GAP-44 (under greenlets the reference gives P CODE_SWAPPED, not PASS)"
+   "seconds": 0.293,
+   "note": "the case body runs its own fresh subprocess"
   },
   "V47": {
    "table": "new valid cases",
@@ -933,7 +941,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.3,
+   "seconds": 0.335,
    "note": "the case body runs its own fresh subprocess"
   },
   "V69": {
@@ -943,7 +951,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.291,
+   "seconds": 0.296,
    "note": "the case body runs its own fresh subprocess"
   },
   "V71": {
@@ -953,7 +961,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.792,
+   "seconds": 0.902,
    "note": "the case body runs its own fresh subprocess"
   },
   "V72b": {
@@ -963,7 +971,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.309,
+   "seconds": 0.296,
    "note": "the case body runs its own fresh subprocess"
   },
   "X137j": {
@@ -973,7 +981,17 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.595,
+   "seconds": 0.629,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "R25": {
+   "table": "new documented residuals",
+   "placement": "subprocess",
+   "row": "revision 12 (GAP-38; over-blocking #24; version-keyed), fresh subprocess: (1) in section G, f called, M_T kept in an untracked tuple, gc.collect(); (2) gc.unfreeze(), then the same; (3) gc.unfreeze() and a full gc.collect(), then the same -> (1) PASS {f:1}; (2) CLONE_ALIVE ('the gc freeze count rose ...') on 3.12.3, PASS {f:1} on 3.13.12; (3) PASS {f:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.35,
    "note": "the case body runs its own fresh subprocess"
   },
   "V01": {
@@ -983,7 +1001,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.027
   },
   "X40": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -992,7 +1010,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.019
   },
   "X55": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1001,7 +1019,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.017
   },
   "X59": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1010,7 +1028,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "X26b": {
    "table": "new violation cases",
@@ -1019,7 +1037,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.018
   },
   "X24b": {
    "table": "new violation cases",
@@ -1028,7 +1046,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "X13b": {
    "table": "new violation cases",
@@ -1037,7 +1055,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "X14c": {
    "table": "new violation cases",
@@ -1046,7 +1064,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "X17b": {
    "table": "new violation cases",
@@ -1055,7 +1073,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.021
   },
   "X34": {
    "table": "new violation cases",
@@ -1064,7 +1082,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "V07": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1073,7 +1091,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.019
   },
   "X33": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1082,7 +1100,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "X73": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1091,7 +1109,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "V18": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1100,7 +1118,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.018
   },
   "X76": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1109,7 +1127,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "X60": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1118,7 +1136,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.02
   },
   "X78f": {
    "table": "new violation cases",
@@ -1127,7 +1145,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "V54": {
    "table": "new valid cases",
@@ -1136,7 +1154,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "V55": {
    "table": "new valid cases",
@@ -1145,7 +1163,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "V14": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1154,7 +1172,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X119": {
    "table": "new violation cases",
@@ -1163,7 +1181,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.01
+   "seconds": 0.024
   },
   "X74d": {
    "table": "new violation cases",
@@ -1172,7 +1190,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X93d": {
    "table": "new violation cases",
@@ -1181,7 +1199,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.02
   },
   "X96d": {
    "table": "new violation cases",
@@ -1190,7 +1208,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.022
   },
   "X103c": {
    "table": "new violation cases",
@@ -1199,7 +1217,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.023
   },
   "X112b": {
    "table": "new violation cases",
@@ -1208,7 +1226,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.024
   },
   "X117b": {
    "table": "new violation cases",
@@ -1217,7 +1235,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.023
   },
   "X117c": {
    "table": "new violation cases",
@@ -1226,7 +1244,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.023
   },
   "X95b": {
    "table": "new violation cases",
@@ -1235,7 +1253,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.021
   },
   "X122": {
    "table": "new violation cases",
@@ -1244,7 +1262,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "X109": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1253,7 +1271,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.025
   },
   "X90/X91": {
    "table": "v5e cases whose outcome changes",
@@ -1262,7 +1280,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "V52": {
    "table": "new valid cases",
@@ -1271,7 +1289,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.01
+   "seconds": 0.038
   },
   "X32": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -1280,7 +1298,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "V28b": {
    "table": "new valid cases",
@@ -1289,7 +1307,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.021
   },
   "X78h": {
    "table": "new violation cases",
@@ -1298,7 +1316,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.029
   },
   "X93e": {
    "table": "new violation cases",
@@ -1307,7 +1325,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.019
   },
   "X24f": {
    "table": "new violation cases",
@@ -1316,7 +1334,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.024
   },
   "X84": {
    "table": "new violation cases",
@@ -1325,7 +1343,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.021
   },
   "X10c": {
    "table": "new violation cases",
@@ -1334,7 +1352,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.022
   },
   "X14d": {
    "table": "new violation cases",
@@ -1343,7 +1361,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.019
   },
   "X117e": {
    "table": "new violation cases",
@@ -1352,7 +1370,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.026
   },
   "X117f": {
    "table": "new violation cases",
@@ -1361,7 +1379,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.021
   },
   "R05b": {
    "table": "new documented residuals",
@@ -1370,7 +1388,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.023
   },
   "R12": {
    "table": "new documented residuals",
@@ -1379,7 +1397,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.025
   },
   "R13": {
    "table": "new documented residuals",
@@ -1388,7 +1406,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "R14": {
    "table": "new documented residuals",
@@ -1397,7 +1415,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "R16": {
    "table": "new documented residuals",
@@ -1406,7 +1424,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.011
+   "seconds": 0.02
   },
   "R22": {
    "table": "new documented residuals",
@@ -1415,7 +1433,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.017
   },
   "V48": {
    "table": "new valid cases",
@@ -1424,7 +1442,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.018
   },
   "V49": {
    "table": "new valid cases",
@@ -1433,7 +1451,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X95": {
    "table": "v5e cases whose outcome changes",
@@ -1442,7 +1460,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "X07b / X07c": {
    "table": "new violation cases",
@@ -1451,7 +1469,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.024
   },
   "X14b": {
    "table": "new violation cases",
@@ -1460,7 +1478,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.025
   },
   "X16b": {
    "table": "new violation cases",
@@ -1469,7 +1487,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X24c": {
    "table": "new violation cases",
@@ -1478,7 +1496,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.046
   },
   "X24d": {
    "table": "new violation cases",
@@ -1487,7 +1505,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "X24e": {
    "table": "new violation cases",
@@ -1496,7 +1514,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "X25c": {
    "table": "new violation cases",
@@ -1505,7 +1523,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.023
   },
   "X25d": {
    "table": "new violation cases",
@@ -1514,7 +1532,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.027
   },
   "X26c": {
    "table": "new violation cases",
@@ -1523,7 +1541,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.023
   },
   "X26d": {
    "table": "new violation cases",
@@ -1532,7 +1550,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "X26e": {
    "table": "new violation cases",
@@ -1541,7 +1559,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X26f": {
    "table": "new violation cases",
@@ -1550,7 +1568,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X29b": {
    "table": "new violation cases",
@@ -1559,7 +1577,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.02
   },
   "X30d": {
    "table": "new violation cases",
@@ -1568,7 +1586,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.021
   },
   "X32d": {
    "table": "new violation cases",
@@ -1577,7 +1595,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.217
+   "seconds": 0.24
   },
   "X34b": {
    "table": "new violation cases",
@@ -1586,7 +1604,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.068
+   "seconds": 0.029
   },
   "X34c": {
    "table": "new violation cases",
@@ -1595,7 +1613,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X55d": {
    "table": "new violation cases",
@@ -1604,16 +1622,16 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.01
+   "seconds": 0.022
   },
   "X57b": {
    "table": "new violation cases",
    "placement": "self-trace",
-   "row": "a same-globals clone of M_T made in the trace, then gc.freeze(), kept alive through exit -> CLONE_ALIVE",
+   "row": "a same-globals clone of M_T made in the trace, then gc.freeze(), kept alive through exit -> CLONE_ALIVE, with clause (b)'s revision-12 text",
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.028
   },
   "X57c": {
    "table": "new violation cases",
@@ -1622,7 +1640,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.029
   },
   "X58b": {
    "table": "new violation cases",
@@ -1631,7 +1649,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.028
   },
   "X59c": {
    "table": "new violation cases",
@@ -1640,7 +1658,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.011
+   "seconds": 0.026
   },
   "X59d": {
    "table": "new violation cases",
@@ -1649,7 +1667,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.018
   },
   "X65c": {
    "table": "new violation cases",
@@ -1658,7 +1676,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.02
   },
   "X65d": {
    "table": "new violation cases",
@@ -1667,7 +1685,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.018
   },
   "X76b": {
    "table": "new violation cases",
@@ -1676,7 +1694,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.017
   },
   "X78e": {
    "table": "new violation cases",
@@ -1685,7 +1703,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.017
   },
   "X78g": {
    "table": "new violation cases",
@@ -1694,7 +1712,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.016
   },
   "X83": {
    "table": "new violation cases",
@@ -1703,7 +1721,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.019
   },
   "X92c": {
    "table": "new violation cases",
@@ -1712,7 +1730,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.025
   },
   "X96c": {
    "table": "new violation cases",
@@ -1721,7 +1739,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X103b": {
    "table": "new violation cases",
@@ -1730,7 +1748,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.019
   },
   "X105d": {
    "table": "new violation cases",
@@ -1739,7 +1757,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X109b": {
    "table": "new violation cases",
@@ -1748,7 +1766,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.022
   },
   "X117d": {
    "table": "new violation cases",
@@ -1757,7 +1775,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.017
   },
   "X120": {
    "table": "new violation cases",
@@ -1766,7 +1784,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "X121": {
    "table": "new violation cases",
@@ -1775,7 +1793,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X122b": {
    "table": "new violation cases",
@@ -1784,7 +1802,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "X123": {
    "table": "new violation cases",
@@ -1793,7 +1811,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.019
   },
   "X133": {
    "table": "new violation cases",
@@ -1802,7 +1820,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.015
+   "seconds": 0.028
   },
   "X135": {
    "table": "new violation cases",
@@ -1811,7 +1829,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.025
   },
   "X137": {
    "table": "new violation cases",
@@ -1820,7 +1838,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "V10b": {
    "table": "new valid cases",
@@ -1829,7 +1847,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.021
   },
   "V11c": {
    "table": "new valid cases",
@@ -1838,7 +1856,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.021
   },
   "V15b": {
    "table": "new valid cases",
@@ -1847,7 +1865,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.031
   },
   "V19b": {
    "table": "new valid cases",
@@ -1856,7 +1874,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.022
   },
   "V35": {
    "table": "new valid cases",
@@ -1865,7 +1883,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.021
   },
   "V36": {
    "table": "new valid cases",
@@ -1874,7 +1892,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.012
+   "seconds": 0.03
   },
   "V36b": {
    "table": "new valid cases",
@@ -1883,7 +1901,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.036
   },
   "V37": {
    "table": "new valid cases",
@@ -1892,7 +1910,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.021
   },
   "V38": {
    "table": "new valid cases",
@@ -1901,7 +1919,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.018
   },
   "V39": {
    "table": "new valid cases",
@@ -1910,7 +1928,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.018
   },
   "V40": {
    "table": "new valid cases",
@@ -1919,7 +1937,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.018
   },
   "V40b": {
    "table": "new valid cases",
@@ -1928,7 +1946,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.02
   },
   "V41": {
    "table": "new valid cases",
@@ -1937,7 +1955,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.018
   },
   "V42": {
    "table": "new valid cases",
@@ -1946,7 +1964,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.019
   },
   "V43": {
    "table": "new valid cases",
@@ -1955,7 +1973,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "V44": {
    "table": "new valid cases",
@@ -1964,7 +1982,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.019
   },
   "V45": {
    "table": "new valid cases",
@@ -1973,7 +1991,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.018
   },
   "V50": {
    "table": "new valid cases",
@@ -1982,7 +2000,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.079
+   "seconds": 0.099
   },
   "V51": {
    "table": "new valid cases",
@@ -1991,7 +2009,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.025
   },
   "V53": {
    "table": "new valid cases",
@@ -2000,7 +2018,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.023
   },
   "V57": {
    "table": "new valid cases",
@@ -2009,7 +2027,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.023
   },
   "V58": {
    "table": "new valid cases",
@@ -2018,7 +2036,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.021
   },
   "V59": {
    "table": "new valid cases",
@@ -2027,7 +2045,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.023
   },
   "V60": {
    "table": "new valid cases",
@@ -2036,7 +2054,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.024
   },
   "V63": {
    "table": "new valid cases",
@@ -2045,7 +2063,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.021
   },
   "X117g": {
    "table": "new violation cases",
@@ -2054,7 +2072,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.021
   },
   "R23": {
    "table": "new documented residuals",
@@ -2063,7 +2081,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.021
   },
   "X72b": {
    "table": "new violation cases",
@@ -2072,7 +2090,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.023
   },
   "X65b": {
    "table": "new violation cases",
@@ -2081,7 +2099,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.015
+   "seconds": 0.036
   },
   "X30b": {
    "table": "new violation cases",
@@ -2090,7 +2108,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.024
   },
   "v5e:R01": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2099,7 +2117,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.026
+   "seconds": 0.045
   },
   "v5e:R02": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2108,7 +2126,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.042
   },
   "v5e:R03": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2117,7 +2135,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.042
   },
   "v5e:R04": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2126,7 +2144,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.041
   },
   "v5e:R05": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2135,7 +2153,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.04
   },
   "v5e:R06": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2144,7 +2162,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.038
   },
   "v5e:R07": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2153,7 +2171,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.041
   },
   "v5e:R08": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2162,7 +2180,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.041
+   "seconds": 0.052
   },
   "v5e:R09": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2171,7 +2189,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.046
   },
   "v5e:R10": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2180,7 +2198,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.049
   },
   "v5e:R11": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2189,7 +2207,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.132
+   "seconds": 0.164
   },
   "v5e:V01": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2198,7 +2216,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.047
   },
   "v5e:V02": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2207,7 +2225,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.046
   },
   "v5e:V03": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2216,7 +2234,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.043
   },
   "v5e:V04": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2225,7 +2243,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.049
   },
   "v5e:V05": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2234,7 +2252,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.044
   },
   "v5e:V06": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2243,7 +2261,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.027
+   "seconds": 0.048
   },
   "v5e:V07": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2252,7 +2270,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.065
   },
   "v5e:V08": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2261,7 +2279,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.044
   },
   "v5e:V09": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2270,7 +2288,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.041
   },
   "v5e:V10": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2279,7 +2297,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.046
   },
   "v5e:V11": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2288,7 +2306,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.044
   },
   "v5e:V11b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2297,7 +2315,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.043
   },
   "v5e:V12": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2306,7 +2324,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.044
   },
   "v5e:V13": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2315,7 +2333,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.047
   },
   "v5e:V14": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2324,7 +2342,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.049
   },
   "v5e:V15": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2333,7 +2351,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.037
+   "seconds": 0.065
   },
   "v5e:V16": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2342,7 +2360,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.037
+   "seconds": 0.066
   },
   "v5e:V17": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2351,7 +2369,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.037
+   "seconds": 0.079
   },
   "v5e:V18": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2360,7 +2378,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.046
   },
   "v5e:V19": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2369,7 +2387,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.049
   },
   "v5e:V20": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2378,7 +2396,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.045
   },
   "v5e:V21": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2387,7 +2405,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.044
   },
   "v5e:V22": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2396,7 +2414,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.048
   },
   "v5e:V23": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2405,7 +2423,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.025
+   "seconds": 0.063
   },
   "v5e:V24": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2414,7 +2432,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.047
   },
   "v5e:V25": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2423,7 +2441,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.047
   },
   "v5e:V25b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2432,7 +2450,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.045
   },
   "v5e:V25c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2441,7 +2459,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.044
   },
   "v5e:V26": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2450,7 +2468,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.047
   },
   "v5e:V27": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2459,7 +2477,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.047
   },
   "v5e:V28": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2468,7 +2486,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.043
   },
   "v5e:V29": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2477,7 +2495,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.049
   },
   "v5e:V32": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2486,7 +2504,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.413
+   "seconds": 0.467
   },
   "v5e:V33": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2495,7 +2513,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.028
+   "seconds": 0.05
   },
   "v5e:X01": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2504,7 +2522,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.044
   },
   "v5e:X02": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2513,7 +2531,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.045
   },
   "v5e:X02b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2522,7 +2540,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.042
   },
   "v5e:X03": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2531,7 +2549,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.046
   },
   "v5e:X04": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2540,7 +2558,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.047
   },
   "v5e:X05": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2549,7 +2567,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.047
   },
   "v5e:X06": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2558,7 +2576,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.016
+   "seconds": 0.046
   },
   "v5e:X07": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2567,7 +2585,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.016
+   "seconds": 0.046
   },
   "v5e:X08": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2576,7 +2594,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.015
+   "seconds": 0.045
   },
   "v5e:X10": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2585,7 +2603,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.043
   },
   "v5e:X11": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2594,7 +2612,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.016
+   "seconds": 0.051
   },
   "v5e:X12": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2603,7 +2621,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.016
+   "seconds": 0.051
   },
   "v5e:X12b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2612,7 +2630,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.015
+   "seconds": 0.042
   },
   "v5e:X13": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2621,7 +2639,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.016
+   "seconds": 0.042
   },
   "v5e:X14": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2630,7 +2648,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.044
   },
   "v5e:X15": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2639,7 +2657,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.04
   },
   "v5e:X16": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2648,7 +2666,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.016
+   "seconds": 0.041
   },
   "v5e:X17": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2657,7 +2675,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.045
   },
   "v5e:X18": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2666,7 +2684,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.051
   },
   "v5e:X19": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2675,7 +2693,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.049
   },
   "v5e:X20": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2684,7 +2702,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.044
   },
   "v5e:X21": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2693,7 +2711,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.045
   },
   "v5e:X22": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2702,7 +2720,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.046
   },
   "v5e:X23": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2711,7 +2729,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.043
   },
   "v5e:X24": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2720,7 +2738,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.015
+   "seconds": 0.041
   },
   "v5e:X25": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2729,7 +2747,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.043
   },
   "v5e:X25b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2738,7 +2756,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.015
+   "seconds": 0.042
   },
   "v5e:X26": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2747,7 +2765,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.044
   },
   "v5e:X27": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2756,7 +2774,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.044
   },
   "v5e:X28": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2765,7 +2783,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.046
   },
   "v5e:X29": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2774,7 +2792,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.027
+   "seconds": 0.041
   },
   "v5e:X30": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2783,7 +2801,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.045
   },
   "v5e:X30b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2792,7 +2810,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.044
   },
   "v5e:X30c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2801,7 +2819,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.05
   },
   "v5e:X31": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2810,7 +2828,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.041
+   "seconds": 0.076
   },
   "v5e:X31b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2819,7 +2837,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.04
+   "seconds": 0.067
   },
   "v5e:X32": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2828,7 +2846,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.058
   },
   "v5e:X32b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2837,7 +2855,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.044
   },
   "v5e:X33": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2846,7 +2864,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.052
   },
   "v5e:X40": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2855,7 +2873,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.05
   },
   "v5e:X41": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2864,7 +2882,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.051
   },
   "v5e:X42": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2873,7 +2891,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.05
   },
   "v5e:X43": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2882,7 +2900,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.05
   },
   "v5e:X44": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2891,7 +2909,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.047
   },
   "v5e:X45": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2900,7 +2918,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.048
   },
   "v5e:X46": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2909,7 +2927,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.039
+   "seconds": 0.058
   },
   "v5e:X47": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2918,7 +2936,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.04
+   "seconds": 0.044
   },
   "v5e:X48": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2927,7 +2945,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.041
   },
   "v5e:X49": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2936,7 +2954,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.048
   },
   "v5e:X50": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2945,7 +2963,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.045
   },
   "v5e:X51": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2954,7 +2972,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.045
   },
   "v5e:X52": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2963,7 +2981,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.045
   },
   "v5e:X53": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2972,7 +2990,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.043
   },
   "v5e:X54": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2981,7 +2999,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.045
   },
   "v5e:X55": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2990,7 +3008,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.047
   },
   "v5e:X55b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -2999,7 +3017,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.043
   },
   "v5e:X55c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3008,7 +3026,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.051
   },
   "v5e:X56": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3017,7 +3035,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.05
   },
   "v5e:X57": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3026,7 +3044,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.025
+   "seconds": 0.048
   },
   "v5e:X58": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3035,7 +3053,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.025
+   "seconds": 0.047
   },
   "v5e:X59": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3044,7 +3062,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.044
   },
   "v5e:X59b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3053,7 +3071,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.044
   },
   "v5e:X60": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3062,7 +3080,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.039
+   "seconds": 0.064
   },
   "v5e:X61": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3071,7 +3089,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.041
+   "seconds": 0.067
   },
   "v5e:X62": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3080,7 +3098,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.05
   },
   "v5e:X63": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3089,7 +3107,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.038
+   "seconds": 0.068
   },
   "v5e:X64": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3098,7 +3116,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.045
   },
   "v5e:X65": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3107,7 +3125,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.025
+   "seconds": 0.058
   },
   "v5e:X66": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3116,7 +3134,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.038
+   "seconds": 0.064
   },
   "v5e:X67": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3125,7 +3143,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.05
   },
   "v5e:X68": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3134,7 +3152,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.034
+   "seconds": 0.068
   },
   "v5e:X69": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3143,7 +3161,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.055
   },
   "v5e:X70": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3152,7 +3170,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.049
   },
   "v5e:X71": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3161,27 +3179,25 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.072
   },
   "v5e:X72": {
    "table": "v5e cases kept (revision 11 spec data)",
    "placement": "self-trace",
-   "row": "X72 (kept; Violation cases (expected code)): v5f outcome NOT_EXERCISED",
-   "ok": false,
-   "detail": "AssertionError: expected [V5:NOT_EXERCISED], got assert: refusal lacks ['work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself']: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 2}, unattributed {}; openings'",
+   "row": "X72 (kept; Violation cases (expected code)): v5f outcome NOT_EXERCISED; sub-assertions: as v5e, except the fixed-sentence substring: the refusal contains v5f's NOT_EXERCISED sentence (M11, Spec-fixed texts) in place of v5e's FIXED_SENTENCE; NE_WORDING 'not executed on the stack of any opening of section' and the forbidden 'never executed' are unchanged (revision 12, GAP-46)",
+   "ok": true,
+   "detail": "",
    "leftover": [],
-   "seconds": 0.021,
-   "known_spec_gap": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)"
+   "seconds": 0.05
   },
   "v5e:X73": {
    "table": "v5e cases kept (revision 11 spec data)",
    "placement": "self-trace",
-   "row": "X73 (kept; Violation cases (expected code)): v5f outcome NOT_EXERCISED",
-   "ok": false,
-   "detail": "AssertionError: expected [V5:NOT_EXERCISED], got assert: refusal lacks ['work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself']: [V5:NOT_EXERCISED] gate 'G': COVERAGE VIOLATION -- not executed on the stack of any opening of section 'G': ['_v5e_fx:f'] (did execute none of them). Uncredited calls of those targets: dispatched {'_v5e_fx:f': 1}, unattributed {}; openings'",
+   "row": "X73 (kept; Violation cases (expected code)): v5f outcome NOT_EXERCISED; sub-assertions: as v5e, except the fixed-sentence substring: the refusal contains v5f's NOT_EXERCISED sentence (M11, Spec-fixed texts) in place of v5e's FIXED_SENTENCE; NE_WORDING 'not executed on the stack of any opening of section' and the forbidden 'never executed' are unchanged (revision 12, GAP-46)",
+   "ok": true,
+   "detail": "",
    "leftover": [],
-   "seconds": 0.019,
-   "known_spec_gap": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)"
+   "seconds": 0.055
   },
   "v5e:X74": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3190,7 +3206,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.054
   },
   "v5e:X74b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3199,7 +3215,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.079
   },
   "v5e:X74c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3208,7 +3224,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.053
   },
   "v5e:X76": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3217,7 +3233,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.057
   },
   "v5e:X77": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3226,7 +3242,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.049
   },
   "v5e:X78": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3235,7 +3251,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.046
   },
   "v5e:X78b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3244,7 +3260,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.046
   },
   "v5e:X78c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3253,7 +3269,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.046
   },
   "v5e:X78d": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3262,7 +3278,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.024
+   "seconds": 0.042
   },
   "v5e:X79": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3271,7 +3287,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.044
   },
   "v5e:X79b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3280,7 +3296,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.016
+   "seconds": 0.051
   },
   "v5e:X79c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3289,7 +3305,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.058
   },
   "v5e:X82": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3298,7 +3314,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.051
   },
   "v5e:X90": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3307,7 +3323,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.046
   },
   "v5e:X91": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3316,7 +3332,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.048
   },
   "v5e:X92": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3325,7 +3341,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.054
   },
   "v5e:X93": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3334,7 +3350,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.048
   },
   "v5e:X93b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3343,7 +3359,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.049
   },
   "v5e:X94": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3352,7 +3368,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.048
   },
   "v5e:X95": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3361,7 +3377,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.382
+   "seconds": 0.399
   },
   "v5e:X96": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3370,7 +3386,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.053
   },
   "v5e:X96b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3379,7 +3395,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.05
   },
   "v5e:X97": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3388,7 +3404,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.048
   },
   "v5e:X97b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3397,7 +3413,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.057
   },
   "v5e:X97c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3406,7 +3422,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.053
   },
   "v5e:X98": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3415,7 +3431,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.046
   },
   "v5e:X98b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3424,7 +3440,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.041
   },
   "v5e:X99": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3433,7 +3449,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.048
   },
   "v5e:X99b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3442,7 +3458,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.05
   },
   "v5e:X99c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3451,7 +3467,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.047
   },
   "v5e:X100": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3460,7 +3476,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.028
+   "seconds": 0.045
   },
   "v5e:X100b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3469,7 +3485,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.05
   },
   "v5e:X100c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3478,7 +3494,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.05
   },
   "v5e:X101": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3487,7 +3503,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.049
   },
   "v5e:X101b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3496,7 +3512,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.047
   },
   "v5e:X102": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3505,7 +3521,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.048
   },
   "v5e:X102b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3514,7 +3530,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.044
   },
   "v5e:X103": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3523,7 +3539,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.054
   },
   "v5e:X104": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3532,7 +3548,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.058
   },
   "v5e:X104b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3541,7 +3557,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.05
   },
   "v5e:X104c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3550,7 +3566,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.052
   },
   "v5e:X104d": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3559,7 +3575,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.056
   },
   "v5e:X104e": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3568,7 +3584,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.048
   },
   "v5e:X105": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3577,7 +3593,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.046
   },
   "v5e:X105b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3586,7 +3602,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.049
   },
   "v5e:X105c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3595,7 +3611,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.053
   },
   "v5e:X106": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3604,7 +3620,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.045
   },
   "v5e:X106b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3613,7 +3629,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.045
   },
   "v5e:X107": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3622,7 +3638,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.051
   },
   "v5e:X107b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3631,7 +3647,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.046
   },
   "v5e:X107c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3640,7 +3656,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.044
   },
   "v5e:X108": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3649,7 +3665,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.044
   },
   "v5e:X108b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3658,7 +3674,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.043
   },
   "v5e:X108c": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3667,7 +3683,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.049
   },
   "v5e:X108d": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3676,7 +3692,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.018
+   "seconds": 0.07
   },
   "v5e:X108e": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3685,7 +3701,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.045
   },
   "v5e:X108f": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3694,7 +3710,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.017
+   "seconds": 0.049
   },
   "v5e:X108g": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3703,7 +3719,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.045
   },
   "v5e:X108h": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3712,7 +3728,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.048
   },
   "v5e:X108i": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3721,7 +3737,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.047
   },
   "v5e:X108j": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3730,7 +3746,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.046
   },
   "v5e:X108k": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3739,7 +3755,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.045
   },
   "v5e:X108m": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3748,7 +3764,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.044
   },
   "v5e:X109": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3757,7 +3773,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.039
+   "seconds": 0.068
   },
   "v5e:X110": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3766,7 +3782,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.053
   },
   "v5e:X110b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3775,7 +3791,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.02
+   "seconds": 0.05
   },
   "v5e:X111": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3784,7 +3800,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.051
   },
   "v5e:X112": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3793,7 +3809,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.058
   },
   "v5e:X113": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3802,7 +3818,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.05
   },
   "v5e:X114": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3811,7 +3827,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.023
+   "seconds": 0.048
   },
   "v5e:X115": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3820,7 +3836,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.047
   },
   "v5e:X115b": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3829,7 +3845,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.045
   },
   "v5e:X116": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3838,7 +3854,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.019
+   "seconds": 0.048
   },
   "v5e:X117": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3847,7 +3863,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.021
+   "seconds": 0.051
   },
   "v5e:X118": {
    "table": "v5e cases kept (revision 11 spec data)",
@@ -3856,7 +3872,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.022
+   "seconds": 0.052
   },
   "V34": {
    "table": "v5e cases whose outcome changes",
@@ -7335,8 +7351,8 @@
  },
  "tables": {
   "new violation cases": {
-   "run": 139,
-   "passed": 137,
+   "run": 140,
+   "passed": 140,
    "ids": [
     "X137c",
     "X143c",
@@ -7397,6 +7413,7 @@
     "X154b",
     "X154c",
     "X154d",
+    "X154",
     "X154e",
     "X155",
     "X157c",
@@ -7532,8 +7549,8 @@
    ]
   },
   "new documented residuals": {
-   "run": 15,
-   "passed": 15,
+   "run": 16,
+   "passed": 16,
    "ids": [
     "R18a",
     "R18b",
@@ -7543,6 +7560,7 @@
     "X157",
     "X157b",
     "X137j",
+    "R25",
     "R05b",
     "R12",
     "R13",
@@ -7569,7 +7587,7 @@
   },
   "v5e cases kept (revision 11 spec data)": {
    "run": 197,
-   "passed": 195,
+   "passed": 197,
    "ids": [
     "X71c",
     "v5e:R01",
@@ -7809,15 +7827,15 @@
  "coverage_of_design_tables": {
   "new violation cases": {
    "rows_in_design": 140,
-   "cases_in_runner": 140
+   "cases_in_runner": 141
   },
   "new valid cases": {
    "rows_in_design": 46,
    "cases_in_runner": 46
   },
   "new documented residuals": {
-   "rows_in_design": 15,
-   "cases_in_runner": 15
+   "rows_in_design": 16,
+   "cases_in_runner": 16
   },
   "exam-hole kill cases": {
    "rows_in_design": 30,
@@ -8062,6 +8080,18 @@
   "_unwind_on": [
    119
   ],
+  "_unwind_on (X154, one subprocess per trial)": [
+   119
+  ],
+  "_unwind_off (X154, one subprocess per trial)": [
+   53
+  ],
+  "_set_local (X154, one subprocess per trial)": [
+   36
+  ],
+  "_register (X154, one subprocess per trial)": [
+   67
+  ],
   "_take (X155, one subprocess per trial)": [
    33
   ]
@@ -8284,8 +8314,8 @@
   ],
   "no_registration": []
  },
- "v5e_kept_sha256": "5160cecb4f0a3e8d888385b748f4526a21ded0ea62e898810aab460430aa4bf1",
- "v5e_port_sha256": "286d8b1bc914340406dc654d0a09ab4c979a72e4523f9e9aa3b52b4a7974ec79",
+ "v5e_kept_sha256": "77d31b0535afb3bb693c5cc4c8de8dbbffd8649d65dac82c1d91bc3dc54f86b4",
+ "v5e_port_sha256": "b78eb1123d23424816872c1bdf56f541022c9cf104d16f5242cd5db15748b2dc",
  "h2_report": {
   "n": 20,
   "propagated": 20,
@@ -8295,13 +8325,13 @@
   "leftovers": []
  },
  "h4_performance_report": {
-  "untraced_call_us": 0.075,
-  "traced_call_us": 4.211,
-  "section_open_close_us": 15.62
+  "untraced_call_us": 0.041,
+  "traced_call_us": 2.433,
+  "section_open_close_us": 8.87
  },
  "h8_report": {
-  "credited": 228581,
-  "body_runs": 229387
+  "credited": 212011,
+  "body_runs": 212797
  },
  "h6_report": {
   "points": 3259,
@@ -8312,39 +8342,36 @@
  "h10_report": {
   "a": {
    "inflight": false,
-   "handled": 14167122,
+   "handled": 13466798,
    "lost": 0,
    "work": 0,
    "entered": 0,
    "cleaned": 0,
    "poisoned": false,
    "diff": [],
-   "lock_left_held": false,
-   "gap45_only": false
+   "lock_left_held": false
   },
   "b": {
    "inflight": false,
-   "handled": 4417855,
-   "lost": 685231,
+   "handled": 4072348,
+   "lost": 556921,
    "work": 0,
    "entered": 0,
    "cleaned": 0,
    "poisoned": false,
    "diff": [],
-   "lock_left_held": false,
-   "gap45_only": false
+   "lock_left_held": false
   },
   "c": {
    "inflight": false,
    "handled": 0,
    "lost": 0,
-   "work": 717312,
-   "entered": 717312,
-   "cleaned": 717312,
+   "work": 571679,
+   "entered": 571679,
+   "cleaned": 571679,
    "poisoned": false,
    "diff": [],
-   "lock_left_held": false,
-   "gap45_only": false
+   "lock_left_held": false
   }
  },
  "x71c_report": {
@@ -8505,15 +8532,10 @@
    "TRACE_INCOMPLETE": 50
   }
  },
- "n_cases_run": 423,
- "n_passed": 419,
- "n_failed_known_spec_gaps": 4,
- "known_spec_gaps": {
-  "X137h": "GAP-42 (P and S open no section, so SECTION_ABSENT precedes NOT_EXERCISED)",
-  "X158d": "GAP-44 (under greenlets the reference gives P CODE_SWAPPED, not PASS)",
-  "v5e:X72": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)",
-  "v5e:X73": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)"
- },
- "verdict": "FAIL_ONLY_KNOWN_SPEC_GAPS",
- "seconds": 439.06
+ "n_cases_run": 425,
+ "n_passed": 425,
+ "n_failed_known_spec_gaps": 0,
+ "known_spec_gaps": {},
+ "verdict": "PASS",
+ "seconds": 538.02
 }

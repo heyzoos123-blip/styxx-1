@@ -205,5 +205,33 @@ Every new case and every weakening was written from the rows' own words.
 
 The runner also fails every one of the 26 mutant implementations on 3.12.3.
 
+## Revision 12 update (2026-09-29)
+
+The same exam author applied revision 12's required changes. `ref_v5f.py` changes one free-form message (CLONE_ALIVE (b)); its sha256 prefix is now `2a1781e66975a8aa`.
+
+### What I read for this update
+1. The design text at revision 12: the "Revision 12" section in full, and `git diff d98ea9e0 979fbe97` of the design text (every revision-12 body edit: the tripwire message and paragraph, the #130279 shapes, the greenlet limit, over-blocking #24, case hygiene, the kept-cases paragraph, rows X140, X154, X154b, X154d, X137h, X158d, R25, H9, C5, the poison test, G_XVER, rule 1, and Appendix A's "Revision 12: D witnesses").
+2. Spec data, through scripts: `protocol_v5f_design/rev12/v5e_cases_kept_rev12.json` (compared row by row with the rev11 file) and `rev12/appendix_a/atom_witness_overrides_rev12.json`.
+3. A listing of `protocol_v5f_design/rev12/` (names only).
+4. My own artifacts.
+
+### What I did not read for this update
+- `rev12/p_130279.py`, `p_h9.py`, `p_rev12.py`, `p_freeze_rise.py`, their outputs `out_*.txt`, and `rev12/appendix_a/build_rev12_data.py`;
+- anything else under `protocol_v5f_design/` outside the directories named above and in earlier sections;
+- the critiques, any prototype, the v5e implementation.
+
+Every changed case and every weakening was written from the rows' own words.
+
+### Runs
+| what | 3.12.3 | 3.13.12 | 3.10.20 | 3.11.15 |
+|---|---|---|---|---|
+| `smoke_cases.py` | 69/69 | 69/69 | 3/3 (scoring-only) | 3/3 (scoring-only) |
+| `tools/mutants_v5f.py` (38 weakenings) | all detected | all detected | — | — |
+| `run_protocol_v5f_exam.py` against `ref_v5f.py` (`receipts_v5f/`) | 425/425 PASS, 0 known-gap failures; X154's four sweeps 119 + 53 + 36 + 67 trials, one subprocess each | the same | 21/21 scoring-only; tracing refused cleanly | the same |
+| `tools/runner_mutants_v5f.py` (52 weakenings; X158d's with `V5F_DEPS_PATH` set) | 52/52 killed | 52/52 killed | — | — |
+
+`mut_h9_x3_in_lock` (the `for` form) is retired as equivalent (revision 12, GAP-49); `mut_h9_while_in_lock` hangs X140 at `_exit@422` (3.12.3) and `_exit@436` (3.13.12).
+`rules_v5f.json` (revision 12, `tools/reconcile12.py`): 2,556 atoms; 1,098 P/D/C; 1,080 with a checkable witness, 18 reading, 0 without a witness.
+
 Signed: the v5f exam author (Claude Code subagent), 2026-09-29.
 

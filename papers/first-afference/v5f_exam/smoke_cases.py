@@ -130,6 +130,22 @@ FIXTURES = {
         stamped = functools.lru_cache(None)(_mk())
         stamped.__wrapped__ = Stamp()
     ''',
+    "fx_r11.py": '''
+        # revision 11's fixtures: X35e's fresh wrapper (aiodebug 2.3.0's shape), X57d's blk, X137j's lev
+        import asyncio.events
+        def enable():
+            orig = asyncio.events.Handle._run
+            def instrumented(self):
+                return orig(self)
+            asyncio.events.Handle._run = instrumented
+        def blk(ev=None, inside=None):
+            if ev is not None:
+                inside.set()
+                ev.wait(30)
+            return 57
+        def lev():
+            return 137
+    ''',
     "fx_pep.py": '''
         def __getattr__(name):
             if name == "thing":
@@ -142,6 +158,7 @@ for fname, body in FIXTURES.items():
     with open(os.path.join(FIX, fname), "w") as fh:
         fh.write(textwrap.dedent(body))
 import fx_v5f, fx_stub, fx_swap, fx_pep, fx_x59e, fx_x14d, fx_x24f   # noqa: E402
+import fx_r11   # noqa: E402
 
 ORIG = {}
 for mod in (fx_v5f, fx_stub, fx_swap):
@@ -192,6 +209,8 @@ PREREGS = {
     "X24F_LEN": gates({"G": ["fx_x24f:cached_len"]}),
     "X24F_STAMP": gates({"G": ["fx_x24f:stamped"]}),
     "X117E": gates({"G": ["fx_v5f:f"]}, metric="a.b"),
+    "BLK": gates({"G": ["fx_r11:blk"]}),
+    "A_F": gates({"A": ["fx_v5f:f"]}),
 }
 for key, spec in PREREGS.items():
     with open(os.path.join(REPO, f"PREREG_{key}.md"), "w") as fh:
@@ -1268,7 +1287,220 @@ def v72():
     expect(r == {"seen": "held", "raised": "V72 hook", "after": "dead",
                  "second": ["PASS", {"G": {"fx_v5f:f": 1}}], "final": "free"}, f"{r}")
 
-SCORING_ONLY = {"X117e", "X117f"}                  # scoring-only: also run on 3.10 and 3.11
+
+# -- revision 11: the new cases (X35e, X57d, R24, X117g, V72b, X137j, R23) --------------------------------
+def _codes(problems):
+    return [code_of(p) for p in problems]
+
+@case("X35e", "cut", "rev. 11 (GAP-34); main thread before the self-trace, fresh wrapper: fx_r11.enable() binds Handle._run to enable.<locals>.instrumented (aiodebug's shape); coverage_trace() twice while bound -> CUT_UNAVAILABLE, CUT_UNAVAILABLE; restored; coverage_trace() again -> constructed")
+def x35e():
+    import asyncio
+    H = asyncio.events.Handle
+    run0 = H.__dict__["_run"]
+    got = []
+    fx_r11.enable()
+    try:
+        expect(H.__dict__["_run"].__qualname__ == "enable.<locals>.instrumented", "fixture shape")
+        for _ in range(2):
+            try:
+                P.coverage_trace(EXP("F"))
+                got.append("constructed")
+            except GateSpecError as e:
+                got.append(code_of(e))
+    finally:
+        H._run = run0
+    try:
+        c3 = P.coverage_trace(EXP("F"))
+        got.append("constructed")
+        del c3
+    except GateSpecError as e:
+        got.append(code_of(e))
+    expect(got == ["CUT_UNAVAILABLE", "CUT_UNAVAILABLE", "constructed"], f"{got}")
+
+@case("X57d", "identity", "rev. 11 (GAP-36, W066); main thread before the self-trace: P(blk) entered; 2,000 lists, gc.freeze(); Q(blk) entered (joins P's mint); a worker blocks inside blk; Q exits; worker released, joined; P exits; gc.unfreeze() -> Q's problems exactly [CLONE_ALIVE], P's empty")
+def x57d():
+    ev, inside = threading.Event(), threading.Event()
+    keep = []
+    w = None
+    try:
+        cP = P.coverage_trace(EXP("BLK"))
+        cP.__enter__()
+        try:
+            keep.append([[] for _ in range(2000)])
+            gc.freeze()
+            cQ = P.coverage_trace(EXP("BLK"))
+            cQ.__enter__()
+            w = threading.Thread(target=fx_r11.blk, args=(ev, inside))
+            w.start()
+            expect(inside.wait(30), "worker never entered blk")
+            cQ.__exit__(None, None, None)
+            ev.set()
+            w.join(30)
+        finally:
+            ev.set()
+            cP.__exit__(None, None, None)
+        rq, rp = cQ.record(), cP.record()
+    finally:
+        ev.set()
+        if w is not None:
+            w.join(30)
+        gc.unfreeze()
+        keep.clear()
+        gc.collect()        # GAP-39: 3.12.3 restores its boot count at a full collection
+    expect(_codes(rq["problems"]) == ["CLONE_ALIVE"], f"Q problems {rq['problems']}")
+    expect(rp["problems"] == [], f"P problems {rp['problems']}")
+
+@case("R24", "residual", "rev. 11 (GAP-36, W076); main thread before the self-trace: 300,000 lists, gc.freeze(); in section A a same-globals clone of M_T is made and called; gc.unfreeze(), lists deleted, gc.collect(), gc.freeze() (count not above its value at mint); clone kept through exit; gc.unfreeze() -> PASS {f:1}, no CLONE_ALIVE")
+def r24():
+    box = {"lists": [[] for _ in range(300000)]}
+    keep = []
+    counts = {}
+    try:
+        gc.freeze()
+        exp = EXP("A_F")
+        with P.coverage_trace(exp) as cov:
+            counts["mint"] = gc.get_freeze_count()
+            def body():
+                keep.append(types.FunctionType(fx_v5f.f.__code__, fx_v5f.f.__globals__))
+                keep[0](0)
+                gc.unfreeze()
+                box.pop("lists")
+                gc.collect()
+                gc.freeze()
+                counts["refrozen"] = gc.get_freeze_count()
+            cov.run("A", body)
+        rec = cov.record()
+    finally:
+        gc.unfreeze()
+        keep.clear()
+        box.clear()
+        gc.collect()        # GAP-39
+    expect(counts["refrozen"] <= counts["mint"], f"precondition: the count rose {counts}")
+    expect_pass(score(exp, rec), {"A": {"fx_v5f:f": 1}})
+    expect(not any(p.startswith("[V5:CLONE_ALIVE]") for p in rec["problems"]), f"{rec['problems']}")
+
+@case("X117g", "scoring", "rev. 11 (GAP-36, W224): check_metrics({'m': I(3)}), I an int subclass counting __float__ and __bool__ -> usable; __float__ called exactly once, __bool__ never")
+def x117g():
+    n = {"float": 0, "bool": 0}
+    class I(int):
+        def __float__(self):
+            n["float"] += 1
+            return int.__float__(self)
+        def __bool__(self):
+            n["bool"] += 1
+            return int.__bool__(self)
+    m = EXP("F").check_metrics({"m": I(3)})["G"]
+    expect(m["present"] is True and m["usable"] is True, f"{m}")
+    expect(n == {"float": 1, "bool": 0}, f"user methods called: {n}")
+
+def _x137j(with_section):
+    mon = sys.monitoring
+    E = mon.events
+    exp = EXP("F")
+    with P.coverage_trace(exp) as c1:
+        c1.run("G", fx_v5f.f)
+    t = P._v5_state()["tool"]
+    mon.free_tool_id(t)
+    mon.use_tool_id(t, "other137j")
+    def line_cb(code, line):
+        return None
+    def start_cb(code, offset):
+        return None
+    mon.register_callback(t, E.LINE, line_cb)
+    mon.register_callback(t, E.PY_START, start_cb)
+    mon.set_events(t, E.LINE)
+    mon.set_local_events(t, fx_r11.lev.__code__, E.PY_START)
+    mon.free_tool_id(t)
+    exp2 = EXP("F")
+    with P.coverage_trace(exp2) as c2:
+        if with_section:
+            c2.run("G", fx_v5f.f)
+    def cb(ev):
+        prev = mon.register_callback(t, ev, None)
+        mon.register_callback(t, ev, prev)
+        return prev
+    lc, sc = cb(E.LINE), cb(E.PY_START)
+    return {"tool_ours": P._v5_state()["tool_ours"], "same_id": P._v5_state()["tool"] == t,
+            "global_events": mon.get_events(t), "local_events": mon.get_local_events(t, fx_r11.lev.__code__),
+            "line_cb_other": lc is line_cb, "start_cb_styxx": getattr(sc, "__module__", None) == P.__name__,
+            "second": _outcome_json(score(exp2, c2.record())), "PY_START": E.PY_START}
+
+# The row says only that the second tracer "runs". Both shapes are run: with no section, the
+# reconciliation's _unwind_off(None) is what clears the foreign global events (F39); with a section,
+# the opener's _unwind_on also rewrites them. The row's outcome must hold in both.
+@sub("X137j")
+def _sub_x137j():
+    return _x137j(False)
+
+@sub("X137j-sec")
+def _sub_x137j_sec():
+    return _x137j(True)
+
+@case("X137j", "residual", "rev. 11 (GAP-36, W141); fresh subprocess: a tracer runs and exits; its id freed; another tool takes it, registers LINE and PY_START callbacks, sets global LINE and local PY_START on a fixture's code, frees it; a second tracer runs and exits -> tool_ours True; global events 0; local events still PY_START; LINE callback the other's; PY_START callback styxx's")
+def x137j():
+    for mode, second in (("X137j", ["REFUSE", "SECTION_ABSENT"]), ("X137j-sec", ["PASS", {"G": {"fx_v5f:f": 1}}])):
+        r = run_sub(mode)
+        pys = r.pop("PY_START")
+        expect(r == {"tool_ours": True, "same_id": True, "global_events": 0, "local_events": pys,
+                     "line_cb_other": True, "start_cb_styxx": True, "second": second}, f"{mode}: {r}")
+
+@case("R23", "residual", "rev. 11 (GAP-36, W074); inside the self-trace: in section A, f is called; u.__code__ = f.__code__ (M_T), u a function of f's module; u() called; u.__code__ restored before the section closes -> PASS {f:2}, no problem")
+def r23():
+    exp = EXP("A_F")
+    u = fx_v5f.other
+    u0 = u.__code__
+    try:
+        with P.coverage_trace(exp) as cov:
+            def body():
+                fx_v5f.f()
+                u.__code__ = fx_v5f.f.__code__
+                try:
+                    u()
+                finally:
+                    u.__code__ = u0
+            cov.run("A", body)
+        rec = cov.record()
+    finally:
+        u.__code__ = u0
+    expect_pass(score(exp, rec), {"A": {"fx_v5f:f": 2}})
+    expect(rec["problems"] == [], f"problems {rec['problems']}")
+
+@sub("V72b")
+def _sub_v72b():
+    exp = EXP("F")
+    cov = P.coverage_trace(exp)
+    cov.__enter__()
+    cov.run("G", fx_v5f.f)
+    me = threading.get_ident()
+    arm = {"on": True}
+    def hook(event, args):
+        if arm["on"] and event == "sys.monitoring.register_callback" and threading.get_ident() == me:
+            arm["on"] = False
+            raise RuntimeError("V72 hook")
+    sys.addaudithook(hook)
+    try:
+        cov.__exit__(None, None, None)
+    except RuntimeError:
+        pass
+    def rd():
+        try:
+            cov.record()
+            return None
+        except GateSpecError as e:
+            return code_of(e)
+    first = rd()
+    exp2 = EXP("F")
+    with P.coverage_trace(exp2) as c2:
+        c2.run("G", fx_v5f.f)
+    return {"first": first, "second_trace": _outcome_json(score(exp2, c2.record())), "again": rd()}
+
+@case("V72b", "valid", "fresh subprocess: V72's first tracer (its __exit__ raised inside X5): record() TRACE_INCOMPLETE; a second tracer runs (prunes the first core); record() again -> TRACE_INCOMPLETE both times")
+def v72b():
+    r = run_sub("V72b")
+    expect(r == {"first": "TRACE_INCOMPLETE", "second_trace": ["PASS", {"G": {"fx_v5f:f": 1}}], "again": "TRACE_INCOMPLETE"}, f"{r}")
+
+
+SCORING_ONLY = {"X117e", "X117f", "X117g"}                  # scoring-only: also run on 3.10 and 3.11
 
 
 def main():

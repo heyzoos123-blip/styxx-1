@@ -106,6 +106,20 @@ M = {
                 notes.append(o.lazy)""", """            notes = list(notes)
             if o.lazy is not None:
                 notes.insert(0, o.lazy)""")]),
+ # revision 11 (the new cases; each a single-rule weakening named by the text or written from its rule)
+ "mut_no_locals_clause": (["X35e"], [("        if '<locals>' in c.co_qualname or twins:", "        if twins:")]),
+ "mut_cut_before_scan": (["X35e"], [("        twins = [r for r in gc.get_referrers(c) if type(r) is FunctionType and r is not x]",
+                                     "        _CUT.setdefault(id(c), c)\n        twins = [r for r in gc.get_referrers(c) if type(r) is FunctionType and r is not x]")]),
+ "mut_freeze0_at_join": (["X57d"], [("        m.holders = m.holders + (core,)", "        m.holders = m.holders + (core,)\n        m.freeze0 = gc.get_freeze_count()")]),
+ "mut_freeze_ne": (["R24"], [("    if gc.get_freeze_count() > m.freeze0:", "    if gc.get_freeze_count() != m.freeze0:")]),
+ "mut_cm_bool": (["X117g"], [("            usable = issubclass(tv, (int, float)) and tv is not bool and _finite(val)",
+                              "            usable = issubclass(tv, (int, float)) and tv is not bool and _finite(val) and (bool(val) or True)")]),
+ "mut_prune_marks_exited": (["V72b"], [("def _prune(h):\n    for o in list(h.openings):", "def _prune(h):\n    h.marks['exited'] = True\n    for o in list(h.openings):")]),
+ "mut_unwind_off_pyu_only": (["X137j"], [("                                               _map(_not, (_ANCHORS,))), _ZERO1)))",
+                                          "                                               _map(_not, (_ANCHORS,))),\n"
+                                          "                    ((_MON[0][1](t) & ~PY_UNWIND) if t is not None and get_tool(t) is _TOOL_NAME else 0,))))")]),
+ "mut_clone_by_referrers": (["R23"], [("    if f.f_globals is not m.globals:                # CLONE_CALLED: credits nothing",
+                                       "    if f.f_globals is not m.globals or [r for r in gc.get_referrers(code) if type(r) is FunctionType and r is not m.fn]:")]),
 }
 
 

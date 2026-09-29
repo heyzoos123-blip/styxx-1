@@ -591,6 +591,8 @@ Each row is one atom of `rules_v5f.json`, and each atom has `needs_witness: true
 
 ## Revision 11 follow-ups (raised while writing the runner's remaining tables; for the spec owner)
 
+**All closed by revision 12** (commits fb13294b, e293d3de, f8f252d1, 979fbe97; the design's "Revision 12" section). The exam artifacts apply its required changes; nothing below is left open.
+
 Readings the text does not fix. None is chosen here: each is recorded, and the runner either keeps the rule literal or leaves the row unrun, as the entry says.
 
 | gap | section | blocks the freeze? |

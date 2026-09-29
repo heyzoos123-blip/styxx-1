@@ -41,6 +41,7 @@ P1_PREREG = "PREREG_p1_power_refusal_2026_08_08.md"
 FIXED_SENTENCE = ("work on other threads, pools, executors or asyncio tasks is credited only to a "
                   "section that work opens itself")
 NE_WORDING = "not executed on the stack of any opening of section"
+V5F_FIXED_SENTENCE = 'work on other threads, pools, executors, child processes or asyncio tasks is credited only to a section that work opens itself; generator and coroutine objects created before the trace are never credited; a call counts only when it returns, yields or raises from inside its body while the tracer is active'   # rev12/v5e_cases_kept_rev12.json, X72/X73 (revision 12, GAP-46)
 _GETREFCOUNT, _GET_REFERRERS = sys.getrefcount, gc.get_referrers
 
 
@@ -1506,7 +1507,7 @@ def violations() -> dict:
              f"both children's calls belong under 'dispatched': {rec['uncredited']}")
         msg_lists_diagnostics(exp, rec, T("f"))
         return _score(exp, rec)
-    V["X72"] = ("NOT_EXERCISED", msg_case(x72, NE_WORDING, FIXED_SENTENCE, forbid=("never executed",)))
+    V["X72"] = ("NOT_EXERCISED", msg_case(x72, NE_WORDING, V5F_FIXED_SENTENCE, forbid=("never executed",)))
 
     def x73(tmp):
         exp = tmp.exp(G1(T("f")))
@@ -1518,7 +1519,7 @@ def violations() -> dict:
              f"the loop's call belongs under 'dispatched': {rec['uncredited']}")
         msg_lists_diagnostics(exp, rec, T("f"))
         return _score(exp, rec)
-    V["X73"] = ("NOT_EXERCISED", msg_case(x73, NE_WORDING, FIXED_SENTENCE, forbid=("never executed",)))
+    V["X73"] = ("NOT_EXERCISED", msg_case(x73, NE_WORDING, V5F_FIXED_SENTENCE, forbid=("never executed",)))
 
     def x74(tmp):
         exp = tmp.exp(G1(T("f")))

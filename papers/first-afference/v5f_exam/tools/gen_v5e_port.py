@@ -15,6 +15,7 @@ import hashlib, os, sys
 EXAM = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(os.path.dirname(EXAM), "run_protocol_v5e.py")
 OUT = os.path.join(EXAM, "v5e_port.py")
+KEPT = os.path.join(os.path.dirname(EXAM), "protocol_v5f_design", "rev12", "v5e_cases_kept_rev12.json")
 SRC_SHA256 = "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52"
 
 HEADER = '''# -*- coding: utf-8 -*-
@@ -60,6 +61,7 @@ P1_PREREG = "PREREG_p1_power_refusal_2026_08_08.md"
 FIXED_SENTENCE = ("work on other threads, pools, executors or asyncio tasks is credited only to a "
                   "section that work opens itself")
 NE_WORDING = "not executed on the stack of any opening of section"
+V5F_FIXED_SENTENCE = {v5f_sentence!r}   # rev12/v5e_cases_kept_rev12.json, X72/X73 (revision 12, GAP-46)
 _GETREFCOUNT, _GET_REFERRERS = sys.getrefcount, gc.get_referrers
 
 
@@ -135,6 +137,12 @@ PORT = [
     ("V28 (changed): v5f_outcome '{f:1}, no note' (THREAD_HOP is retired)",
      '        return _expect(exp, _trace(exp, h), {"G": {T("f"): 1}}, notes={"G": ["THREAD_HOP"]})\n',
      '        return _expect(exp, _trace(exp, h), {"G": {T("f"): 1}})\n'),
+    ("X72 (kept): rev12 data, GAP-46: the refusal contains v5f's fixed sentence in place of v5e's FIXED_SENTENCE",
+     'V["X72"] = ("NOT_EXERCISED", msg_case(x72, NE_WORDING, FIXED_SENTENCE, forbid=("never executed",)))',
+     'V["X72"] = ("NOT_EXERCISED", msg_case(x72, NE_WORDING, V5F_FIXED_SENTENCE, forbid=("never executed",)))'),
+    ("X73 (kept): rev12 data, GAP-46: as X72",
+     'V["X73"] = ("NOT_EXERCISED", msg_case(x73, NE_WORDING, FIXED_SENTENCE, forbid=("never executed",)))',
+     'V["X73"] = ("NOT_EXERCISED", msg_case(x73, NE_WORDING, V5F_FIXED_SENTENCE, forbid=("never executed",)))'),
 ]
 
 
@@ -151,7 +159,11 @@ def build():
     for why, old, new in PORT:
         assert body.count(old) == 1, (why, old)
         body = body.replace(old, new)
-    return sha, HEADER.format(sha=sha) + body
+    import json
+    rows = {r["id"]: r for r in json.load(open(KEPT, encoding="utf-8"))["rows"]}
+    sent = rows["X72"]["v5f_fixed_sentence"]
+    assert sent == rows["X73"]["v5f_fixed_sentence"]
+    return sha, HEADER.format(sha=sha, v5f_sentence=sent) + body
 
 
 def main(argv):

@@ -91,6 +91,13 @@ FIXTURES = {
         def real(): return "real"
         alias = real
     ''',
+    "fx_x59e.py": '''
+        # X59e's fresh wrapper: a top-level def of its own, used by no other case (harness rules).
+        import asyncio.events
+        _orig_run = asyncio.events.Handle._run
+        def run59(self):
+            return _orig_run(self)
+    ''',
     "fx_pep.py": '''
         def __getattr__(name):
             if name == "thing":
@@ -102,7 +109,7 @@ FIXTURES = {
 for fname, body in FIXTURES.items():
     with open(os.path.join(FIX, fname), "w") as fh:
         fh.write(textwrap.dedent(body))
-import fx_v5f, fx_stub, fx_swap, fx_pep          # noqa: E402
+import fx_v5f, fx_stub, fx_swap, fx_pep, fx_x59e   # noqa: E402
 
 ORIG = {}
 for mod in (fx_v5f, fx_stub, fx_swap):
@@ -172,8 +179,12 @@ def score(exp, trace, m=1.0):
         return ("REFUSE", code_of(e), str(e))
 
 def gate_outcome(exp, trace, gate):
+    """Revision 9 (GAP-26): scoring cases are judged through the public score(), never through the
+    private Experiment._check_coverage. `gate` names the gate the row is about; score() checks
+    every declaring gate, and each caller's prereg refuses with the same code at every gate."""
     try:
-        return ("PASS", exp._check_coverage(gate, {"coverage_trace": trace}))
+        v = exp.score({"m": 1.0, "coverage_trace": trace})
+        return ("PASS", v.coverage.get(gate))
     except GateSpecError as e:
         return ("REFUSE", code_of(e), str(e))
 
@@ -486,17 +497,18 @@ def _genuine_trace():
         cov.run("G", fx_v5f.f)
     return exp, cov.record()
 
-@case("X93d", "scoring", "trace loaded with object_pairs_hook=OrderedDict -> NO_TRACE, third wording")
+@case("X93d", "scoring", "trace loaded with object_pairs_hook=OrderedDict -> NO_TRACE, third wording, exactly \"'coverage_trace' is a OrderedDict, not an exact dict (e.g. loaded with object_pairs_hook)\"")
 def x93d():
     exp, rec = _genuine_trace()
     res = json.loads(json.dumps({"m": 1.0, "coverage_trace": rec}),
                      object_pairs_hook=collections.OrderedDict)
-    try:
-        exp._check_coverage("G", res)
+    try:                                          # GAP-26: X93d is judged by score()
+        exp.score(res)
         raise AssertionError("no refusal")
-    except GateSpecError as e:
-        expect(str(e).startswith("[V5:NO_TRACE]") and "not an exact dict" in str(e)
-               and "OrderedDict" in str(e), str(e))
+    except GateSpecError as e:                    # GAP-15: the byte-exact text, no backticks
+        expect(str(e).startswith("[V5:NO_TRACE]") and
+               "'coverage_trace' is a OrderedDict, not an exact dict (e.g. loaded with "
+               "object_pairs_hook)" in str(e), str(e))
 
 @case("X96d", "scoring", "gates_sha256: 5 -> BAD_TRACE; tracer as a str subclass whose __eq__ raises -> WRONG_TRACER")
 def x96d():
@@ -706,6 +718,222 @@ def x137_free():
     expect_pass(score(exp2, cov2.record()), {"G": {"fx_v5f:f": 1}})
 
 
+# -- revision 9 cases (the exam author's gaps, "Revision 9: spec gaps from the exam author") --------
+_PCODE = __import__("re").compile(r"\[V5:([A-Z_]+)\]")
+
+def _problem_codes(rec):
+    return [_PCODE.match(p).group(1) for p in rec["problems"]]
+
+def _x59e(variant):
+    exp = EXP("F")
+    f = fx_v5f.f
+    orig = ORIG[("fx_v5f", "f")][1]
+    handle = __import__("asyncio").events.Handle
+    run0 = handle.__dict__["_run"]
+    keep = []
+    try:
+        with P.coverage_trace(exp) as cov:
+            def body():
+                f()
+                if variant:
+                    try:
+                        cov.run("B", f)                    # B is undeclared: swallowed
+                    except GateSpecError:
+                        pass
+                clone = types.FunctionType(f.__code__, {})
+                clone(0)                                   # CLONE_CALLED
+                keep.append(clone)                         # alive through exit: CLONE_ALIVE (a)
+                f.__code__ = fx_v5f.other.__code__         # CODE_SWAPPED, left in place
+                handle._run = fx_x59e.run59                # CUT_MOVED at exit
+            cov.run("G", body)
+        handle._run = run0
+        rec = cov.record()
+    finally:
+        handle._run = run0
+        f.__code__ = orig
+        keep.clear()
+        gc.collect()
+    want = ["CLONE_CALLED", "CODE_SWAPPED", "CLONE_ALIVE", "CUT_MOVED"]
+    if variant:
+        want = ["UNDECLARED_SECTION"] + want
+    expect(_problem_codes(rec) == want, f"problem codes {_problem_codes(rec)}, want {want}")
+    expect_refuse(score(exp, rec), want[0])
+
+@case("X59e", "exit order", "clone called, code swapped and left, clone alive through exit, Handle._run rebound -> problems exactly [CLONE_CALLED, CODE_SWAPPED, CLONE_ALIVE, CUT_MOVED]; score refuses CLONE_CALLED")
+def x59e():
+    _x59e(False)
+
+@case("X59e-v", "exit order", "X59e plus a swallowed cov.run('B', f) with B undeclared, before the clone -> [UNDECLARED_SECTION, CLONE_CALLED, CODE_SWAPPED, CLONE_ALIVE, CUT_MOVED]; score refuses UNDECLARED_SECTION")
+def x59e_v():
+    _x59e(True)
+
+
+# Fresh-subprocess cases: the subprocess re-runs this file with "--sub <mode>" and prints one JSON
+# line; the case judges it here. The subprocess builds its own fixtures and preregs.
+def run_sub(mode):
+    r = subprocess.run([sys.executable, os.path.abspath(__file__), "--sub", mode],
+                       capture_output=True, text=True, timeout=120)
+    lines = [ln for ln in r.stdout.splitlines() if ln.startswith("{")]
+    expect(r.returncode == 0 and lines, f"subprocess {mode}: rc {r.returncode}\n{r.stderr[-2000:]}")
+    return json.loads(lines[-1])
+
+SUB = {}
+def sub(mode):
+    def deco(fn):
+        SUB[mode] = fn
+        return fn
+    return deco
+
+def _outcome_json(out):
+    return list(out[:2]) if out[0] == "REFUSE" else ["PASS", out[1]]
+
+@sub("state0")
+def _sub_state0():
+    s = P._v5_state()
+    s.pop("pid")
+    return {"state": s}
+
+@case("M10-S0", "introspection", "revision 9 (GAP-05); fresh subprocess: _v5_state() before the first coverage_trace() -> mints [], anchors 0, guard free, cut 0, cut_current True, tool None, tool_ours False, global_events 0")
+def m10_s0():
+    got = run_sub("state0")["state"]
+    want = {"mints": [], "anchors": 0, "guard": "free", "cut": 0, "cut_current": True,
+            "tool": None, "tool_ours": False, "global_events": 0}
+    expect(got == want, f"state {got}")
+
+def _sub_v69b(lying):
+    sm = sys.monitoring
+    real = sm.get_local_events
+    n = [0]
+    def gle(tool, code):
+        n[0] += 1
+        return 0 if lying else real(tool, code)
+    exp = EXP("F")
+    P.coverage_trace(exp)                          # the first coverage_trace() binds _MON
+    sm.get_local_events = gle
+    try:
+        with P.coverage_trace(exp) as cov:
+            cov.run("G", fx_v5f.f)
+            P._v5_state()                          # the other reader of _MON[0][6]
+        rec = cov.record()
+    finally:
+        sm.get_local_events = real
+    notes = rec["sections"]["G"][0]["notes"]
+    return {"score": _outcome_json(score(exp, rec)), "calls": n[0],
+            "lost": any(x.startswith("[V5:MONITOR_LOST]") for x in notes)}
+
+@sub("V69b")
+def _sub_v69b_pass():
+    return _sub_v69b(False)
+
+@sub("V69c")
+def _sub_v69b_lie():
+    return _sub_v69b(True)
+
+@case("V69b", "binding", "revision 9 (GAP-03); fresh subprocess: after the first coverage_trace(), a counting pass-through on sys.monitoring.get_local_events; a trace calling f -> PASS {f:1}, no MONITOR_LOST, counter 0")
+def v69b():
+    r = run_sub("V69b")
+    expect(r == {"score": ["PASS", {"G": {"fx_v5f:f": 1}}], "calls": 0, "lost": False}, f"{r}")
+
+@case("V69b-v", "binding", "V69b's variant: the replacement returns 0 instead of calling through -> PASS {f:1}, no MONITOR_LOST, counter 0")
+def v69c():
+    r = run_sub("V69c")
+    expect(r == {"score": ["PASS", {"G": {"fx_v5f:f": 1}}], "calls": 0, "lost": False}, f"{r}")
+
+@sub("X156f")
+def _sub_x156f():
+    sm = sys.monitoring
+    real = sm.get_local_events
+    n = [0]
+    def gle(tool, code):
+        n[0] += 1
+        return real(tool, code)
+    exp = EXP("F")
+    sm.get_local_events = gle
+    try:
+        try:
+            with P.coverage_trace(exp) as cov:
+                cov.run("G", fx_v5f.f)
+            out = {"refused": None, "score": _outcome_json(score(exp, cov.record()))}
+        except GateSpecError as e:
+            out = {"refused": code_of(e)}
+        # scoring works: a trace-less result is judged, and check_metrics runs
+        out["scoring"] = _outcome_json(score(exp, None))[:2]
+        out["check_metrics"] = sorted(exp.check_metrics({"m": 1.0}))
+    finally:
+        sm.get_local_events = real
+    out["calls"] = n[0]
+    out["tool"] = P._v5_state()["tool"]            # a refusal binds and takes nothing
+    return out
+
+@case("X156f", "binding", "revision 9 (GAP-03); fresh subprocess: before the first coverage_trace(), sys.monitoring.get_local_events replaced by a pure-Python pass-through -> coverage_trace() raises UNSUPPORTED_VERSION; scoring works")
+def x156f():
+    r = run_sub("X156f")
+    expect(r.get("refused") == "UNSUPPORTED_VERSION", f"{r}")
+    expect(r["scoring"] == ["REFUSE", "NO_TRACE"] and r["check_metrics"], f"scoring {r}")
+    expect(r["calls"] == 0 and r["tool"] is None, f"{r}")
+
+def _x65d_shape(cov):
+    """X65d's shape: inside the section, a loop whose class overrides _run_once and runs its ready
+    handles' callbacks directly (no Handle._run or BaseEventLoop._run_once frame) runs a coroutine
+    that calls f."""
+    import asyncio
+    class DirectLoop(asyncio.SelectorEventLoop):
+        def _run_once(self):
+            while self._ready:
+                h = self._ready.popleft()
+                if not h._cancelled:
+                    h._context.run(h._callback, *h._args)
+    async def co():
+        return fx_v5f.f()
+    def body():
+        loop = DirectLoop()
+        try:
+            return loop.run_until_complete(co())
+        finally:
+            loop.close()
+    cov.run("G", body)
+
+def _sub_x156g(patch):
+    import asyncio
+    real = asyncio.events._get_running_loop
+    exp = EXP("F")
+    if patch:
+        def grl():
+            return None
+        asyncio.events._get_running_loop = grl
+    try:
+        try:
+            with P.coverage_trace(exp) as cov:
+                _x65d_shape(cov)
+            rec = cov.record()
+            out = {"refused": None, "score": _outcome_json(score(exp, rec)),
+                   "uncredited": rec.get("uncredited")}
+        except GateSpecError as e:
+            out = {"refused": code_of(e)}
+    finally:
+        asyncio.events._get_running_loop = real
+    return out
+
+@sub("X156g")
+def _sub_x156g_patched():
+    return _sub_x156g(True)
+
+@sub("X156g_ctl")
+def _sub_x156g_ctl():
+    return _sub_x156g(False)
+
+@case("X156g", "binding", "revision 9 (GAP-02); fresh subprocess: after import and before the first coverage_trace(), asyncio.events._get_running_loop replaced by a Python function returning None; X65d's shape -> coverage_trace() raises UNSUPPORTED_VERSION")
+def x156g():
+    r = run_sub("X156g")
+    expect(r == {"refused": "UNSUPPORTED_VERSION"}, f"{r}")
+
+@case("X156g-ctl", "binding", "X156g unpatched: the same program -> NOT_EXERCISED with dispatched {f:1}")
+def x156g_ctl():
+    r = run_sub("X156g_ctl")
+    expect(r.get("refused") is None and r["score"][:2] == ["REFUSE", "NOT_EXERCISED"], f"{r}")
+    expect(r["uncredited"]["dispatched"] == {"fx_v5f:f": 1}, f"uncredited {r['uncredited']}")
+
+
 def main():
     ver = ".".join(map(str, sys.version_info[:3]))
     results = []
@@ -730,4 +958,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 3 and sys.argv[1] == "--sub":
+        print(json.dumps(SUB[sys.argv[2]]()))
+        sys.exit(0)
     sys.exit(main())

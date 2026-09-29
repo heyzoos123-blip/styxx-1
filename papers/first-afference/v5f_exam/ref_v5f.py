@@ -6,6 +6,9 @@
 # drop-in replacement for styxx/protocol.py: the v4-era head below is v5e's, with M11's scoring
 # changes; everything from "-- v5f: the coverage tracer" on is the v5 region, rewritten. Where the
 # text was ambiguous the reading taken is recorded in SPEC_GAPS.md (cited here as "GAP-nn").
+# Revision 9 of the text ("Revision 9: spec gaps from the exam author") resolves every GAP-nn in
+# the text; each GAP-nn comment below now cites that resolution. This file applies its "Required
+# changes to ref_v5f.py", C1-C4 (C1-C3 in coverage_trace(), _exit_txn and _v5_state()).
 """styxx.protocol — the research loop as enforceable machinery.
 
 The witness harnesses the program's *instruments*; this harnesses its *process*. The
@@ -76,7 +79,7 @@ __all__ = ["Experiment", "Verdict", "PrologueError", "GateSpecError",
 # -- v5f M1: module state (every piece of shared state is a registry changed only by single
 # GIL-atomic C operations, an immutable value replaced by one store, or a monotone map changed only
 # by setdefault). Placed before every function (M1). `import styxx.protocol` never touches
-# sys.monitoring or asyncio (M0), so the event masks are literals (GAP-01).
+# sys.monitoring or asyncio (M0), so the event masks are literals (revision 9, GAP-01: the first line of M1).
 PY_START, PY_RESUME, PY_RETURN, PY_YIELD, PY_UNWIND = 1, 2, 4, 8, 4096
 
 _TRACER_ID = "styxx.protocol.coverage_trace/3"
@@ -92,8 +95,11 @@ _TOOL_NAME = globals().get("_TOOL_NAME") or "styxx.protocol/" + os.urandom(6).he
 _HANDLE_DICT = globals().get("_HANDLE_DICT", [None])   # asyncio.events.Handle's class dict
 _LOOP_DICT = globals().get("_LOOP_DICT", [None])       # asyncio.base_events.BaseEventLoop's class dict
 _LOST = globals().get("_LOST", [])                # a counter read as len(_LOST); grows by append only
-_MON = globals().get("_MON", [None])              # the six sys.monitoring functions, bound once
-_get_running_loop = globals().get("_get_running_loop")   # asyncio.events._get_running_loop (GAP-02)
+_MON = globals().get("_MON", [None])              # the seven sys.monitoring functions, bound once:
+# (get_tool, get_events, set_events, set_local_events, register_callback, use_tool_id,
+#  get_local_events); index 6 from revision 9 (GAP-03), read only by _exit_txn and _v5_state (M0)
+_get_running_loop = globals().get("_get_running_loop")   # asyncio.events._get_running_loop, checked
+# and re-bound by every coverage_trace() after its import asyncio (revision 9, GAP-02; M0 steps 5-7)
 _BUSY_SECONDS = 10.0
 _LOCAL = PY_START | PY_RESUME | PY_RETURN | PY_YIELD        # local, on minted code only
 # The M1 one-call vocabulary (M7): `_map` through `_CALLBACKS5`; plain bindings, re-bound by a reload.
@@ -804,7 +810,7 @@ class _Txn:
         self.succ = {}                       # a fresh dict per token (M1, revision 5 N6)
 
 
-if _GUARD is None:                           # M1 (GAP-06): {"hint": _Txn(None, 0, None)}; kept by a reload
+if _GUARD is None:                           # M1 (revision 9, GAP-06): the statement right after class _Txn; a reload keeps the dict
     _GUARD = {"hint": _Txn(None, 0, None)}
 
 
@@ -1033,7 +1039,7 @@ def _resolve_target(target):
             else:
                 n = dict.get(callee.__globals__, '__name__')
                 cname = (n if type(n) is str else callee.__code__.co_filename) + ':' + callee.__qualname__
-            # GAP-07: "<stamped>" is rendered by type only, so the message never names it (X24c).
+            # revision 9, GAP-07: the stamp is named by its type only (<T>), never by name (X24c).
             raise GateSpecError(
                 f"[V5:NOT_A_FUNCTION] declared target {target!r}: the wrapper calls {cname}; its "
                 f"__wrapped__ names a different object (a {_TYPE_QUAL.__get__(type(stamped))}); "
@@ -1409,29 +1415,31 @@ def _clone_alive(m):
 
 def _exit_txn(core):
     _reconcile()                                     # X5.1: this core's exiting token is live
+    # GAP-19 (revision 9): held = the mints holding the core, from a list(_MINTED.values())
+    # snapshot taken after step 1, in that order.
+    held = [m for m in list(_MINTED.values()) if [h for h in m.holders if h is core]]
     t = _TOOL[0]
     r = _register(t)                                 # X5.2: registration first (revision 6 order)
-    held = [m for m in list(_MINTED.values()) if [h for h in m.holders if h is core]]
     lost = r[-1] is not _TOOL_NAME
     if not lost:
         if len(_LOST) != core.lost0:
             lost = True
-        gle = sys.monitoring.get_local_events       # GAP-03: not one of _MON's six
+        gle = _MON[0][6]                             # C3 (GAP-03): the bound get_local_events
         for m in held:
             if gle(t, m.code) != _LOCAL:
                 lost = True
         if 'UNWIND_LOST' in core.flags:
             lost = True
-    probs = []
-    for m in held:                                   # X5.3
+    swapped = []
+    for m in held:                                   # X5.3, in held order
         if m.fn.__code__ is not m.code:
-            probs.append(
+            swapped.append(
                 f"[V5:CODE_SWAPPED] {m.qualname}.__code__ was replaced during the trace -- calls "
                 f"through the replacement were not observed")
         m.holders = tuple([h for h in m.holders if h is not core])
         if not m.holders:
             _retire(m)
-    return held, (probs, lost)
+    return held, (swapped, lost)                     # GAP-19: (held, (swapped, lost))
 
 
 def _exit(core):
@@ -1454,14 +1462,16 @@ def _exit(core):
     for cid, q in list(dict(core.clone_called).items()):
         probs.append(f"[V5:CLONE_CALLED] the minted code of {q} ran under globals that are not its "
                      f"function's: a function was built from its code object, or it was exec'd")
-    held = []
-    more = ([], False)
+    # X5 (GAP-19): on a GateSpecError from _locked, held = [], swapped = [], lost = False. The
+    # order of probs: X4's CLONE_CALLED texts; the _locked error or the swapped texts; X6.
+    held, swapped, lost = [], [], False
     try:                                             # X5
-        held, more = _locked(_exit_txn, core)
+        held, (swapped, lost) = _locked(_exit_txn, core)
     except GateSpecError as e:
         probs.append(str(e))
-    probs.extend(more[0])
-    for m in held:                                   # X6: tripwires, outside the mutex
+    else:
+        probs.extend(swapped)
+    for m in held:                                   # X6: tripwires, outside the mutex, held order
         txt = _clone_alive(m)
         if txt is not None:
             probs.append(txt)
@@ -1471,7 +1481,7 @@ def _exit(core):
             "_run_once was rebound, or its code replaced, while this trace saw it: dispatch through "
             "the moved binding is not cut")
     core.problems.extend(probs)                      # X7
-    if more[1]:
+    if lost:
         core.lost_note = ("[V5:MONITOR_LOST] styxx's sys.monitoring tool id lost events or callbacks "
                           "during this trace (freed, taken, cleared or replaced by another party); "
                           "counts are lower bounds")
@@ -1764,7 +1774,7 @@ def coverage_trace(experiment: "Experiment") -> _CoverageTracer:
     Tracing runs on the verified interpreters only (CPython 3.12.3 and 3.13.12, GIL builds);
     scoring works on every version. Sections are calls (``cov.run`` / ``await cov.run_async``).
     """
-    gil = getattr(sys, '_is_gil_enabled', None)      # M0, read at call time (GAP-04: no lambda)
+    gil = getattr(sys, '_is_gil_enabled', None)      # M0, read at call time (revision 9, GAP-04: no lambda)
     vi = tuple(sys.version_info[:3])
     if not (sys.implementation.name == 'cpython' and vi in _VERIFIED
             and not sysconfig.get_config_var('Py_GIL_DISABLED') and (gil is None or gil())):
@@ -1785,13 +1795,13 @@ def coverage_trace(experiment: "Experiment") -> _CoverageTracer:
     # before the first binding), and the one-call vocabulary as the module binds it now.
     sm = sys.monitoring
     mon = _MON[0]
-    if mon is None:
+    if mon is None:                                  # C1 (GAP-03): seven functions
         mon = (sm.get_tool, sm.get_events, sm.set_events, sm.set_local_events,
-               sm.register_callback, sm.use_tool_id)
+               sm.register_callback, sm.use_tool_id, sm.get_local_events)
     bad = None
     i = 0
     for nm in ("get_tool", "get_events", "set_events", "set_local_events", "register_callback",
-               "use_tool_id"):
+               "use_tool_id", "get_local_events"):
         f = mon[i]
         i += 1
         if not (type(f) is BuiltinFunctionType and f.__self__ is sm and f.__name__ == nm):
@@ -1848,16 +1858,23 @@ def coverage_trace(experiment: "Experiment") -> _CoverageTracer:
             f"[V5:UNSUPPORTED_VERSION] {bad} is not the C builtin (a wrapper or subclass was "
             f"installed before this coverage_trace()): styxx's one-call steps must call C "
             f"functions only")
-    if _MON[0] is None:
+    import asyncio                                   # M0 step 5 (GAP-09)
+    grl = asyncio.events._get_running_loop           # C2 (GAP-02), M0 step 6: read afresh, checked
+    if not (type(grl) is BuiltinFunctionType and grl.__name__ == "_get_running_loop"
+            and grl.__self__ is sys.modules.get("_asyncio")):
+        raise GateSpecError(
+            "[V5:UNSUPPORTED_VERSION] asyncio.events._get_running_loop is not the C builtin (a "
+            "wrapper or subclass was installed before this coverage_trace()): styxx's one-call "
+            "steps must call C functions only")
+    if _MON[0] is None:                              # M0 step 7: only now, every check passed
         _MON[0] = mon
-    import asyncio
     global _get_running_loop
-    _get_running_loop = asyncio.events._get_running_loop
+    _get_running_loop = grl
     if _HANDLE_DICT[0] is None:                      # read by the first coverage_trace(), never again
         _HANDLE_DICT[0] = _TYPE_DICT.__get__(asyncio.events.Handle)
         _LOOP_DICT[0] = _TYPE_DICT.__get__(asyncio.base_events.BaseEventLoop)
     _cut_refresh()                                   # E2: the constructor runs it too
-    fac = _CoverageTracer.__new__(_CoverageTracer)   # no facade __init__ (GAP-08)
+    fac = _CoverageTracer.__new__(_CoverageTracer)   # M0 step 10: no facade __init__ (revision 9, GAP-08)
     fac._core = _Core(experiment, weakref.ref(fac))
     return fac
 
@@ -1869,7 +1886,7 @@ def _v5_state():
     mon = _MON[0]
     rows = []
     for m in list(_MINTED.values()):
-        le = sys.monitoring.get_local_events(t, m.code) if (t is not None and mon is not None) else 0
+        le = mon[6](t, m.code) if (t is not None and mon is not None) else 0   # C3 (GAP-03)
         rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))
     rows.sort()
     r = _GUARD["hint"]
@@ -1883,7 +1900,7 @@ def _v5_state():
         "anchors": len(_ANCHORS),
         "guard": "free" if r.tid is None else ("held" if _alive(r) else "dead"),
         "cut": len(_CUT),
-        "cut_current": _HANDLE_DICT[0] is None or _cut_ok(),        # GAP-05
+        "cut_current": _HANDLE_DICT[0] is None or _cut_ok(),        # revision 9, GAP-05
         "tool": t,
         "tool_ours": mon is not None and _ours(),
         "global_events": mon[1](t) if (t is not None and mon is not None) else 0,
@@ -1945,7 +1962,7 @@ def _forget_in_child():
 
 
 def _finite(v):
-    """M11 (GAP-08: named by M11, outside the frozen function set): math.isfinite, catching OverflowError only (an int too large for a float)."""
+    """M11: math.isfinite, catching OverflowError only (an int too large for a float). One of the SM2 region's scoring functions (revision 9, GAP-08)."""
     try:
         return math.isfinite(v)
     except OverflowError:

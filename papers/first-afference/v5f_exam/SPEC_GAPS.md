@@ -544,6 +544,7 @@ Each row is one atom of `rules_v5f.json`, and each atom has `needs_witness: true
 | GAP-34 | R-OVER_BLOCKING_DISCLOSED-075: a D claim pinned only by a probe | **yes** (rule 3) |
 | GAP-35 | R-OVER_BLOCKING_DISCLOSED-090: the verifier list's witness is stale ("none pinned"); X84 now pins it | no (data fix; the atom's paragraph names X84) |
 | GAP-36 | 10 `definition` rows the exam author disputes as D claims with no checkable witness | **yes** if the owner agrees they are D; no if the owner keeps them S |
+| GAP-37 | The runner cannot write the v5e cases v5f keeps, or the delta rows V26, V28, X82 and V33, from the v5f text | **yes** (the frozen runner must run every case in the case tables) |
 
 **GAP-32. Rule 3 as revision 10 words it vs rule 2.**
 - *The contradiction.* Revision 10's required change says: "An atom that is P, D or C and still has no witness, or that appears in no list and no map, is a new gap". The status line says the freeze waits for `rules_v5f.json` "with no atom left unlisted". But the lists hold only sentences with a list keyword (*must, never, always, cannot, nothing, no, none, only, every*), and the maps hold only the 344 GAP-W atoms and the 40 pointer atoms. Rule 2 ("any other atom is classed by the table") still exists for every other atom. 1,017 unlisted atoms have no keyword, so no list could hold them. The other 102 contain a keyword: text new or edited in revision 10, which no list has seen yet, or table rows and list items split differently from the wide extraction.
@@ -582,3 +583,9 @@ Each row is one atom of `rules_v5f.json`, and each atom has `needs_witness: true
 | R-MECHANISM_AND_LIFECYCLE_M11-028 | GAP-W224 | rev1/p2_dict_collide.py (definition: disclosure) | D: check_metrics can run two kinds of user method; a probe witnesses only C claims | For in-process results carrying user objects, it can run two kinds of user method: a `__float__` override on an int or … |
 | R-MECHANISM_AND_LIFECYCLE_M11-029 | GAP-W225 | (definition: disclosure) | D (or C): "a JSON-loaded result has exact-str keys"; no witness at all | The second is contrived: a JSON-loaded result has exact-str keys. |
 | R-EXCEPTION_SAFETY_MODEL-119 | GAP-W279 | L-MONITOR | D: the kept frame keeps its callers alive until then; "L-MONITOR" only | It keeps its frame, and that frame's callers, alive until then (L-MONITOR). |
+
+**GAP-37. The v5e cases v5f keeps are defined only in the v5e design.** (Raised while writing `run_protocol_v5f_exam.py`.)
+- *What is missing.* "Every other v5e case keeps its id and its expected outcome" (Exam cases required), and the delta table changes V26, V28, X82 and V33 by id. But their shapes and outcomes are written only in `DESIGN_protocol_v5e_mint_anchor_2026_09_24.md`. The exam author's brief for this revision allows the v5f text and its Appendix A data, not the v5e design, and the v5e runner may be read only for structure. So the runner cannot write these cases from the text it may read. The runner's 14 v5e-kept cases (V01, X40, X55, X59, V07, X33, X73, V18, X76, X60, V14, X109, X32 and X90/X91) are carried over from `smoke_cases.py`. They were written in the first round, when the brief included the v5e design.
+- *Reading taken.* The receipt lists the v5e tables, and the delta rows V26, V28 and X82/V33, as not yet covered (`tables_not_yet_covered`, `delta_table_rows`).
+- *Fix needed.* Either add the v5e design's case tables to the exam author's reading as spec data, or restate the kept v5e cases, with their v5f placements, in the v5f text.
+

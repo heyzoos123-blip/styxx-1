@@ -97,3 +97,60 @@ Everything below was run on `/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35
 
 Signed: the v5f exam author (Claude Code subagent), 2026-09-29.
 
+## Revision 10 update (2026-09-29)
+
+The same exam author, in a separate context, worked from the revision-10 text. Commits, local only and not pushed:
+- `97fb2f54`: smoke cases and weakenings;
+- `b88fd3a2`: `rules_v5f.json` and the Revision 10 follow-ups;
+- `eafb3d3f`: `tools/`;
+- `b06a6e5b`, `12de507a` and `d889964f`: the runner, table by table;
+- this file's commit, which also adds GAP-37.
+
+`ref_v5f.py` is unchanged. Revision 10 changes no mechanism, and `tools/lint_region.py` checks the one new code-ordering clause (G_HYG, R9-4) statically.
+
+### What I read for this update
+1. The design text at revision 10. I read:
+   - "Revision 10: verifier findings on revision 9", in full;
+   - Appendix A's "Rule 1's data, and what counts as a witness";
+   - `git diff fe442984 bebc8f46` of the design text (every revision-10 body edit);
+   - the case rows X10c, X14c, X14d, X24b, X24c, X24f, X78f, X78h, X84, X93e, X95b, X117e, X117f, X156h, X156i, V48, V49, V72 and V73;
+   - the table "New documented residuals", in full;
+   - "v5e cases whose outcome changes" and its port table;
+   - the harness rules ("Interpreters", "How cases run", "Leftover checks after every case", "Entry points for scoring cases", "What the exam may read");
+   - the table lists and row ids of "Exam cases required";
+   - Appendix A's revision-7 tables (the findings table and "The P, D and C claims and their witnesses").
+2. Spec data in `protocol_v5f_design/rev10/appendix_a/`, as data through scripts:
+   - `rev9_new_sentences_classified_rev10.json`;
+   - `wide_old_rows_resolved.json`;
+   - `rev7_audit_claims_classified.json`;
+   - `pointer_witness_map.json`;
+   - `atom_witness_map.json`.
+
+   Also `rev9/appendix_a/wide_claims_classified.json`. I did not open `build_appendix_rev10.py` or `atom_witness_map_src.py` in that directory; they are code the exam author need not run.
+3. `papers/first-afference/run_protocol_v5e.py`, for structure and receipt format only: its docstring (lines 1–156), its `main()` and its receipt block (lines 3484–3706), and a grep of its top-level names. I read none of its case bodies, and no v5e implementation.
+4. A listing of `papers/first-afference/` (names only), to find the frozen runners.
+5. My own artifacts and `git show` of my own earlier `rules_v5f.json` versions (70a625ac, 99a2cc76).
+6. `git log` / `git show --stat` of commits 430a3db7, c35ae46f and bebc8f46 (names and messages).
+
+### What I did not read for this update
+- `protocol_v5f_design/rev10/p_rev10.py`, `p_rev10b.py` and their outputs;
+- anything else under `protocol_v5f_design/` outside `rev9/appendix_a/` and `rev10/appendix_a/`;
+- the verifier's `rev9/verify/`;
+- the critiques;
+- any prototype;
+- the v5e implementation;
+- the v5e design.
+
+Every new case and every weakening was written from the rows' own words.
+
+### Runs
+| what | 3.12.3 | 3.13.12 | 3.10.20 | 3.11.15 |
+|---|---|---|---|---|
+| `smoke_cases.py` | 59/59 | 59/59 | 2/2 (scoring-only) | 2/2 (scoring-only) |
+| `tools/mutants_v5f.py` (26 weakenings, each against its named witness) | all detected | all detected | — | — |
+| `run_protocol_v5f_exam.py` against `ref_v5f.py` | 75/75, self-trace V34 PASS | 75/75, self-trace V34 PASS | 14/14 scoring-only; tracing refused cleanly | 14/14 scoring-only; tracing refused cleanly |
+
+The runner also fails every one of the 26 mutant implementations on 3.12.3.
+
+Signed: the v5f exam author (Claude Code subagent), 2026-09-29.
+

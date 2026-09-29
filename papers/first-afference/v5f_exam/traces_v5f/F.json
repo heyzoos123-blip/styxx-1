@@ -1,0 +1,24 @@
+{
+ "gates_sha256": "cc58091e9e80c98b97133c40d94efaad6c25e419c57b33007a005ed02050f3ae",
+ "problems": [],
+ "sections": {
+  "G": [
+   {
+    "ambiguous": {},
+    "calls": {
+     "fx_v5f:f": 1
+    },
+    "end": "returned",
+    "notes": []
+   }
+  ]
+ },
+ "targets": {
+  "fx_v5f:f": "/tmp/v5f_exam_st97w2jg/fixtures/fx_v5f.py:3"
+ },
+ "tracer": "styxx.protocol.coverage_trace/3",
+ "uncredited": {
+  "dispatched": {},
+  "unattributed": {}
+ }
+}

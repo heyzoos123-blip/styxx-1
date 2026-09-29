@@ -1,0 +1,247 @@
+{
+ "runner": "run_protocol_v5f_exam.py",
+ "runner_sha256": "fd0cabf5d6228522b4ce3bb285a3b3284ba3f728584c92f01323e524b6211d97",
+ "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
+ "impl_module": "ref_v5f",
+ "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
+ "spec_sha256": "ebb6a16f35b16019d5a965c15b9916e6567ce170966e67febd47f3c8ec2bcc85",
+ "python": "3.11.15",
+ "build": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+ "python_build": [
+  "main",
+  "Mar  3 2026 09:26:23"
+ ],
+ "python_compiler": "GCC 13.3.0",
+ "mode": "scoring-only (not an exam interpreter for tracing)",
+ "cases": {
+  "X93d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "trace loaded with object_pairs_hook=OrderedDict -> NO_TRACE, third wording, exactly \"'coverage_trace' is a OrderedDict, not an exact dict (e.g. loaded with object_pairs_hook)\"",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X96d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "gates_sha256: 5 -> BAD_TRACE; tracer as a str subclass whose __eq__ raises -> WRONG_TRACER",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X103c": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "end = S('returned') with class S(str) -> BAD_TRACE",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X112b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "genuine recorded UNDECLARED_SECTION and one calls count set to 0 -> BAD_COUNT",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X117b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a 400-digit int metric -> check_metrics REPORTED ('int too large for a float'); score GateSpecError, not OverflowError",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X117c": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "smoke is an object whose __bool__ raises -> REPORTED; __bool__ never called",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X95b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a committed v5e /2 trace -> WRONG_TRACER",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X122": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a declaring gate whose bar fails (m=0.0) and a harness that never calls one target -> NOT_EXERCISED (never FAIL)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X109": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "trace from another gates block -> STALE_TRACE",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "X93e": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-1): NO_TRACE's first and third texts name a counting-metaclass type exactly, counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X117e": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-5): check_metrics on counting dict subclasses, path a.b present (0.5) / b absent -> present+usable / not present; counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X117f": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-5): check_metrics on {m:1.0} -> NO_TRACE note 'the result has no 'coverage_trace' key'; with smoke True -> exactly 'smoke run'",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X37": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "X37 (3.10/3.11 only): coverage_trace() refuses UNSUPPORTED_VERSION; scoring works",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  }
+ },
+ "not_run": {
+  "V01": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X40": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X55": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X59": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X26b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X24b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X13b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X14c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X17b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X34": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V07": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X33": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X73": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V18": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X76": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X60": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X78f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V54": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V55": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V14": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X119": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V67": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X74d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X90/X91": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V52": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X32": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V28b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X143c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137-free": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X59e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X59e-v": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "M10-S0": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V69b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V69b-v": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156g": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156g-ctl": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X78h": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X24f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X84": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X10c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X14d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V73": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156h": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156i": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V72": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12"
+ },
+ "self_trace": null,
+ "tables": {
+  "new violation cases": {
+   "run": 12,
+   "passed": 12,
+   "ids": [
+    "X93d",
+    "X96d",
+    "X103c",
+    "X112b",
+    "X117b",
+    "X117c",
+    "X95b",
+    "X122",
+    "X93e",
+    "X117e",
+    "X117f",
+    "X37"
+   ]
+  },
+  "v5e cases kept (every other v5e case keeps its id and outcome)": {
+   "run": 1,
+   "passed": 1,
+   "ids": [
+    "X109"
+   ]
+  }
+ },
+ "coverage_of_design_tables": {
+  "new violation cases": {
+   "rows_in_design": 137,
+   "cases_in_runner": 36
+  },
+  "new valid cases": {
+   "rows_in_design": 45,
+   "cases_in_runner": 9
+  },
+  "new documented residuals": {
+   "rows_in_design": 10,
+   "cases_in_runner": 0
+  },
+  "exam-hole kill cases": {
+   "rows_in_design": 30,
+   "cases_in_runner": 0
+  },
+  "v5e cases whose outcome changes": {
+   "rows_in_design": 20,
+   "cases_in_runner": 1
+  }
+ },
+ "tables_not_yet_covered": [
+  "new documented residuals (R05b-R22)",
+  "exam-hole kill cases",
+  "v5e cases whose outcome changes",
+  "hazard sweeps (H1-H10)",
+  "mutation audit witnesses not already in the case tables",
+  "the rest of the new violation and valid cases",
+  "the v5e cases kept (the v5e case tables)"
+ ],
+ "n_cases_run": 13,
+ "n_passed": 13,
+ "verdict": "REFUSED_TRACING_UNSUPPORTED_INTERPRETER; scoring-only cases PASS",
+ "seconds": 0.04
+}

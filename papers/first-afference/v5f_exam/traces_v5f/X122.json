@@ -1,0 +1,25 @@
+{
+ "gates_sha256": "83147fb2bfb6c2736af95527c363f36f97c861ee3a03d7ede6e79666b7fde5e6",
+ "problems": [],
+ "sections": {
+  "G": [
+   {
+    "ambiguous": {},
+    "calls": {
+     "fx_v5f:f": 1
+    },
+    "end": "returned",
+    "notes": []
+   }
+  ]
+ },
+ "targets": {
+  "fx_v5f:f": "/tmp/v5f_exam_st97w2jg/fixtures/fx_v5f.py:3",
+  "fx_v5f:g": "/tmp/v5f_exam_st97w2jg/fixtures/fx_v5f.py:4"
+ },
+ "tracer": "styxx.protocol.coverage_trace/3",
+ "uncredited": {
+  "dispatched": {},
+  "unattributed": {}
+ }
+}

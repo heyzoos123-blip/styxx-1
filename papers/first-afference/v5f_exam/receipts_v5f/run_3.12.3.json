@@ -1,0 +1,1174 @@
+{
+ "runner": "run_protocol_v5f_exam.py",
+ "runner_sha256": "fd0cabf5d6228522b4ce3bb285a3b3284ba3f728584c92f01323e524b6211d97",
+ "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
+ "impl_module": "ref_v5f",
+ "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
+ "spec_sha256": "ebb6a16f35b16019d5a965c15b9916e6567ce170966e67febd47f3c8ec2bcc85",
+ "python": "3.12.3",
+ "build": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+ "python_build": [
+  "main",
+  "Mar  3 2026 12:15:18"
+ ],
+ "python_compiler": "GCC 13.3.0",
+ "mode": "full (verified interpreter)",
+ "cases": {
+  "X137c": {
+   "table": "new violation cases",
+   "placement": "main",
+   "row": "inside G: f, then set_events(tool, 0), then t raises and is caught -> NOT_EXERCISED for t, MONITOR_LOST",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.006
+  },
+  "V67": {
+   "table": "new valid cases",
+   "placement": "main",
+   "row": "t raises 100 times outside every section -> pending == 0 before exit; leftovers clean",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X143c": {
+   "table": "new violation cases",
+   "placement": "main",
+   "row": "cov.run('A', f) with a fault right after _detach's _unwind_off call (here: at _detach's return) -> Injected; global_events 0; PASS {f:1}, end returned, no MONITOR_LOST",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.002
+  },
+  "X59e": {
+   "table": "new violation cases",
+   "placement": "main",
+   "row": "clone called, code swapped and left, clone alive through exit, Handle._run rebound -> problems exactly [CLONE_CALLED, CODE_SWAPPED, CLONE_ALIVE, CUT_MOVED]; score refuses CLONE_CALLED",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.008
+  },
+  "X59e-v": {
+   "table": "new violation cases",
+   "placement": "main",
+   "row": "X59e plus a swallowed cov.run('B', f) with B undeclared, before the clone -> [UNDECLARED_SECTION, CLONE_CALLED, CODE_SWAPPED, CLONE_ALIVE, CUT_MOVED]; score refuses UNDECLARED_SECTION",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.008
+  },
+  "V73": {
+   "table": "new valid cases",
+   "placement": "main",
+   "row": "rev. 10 (GAP-W183): worker's G calls f, waits; main clears f's local events and exits; worker returns an unstarted generator -> notes codes [OPEN_AT_EXIT, LAZY_RESULT, MONITOR_LOST], end open",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "X137-free": {
+   "table": "new violation cases",
+   "placement": "subprocess",
+   "row": "inside G: f, free_tool_id(tool), g -> PASS {f:1,g:1} + MONITOR_LOST; after exit tool_ours, global_events 0, no callback for 1000 raises; 2nd trace PASS {f:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.157
+  },
+  "M10-S0": {
+   "table": "M10 property (not a table row): _v5_state() before any tracer",
+   "placement": "subprocess",
+   "row": "revision 9 (GAP-05); fresh subprocess: _v5_state() before the first coverage_trace() -> mints [], anchors 0, guard free, cut 0, cut_current True, tool None, tool_ours False, global_events 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.172,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "V69b": {
+   "table": "new valid cases",
+   "placement": "subprocess",
+   "row": "revision 9 (GAP-03); fresh subprocess: after the first coverage_trace(), a counting pass-through on sys.monitoring.get_local_events; a trace calling f -> PASS {f:1}, no MONITOR_LOST, counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.164,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "V69b-v": {
+   "table": "new valid cases",
+   "placement": "subprocess",
+   "row": "V69b's variant: the replacement returns 0 instead of calling through -> PASS {f:1}, no MONITOR_LOST, counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.205,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X156f": {
+   "table": "new violation cases",
+   "placement": "subprocess",
+   "row": "revision 9 (GAP-03); fresh subprocess: before the first coverage_trace(), sys.monitoring.get_local_events replaced by a pure-Python pass-through -> coverage_trace() raises UNSUPPORTED_VERSION; scoring works",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.172,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X156g": {
+   "table": "new violation cases",
+   "placement": "subprocess",
+   "row": "revision 9 (GAP-02); fresh subprocess: after import and before the first coverage_trace(), asyncio.events._get_running_loop replaced by a Python function returning None; X65d's shape -> coverage_trace() raises UNSUPPORTED_VERSION",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.137,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X156g-ctl": {
+   "table": "new violation cases",
+   "placement": "subprocess",
+   "row": "X156g unpatched: the same program -> NOT_EXERCISED with dispatched {f:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.162,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X156h": {
+   "table": "new violation cases",
+   "placement": "subprocess",
+   "row": "rev. 10 (R9-3); fresh subprocess: a clean trace PASS {f:1}; then _get_running_loop replaced -> the next coverage_trace() raises UNSUPPORTED_VERSION",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.163,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X156i": {
+   "table": "new violation cases",
+   "placement": "subprocess",
+   "row": "rev. 10 (R9-4); fresh subprocess: a step-6 refusal at the first coverage_trace() binds nothing (tool None, tool_ours False, cut 0); a set_events wrapper installed afterwards is refused",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.141,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "V72": {
+   "table": "new valid cases",
+   "placement": "subprocess",
+   "row": "rev. 10 (R9-8); fresh subprocess: an audit hook in the exit transaction's registration reads guard 'held' and raises -> RuntimeError from __exit__; guard 'dead'; a second tracer PASS {f:1}; guard 'free'",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.163,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "V01": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "plain f -> {f:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "X40": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "factory sibling: declare check_low, call check_high -> NOT_EXERCISED",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X55": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "FunctionType(T.__code__, {})() -> CLONE_CALLED",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X59": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "T called, then T.__code__ reassigned -> CODE_SWAPPED (swap left in place)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X26b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "real.__code__ = stub.__code__ before the trace; called via alias -> FOREIGN_DEFINITION",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X24b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "wraps(power_ref)(lru_cache(fast)) -> NOT_A_FUNCTION naming fast",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.009
+  },
+  "X13b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "PEP 562 __getattr__ returning a fresh function -> UNRESOLVED with remedy",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X14c": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "Leaf(Mid(Base)).fit -> INHERITED naming the defining class",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X17b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "step through a Python __dict__ property -> INSTANCE_PATH, counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X34": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "declare asyncio.events:Handle._run and f -> RESERVED_TARGET at entry",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "V07": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "cached.cache_clear(), then cached(1) twice -> {cached:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "X33": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "one good + one unresolvable target -> UNRESOLVED; good __code__ untouched",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X73": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "cov.run(G, asyncio.run, main()) -> NOT_EXERCISED (dispatched)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "V18": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "asyncio.run(cov.run_async(G, main)) -> {f:1, g:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "X76": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "same-tracer nested open, swallowed; an unrelated gate also refuses -> NESTED_SECTION",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X60": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "thread started in A calls f -> NOT_EXERCISED; uncredited unattributed {f:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X78f": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "cov.run(5, f) swallowed; variant (rev. 10) counting __eq__/__hash__/__repr__/__str__/__format__ and the metaclass's __qualname__/__name__ reads -> UNDECLARED_SECTION, counters 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "V54": {
+   "table": "new valid cases",
+   "placement": "self-trace",
+   "row": "target raising inside its body, caught, 3 calls -> {t:3} (confirmed by PY_UNWIND)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "V55": {
+   "table": "new valid cases",
+   "placement": "self-trace",
+   "row": "asyncio.run(cov.run_async('G', main)), declared coroutine awaits once -> {coro:2}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "V14": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "generator with two yields, consumed -> {gen:3}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X119": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "generator: dropped unstarted; close() unstarted; throw() into unstarted; primed outside, closed at a yield inside -> NOT_EXERCISED",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.005
+  },
+  "X74d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "run(G, genfn): LAZY_RESULT note contains '...does not count (its body had not started)' -> NOT_EXERCISED",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X93d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "trace loaded with object_pairs_hook=OrderedDict -> NO_TRACE, third wording, exactly \"'coverage_trace' is a OrderedDict, not an exact dict (e.g. loaded with object_pairs_hook)\"",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X96d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "gates_sha256: 5 -> BAD_TRACE; tracer as a str subclass whose __eq__ raises -> WRONG_TRACER",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X103c": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "end = S('returned') with class S(str) -> BAD_TRACE",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X112b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "genuine recorded UNDECLARED_SECTION and one calls count set to 0 -> BAD_COUNT",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X117b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a 400-digit int metric -> check_metrics REPORTED ('int too large for a float'); score GateSpecError, not OverflowError",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X117c": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "smoke is an object whose __bool__ raises -> REPORTED; __bool__ never called",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X95b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a committed v5e /2 trace -> WRONG_TRACER",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X122": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a declaring gate whose bar fails (m=0.0) and a harness that never calls one target -> NOT_EXERCISED (never FAIL)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.009
+  },
+  "X109": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "trace from another gates block -> STALE_TRACE",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.005
+  },
+  "X90/X91": {
+   "table": "v5e cases whose outcome changes",
+   "placement": "self-trace",
+   "row": "record() inside the trace / before enter -> TRACE_ACTIVE with per-case texts",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "V52": {
+   "table": "new valid cases",
+   "placement": "self-trace",
+   "row": "(1) explicit __exit__ plus a second in finally -> PASS {f:1}; (2) __exit__ after __enter__ raised UNRESOLVED -> TRACE_INCOMPLETE, clean",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.009
+  },
+  "X32": {
+   "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
+   "placement": "self-trace",
+   "row": "tracer entered twice, second entry swallowed -> REENTRY raised and at score",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "V28b": {
+   "table": "new valid cases",
+   "placement": "self-trace",
+   "row": "coroutine section B driven by send() on a worker, resumed inside A on main -> A calls {f:1} ambiguous {g:1}; B calls {g:1} ambiguous {g:1}; B returned; no notes",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "X78h": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-1): cov.run(Sec(), f) on a tracer never entered, and on another after its exit -> TRACE_INACTIVE both; f never runs; counters 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.005
+  },
+  "X93e": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-1): NO_TRACE's first and third texts name a counting-metaclass type exactly, counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X24f": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-1, R9-9): lru_cache(len) -> NOT_A_FUNCTION 'the wrapper calls no single Python function; ... (a builtin_function_or_method)'; a Stamp __wrapped__ -> '(a Stamp)', metaclass counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.005
+  },
+  "X84": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-2), over-blocking #23: T opens G with L1 running; U opens G with None running; T opens G again with L1 running -> NESTED_SECTION; T's problems exactly that",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.006
+  },
+  "X10c": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (GAP-W011, W018): import raising ValueError, PEP 562 __getattr__ raising KeyError -> UNRESOLVED, __cause__ the ValueError / the KeyError",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.006
+  },
+  "X14d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (GAP-W022): Sub.fit inherited from Base with Base.__module__ = 5 -> INHERITED 'declare the defining class ?:Base'",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.008
+  },
+  "X117e": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-5): check_metrics on counting dict subclasses, path a.b present (0.5) / b absent -> present+usable / not present; counter 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X117f": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 10 (R9-5): check_metrics on {m:1.0} -> NO_TRACE note 'the result has no 'coverage_trace' key'; with smoke True -> exactly 'smoke run'",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "V34": {
+   "table": "v5e cases whose outcome changes",
+   "placement": "self-trace",
+   "row": "V34: the self-trace; G0 declares Experiment._check_coverage, _resolve_target, _open, _exit and _run; PASS: each has a union count >= 1",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.0
+  }
+ },
+ "not_run": {
+  "X37": "3.10/3.11 only"
+ },
+ "self_trace": {
+  "case": "V34",
+  "gates": [
+   "G0"
+  ],
+  "targets": [
+   "ref_v5f:Experiment._check_coverage",
+   "ref_v5f:_resolve_target",
+   "ref_v5f:_open",
+   "ref_v5f:_exit",
+   "ref_v5f:_run"
+  ],
+  "outcome": [
+   "PASS",
+   {
+    "G0": {
+     "ref_v5f:Experiment._check_coverage": 41,
+     "ref_v5f:_resolve_target": 41,
+     "ref_v5f:_open": 24,
+     "ref_v5f:_exit": 37,
+     "ref_v5f:_run": 24
+    }
+   }
+  ],
+  "union": {
+   "ref_v5f:Experiment._check_coverage": 41,
+   "ref_v5f:_resolve_target": 41,
+   "ref_v5f:_open": 24,
+   "ref_v5f:_exit": 37,
+   "ref_v5f:_run": 24
+  },
+  "problems": [],
+  "detail": {
+   "message": "PASS",
+   "sections": {
+    "G0": [
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 3,
+       "ref_v5f:_resolve_target": 2,
+       "ref_v5f:_run": 3
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 3,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 3
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 5
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2,
+       "ref_v5f:_exit": 4,
+       "ref_v5f:_open": 2,
+       "ref_v5f:_resolve_target": 4,
+       "ref_v5f:_run": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 2,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 3,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 3
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 2,
+       "ref_v5f:_resolve_target": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 2,
+       "ref_v5f:_resolve_target": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 2,
+       "ref_v5f:_resolve_target": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_resolve_target": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     }
+    ]
+   },
+   "uncredited": {
+    "dispatched": {
+     "ref_v5f:_open": 5,
+     "ref_v5f:_run": 3
+    },
+    "unattributed": {
+     "ref_v5f:_open": 1
+    }
+   }
+  },
+  "ok": true
+ },
+ "tables": {
+  "new violation cases": {
+   "run": 35,
+   "passed": 35,
+   "ids": [
+    "X137c",
+    "X143c",
+    "X59e",
+    "X59e-v",
+    "X137-free",
+    "X156f",
+    "X156g",
+    "X156g-ctl",
+    "X156h",
+    "X156i",
+    "X26b",
+    "X24b",
+    "X13b",
+    "X14c",
+    "X17b",
+    "X34",
+    "X78f",
+    "X119",
+    "X74d",
+    "X93d",
+    "X96d",
+    "X103c",
+    "X112b",
+    "X117b",
+    "X117c",
+    "X95b",
+    "X122",
+    "X78h",
+    "X93e",
+    "X24f",
+    "X84",
+    "X10c",
+    "X14d",
+    "X117e",
+    "X117f"
+   ]
+  },
+  "new valid cases": {
+   "run": 9,
+   "passed": 9,
+   "ids": [
+    "V67",
+    "V73",
+    "V69b",
+    "V69b-v",
+    "V72",
+    "V54",
+    "V55",
+    "V52",
+    "V28b"
+   ]
+  },
+  "M10 property (not a table row): _v5_state() before any tracer": {
+   "run": 1,
+   "passed": 1,
+   "ids": [
+    "M10-S0"
+   ]
+  },
+  "v5e cases kept (every other v5e case keeps its id and outcome)": {
+   "run": 13,
+   "passed": 13,
+   "ids": [
+    "V01",
+    "X40",
+    "X55",
+    "X59",
+    "V07",
+    "X33",
+    "X73",
+    "V18",
+    "X76",
+    "X60",
+    "V14",
+    "X109",
+    "X32"
+   ]
+  },
+  "v5e cases whose outcome changes": {
+   "run": 2,
+   "passed": 2,
+   "ids": [
+    "X90/X91",
+    "V34"
+   ]
+  }
+ },
+ "coverage_of_design_tables": {
+  "new violation cases": {
+   "rows_in_design": 137,
+   "cases_in_runner": 36
+  },
+  "new valid cases": {
+   "rows_in_design": 45,
+   "cases_in_runner": 9
+  },
+  "new documented residuals": {
+   "rows_in_design": 10,
+   "cases_in_runner": 0
+  },
+  "exam-hole kill cases": {
+   "rows_in_design": 30,
+   "cases_in_runner": 0
+  },
+  "v5e cases whose outcome changes": {
+   "rows_in_design": 20,
+   "cases_in_runner": 1
+  }
+ },
+ "tables_not_yet_covered": [
+  "new documented residuals (R05b-R22)",
+  "exam-hole kill cases",
+  "v5e cases whose outcome changes",
+  "hazard sweeps (H1-H10)",
+  "mutation audit witnesses not already in the case tables",
+  "the rest of the new violation and valid cases",
+  "the v5e cases kept (the v5e case tables)"
+ ],
+ "n_cases_run": 60,
+ "n_passed": 60,
+ "verdict": "PASS",
+ "seconds": 1.86
+}

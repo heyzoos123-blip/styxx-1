@@ -602,6 +602,11 @@ Readings the text does not fix. None is chosen here: each is recorded, and the r
 | GAP-42 | X137h: P and S open no section, so the score order gives SECTION_ABSENT, not the row's NOT_EXERCISED | **yes** (the row's outcome contradicts the score order) |
 | GAP-43 | X154c: "frees styxx's id (from `_v5_state()["tool"]`)" while `tool` is still None at the first acquisition | no (the row's outcome names id 4) |
 | GAP-44 | X158d: `ref_v5f.py` gives P CODE_SWAPPED, not the row's PASS `{f:1}` | **yes** (the row's outcome contradicts the mechanism text under greenlets) |
+| GAP-45 | G_SIG poison (revision 3, N8) and G_FI C5: "any field but `cut` and `tool`" has no R9-6 exemption for `tool_ours` | **yes** (a correct implementation fails H10/G_SIG when a cell makes the process's first acquisition) |
+| GAP-46 | kept v5e rows X72 and X73: their v5e sub-assertion requires v5e's NOT_EXERCISED sentence, which v5f's fixed sentence replaced | **yes** (kept rows that `ref_v5f.py` scores differently; revision 11 calls that a spec defect) |
+| GAP-47 | the override for `R-MECHANISM_AND_LIFECYCLE_M3-020` names an atom whose text revision 11 corrected (F39) | no (its two successor atoms are witnessed by X137j under rule 2) |
+| GAP-48 | rule 3 (revision 11): 25 D atoms name only a gate, an invariant or a model property, and no case or pinned residual | **yes** (rule 3: "one that does not is a gap, and the freeze waits for it") |
+| GAP-49 | H9: X140 cannot detect the SM1 mutant "X3 inside `with _M:`" as the text shapes it; and X140's scenario does not say whether the cancelled `run_async` opening completes | **yes** (an SM1 row whose named witness does not kill it) |
 
 **GAP-38. CLONE_ALIVE (b) reads a freeze-count rise that no `gc.freeze()` caused.**
 - *What the text says.* Tripwires: (b) fires when `gc.get_freeze_count() > m.freeze0` and references remain unexplained, with the message "gc.freeze() ran while the minted code existed". The paragraph after it says the count falls with no freeze call, and that `gc.unfreeze()` sets it to 0. It adds that "only a `gc.freeze()` made after the mint can freeze" a clone, "and that call raises the count".
@@ -652,4 +657,59 @@ Readings the text does not fix. None is chosen here: each is recorded, and the r
 
   The row's expectation matched the revision-8 prototype, which the exam author may not read. The reference follows the text.
 - *Fix needed.* Either change X158d's expected outcome, or state how the liveness test or the exit treats a core pruned during its own exit transaction.
+
+**GAP-45. The poison test (G_SIG, and C5's test in G_FI) vs `tool_ours` at the first acquisition.**
+- *What the text says.* G_SIG, "Poison (revision 3, N8)": a cell is poisoned "if `_v5_state()` after it differs from the snapshot taken before the cell in any field but `cut` and `tool` (C5's test)". R9-6 (revision 10) added the `tool_ours` exemption to the *leftover check* only, for the same reason: `tool_ours` goes False to True at the process's first acquisition.
+- *What happens.* H10 run first in a process (`--only H10`, or any process where no tracer ran before the cell): cell (a)'s "before" snapshot has `tool` None and `tool_ours` False, and after the cell `tool_ours` is True. The poison test flags cell (a) as poisoned, on 3.12.3 and 3.13.12, with 0 lost handlers and a clean probe cycle. In the full runner, where earlier cases already acquired the id, the test passes. The same wording is used by G_FI's C5, so the frozen `crash_sweep_v5f.py` and `sigflood_v5f.py` meet it wherever their first point or cell makes the first acquisition.
+- *Readings left open.* Either the poison test and C5 take R9-6's narrow exemption (`tool_ours` when "before" `tool` is None), or the frozen harnesses must acquire the id before the first snapshot (a warm-up trace), which the text does not state.
+- *In the runner.* The test stays as written (`_poisoned`: every field but `cut` and `tool`). When a cell is poisoned *only* by `tool_ours` and its "before" `tool` was None, H10 fails with `KnownGapFailure: GAP-45` after every other check has passed, and the receipt lists it with the known spec gaps. Any other poison is a plain failure.
+
+**GAP-46. Kept rows X72 and X73: the v5e NOT_EXERCISED sentence.**
+- *The data.* `rev11/v5e_cases_kept.json` keeps X72 and X73 (status `kept`, v5f outcome NOT_EXERCISED, "every sub-assertion the v5e runner makes for this id, as v5e"). The v5e runner registers both as `msg_case(x7N, NE_WORDING, FIXED_SENTENCE, forbid=("never executed",))`, so the refusal must contain v5e's fixed sentence "work on other threads, pools, executors or asyncio tasks is credited only to a section that work opens itself".
+- *The text.* v5f's score step (Scoring, "NOT_EXERCISED") fixes a different sentence: "work on other threads, pools, executors, child processes or asyncio tasks is credited only to a section that work opens itself; …". `ref_v5f.py` uses the v5f sentence.
+- *What happens.* On 3.12.3 and 3.13.12 both rows refuse NOT_EXERCISED with the right code, `NE_WORDING`, both counts and the non-returned end; they fail only the v5e sentence substring (`v5e:X72`, `v5e:X73` in the receipts). Revision 11 says a kept row that `ref_v5f.py` scores differently is a spec defect. Not adapted.
+- *Fix needed.* Mark the sentence sub-assertion of X72 and X73 as replaced (by v5f's sentence) in the data file, or change the v5f sentence.
+- *In the runner.* Both assert the v5e sub-assertions as written and are listed with the known spec gaps.
+
+**GAP-47. An override that names a replaced atom.**
+- *What happens.* `atom_witness_overrides_rev11.json` rules on `R-MECHANISM_AND_LIFECYCLE_M3-020` (W141). Revision 11 also corrected that sentence (F39: "M3 is corrected"), so the revision-11 text has no atom with that id's text; the reconciliation gives its two successor sentences new ids (`R-MECHANISM_AND_LIFECYCLE_M3-R11-001`, `-002`).
+- *In rules_v5f.json.* The override is reported under `overrides_rev11_not_found` and applied to nothing. Both successors are P under rule 2 and name X137j, which is checkable, so no witness is missing. Carrying the override to the successors would be a reading; it is not done.
+- *Fix needed.* Re-key the override to the corrected sentence, or state that it lapses with the text it ruled on.
+
+**GAP-48. Rule 3's sharpened D test leaves 25 D atoms without a witness.**
+- *The rule.* Revision 11, rule 3: "A D claim, a disclosure, is witnessed by a case or a pinned residual whose outcome shows the disclosed behaviour, or is filed as reading." A gate, an invariant (U3, I5) or a model property is none of these. The reconciliation (`tools/reconcile11.py`) applies the rule as written: for class D, only a named case id (X, V, R or H) counts.
+- *What is left.* 25 D atoms whose own list row, map entry, or enclosing text names only a gate (G_SIG, G_FI, G_ATOM, G3), an invariant (U3, U4, I5) or a model configuration:
+  - `R-MECHANISM_AND_LIFECYCLE_M7-033` (rule1:wide_list; named: invariants: U3): "In `_unwind_off` that can leave S set with no anchor after the pop, until the next close that leaves no anchor or the next reconciliation (U…"
+  - `R-EXCEPTION_SAFETY_MODEL-157` (rule2_table; named: invariants: I5): "**Audit hooks and slow owners.** An audit hook that blocks inside a transaction holds the mutex, and other threads' transactions raise MACHI…"
+  - `R-EXCEPTION_SAFETY_MODEL-160` (rule1:rev9_new_sentences_classified_rev11; named: model lock-taking configuration (any site; W5); I5 bound): "They also run at `_alive`'s `sys._current_frames`, `id()` and `f_code` reads in every reconciliation that tests a holder, which is the first…"
+  - `R-EXCEPTION_SAFETY_MODEL-161` (rule2_table; named: invariants: I5; probes: rev5/m5_modelcheck.py): "The waiter's bound breaks it after 10 s (I5; `rev5/m5_modelcheck.py`, `with L: exit(X) // exit(Y)+[lock]`: a true deadlock with the bound re…"
+  - `R-EXCEPTION_SAFETY_MODEL-162` (rule2_table; named: invariants: I5): "A hook that raises at `register_callback` inside X5 makes `__exit__` propagate it (M5).…"
+  - `R-EXCEPTION_SAFETY_MODEL-181` (rule2_table; named: gates: G_FI): "The v5f machine must pass the same sweep, extended to two threads, `run_async`, generator targets and hopped coroutine sections (G_FI).…"
+  - `R-OVER_BLOCKING_DISCLOSED-022` (rule2_table; named: gates: G_ATOM): "This refuses most users' interpreters today; it is the price of not trusting an undocumented CPython property on a patch level where nobody …"
+  - `R-OVER_BLOCKING_DISCLOSED-026` (rule1:wide_list; named: G_ATOM build record (id 56)): "(revision 7, N2; a scope note, not a refusal) nothing refuses a different *build* of 3.12.3 or 3.13.12; such a build is accepted but its pre…"
+  - `R-OVER_BLOCKING_DISCLOSED-059` (rule1:rev9_new_sentences_classified_rev11; named: model lock-taking configuration; I5 bound (W5)): "The audit-hook sites inside a transaction include `__code__` writes and, as revision 6 corrects (B1), `sys.monitoring.register_callback`, wh…"
+  - `R-OVER_BLOCKING_DISCLOSED-060` (rule1:rev9_new_sentences_classified_rev11; named: model lock-taking configuration; I5 bound (W5)): "(Revision 8 self-audit, W5: the reconciliation's holder test, `_alive`, also raises `sys._current_frames`, `builtins.id` and `object.__getat…"
+  - `R-STATED_LIMITS-001` (rule2_table; named: gates: G3): "**Carried forward.** Exercised is not tested: one call satisfies a declaration.…"
+  - `R-STATED_LIMITS-002` (rule2_table; named: gates: G3): "Transitive calls count.…"
+  - `R-STATED_LIMITS-004` (rule2_table; named: gates: G3): "The trace is written by the runner, so forgery is an accepted residual under an honest-but-careless threat model.…"
+  - `R-STATED_LIMITS-005` (rule2_table; named: gates: G3): "Hardcoded values (P1's G3) are out of scope.…"
+  - `R-STATED_LIMITS-029` (rule2_table; named: invariants: U3, U4): "An asynchronous Exception subclass landing in the declared module's import, or in its PEP 562 `__getattr__`, becomes a chained UNRESOLVED.…"
+  - `R-STATED_LIMITS-030` (rule2_table; named: invariants: U3, U4): "An asynchronous exception during that import can also leave importlib's per-module lock inconsistent.…"
+  - `R-STATED_LIMITS-031` (rule2_table; named: invariants: U3, U4): "That is CPython's behaviour: D1 observed it on 3.10 and 3.11. It was not measured on 3.12 or 3.13, where the lock's own wait loop is also ex…"
+  - `R-STATED_LIMITS-033` (rule2_table; named: invariants: U3, U4): "M7 states the exceptions exactly (U3 and U4).…"
+  - `R-STATED_LIMITS-035` (rule2_table; named: invariants: U3, U4): "It lasts until that trace's exit, or until a reconciliation prunes it once the trace is dead.…"
+  - `R-STATED_LIMITS-040` (rule2_table; named: gates: G_SIG): "Near the recursion limit, a callback's own frame can raise RecursionError at those same points.…"
+  - `R-STATED_LIMITS-043` (rule2_table; named: gates: G_SIG): "G_SIG re-measures this with v5f's full event set.…"
+  - `R-STATED_LIMITS-060` (rule2_table; named: gates: G_SIG): "**G_SIG (frozen decision).** L-DELIVERY does not count as a "wrong result" under G_SIG.…"
+  - `R-STATED_LIMITS-062` (rule2_table; named: gates: G_SIG; invariants: U3): "Revision 3 (MF2) fixes the cell's shape so the gate does not depend on a fault window.…"
+  - `R-STATED_LIMITS-106` (rule1:rev7_list; named: `critic4/a6_pending_left_fault_free.py`; G_FI C5's exclusion): "Revision 4 could raise ValueError out of `run()` or a transaction here. - **Pending entries.** A pending entry whose confirmation never arri…"
+  - `R-STATED_LIMITS-109` (rule1:wide_list; named: gates: G_ATOM): "It never sees code inside callbacks or unconfirmed calls, and it is never evidence. - **Scope of testing.** CPython 3.12.3 and 3.13.12, GIL …"
+- *Readings left open.* Either rule 3 also admits a gate cell or an invariant for a D claim (as revision 10's definition did), or each of these needs a case, a pinned residual, or a "reading" filing. Some may not be disclosures at all (for example `R-STATED_LIMITS-060`, a frozen G_SIG decision, and `R-STATED_LIMITS-001`/`-002`, carried-forward scope statements); their class comes from the lists and the table, which the exam author does not re-class.
+
+**GAP-49. H9's mutant and X140.**
+- *What the text says.* H9: "**Mutant** (an SM1 row): `ref_v5f.py`'s X3 detach loop placed inside `with _M:`, where `_M` is a `threading.Lock` that `_exit_txn` also takes (v5e's shape). X140 must detect it on both versions: the exception raised at the back-edge offset skips the with-exit (p10), and another thread's exit then hangs." X140: "in a scenario with 3 openings (one `run_async`, driven through a thrown-then-handled cancellation)"; "A back-edge in `_exit` gives TRACE_INCOMPLETE".
+- *First, the scenario.* X3's loop runs only over openings still open at exit. If the cancelled coroutine completes after handling the cancellation, no opening is open at exit and X3's back-edge is never reached (UNREACHED, counted clean), so no weakening of X3 can be detected. If it stays suspended, X3 runs. The row does not say which. The runner runs both variants, (a) completes and (b) stays suspended through exit, and asserts the row's outcome in each.
+- *Second, the mutant.* With the mutant built as the text says (`tools/runner_mutants_v5f.py`, `mut_h9_x3_in_lock`: `with _M:` around the X3 loop, `_exit_txn` run under `with _M:`), variant (b) reaches X3's back-edge (3.12.3: `_exit@348`), and the injector raises KeyboardInterrupt there. But the back-edge lies inside the `with` block's exception-table range on both verified interpreters (3.12.3: `240 to 350 -> 904 [1] lasti`; 3.13.12: the same shape), so the with-exit runs, `_M` is released, and the trial is clean. X140 passes the mutant on 3.12.3 and 3.13.12 in both variants.
+- *Readings left open.* The mutant may need a different shape (for example the `with` inside the loop, or a loop in a `try` whose range ends before the back-edge, as in #130279), or the witness may be a different case. The exam author does not choose one.
+- *In the runner.* X140 runs both variants; `mut_h9_x3_in_lock` is reported SURVIVED under this gap.
 

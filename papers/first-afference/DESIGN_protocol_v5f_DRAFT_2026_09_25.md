@@ -2,7 +2,7 @@
 
 **Revision 9 (2026-09-29).** Revision 8 plus the answers to the exam author's 27 spec gaps (`v5f_exam/SPEC_GAPS.md`), each resolved in the text; see "Revision 9: spec gaps from the exam author" at the end.
 
-**Status: FREEZE_READY (text), pending the reference.** Every gap the exam author raised is closed in the text, with no reading left open. The freeze itself waits for three things: `ref_v5f.py` applying "Required changes to ref_v5f.py" (C1–C3) and re-running its smoke cases; the exam author reconciling `rules_v5f.json` with Appendix A's classified lists (GAP-27); and the verifier classing the 163 sentences the wide extraction finds new in this text (Appendix A, "The classified lists are spec data").
+**Status: FREEZE_READY (text), pending the reference.** Every gap the exam author raised is closed in the text, with no reading left open. The freeze itself waits for three things: `ref_v5f.py` applying "Required changes to ref_v5f.py" (C1–C3) and re-running its smoke cases; the exam author reconciling `rules_v5f.json` with Appendix A's classified lists (GAP-27); and the verifier classing the 164 sentences the wide extraction finds new in this text (Appendix A, "The classified lists are spec data").
 
 **Basis.** Both judges chose the "claim-and-reconcile" design (D1), and this spec starts from it. Judge 1 restricted it to its sys.monitoring adapter on CPython 3.12/3.13. Judge 2 kept it whole and asked the panel to decide 3.11 explicitly. From D1 this spec keeps:
 
@@ -3327,7 +3327,7 @@ The rule for `rules_v5f.json`, applied by the exam author before the freeze:
 2. Any other atom is classed by the table at the top of this appendix. A heading, a definition or a restatement is H or S, and names the section it summarizes.
 3. Every atom classed P, D or C that still names no witness (a case, a gate clause, a model property, or for C the probe) is reported to the spec owner as a new gap, and the freeze waits for it.
 
-The extraction itself must also run again on the text that is frozen (above: "Each extraction must run on the text that is frozen, after its last edit"). Run on the revision-9 text as first committed, `verify8/extract_wide.py` finds 1,336 sentences with a wide keyword, of which 163 are not in the revision-8 list (15 of them also carry a revision-7 keyword): the verifier's own post-extraction edits and revision 9's. They are listed in `rev9/appendix_a/rev9_new_sentences.json`. Revision 9's own normative sentences name their witnesses in the Revision 9 table; classing all 163 by the table is the verifier's pre-freeze duty, and it is not done in this revision.
+The extraction itself must also run again on the text that is frozen (above: "Each extraction must run on the text that is frozen, after its last edit"). Run on the revision-9 text as first committed, `verify8/extract_wide.py` finds 1,337 sentences with a wide keyword, of which 164 are not in the revision-8 list (15 of them also carry a revision-7 keyword): the verifier's own post-extraction edits and revision 9's. They are listed in `rev9/appendix_a/rev9_new_sentences.json`. Revision 9's own normative sentences name their witnesses in the Revision 9 table; classing all 164 by the table is the verifier's pre-freeze duty, and it is not done in this revision.
 
 ---
 
@@ -3339,7 +3339,9 @@ The revision-9 probes are committed in the repository, in `papers/first-afferenc
 - `rev9/p_gaps.py` (`out_gaps.txt`): the `sys.monitoring` event values; `sys.monitoring.get_local_events` is a C builtin of `sys.monitoring`, raises no audit event, and never raises on an unused, freed or foreign-held id; `asyncio.events._get_running_loop` is the builtin `_get_running_loop` of the C module `_asyncio`;
 - `rev9/build.py`, `rev9/witness.py`, `rev9/run_witness.sh` (`out_witness.txt`): `build.py` applies this revision's GAP-02 and GAP-03 text to a copy of `ref_v5f.py` (`ref9.py`, generated, not committed) and builds three single-rule mutants of it; `witness.py` runs the new cases V69b, X156f and X156g, and V69b's lying variant, one fresh process per case;
 - `rev9/p_texts.py` (`out_texts.txt`): `_v5_state()` before the first `coverage_trace()`, the LAZY_RESULT "not started" test for each lazy type, and the three NO_TRACE texts, through `ref_v5f.py`;
-- `rev9/p_order.py` (`out_order.txt`): the order of the problems an exit records, through `ref_v5f.py` (new case X59e).
+- `rev9/p_order.py` (`out_order.txt`): the order of the problems an exit records, through `ref_v5f.py`, `ref9.py` and two order mutants (new case X59e);
+- `rev9/run_smoke_ref9.sh` (`out_smoke_ref9.txt`): the exam author's `smoke_cases.py` against `ref9.py`;
+- `rev9/appendix_a/`: Appendix A's revision-8 wide list, and `rev9_new_sentences.json`, the sentences the wide extraction finds in this text that the list lacks (GAP-27).
 
 | gap | the gap | normative resolution (sections changed) | ref |
 |---|---|---|---|
@@ -3376,6 +3378,18 @@ The revision-9 probes are committed in the repository, in `papers/first-afferenc
 - **GAP-02, rejected: bind once, like `_MON`.** Re-checking and re-binding at every `coverage_trace()` makes a wrapper installed after the first binding refuse loudly instead of being ignored silently. Both are sound, and the re-bound form keeps the author's reading.
 - **GAP-11, rejected: stop the NESTED walk at a foreign-loop anchor.** It would mirror M6 exactly, but it changes the reference for a shape that needs the running loop changed twice on one stack. The skip is sound (it can only over-block) and is disclosed.
 
+### Found while resolving (not raised by the exam author)
+- **F33. The `_get_running_loop` check is not only hygiene.** Revision 8's claim that the loop boundary "runs no user code" rested on a binding nobody checked. X156g shows the consequence of an unchecked binding: a pure-Python replacement that returns None credits X65d's shape, an over-credit, not only an extra call.
+- **F34. The LAZY_RESULT "not started" test has one cross-version shape.** An async generator whose `aclose()` awaitable is created and closed without being awaited reads as not started on 3.12.3 and as closed on 3.13.12 (`rev9/out_texts.txt`). The text now fixes the test (`inspect`'s CREATED state), so both implementations agree on each interpreter; no case uses the shape, and G_XVER is unaffected.
+- **F35. The reference with C1–C3 passes the exam author's smoke cases.** `rev9/run_smoke_ref9.sh` runs `v5f_exam/smoke_cases.py` against `build.py`'s `ref9.py`: 39 of 39 on both verified interpreters (`rev9/out_smoke_ref9.txt`), the same as `ref_v5f.py` itself.
+- **F36. `_v5_state()`'s `guard` field had no rule.** The exam author did not raise it, and the reference's rule (the last token of the chain: free, live or dead) is now the text's (M10).
+
+### Weakest points of revision 9, for the freeze review
+1. **The wide extraction on this text is run but not classed.** 164 sentences are new since revision 8's list (Appendix A, "The classified lists are spec data"). Revision 9's own claims name their witnesses in the table above; the rest are the verifier's post-extraction edits and must be classed before the freeze.
+2. **`rules_v5f.json`.** Its reconciliation with Appendix A's lists (GAP-27) is the exam author's, and it may raise new gaps.
+3. **The new witnesses run on the reference with the edits applied by `rev9/build.py`, not on `ref_v5f.py` as the exam author will change it.** C1–C3 are mechanical, and the author's own change must reproduce `out_witness.txt` and `out_order.txt`.
+4. **GAP-11's skip** is a disclosed over-block (#23) where a mirror of M6's walk would be exact. It was kept to leave the reference unchanged for a shape stdlib asyncio cannot build.
+
 ### Required changes to ref_v5f.py
 Each change is to `papers/first-afference/v5f_exam/ref_v5f.py`, made by the exam author. `rev9/build.py` applies C1–C3 mechanically, so its replacement strings are exact.
 - **C1 (GAP-03).** In `coverage_trace()`, the pre-binding tuple becomes `(sm.get_tool, sm.get_events, sm.set_events, sm.set_local_events, sm.register_callback, sm.use_tool_id, sm.get_local_events)`, and the check's name loop iterates the seven names `"get_tool", "get_events", "set_events", "set_local_events", "register_callback", "use_tool_id", "get_local_events"` in that order.
@@ -3383,3 +3397,4 @@ Each change is to `papers/first-afference/v5f_exam/ref_v5f.py`, made by the exam
 - **C3 (GAP-03).** In `_exit_txn`, `gle = sys.monitoring.get_local_events` becomes `gle = _MON[0][6]`. In `_v5_state()`, `sys.monitoring.get_local_events(t, m.code)` becomes `mon[6](t, m.code)`.
 - **C4 (comments only).** The `GAP-nn` comments may cite this section. The module's M1 comment for `_MON` names seven functions.
 - **Not ref changes.** The new cases X59e, V69b, X156f and X156g are for the frozen runner, with the placements their rows give. `rules_v5f.json` is reconciled as GAP-27 says. Every other gap's resolution is what `ref_v5f.py` already does.
+- **Check after the change.** With C1–C3 applied, `smoke_cases.py` passes 39 of 39 on both verified interpreters (F35), and `rev9/run_witness.sh` and `rev9/p_order.py`, pointed at the changed file, give the outputs recorded in `rev9/out_witness.txt` and `rev9/out_order.txt` for its unmutated rows.

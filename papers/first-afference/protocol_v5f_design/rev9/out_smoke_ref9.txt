@@ -1,0 +1,4 @@
+39
+CPython 3.12.3: 39/39 smoke cases pass
+39
+CPython 3.13.12: 39/39 smoke cases pass

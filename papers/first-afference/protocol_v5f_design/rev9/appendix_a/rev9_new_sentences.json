@@ -1,0 +1,2016 @@
+[
+{
+"id": 1,
+"line": 5,
+"top": "",
+"sec": "",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "**Status: FREEZE_READY (text), pending the reference.** Every gap the exam author raised is closed in the text, with no reading left open."
+},
+{
+"id": 5,
+"line": 20,
+"top": "",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": true,
+"text": "**Mutation-gate additions.** The G_SEM positive control (the gate must fail on v5e with v5e's frozen exam); the every-site generic operator catalog, where a mutant that compiles byte-identical (TCE) counts as equivalent by construction; and the G_FI and G_SIG companion gates with named allowed windows."
+},
+{
+"id": 37,
+"line": 134,
+"top": "",
+"sec": "Verified in scratch, and what was not",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- `m1_pairs_modelcheck`: every interleaving, at the granularity of single C operations, of every pair of concurrent transitions (open, close, exit of the same tracer and of another, a second exit, a reconciliation that prunes), plus four triples, with up to two faults; revision 3, revision 3 with its test-and-clear split, and revision 4."
+},
+{
+"id": 43,
+"line": 160,
+"top": "",
+"sec": "Verified in scratch, and what was not",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "They run against `rev7/mech7.py`, which is `rev6/mech6.py` copied with revision 7's rules behind single-rule mutants (the repaired callback counted, a same-id re-take counted, the binding check at every `coverage_trace()`, the deque check, the version read at call time) and with mint joining, which `mech6.py` lacked."
+},
+{
+"id": 45,
+"line": 175,
+"top": "",
+"sec": "Verified in scratch, and what was not",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "**Not verified: the v5f combination as a whole.** No prototype yet combines D1's machine with confirmation, coherence on every link, the freeze clause, `_v5_state()`/`_v5_faultpoints()`, the callback re-registration check in MONITOR_LOST, the deletion of `_TH`, and uncredited counting on every thread."
+},
+{
+"id": 62,
+"line": 193,
+"top": "Delta from v5e, section by section",
+"sec": "",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "New: the robust mutex (`_GUARD` and `_Txn` tokens), per-tracer monotone `marks`, reconciliation, sys.monitoring tool id 4 or 3 under a per-copy tool name (local events on minted code; global PY_UNWIND only while some section is open, from revision 2), per-mint pending entries, the at-fork handler, `_v5_state()` and `_v5_faultpoints()`."
+},
+{
+"id": 89,
+"line": 242,
+"top": "Target identity",
+"sec": "Resolution (at `__enter__`, every target, before anything global is touched; the function `_resolve_target`)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- If `callee is None or callee is not stamped`, refuse **NOT_A_FUNCTION**: \"the wrapper calls `<callee>`; its `__wrapped__` names a different object (a `<T>`); declare the function the wrapper calls\"."
+},
+{
+"id": 90,
+"line": 242,
+"top": "Target identity",
+"sec": "Resolution (at `__enter__`, every target, before anything global is touched; the function `_resolve_target`)",
+"code": false,
+"kw": [
+"no",
+"none"
+],
+"old": false,
+"text": "`<callee>` is the callee's `module:qualname`, with the module named by Provenance (d)'s rule applied to the callee, or \"no single Python function\" when `callee` is None."
+},
+{
+"id": 91,
+"line": 242,
+"top": "Target identity",
+"sec": "Resolution (at `__enter__`, every target, before anything global is touched; the function `_resolve_target`)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "`<T>` is `_TYPE_QUAL.__get__(type(stamped))` (for example `function`, or `NoneType` when there is no own-dict `__wrapped__`)."
+},
+{
+"id": 92,
+"line": 242,
+"top": "Target identity",
+"sec": "Resolution (at `__enter__`, every target, before anything global is touched; the function `_resolve_target`)",
+"code": false,
+"kw": [
+"only"
+],
+"old": true,
+"text": "The stamp is named by its type only, never by its name or `repr()` (revision 9, GAP-07: revision 8's template named `<stamped>`, which in X24c is `power_ref`, while X24c requires that the message never name `power_ref`)."
+},
+{
+"id": 93,
+"line": 242,
+"top": "Target identity",
+"sec": "Resolution (at `__enter__`, every target, before anything global is touched; the function `_resolve_target`)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "SM2 compares only the `<callee>` part."
+},
+{
+"id": 96,
+"line": 249,
+"top": "Target identity",
+"sec": "Resolution (at `__enter__`, every target, before anything global is touched; the function `_resolve_target`)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "The message has two forms (revision 2, N2): with no exact-str `__file__`, \"the declared module has no source file to tie its code to\"; with a `.pyc`/`.pyo` `__file__`, \"the declared module was loaded from compiled code `<__file__>`, not from source (a zip archive holding a `.pyc` does this); import it from its `.py` source\"."
+},
+{
+"id": 118,
+"line": 309,
+"top": "Attribution",
+"sec": "Rule (one sentence)",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "- at H's entry event (PY_START or PY_RESUME), O's anchor is registered and is met on H's `f_back` chain before the first frame that either has its `f_code` in the cut `_CUT` (every `Handle._run` and `BaseEventLoop._run_once` code seen) or is the anchor of a registered opening whose `loop` is not the thread's running asyncio loop; the running loop is `O.loop` (the *loop boundary*); and no other registered opening of O's tracer is met there (revision 9, GAP-12: revision 8's sentence did not say that a foreign-loop anchor ends the walk, which M6's walk does;"
+},
+{
+"id": 119,
+"line": 315,
+"top": "Attribution",
+"sec": "Rule (one sentence)",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "It is a C function and runs no user code: from revision 9 (GAP-02) every `coverage_trace()` checks that it is the builtin of the `_asyncio` module before binding it (M0;"
+},
+{
+"id": 128,
+"line": 344,
+"top": "Attribution",
+"sec": "At open (raised before fn runs; every refusal is also appended to `core.problems`, the record)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "The text names the section as `repr(section)` when `type(section) is str`, and otherwise as `of type <T>` with `<T>` = `_TYPE_QUAL.__get__(type(section))` (revision 9, GAP-16: formatting any other object would run its `__repr__`; this applies to every refusal text that names a section)."
+},
+{
+"id": 130,
+"line": 345,
+"top": "Attribution",
+"sec": "At open (raised before fn runs; every refusal is also appended to `core.problems`, the record)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "Anything else refuses **UNDECLARED_SECTION** without being compared or formatted: the text names only `of type <T>` (GAP-16), so X78f's variant counters stay 0."
+},
+{
+"id": 132,
+"line": 347,
+"top": "Attribution",
+"sec": "At open (raised before fn runs; every refusal is also appended to `core.problems`, the record)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "This refuses one shape in which a hit would credit only the new opening: a same-core opening with the running loop *below* a foreign-loop anchor, which needs the running loop to change twice on one stack."
+},
+{
+"id": 141,
+"line": 349,
+"top": "Attribution",
+"sec": "At open (raised before fn runs; every refusal is also appended to `core.problems`, the record)",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "Inside the `try`, any fault in them is followed by the `finally`'s `_detach`, which pops the anchor if it was stored and clears the event if no other anchor is left (`rev5/spec_rev5_eventpath.py`: a fault at every instruction of `_commit` and `_unwind_on` leaves no anchor and no event, both versions)."
+},
+{
+"id": 150,
+"line": 351,
+"top": "Attribution",
+"sec": "At open (raised before fn runs; every refusal is also appended to `core.problems`, the record)",
+"code": false,
+"kw": [
+"no",
+"none"
+],
+"old": true,
+"text": "When exit's X3 detached an appended opening before its owner's store, `_commit` then read None and registered `_ANCHORS[None] = o`, which no later `_detach` could pop: PY_UNWIND stayed set for the rest of the process and `_on_entry`'s empty-registry shortcut never applied again (the fourth critic's B1;"
+},
+{
+"id": 169,
+"line": 378,
+"top": "Attribution",
+"sec": "At close and at exit",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "Revision 9 (GAP-15) fixes both: `<type>` is `_TYPE_QUAL.__get__(type(result))`, so `generator`, `coroutine` or `async_generator`; the suffix is \" (its body had not started)\", with one leading space, appended iff the object's frame attribute (`gi_frame`, `cr_frame`, `ag_frame`) is not None and its running and suspended attributes (`gi_running`/`gi_suspended`, and the `cr_` and `ag_` pairs) are both false, which is `inspect`'s CREATED state (M11, \"Spec-fixed texts\";"
+},
+{
+"id": 170,
+"line": 378,
+"top": "Attribution",
+"sec": "At close and at exit",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "No case uses it."
+},
+{
+"id": 181,
+"line": 408,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- the build is not free-threaded: `sysconfig.get_config_var('Py_GIL_DISABLED')` is falsy, and `g = getattr(sys, '_is_gil_enabled', None)` is None or `g()` is true (revision 9, GAP-04: revision 8 wrote a `lambda` default, a nested code object that G_HYG forbids)."
+},
+{
+"id": 185,
+"line": 412,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"only"
+],
+"old": true,
+"text": "The refusal text names the interpreter and says that tracing runs only on CPython 3.12.3 and 3.13.12 GIL builds, the patch levels on which styxx's atomicity premise was verified, and that the G_ATOM probe must be run on any other."
+},
+{
+"id": 186,
+"line": 412,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"every",
+"only"
+],
+"old": false,
+"text": "Revision 9 (GAP-10): one text serves every interpreter M0 refuses (another implementation, another version or patch level, a free-threaded build), and only its `[V5:UNSUPPORTED_VERSION]` prefix is spec-fixed."
+},
+{
+"id": 193,
+"line": 418,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"every",
+"only"
+],
+"old": false,
+"text": "`_CONSUME` is a builtin method named `extend` whose `__self__` has a type that passes the type test above with the pair `('collections', 'deque')`, and whose `maxlen` is 0 (revision 7, N1: revision 6 said only \"a `collections.deque`\", and its prototype compared the type's name, so a Python subclass named `deque` that drops `maxlen` passed and kept every pipeline value;"
+},
+{
+"id": 194,
+"line": 419,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "It is read afresh at every `coverage_trace()` and, once the check passes, bound to the M1 name `_get_running_loop`, which `_open` (step 5) and `_outcome` call."
+},
+{
+"id": 195,
+"line": 419,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"every",
+"none"
+],
+"old": false,
+"text": "A pure-Python replacement would run user code at every open and every hit, and one that returns None defeats the loop boundary: X65d's shape is then credited, `{f:1}` (X156g;"
+},
+{
+"id": 199,
+"line": 426,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "NOTHING_DECLARED, when no gate declares `exercises`;"
+},
+{
+"id": 200,
+"line": 430,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"every",
+"none",
+"only"
+],
+"old": false,
+"text": "7. only now, with every check passed: `_MON[0]` is bound to the seven-tuple if it is still None, and `_get_running_loop` is bound;"
+},
+{
+"id": 201,
+"line": 431,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "`_HANDLE_DICT[0]` and `_LOOP_DICT[0]` are captured through `_TYPE_DICT` if still None;"
+},
+{
+"id": 202,
+"line": 433,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "10. the core is constructed, reading `os.getpid()` into `core.pid` (GAP-14), and the facade is built with `_CoverageTracer.__new__(_CoverageTracer)` and given `fac._core = _Core(experiment, weakref.ref(fac))` (GAP-08: the facade has no `__init__`)."
+},
+{
+"id": 203,
+"line": 435,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "A refusal at any step binds and captures nothing."
+},
+{
+"id": 204,
+"line": 435,
+"top": "Mechanism and lifecycle",
+"sec": "M0. Version gate",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "`ref_v5f.py` bound `_MON` before `import asyncio`, which revision 9 moves after step 6 so that a refused `_get_running_loop` binds nothing."
+},
+{
+"id": 211,
+"line": 451,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": true,
+"kw": [
+"none"
+],
+"old": false,
+"text": "_GUARD   = globals().get(\"_GUARD\", None)   # head of the robust-mutex succession chain; set right after class _Txn (revision 9, GAP-06)"
+},
+{
+"id": 220,
+"line": 471,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": true,
+"kw": [
+"every",
+"none"
+],
+"old": false,
+"text": "_MON     = [None]   # (get_tool, get_events, set_events, set_local_events, register_callback, use_tool_id, get_local_events): bound by the first coverage_trace(); checked at every one (M0; index 6 from revision 9, GAP-03)"
+},
+{
+"id": 221,
+"line": 472,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": true,
+"kw": [
+"every"
+],
+"old": false,
+"text": "_get_running_loop = globals().get(\"_get_running_loop\")   # revision 9 (GAP-02): asyncio.events._get_running_loop, checked and re-bound by every coverage_trace() (M0)"
+},
+{
+"id": 223,
+"line": 479,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "They are not checked at binding: `_VERIFIED` pins the patch levels, and a patch level is added only with a G_ATOM run, which uses them."
+},
+{
+"id": 224,
+"line": 480,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- **`_GUARD` (GAP-06).** Revision 8 built `_Txn(None, 0, None)` in a block that precedes the class."
+},
+{
+"id": 225,
+"line": 480,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "The block binds `_GUARD = globals().get(\"_GUARD\", None)`, and the statement immediately after `class _Txn` is `if _GUARD is None: _GUARD = {\"hint\": _Txn(None, 0, None)}`."
+},
+{
+"id": 226,
+"line": 481,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "It is None until the first `coverage_trace()` that passes the binding check, which binds it after `import asyncio` (M0, \"The order of `coverage_trace()`\")."
+},
+{
+"id": 227,
+"line": 481,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Every later `coverage_trace()` checks `asyncio.events._get_running_loop` again and re-binds it."
+},
+{
+"id": 228,
+"line": 481,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "It is bound through `globals().get`, so a reload keeps it; no machinery call runs before a `coverage_trace()` has bound it."
+},
+{
+"id": 232,
+"line": 485,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "**Reload (revision 2, N8; revision 6 lists the plain bindings; revision 9 adds `_get_running_loop` and `_GUARD`'s initial None).** Exactly these names are bound as `X = globals().get(\"X\", <initial>)`: `_BY_FN`, `_MINTED`, `_ANCHORS`, `_CUT`, `_GUARD` (initial None, then set after `class _Txn` when None), `_TOOL`, `_HANDLE_DICT`, `_LOOP_DICT`, `_LOST`, `_MON` and `_get_running_loop` (initial None);"
+},
+{
+"id": 233,
+"line": 485,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Every other name in the block is a plain binding, re-bound by a reload: the event masks `PY_START` … `PY_UNWIND` (revision 9), the constants `_TRACER_ID`, `_CACHE_WRAPPER`, `_BUSY_SECONDS`, `_LOCAL` and `_VERIFIED`, the M1 one-call vocabulary (`_map` through `_CALLBACKS5`;"
+},
+{
+"id": 234,
+"line": 485,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"every",
+"nothing",
+"only"
+],
+"old": false,
+"text": "So that exit's trace and every trace live at that exit note MONITOR_LOST, including traces entered after the reload that lost nothing; traces entered after that exit do not (`rev7/w7_witnesses.py` RELOAD: two traces live across a reload both note it, and without the count only the first to exit does; revision 8 self-audit, W3: case X158e pins it, with a trace entered after the reload and one entered after the first exit)."
+},
+{
+"id": 241,
+"line": 505,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "It defines no `__init__` (revision 9, GAP-08): `coverage_trace()` builds it with `_CoverageTracer.__new__(_CoverageTracer)` and assigns `fac._core = _Core(experiment, weakref.ref(fac))`, the core's weakref to the facade being made after the facade exists."
+},
+{
+"id": 242,
+"line": 505,
+"top": "Mechanism and lifecycle",
+"sec": "M1. Module state",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "Its only methods are `__enter__`, `__exit__`, `run`, `run_async` and `record`."
+},
+{
+"id": 276,
+"line": 553,
+"top": "Mechanism and lifecycle",
+"sec": "M3. Reconciliation (the first step of every transaction, under the mutex)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "The process's first reconciliation, at the first enter's E4 step 1 or at an X0 after a failed first enter, runs before `_ensure_tool` has stored any id, and revision 5's unguarded pipeline then called `get_tool(None)`, which raises TypeError out of the transaction (`rev6/p_first_reconcile.py`, both versions)."
+},
+{
+"id": 287,
+"line": 568,
+"top": "Mechanism and lifecycle",
+"sec": "M4. `__enter__` (the facade calls `_enter(core)`)",
+"code": false,
+"kw": [
+"no",
+"nothing"
+],
+"old": false,
+"text": "Together with revision 4's name-gated read at close (`_detach`), that lost a section's raising calls silently: the section of another trace that opened meanwhile got no event, its close's gated read saw a foreign-looking id and noted nothing, and that trace's exit saw `_LOST` unchanged and the id named (`rev5/m5_modelcheck.py`, `ext: enter(X)"
+},
+{
+"id": 296,
+"line": 573,
+"top": "Mechanism and lifecycle",
+"sec": "M4. `__enter__` (the facade calls `_enter(core)`)",
+"code": false,
+"kw": [
+"no",
+"none"
+],
+"old": false,
+"text": "With `_TOOL[0]` None (a first acquisition or an adoption), E4 makes no count of its own: no trace has entered, so none can be live."
+},
+{
+"id": 297,
+"line": 573,
+"top": "Mechanism and lifecycle",
+"sec": "M4. `__enter__` (the facade calls `_enter(core)`)",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "(Revision 8 self-audit, W4: this said \"nothing is counted\", which the in-call count contradicts."
+},
+{
+"id": 298,
+"line": 573,
+"top": "Mechanism and lifecycle",
+"sec": "M4. `__enter__` (the facade calls `_enter(core)`)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "The registration still appends one entry per previous callback that is not styxx's, five on a fresh id (M7, \"The registration\"), and `core.lost0` is read after it, so no record sees them;"
+},
+{
+"id": 299,
+"line": 573,
+"top": "Mechanism and lifecycle",
+"sec": "M4. `__enter__` (the facade calls `_enter(core)`)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "X154e.) A re-take happens when both of this transaction's reclaims (the reconciliation's and `_ensure_tool`'s) had their registration split with owner None, because an audit hook freed the id again."
+},
+{
+"id": 305,
+"line": 577,
+"top": "Mechanism and lifecycle",
+"sec": "M4. `__enter__` (the facade calls `_enter(core)`)",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "The count makes every trace live at the rebinding note MONITOR_LOST at its exit: its sections may have lost calls between the other tool's take and the rebinding, and a section open at the rebinding has no global PY_UNWIND on the new id until the next `_unwind_on` sets it (whose capture then notes it too)."
+},
+{
+"id": 306,
+"line": 577,
+"top": "Mechanism and lifecycle",
+"sec": "M4. `__enter__` (the facade calls `_enter(core)`)",
+"code": false,
+"kw": [
+"no",
+"nothing"
+],
+"old": false,
+"text": "If both ids then deliver an event of one minted frame, the pending entry is keyed by the frame, so the second delivery finds no entry and publishes nothing: no double count (revision 8 self-audit, W1: X137i, in which both ids deliver f's events)."
+},
+{
+"id": 317,
+"line": 599,
+"top": "Mechanism and lifecycle",
+"sec": "M5. `__exit__` (the facade calls `_exit(core)`; it never raises GateSpecError, and it returns False unless an exception propagates out of it)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "- a held mint's local events on `tool` differ from `_LOCAL`, read as `_MON[0][6](tool, m.code)` (revision 9, GAP-03: revision 8 named no bound function for this read, and a call-time `sys.monitoring.get_local_events` would call a wrapper installed after the first binding, V69b);"
+},
+{
+"id": 320,
+"line": 609,
+"top": "Mechanism and lifecycle",
+"sec": "M5. `__exit__` (the facade calls `_exit(core)`; it never raises GateSpecError, and it returns False unless an exception propagates out of it)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "`core.problems` holds, first, every refusal recorded at open or at enter, in the order they happened (REENTRY, TRACE_INACTIVE, UNDECLARED_SECTION, NESTED_SECTION); then X7 appends `probs`, which is, in order: X4's CLONE_CALLED texts; the `_locked` error, or else the `swapped` texts;"
+},
+{
+"id": 366,
+"line": 742,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"no",
+"only"
+],
+"old": false,
+"text": "So no thread switch, signal handler, cyclic-gc finalizer (3.12 and later run gc only at eval-breaker checks, and schedule it only from `_PyObject_GC_Link`: `critic6/a6_gc_inside_step.py`, 0 of about 3,600 gc callbacks and finalizers inside a consuming call with 2,000 tracked allocations at threshold 1) or asynchronous exception lands there, and no greenlet switch."
+},
+{
+"id": 368,
+"line": 742,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"every",
+"none",
+"only"
+],
+"old": true,
+"text": "RecursionError cannot land after a step's first write: every pipeline callable is a vectorcall callable on both versions (`critic6/a4_vectorcall.py`, `a5_recursion_inside_step.py`), and a depth sweep across the recursion boundary finds only full effects or none (`critic8/c4`; frozen as G_ATOM part R in revision 8, N3)."
+},
+{
+"id": 369,
+"line": 742,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "Of the `sys.monitoring` functions styxx calls, `get_tool`, `get_events`, `set_events`, `set_local_events`, `use_tool_id` and (revision 9) `get_local_events` raise no audit event (`rev9/p_gaps.py` for the last);"
+},
+{
+"id": 378,
+"line": 750,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"no",
+"only"
+],
+"old": true,
+"text": "- *Gc and signals (part D2, revision 6; count-bounded in revision 8, G_ATOM).* Revision 5's part D did not discriminate: its two-statement control also showed 0 violations (the sixth critic's M5), because its finalizer and handler registered an anchor only while `'closer'` was in the registry, which is false exactly in the control's window, and because the control has no eval-breaker check between its test and its write."
+},
+{
+"id": 379,
+"line": 750,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": true,
+"text": "A cyclic-gc finalizer and a 20 µs SIGALRM handler, each registering an anchor, at gc threshold 1, 3 s per form: the one-call step 0 violations in 8,701 / 9,162 closes (3.12.3 / 3.13.12); the Python-call control 2,303 / 3,336; revision 5's two-statement control 0 / 0, which is why part D proved nothing."
+},
+{
+"id": 390,
+"line": 755,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- exchange n landed on the id as `owner` holds it: on styxx's id if `owner is _TOOL_NAME`, on an unowned id if `owner` is None (nobody's callbacks are replaced), and otherwise on the id of the tool that owns it now, whose callback for `_EVENTS5[n-1]` styxx then replaced with its own. styxx does not restore it: a restoring `register_callback` would run an audit hook before its own exchange, and could overwrite a callback that tool registered meanwhile;"
+},
+{
+"id": 396,
+"line": 759,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "So a split is noted by the exit that made it, and by every other trace live at that moment: while another tool holds the id, no exit's registration on it is complete, and a later complete registration needs a reclaim of that id (after its owner frees it), a re-take, or a rebinding to the other id, each of which appends to `_LOST`."
+},
+{
+"id": 404,
+"line": 759,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"every",
+"no",
+"nothing"
+],
+"old": false,
+"text": "`rev6/r6_b1_register.py` runs the critic's shape at each of the five hooks on both versions: revision 5's form replaced 1–3 of the foreign tool's callbacks and reported nothing; revision 6's replaced at most one (at hooks 1, 3 and 5; at hooks 2 and 4 the foreign tool had no callback for that event), and every trial reported the split with the foreign owner."
+},
+{
+"id": 447,
+"line": 792,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "The silent shapes, all outside parties that undo their own change before a machinery step reads it: a party that cleared S sets it again itself; a party that replaced a callback restores it before any exit registers; a party that cleared a mint's local events sets them again before every holder's exit."
+},
+{
+"id": 469,
+"line": 825,
+"top": "Mechanism and lifecycle",
+"sec": "M7. `_open`, `_commit`, `_run`, `_run_async`, `_detach` (no mutex)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- `rev4/s4_stress.py`: revision 3's s1 with a forced hand-off (probability 0.3) at every protocol statement boundary, including between the test and the clear, plus 3 open-versus-own-exit races per round. 100 rounds × 3 seeds × 3 modes (clean, faults without dead anchors, all faults) × with and without the exit races, per version: 36 runs per revision."
+},
+{
+"id": 481,
+"line": 841,
+"top": "Mechanism and lifecycle",
+"sec": "M8. `record()` is pure",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "Both texts are byte-exact templates, with no placeholder; the backticks are this document's markup, not message text (M11, \"Spec-fixed texts\"; revision 9, GAP-15)."
+},
+{
+"id": 483,
+"line": 848,
+"top": "Mechanism and lifecycle",
+"sec": "M9. The at-fork handler",
+"code": false,
+"kw": [
+"no",
+"none"
+],
+"old": false,
+"text": "Revision 9 (GAP-24): \"no-op\" means `_forget_in_child` returns at its first statement iff `_MON[0] is None`."
+},
+{
+"id": 484,
+"line": 848,
+"top": "Mechanism and lifecycle",
+"sec": "M9. The at-fork handler",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Revision 9 (GAP-23): the registration runs on every execution of the module, so each `importlib.reload` registers one more handler, and a child runs one per load, oldest first."
+},
+{
+"id": 485,
+"line": 848,
+"top": "Mechanism and lifecycle",
+"sec": "M9. The at-fork handler",
+"code": false,
+"kw": [
+"every",
+"nothing"
+],
+"old": false,
+"text": "Every handler reads the same globals (a reload re-runs the module in the same dict), and a second run finds `_ANCHORS`, `_BY_FN` and `_MINTED` already empty and the id's events already cleared, so the extra runs change nothing."
+},
+{
+"id": 493,
+"line": 864,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"none"
+],
+"old": true,
+"text": "`holders` is `len(m.holders)`, `installed` is `m.fn.__code__ is m.code`, `pending` is `len(m.pend)`, and `local_events` is `_MON[0][6](_TOOL[0], m.code)`, or 0 when `_TOOL[0]` or `_MON[0]` is None (revision 9, GAP-03: the bound function, never `sys.monitoring`'s attribute at call time; it never raises, even on a freed or foreign-held id, `rev9/p_gaps.py`);"
+},
+{
+"id": 494,
+"line": 866,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- `\"guard\"`: `\"free\" | \"held\" | \"dead\"`: `\"free\"` when the last token of the succession chain (M2's walk) has `tid` None, `\"held\"` when it is live (`_alive`), and `\"dead\"` otherwise (revision 9 states the rule `ref_v5f.py` implements);"
+},
+{
+"id": 495,
+"line": 868,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"no",
+"none"
+],
+"old": false,
+"text": "Revision 9 (GAP-05): before the first capture of `_HANDLE_DICT[0]` it is True, because no captured binding can have moved: the field is `_HANDLE_DICT[0] is None or _cut_ok()`."
+},
+{
+"id": 496,
+"line": 868,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "Revision 8's `_cut_ok()` read `_HANDLE_DICT[0].get` on None, so a snapshot taken before any tracer (G_FI's `S0` in a fresh process, a subprocess case's \"before\" snapshot) raised;"
+},
+{
+"id": 497,
+"line": 869,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- `\"tool\"`: `_TOOL[0]`, an int or None;"
+},
+{
+"id": 498,
+"line": 870,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- `\"tool_ours\"`: bool, `_ours()`, and False while `_MON[0]` is None;"
+},
+{
+"id": 499,
+"line": 871,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "- `\"global_events\"`: int, `_MON[0][1](_TOOL[0])`, and 0 while `_TOOL[0]` or `_MON[0]` is None;"
+},
+{
+"id": 500,
+"line": 874,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "Before the first `coverage_trace()` of the process `_v5_state()` is `{\"mints\": [], \"anchors\": 0, \"guard\": \"free\", \"cut\": 0, \"cut_current\": True, \"tool\": None, \"tool_ours\": False, \"global_events\": 0, \"pid\": …}` (`rev9/out_texts.txt`, both versions)."
+},
+{
+"id": 502,
+"line": 880,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"no",
+"only"
+],
+"old": false,
+"text": "The facade's methods are exactly `__enter__`, `__exit__`, `run`, `run_async` and `record`, with no `__init__` (it is built by `coverage_trace()`, M0 step 10); each plain-data class has `__slots__` and `__init__` only."
+},
+{
+"id": 504,
+"line": 884,
+"top": "Mechanism and lifecycle",
+"sec": "M10. The introspection interface (frozen with the prereg; the only private surface the exam may read, and, for G_ATOM only, the G_ATOM interface)",
+"code": false,
+"kw": [
+"no",
+"only"
+],
+"old": false,
+"text": "- **The G_ATOM interface (revision 7, M1; frozen with the prereg, read by G_ATOM only).** G_ATOM has to put each step function into each of its gate outcomes, and some of those outcomes need an opening that is not registered, several armed openings, a registered key that no section owns, and the id given back to styxx after a case in which another tool held it."
+},
+{
+"id": 515,
+"line": 900,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"only"
+],
+"old": true,
+"text": "- **NOT_EXERCISED.** The fixed sentence reads: \"work on other threads, pools, executors, child processes or asyncio tasks is credited only to a section that work opens itself; generator and coroutine objects created before the trace are never credited; a call counts only when it returns, yields or raises from inside its body while the tracer is active\"."
+},
+{
+"id": 519,
+"line": 904,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- (revision 9, GAP-18) Every metric and composition path is walked one key at a time: while the current value `x` has `issubclass(type(x), dict)`, the next is `dict.get(x, k, <sentinel>)`; a non-dict value or the sentinel ends the walk as \"not present\"."
+},
+{
+"id": 520,
+"line": 904,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "No `isinstance`, `in` or `[]` is applied to result data."
+},
+{
+"id": 521,
+"line": 904,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "`score()` is not changed by this: it keeps v4's `_resolve` and v5e's `isinstance(_v, numbers.Real)` guard, and M11's only change to it is the `float()` OverflowError rule below."
+},
+{
+"id": 524,
+"line": 907,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Revision 9 (GAP-17) states the rule exactly: the note is \"smoke run\" iff smoke is truthy and `present` is false; in every other refusal it is `str(e)`, with the suffix iff smoke is truthy."
+},
+{
+"id": 525,
+"line": 910,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "- **Spec-fixed texts (revision 9, GAP-15).** SM2's normalizer compares exactly these substrings of a message, and masks nothing else, so each is fixed byte for byte here."
+},
+{
+"id": 526,
+"line": 910,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "Backticks elsewhere in this document are markup; none of these texts contains a backtick."
+},
+{
+"id": 527,
+"line": 910,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "Placeholders render as follows, and nothing else in these substrings varies:"
+},
+{
+"id": 528,
+"line": 911,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "- `{T}`: a type's name, `_TYPE_QUAL.__get__(type(x))`, the `__qualname__` read through the C descriptor (so no metaclass property runs)."
+},
+{
+"id": 529,
+"line": 918,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "`the result has no 'coverage_trace' key`"
+},
+{
+"id": 530,
+"line": 929,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Every one of these texts begins after the message's `[V5:CODE] ` prefix (and, for the scoring texts, after a `gate '<name>'` lead-in that is free-form)."
+},
+{
+"id": 531,
+"line": 929,
+"top": "Mechanism and lifecycle",
+"sec": "M11. Scoring and check_metrics",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "For NOT_A_FUNCTION, FOREIGN_DEFINITION, INHERITED, INSTANCE_PATH and UNRESOLVED, SM2 compares the `module:qualname` the Resolution rules name (GAP-07's `<callee>`, GAP-25's defining class, Provenance (d)'s innermost function), rendered as those rules say, and nothing else of the text."
+},
+{
+"id": 535,
+"line": 940,
+"top": "Mechanism and lifecycle",
+"sec": "Cost",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Revision 4, uncontended: the clearer's announcement and withdrawal (`_txn()`, a store, a pop) add 0.46–0.56 µs to every close that clears, and the re-check with the `_CLEARING` test 0.04–0.05 µs to every open, while the open drops one `_unwind_on()` (0.22–0.23 µs): net +0.29 µs (3.13.12) and +0.38 µs (3.12.3) per section (`rev4/b4b_announce_cost.py`)."
+},
+{
+"id": 543,
+"line": 962,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Revision 5 (N2) lists every machinery site that raises an audit event, where a raising audit hook is such a source (revision 8's wider self-audit, W2, adds the sites it missed):"
+},
+{
+"id": 547,
+"line": 965,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- (revision 8 self-audit, W2) `sys._getframe` in `_run` and `_run_async`, the argument of `_open` (M7), at every open;"
+},
+{
+"id": 548,
+"line": 966,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- (revision 8 self-audit, W2) `builtins.id` at every `id()` call, and `object.__getattr__` at every read of a frame's `f_code` (both raised on 3.12.3 and 3.13.12: `verify8/probe_open_audit.py`, 23 events in one `run()` on `rev8/mech8.py`)."
+},
+{
+"id": 549,
+"line": 966,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "The machinery makes such calls in `_open`'s step-5 walk, in every callback (the `_MINTED` lookup, the hit's walk, the pending key and the publication's `id(code) in h.by_code` test), in `_alive`'s liveness test (so inside every reconciliation that tests a holder), and at the mint and retire keys inside E4 and X5."
+},
+{
+"id": 550,
+"line": 966,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Where they land: at open, all before `_open`'s append (steps 1–5), so a hook that raises there propagates out of `run()` (or the coroutine's first step) before any append or store, and fn does not run (V71); in a callback, a raising hook makes that hit raise out of its callback (L-DELIVERY), and one raised at publication loses that one credit, inside I6; inside a transaction, they are further sites of the kind \"Audit hooks and slow owners\" and I5 describe, which the model's lock-taking and greenlet configurations stand for, and G_FI faults every instruction that makes them;"
+},
+{
+"id": 555,
+"line": 971,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "So revision 5 removed revision 4's two open- and close-path sites, `_txn()` in every clearing `_unwind_off` and `_alive` in every waiting open (the fifth critic's `critic5/c5_audit_events.py`)."
+},
+{
+"id": 556,
+"line": 971,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "The close path raises no audit event."
+},
+{
+"id": 557,
+"line": 971,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "The open path raises audit events only before `_open`'s append: `_run`'s `sys._getframe()`, and step 5's `f_code` reads and `id()` calls."
+},
+{
+"id": 558,
+"line": 971,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "`_commit` and everything after the append raise none."
+},
+{
+"id": 559,
+"line": 971,
+"top": "Exception-safety model",
+"sec": "",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "(Revision 8 self-audit, W2: this said \"the open and close paths still raise no audit event\", which `_run`'s frame read and the walk contradict;"
+},
+{
+"id": 585,
+"line": 994,
+"top": "Exception-safety model",
+"sec": "Invariants preserved by every prefix of every transition",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "After its core exits or is pruned, an opening holds no anchor, once its opener has left `_commit` (revision 4: an opener that stores after X3 or a prune detaches itself at step 8, and one that stored before is popped by X3 or the prune, which read the same `o.frame` key; the model check's END property, fault-free, on every pair and triple)."
+},
+{
+"id": 597,
+"line": 1014,
+"top": "Exception-safety model",
+"sec": "Per-transition prefixes",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "If `_TOOL[0]` was None, the next enter adopts the id and registers again (Tool acquisition; revision 8 self-audit, W7: X154e)."
+},
+{
+"id": 599,
+"line": 1023,
+"top": "Exception-safety model",
+"sec": "Per-transition prefixes",
+"code": false,
+"kw": [
+"no",
+"only"
+],
+"old": true,
+"text": "- Inside `_commit` (revision 3), at any point, including inside `_unwind_on` (a fault lands before or after its one call, never inside): the fault is inside `_run`'s `try`, so the `finally`'s `_detach` pops the anchor if it was stored (by `o.frame`, which only this `finally` releases, after the pop) and clears the event in the same call if no anchor is left."
+},
+{
+"id": 610,
+"line": 1033,
+"top": "Exception-safety model",
+"sec": "Per-transition prefixes",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "A tool left named ours with missing callbacks (a fault, including a raising audit hook, inside `_register`) is adopted and re-registered at the next enter when `_TOOL[0]` is None (X154e, revision 8 self-audit, W7)."
+},
+{
+"id": 622,
+"line": 1051,
+"top": "Exception-safety model",
+"sec": "Residuals, disclosed",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Audit hooks run inside a transaction at `__code__` writes (E4's install and `_retire`'s restore), and, from revision 6's correction, at the five `sys.monitoring.register_callback` events of `_register` at X5 on **every exit**, at E4 and at a reclaim (B1)."
+},
+{
+"id": 623,
+"line": 1051,
+"top": "Exception-safety model",
+"sec": "Residuals, disclosed",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "They also run at `_alive`'s `sys._current_frames`, `id()` and `f_code` reads in every reconciliation that tests a holder, which is the first step of every transaction, and at the `id()` of the mint and retire keys; see Sources.) If what the hook blocks on is a lock held by a thread that is itself waiting for the mutex, the two form a cycle."
+},
+{
+"id": 624,
+"line": 1052,
+"top": "Exception-safety model",
+"sec": "Residuals, disclosed",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "In `rev5/m5_modelcheck.py` (`greenlet: [exit(X), rec] || open(X)`) no property is violated when they do, because every reconciliation step is idempotent, and revision 6's model adds outside parties to that configuration with the same result (`rev6/m6_modelcheck.py`, `ext+greenlet: [exit(X), rec] || open(X)`)."
+},
+{
+"id": 633,
+"line": 1060,
+"top": "Exception-safety model",
+"sec": "Residuals, disclosed",
+"code": false,
+"kw": [
+"every"
+],
+"old": true,
+"text": "**Evidence and what must be re-run.** D1's crash sweep, run with its monitoring adapter, injected an exception at every machinery bytecode: 6337 points on 3.12 and 6283 on 3.13, 0 failures on D1's invariants C1–C8, with the C7 check using live facades. v5f's C1–C9 are defined under G_FI (revision 3, MF5); they restate D1's in terms of the public API and `_v5_state()`."
+},
+{
+"id": 655,
+"line": 1100,
+"top": "Reason codes",
+"sec": "",
+"code": false,
+"kw": [
+"every",
+"only"
+],
+"old": false,
+"text": "`coverage_trace()` or `__enter__` on anything but CPython 3.12.3 or 3.13.12 (`_VERIFIED`; revision 6: any other patch level too) GIL builds; also any `coverage_trace()` (revision 7: every one, not only the first) at which a `sys.monitoring` function to be bound, or already bound in `_MON`, or a one-call name as the module now binds it, is not the C object it names (revision 6, M1; revision 7, M3 and N1)"
+},
+{
+"id": 753,
+"line": 1340,
+"top": "Over-blocking, disclosed",
+"sec": "",
+"code": false,
+"kw": [
+"every",
+"only"
+],
+"old": false,
+"text": "The audit-hook sites inside a transaction include `__code__` writes and, as revision 6 corrects (B1), `sys.monitoring.register_callback`, which X5 raises five times on every exit: a hook on that event that takes such a lock closes the cycle at every exit, not only at mints and retires."
+},
+{
+"id": 754,
+"line": 1340,
+"top": "Over-blocking, disclosed",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "(Revision 8 self-audit, W5: the reconciliation's holder test, `_alive`, also raises `sys._current_frames`, `builtins.id` and `object.__getattr__` inside every transaction that has a holder to test;"
+},
+{
+"id": 763,
+"line": 1348,
+"top": "Over-blocking, disclosed",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": true,
+"text": "If a function sharing either code is alive then, such as `FunctionType(Handle._run.__code__, g)` built by a module imported at start-up, that code is \"shareable\" and never enters the cut, and every `coverage_trace()` in the process refuses CUT_UNAVAILABLE for as long as the clone lives (`critic3/c9_x34b_fixture_poisons_first_e2.py`)."
+},
+{
+"id": 766,
+"line": 1353,
+"top": "Over-blocking, disclosed",
+"sec": "",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "An open with a same-core opening of the running loop below such an anchor refuses NESTED_SECTION, although a hit under it would credit only the new opening."
+},
+{
+"id": 817,
+"line": 1452,
+"top": "Stated limits",
+"sec": "",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "Greenlet switches are otherwise covered by the model check only (`rev5/m5_modelcheck.py` to `rev8/m8_modelcheck.py`; revision 8 self-audit, W6: this said \"X137f's one shape\" and \"the model check only\" after X158d was added)."
+},
+{
+"id": 823,
+"line": 1464,
+"top": "Exam cases required",
+"sec": "Exam harness rules (frozen with the prereg before implementation)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- Every case that rebinds `Handle._run` or `BaseEventLoop._run_once`: X35, X35b, X35c, X65e–X65g, X141, X141b, X141c, V61, V62, V64, R18, (revision 7) R20 and (revision 9) X59e."
+},
+{
+"id": 835,
+"line": 1469,
+"top": "Exam cases required",
+"sec": "Exam harness rules (frozen with the prereg before implementation)",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": true,
+"text": "- *Fresh wrapper per case.* Every case that binds a function as `Handle._run` or `BaseEventLoop._run_once` uses a wrapper whose code object has never been bound, scanned or put in the cut in that process: a top-level `def` of its own in a fixture module, used by no other case, with no other function sharing its code except where the case's shape requires one (X35c's twin)."
+},
+{
+"id": 839,
+"line": 1472,
+"top": "Exam cases required",
+"sec": "Exam harness rules (frozen with the prereg before implementation)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "- **Entry points for scoring cases (revision 9, GAP-26).** The exam judges scoring refusals only through the public `Experiment.score()` and `Experiment.check_metrics()`;"
+},
+{
+"id": 840,
+"line": 1472,
+"top": "Exam cases required",
+"sec": "Exam harness rules (frozen with the prereg before implementation)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "Every other scoring case passes a result that carries each gate's metric as a finite float, unless its row is about the metric itself, and is judged by `score()`, and also by `check_metrics()` when its row names it (X103b, X117b–X117d)."
+},
+{
+"id": 898,
+"line": 1579,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "NO_TRACE, third wording, exactly \"'coverage_trace' is a OrderedDict, not an exact dict (e.g. loaded with object_pairs_hook)\" (revision 9, GAP-15: no backticks in the message): the outer OrderedDict passes step 1 and has the key"
+},
+{
+"id": 903,
+"line": 1603,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "first trace: PASS `{f:2, g:1}` with MONITOR_LOST (styxx's local events and callbacks stay on the taken id, as in the free variant); after exit the other tool still owns the id, its global events are still RAISE and its RAISE callback is its own: styxx changed none of its events or callbacks, not at the second open or close and not at exit (the disclosed leak)."
+},
+{
+"id": 924,
+"line": 1617,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "With the `_ANCHORS` test and the clear as two statements (revision 3's shape, or any split of `_unwind_off`'s one call), the trials that land between them lose t: A NOT_EXERCISED with MONITOR_LOST (`rev5/w5_witnesses.py` IS-OFF: 17 of 57 trials fail on 3.12.3, 20 of 60 on 3.13.12; the spec fails none of 69)."
+},
+{
+"id": 937,
+"line": 1623,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "With `_detach` testing the anchor before the event (revision 3's order), the trials that land between the two reads flag `UNWIND_LOST`: MONITOR_LOST (`rev5/w5_witnesses.py` IS-BLIND: 15 of 62 trials on 3.12.3, 17 of 66 on 3.13.12; the spec fails none; revision 4's hold form: `rev4/a4r_detach_order.py`, `rev4/w4_rev4_witnesses.py`)"
+},
+{
+"id": 953,
+"line": 1634,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"every",
+"none"
+],
+"old": false,
+"text": "The interference frees styxx's id; another tool takes it, registers a RAISE callback, sets its global events to RAISE and its local events on the target's minted code to LINE | every trial: afterwards that tool's global events are exactly RAISE, its local events on that code exactly LINE, its RAISE callback its own, and none of styxx's five callbacks is registered on the id."
+},
+{
+"id": 957,
+"line": 1635,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "The hook acts only on `sys.monitoring.register_callback` events raised on the case thread during that `__exit__`: on the k-th, it starts a thread that frees styxx's id (from `_v5_state()[\"tool\"]`) and has another tool take it and register a callback of its own for each of the five events styxx uses, joins that thread, and returns; then it disarms itself."
+},
+{
+"id": 958,
+"line": 1635,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"every",
+"no",
+"none"
+],
+"old": false,
+"text": "After `__exit__` returns, the case reads the other tool's callbacks by *exchange and restore*: for each event, `c = register_callback(t, e, None)` then `register_callback(t, e, c)`, with the hook disarmed (sys.monitoring has no callback getter; the ten audit events this raises are outside every trial)."
+},
+{
+"id": 961,
+"line": 1637,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "Then greenlet g2 runs a reconciling transaction (the enter of a tracer Y declaring g), and an audit hook, at the 5th `sys.monitoring.register_callback` event of g2's reclaim, switches to greenlet g1, whose parent is g2; g1 runs `X.__exit__(None, None, None)` to completion and returns to g2, which finishes; then Y runs `Y.run('B', g)` and exits"
+},
+{
+"id": 990,
+"line": 1648,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "every trace PASS its one call;"
+},
+{
+"id": 991,
+"line": 1648,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "P, Q and R with MONITOR_LOST (P's exit registration finds five previous callbacks that are not the re-bound ones and counts them, and Q and R are live then, R although it lost nothing);"
+},
+{
+"id": 992,
+"line": 1648,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "S with none (entered after that exit)."
+},
+{
+"id": 993,
+"line": 1648,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "Without the in-call count (revision 6's registration), only P is noted (`verify8/x158e_reload.py` on `rev8/mech8.py`, mutant `cbrep_nocount`, both versions)"
+},
+{
+"id": 994,
+"line": 1649,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"nothing",
+"only"
+],
+"old": false,
+"text": "X137g, except that the other tool takes the freed id 4 with `use_tool_id` only and registers nothing, so styxx's callbacks and f's local events stay on id 4 (p3)."
+},
+{
+"id": 996,
+"line": 1649,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"nothing"
+],
+"old": false,
+"text": "The pending entry is keyed by the frame and popped by the first confirmation, so the second finds nothing."
+},
+{
+"id": 997,
+"line": 1649,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "the rebinding's \"no double count\" (E4; rev. 6; witnessed from rev. 8)"
+},
+{
+"id": 998,
+"line": 1650,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "the first `__enter__` raises the hook's RuntimeError, and then `sys.monitoring.get_tool(4)` begins with `styxx.protocol/` (the id is named styxx's) while `_v5_state()[\"tool\"]` is None."
+},
+{
+"id": 999,
+"line": 1650,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "The second tracer adopts id 4 and registers again: `tool == 4`, PASS `{f:1}`, no MONITOR_LOST (its `lost0` is read after the adoption's in-call count)."
+},
+{
+"id": 1000,
+"line": 1650,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "With an adoption that does not register again, f's PY_RETURN has no callback: NOT_EXERCISED with MONITOR_LOST (`verify8/x154e_adoption.py` on `rev8/mech8.py`, mutant `adopt_no_register`, both versions)"
+},
+{
+"id": 1010,
+"line": 1655,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "With `get_local_events` bound as `_MON[0][6]` but left out of the check, the wrapper is bound and called at every exit (`rev9/witness.py` X156f, mutant `mut_gle_nocheck`: constructed; both versions)"
+},
+{
+"id": 1011,
+"line": 1656,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "After `import styxx.protocol` and before the first `coverage_trace()`, `asyncio.events._get_running_loop` is replaced by a Python function returning None."
+},
+{
+"id": 1012,
+"line": 1656,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "The case then runs X65d's shape: inside section A, a loop whose class overrides `_run_once` and runs its ready handles' callbacks directly (no `Handle._run` or `BaseEventLoop._run_once` frame) is started and runs a coroutine that calls f."
+},
+{
+"id": 1013,
+"line": 1656,
+"top": "Exam cases required",
+"sec": "New violation cases (expected code)",
+"code": false,
+"kw": [
+"none"
+],
+"old": false,
+"text": "Without the check the replacement is bound, the loop boundary sees None at the open and at the hit, and A is credited: PASS `{f:1}` (`rev9/witness.py` X156g and X156g_ctl, mutant `mut_grl_nocheck`; both versions)"
+},
+{
+"id": 1043,
+"line": 1702,
+"top": "Exam cases required",
+"sec": "New valid cases (expected union counts)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "An audit hook raises `RuntimeError` at the first `sys._getframe` event on the case thread while armed; it is armed around one `cov.run('A', f)` only."
+},
+{
+"id": 1044,
+"line": 1702,
+"top": "Exam cases required",
+"sec": "New valid cases (expected union counts)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "`_v5_state()[\"anchors\"]` is 0; the record has exactly one opening of A, from the second call, PASS `{f:1}`, no OPEN_AT_EXIT note and no problem."
+},
+{
+"id": 1045,
+"line": 1703,
+"top": "Exam cases required",
+"sec": "New valid cases (expected union counts)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "PASS `{f:1}`, no MONITOR_LOST, and the counter is 0, in both variants: X5's local-events test and `_v5_state()` call `_MON[0][6]`."
+},
+{
+"id": 1064,
+"line": 1751,
+"top": "Exam cases required",
+"sec": "The exam-hole kill cases, from each verifier's `exam_case_that_would_kill_it`",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "\"a pure-Python profiler is installed on the main thread before `with coverage_trace(exp)`, the section runs on a worker thread, and after the exit … sys.getprofile() is that profiler\" | V57 (adapted: the case thread plays the main thread's part, because `sys.setprofile` is per-thread and cases run on their own threads; no `_ACTIVE==0` branch exists)"
+},
+{
+"id": 1072,
+"line": 1773,
+"top": "Exam cases required",
+"sec": "Hazard sweeps (main thread, before the self-trace), each paired with a detection mutant",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "- **H10 (L-DELIVERY; revision 2, M4).** G_SIG's three frozen L-DELIVERY cells (Stated limits): (a) outside every section with a trace active, 0 lost handlers, with the cell's shape fixed in revision 3 (no section is opened while the flood is armed, and `global_events == 0` is asserted before arming);"
+},
+{
+"id": 1078,
+"line": 1794,
+"top": "Exam cases required",
+"sec": "Mutation audit (every rule has a mutant; each is killed by the named case)",
+"code": false,
+"kw": [
+"every",
+"none"
+],
+"old": false,
+"text": "revision 6: `_register` with one name gate before all five exchanges (revision 5's form) / without the owner read after the last exchange / the builtin check on `_MON` at binding / the vocabulary check at binding / `_VERIFIED` widened to every 3.12 and 3.13 patch level / a rebinding without local events for the existing mints / a rebinding not counted in `_LOST` / the reconciliation's last `_unwind_off(None)` without the `_TOOL[0]` guard"
+},
+{
+"id": 1079,
+"line": 1796,
+"top": "Exam cases required",
+"sec": "Mutation audit (every rule has a mutant; each is killed by the named case)",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "revision 7: a registration's repair of a replaced callback not counted in `_LOST` (revision 6's form) / the repair counted by X5 after the registration returns (the seventh critic's proposed form) / E4's re-take of its own id not counted (revision 6's prototype rule) / the binding check only when `_MON` is first bound / `_CONSUME`'s deque tested by type name only / the version read at import instead of at call time"
+},
+{
+"id": 1094,
+"line": 1851,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "Frozen artifacts",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "That is every crash-sweep point; every exam case that uses the id-3 fault tool, the id-5 injector, a signal, `PyThreadState_SetAsyncExc`, a finalizer threshold or a thread race (X71c, X92b, X92c, X131–X133, X135, X138, X139, X140, X140f, X143, X143b, X143c, X144, X145, X146, X146b, X146c, X146d, X146e, X147, X148, X137d, X137e, X138b, X152, X153, X154, X155, V65, V68, R16, the H sweeps and every G_SIG cell; revision 5 retires X149, X149b, X150 and V66); and every fuzzer program whose grammar path includes a fault tool."
+},
+{
+"id": 1130,
+"line": 1925,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "SM1: catalog power, computed at freeze time on the reference only",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- revision 8 self-audit: every row of the self-audit line of the Mutation-audit table, each with the witness named there."
+},
+{
+"id": 1131,
+"line": 1926,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "SM1: catalog power, computed at freeze time on the reference only",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- revision 9: every row of the revision-9 line of the Mutation-audit table, each with the witness named there."
+},
+{
+"id": 1133,
+"line": 1932,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "SM2: operator mutants on the real implementation (the procedure is frozen; the mutants depend on the code)",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "G_HYG checks that `styxx/protocol.py` defines no function or class outside this set, the classes `_Mint`, `_Core`, `_Opening`, `_Txn` and `_CoverageTracer`, and the v4-era set."
+},
+{
+"id": 1227,
+"line": 2098,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "Companion gates",
+"code": false,
+"kw": [
+"only"
+],
+"old": false,
+"text": "The statements after statement 1 (the *pipeline statements*) may name only: the M1 one-call vocabulary (`_map`, `_chain`, `_chain.from_iterable`, `_compress`, `_filter`, `_is`, `_not`, `_and`, `_setitem`, `_ARMED`, `_FLAGS`, `_VALUES`, `_CONSUME`, `_LOST_KEY`, `_TRUE`, `_PYU1`, `_ZERO1`, `_NONE1`, `_NAME1`, `_repeat`, `_list`, `_EVENTS5`, `_CALLBACKS5`, `_TOOL_NAME`, from revision 7 `_is_not` and `_LOST_APPEND`, which only `_register` names, and from revision 8 `_tee`, which only `_register`'s statement 2 names); the locals bound by statement 1 (and, in `_register`, `a` and `b`); the function's parameters (`o`, `key`, `t`, `code`, `events`); the attribute `o.frame`;"
+},
+{
+"id": 1247,
+"line": 2115,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "Companion gates",
+"code": false,
+"kw": [
+"no",
+"only"
+],
+"old": false,
+"text": "- (revision 9, GAP-03) `_MON[0][6]` (`get_local_events`) is called only in `_exit_txn`, for X5 step 2's local-events test, and in `_v5_state()`; no step function binds index 6, so the frozen per-step index sets above are unchanged."
+},
+{
+"id": 1248,
+"line": 2115,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "Companion gates",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "No function in the region reads an attribute of `sys.monitoring` except `coverage_trace()`, for the binding check"
+},
+{
+"id": 1275,
+"line": 2142,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "Companion gates",
+"code": false,
+"kw": [
+"every"
+],
+"old": false,
+"text": "- **G_ATOM (revision 6, M4 and M5; rewritten in revision 7, M1; revision 8, M1–M4 and N3: the premise gate, dynamic, frozen and objective).** The one-call premise is a property of CPython, not of styxx's text, so it is gated by execution on every patch level in `_VERIFIED` (M0), on `ref_v5f.py` at the freeze and on the implementation."
+},
+{
+"id": 1284,
+"line": 2149,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "Companion gates",
+"code": false,
+"kw": [
+"none",
+"only"
+],
+"old": false,
+"text": "The id held by styxx with its five callbacks; held by styxx with its PY_UNWIND callback replaced by another party's (the B1 shape); the same two with the global PY_UNWIND **set** (revision 8, M3: revision 7's nine cases all began with S clear, so a `_register` that cleared S was invisible); held by styxx with its PY_START and PY_UNWIND callbacks replaced by two *finalizer callables* (revision 8, M1: instances of a harness class whose `__call__` returns None and whose `__del__` records whether the interval is open and `len(_LOST)`; the slots hold the only references); held by another tool; or unowned; and the *split* cases k = 1..5."
+},
+{
+"id": 1303,
+"line": 2186,
+"top": "The semantic-mutation gate (G_SEM), frozen before implementation, decided by execution",
+"sec": "Companion gates",
+"code": false,
+"kw": [
+"only"
+],
+"old": true,
+"text": "**Static-only controls (revision 8, M2), run and reported, not gated here.** K12 (`_unwind_on` with its own-anchor gate read by `in` and a subscript in statement 1, `critic8/c2`) and K12b (the same read as a tuple display in the pipeline statement) pass all 67 cases on both versions, because G_ATOM cannot see bytecode."
+},
+{
+"id": 1321,
+"line": 2213,
+"top": "Process gates for the v5f prereg",
+"sec": "",
+"code": false,
+"kw": [
+"no"
+],
+"old": false,
+"text": "The second-implementation author works from this spec alone and has no access to the primary implementation, its commits or the design prototypes."
+},
+{
+"id": 1322,
+"line": 2213,
+"top": "Process gates for the v5f prereg",
+"sec": "",
+"code": false,
+"kw": [
+"every",
+"no"
+],
+"old": false,
+"text": "No other family is available to this program, so that clause is dropped, and this is disclosed: every author is the same model family."
+},
+{
+"id": 1325,
+"line": 2218,
+"top": "Process gates for the v5f prereg",
+"sec": "",
+"code": false,
+"kw": [
+"every"
+],
+"old": true,
+"text": "- **G_ATOM (revision 6; revision 7 criteria; revision 8 matrix, floors and controls)** passes on every patch level in `_VERIFIED`, run on `ref_v5f.py` at the freeze and on the implementation before any scoring: all 67 cases pass, the t1, D2 and R parts meet their count floors within `T_MAX`, K1–K3 are detected in the same run, and K4–K11, K13 and K14 (patches of `ref_v5f.py`, each in its own process) fail, as they must, in the same run."
+}
+]

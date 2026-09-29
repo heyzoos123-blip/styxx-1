@@ -1,0 +1,506 @@
+{
+ "48": {
+  "text": "Own dicts are read only through C descriptors; a Python-level `__dict__` descriptor stops the step or walk and is never called. staticmethod and classmethod are unwrapped at every step.",
+  "line_rev8": 178,
+  "class": "P",
+  "witness": "V40, X17b, X30d (descriptor-only reads); V12, X25c (unwrap at every step)"
+ },
+ "50": {
+  "text": "Every FunctionType link the walk visits, F_T included, must be *coherent*: its `co_filename` starts with `'<'`, or its realpath/normcase equals that of its own globals' `__file__`.",
+  "line_rev8": 180,
+  "class": "P",
+  "witness": "X26b, X26c, X26d (coherence on F_T and on intermediate links)"
+ },
+ "79": {
+  "text": "The result must be an exact dict; otherwise `_own_dict` returns None.",
+  "line_rev8": 222,
+  "class": "P",
+  "witness": "X17, V40"
+ },
+ "110": {
+  "text": "A `code.replace()` copy of M_T carries no monitoring events and is never observed (R22, revision 7).",
+  "line_rev8": 279,
+  "class": "P",
+  "witness": "R22 (pinned residual, revision 7)"
+ },
+ "111": {
+  "text": "- **The pre-trace swap is closed.** F_T's own code must have been compiled from its module's file, and so must every link the walk visits.",
+  "line_rev8": 281,
+  "class": "P",
+  "witness": "X26b, X26c, X26d"
+ },
+ "142": {
+  "text": "When exit's X3 detached an appended opening before its owner's store, `_commit` then read None and registered `_ANCHORS[None] = o`, which no later `_detach` could pop: PY_UNWIND stayed set for the rest of the process and `_on_entry`'s empty-registry shortcut never applied again (the fourth critic's B1;",
+  "line_rev8": 345,
+  "class": "H",
+  "witness": "revision-3 history; its fix is witnessed by X146"
+ },
+ "147": {
+  "text": "No section is open, so no count can result, and PY_UNWIND is off, so a pending entry for a frame that later raises would never be popped.",
+  "line_rev8": 359,
+  "class": "P",
+  "witness": "V67"
+ },
+ "150": {
+  "text": "- **Never counted.** A `throw()` or `close()` resumption fires only PY_THROW and has no pending entry, so it is never counted, even when a handler in the body runs.",
+  "line_rev8": 365,
+  "class": "P",
+  "witness": "X119"
+ },
+ "157": {
+  "text": "`get_events` never raises, even on a freed id (`rev5/out_freed_id_calls.txt`: only `set_events` and `set_local_events` raise there, both versions).",
+  "line_rev8": 371,
+  "class": "C",
+  "witness": "rev5/out_freed_id_calls.txt; X137f, X157c"
+ },
+ "164": {
+  "text": "The at-fork handler excludes it: in the child it clears `_ANCHORS` and retires every mint, and the pid pass-through means a child never opens a section or credits one.",
+  "line_rev8": 384,
+  "class": "P",
+  "witness": "V47; G_FI fork scenario C9"
+ },
+ "169": {
+  "text": "Confirmation adds one more condition and never removes one, so it can only lose credit (I1).",
+  "line_rev8": 390,
+  "class": "P",
+  "witness": "X135, H8 (I1)"
+ },
+ "171": {
+  "text": "`import styxx.protocol` never touches `sys.monitoring` or asyncio, so scoring works on every version.",
+  "line_rev8": 404,
+  "class": "P",
+  "witness": "X37 (3.10/3.11: scoring works); G_XVER"
+ },
+ "174": {
+  "text": "A runtime self-test at import or at the first `coverage_trace()` was considered and rejected: its audit-event half needs an audit hook, and `sys.addaudithook` cannot be undone, so the self-test would leave a permanent hook in every traced process.",
+  "line_rev8": 406,
+  "class": "H",
+  "witness": "rejected design"
+ },
+ "176": {
+  "text": "**Revision 6 (M1), revision 7 (M3): the bound functions must be the C builtins, checked at every `coverage_trace()`.** Every `coverage_trace()` runs the check below.",
+  "line_rev8": 410,
+  "class": "P",
+  "witness": "X156, X156b, X156c, X156d, X156f, X156g, X156h"
+ },
+ "181": {
+  "text": "The refusal text is \"`<name>` is not the C builtin (a wrapper or subclass was installed before this coverage_trace()): styxx's one-call steps must call C functions only\".",
+  "line_rev8": 414,
+  "class": "D",
+  "witness": "X156 (only the prefix is compared)"
+ },
+ "207": {
+  "text": "Notes never refuse, so the effect is a MONITOR_LOST note on those traces and nothing else.",
+  "line_rev8": 457,
+  "class": "P",
+  "witness": "X158e"
+ },
+ "224": {
+  "text": "The loop contains no `try`, so CPython #130279 (a signal at a loop back-edge escapes the enclosing `try` table on 3.13) cannot leave anything held.",
+  "line_rev8": 494,
+  "class": "P",
+  "witness": "G_HYG (no try in a loop; #130279 clause); X140"
+ },
+ "228": {
+  "text": "Its owner is then another tool, which every live trace's exit notes (its registration on that id cannot be complete), or None, and the id is re-taken and counted later: by E4's fall-through in the same transaction when the reclaim was E4's (revision 7, M5;",
+  "line_rev8": 500,
+  "class": "P",
+  "witness": "X154d, X154c"
+ },
+ "229": {
+  "text": "The id is left named, since step 1 took it, and the re-take is never counted: no later reconciliation finds the id freed.",
+  "line_rev8": 500,
+  "class": "D",
+  "witness": "X157b"
+ },
+ "240": {
+  "text": "`set_local_events` raises no audit event (`critic6/a1_audit_monitoring.py`), so this write is one C call with its gate: an id that no longer carries this copy's name is never touched by it, not even by another tool freeing and re-taking it between a test and the write (L-MONITOR;",
+  "line_rev8": 515,
+  "class": "P",
+  "witness": "X154 (_set_local sweep); G_ATOM _set_local cases"
+ },
+ "241": {
+  "text": "Every pop now clears in the same call when it leaves no anchor, so retirement never leaves the event to clear.",
+  "line_rev8": 519,
+  "class": "P",
+  "witness": "X152; G_HYG (_retire has no step 6)"
+ },
+ "243": {
+  "text": "A key maps to one opening only (it is that opening's `_run` frame), so the unguarded pop cannot remove another opening's anchor.",
+  "line_rev8": 521,
+  "class": "P",
+  "witness": "X146d"
+ },
+ "268": {
+  "text": "Its prototype counted only `t != i`, and its model never re-took the same id: three rules for one path (the seventh critic's M5 item 2).",
+  "line_rev8": 545,
+  "class": "H",
+  "witness": "history"
+ },
+ "300": {
+  "text": "- **Where callbacks run.** They never run at a C call: the only events are PY_START, PY_RESUME, PY_RETURN and PY_YIELD (local) and PY_UNWIND (global, and from revision 2 set only while some section is open). styxx never enables INSTRUCTION, LINE, JUMP or BRANCH events.",
+  "line_rev8": 621,
+  "class": "P",
+  "witness": "G_HYG (event-set clause); rev1/p11-p13 (C)"
+ },
+ "301": {
+  "text": "Code run inside any sys.monitoring callback raises no events for any tool (synth/p_syn1.py), so the callbacks cannot re-enter themselves.",
+  "line_rev8": 621,
+  "class": "C",
+  "witness": "synth/p_syn1.py; G_COVER named list (callback lines seen only by the driver)"
+ },
+ "311": {
+  "text": "fr = o.frame                                # never assigned here: every detacher pops by the anchor's own key",
+  "line_rev8": 675,
+  "class": "P",
+  "witness": "X146; G_HYG (_detach never assigns o.frame)"
+ },
+ "333": {
+  "text": "RecursionError cannot land after a step's first write: every pipeline callable is a vectorcall callable on both versions (`critic6/a4_vectorcall.py`, `a5_recursion_inside_step.py`), and a depth sweep across the recursion boundary finds only full effects or none (`critic8/c4`; frozen as G_ATOM part R in revision 8, N3).",
+  "line_rev8": 712,
+  "class": "C",
+  "witness": "G_ATOM part R (critic8/c4, rev8/r8_recursion_sweep.py)"
+ },
+ "343": {
+  "text": "- *Gc and signals (part D2, revision 6; count-bounded in revision 8, G_ATOM).* Revision 5's part D did not discriminate: its two-statement control also showed 0 violations (the sixth critic's M5), because its finalizer and handler registered an anchor only while `'closer'` was in the registry, which is false exactly in the control's window, and because the control has no eval-breaker check between its test and its write.",
+  "line_rev8": 720,
+  "class": "C",
+  "witness": "G_ATOM part D2 (rev6/t1d2_discriminating.py)"
+ },
+ "344": {
+  "text": "A cyclic-gc finalizer and a 20 µs SIGALRM handler, each registering an anchor, at gc threshold 1, 3 s per form: the one-call step 0 violations in 8,701 / 9,162 closes (3.12.3 / 3.13.12); the Python-call control 2,303 / 3,336; revision 5's two-statement control 0 / 0, which is why part D proved nothing.",
+  "line_rev8": 720,
+  "class": "C",
+  "witness": "G_ATOM part D2"
+ },
+ "358": {
+  "text": "From revision 8, a replaced callback's finalizer cannot land there either, because it runs only after the call.",
+  "line_rev8": 727,
+  "class": "P",
+  "witness": "X158d; G_ATOM finalizer case; K14"
+ },
+ "391": {
+  "text": "An armed section's body never runs with S clear while its core is crediting and alive.** This holds on every interleaving, fault-free or not, whatever Python code runs between two machinery steps, on any thread, this one included.",
+  "line_rev8": 750,
+  "class": "P",
+  "witness": "model property U1 (rev5/m5_modelcheck.py .. rev8/m8_modelcheck.py); X143, X145 (sweeps)"
+ },
+ "394": {
+  "text": "A fault in the machinery never clears S: faults only cut a step sequence short, and a fault cannot land inside a one-call step, other than a MemoryError from an allocation inside it (N2, \"One-call steps\").",
+  "line_rev8": 750,
+  "class": "P",
+  "witness": "model property U1; G_FI C4 (no MONITOR_LOST allowance); X152"
+ },
+ "395": {
+  "text": "`_register` never writes S: from revision 8 it binds no `set_events` (G_HYG's index clause), and G_ATOM's `_register` cases with S set check it (the eighth critic's M3).",
+  "line_rev8": 750,
+  "class": "P",
+  "witness": "G_HYG index clause; G_ATOM _register cases with S set; K13"
+ },
+ "398": {
+  "text": "A set S with no anchor never exists**, fault-free or after a fault, except after an outside party set S or freed styxx's id, or after a MemoryError inside `_unwind_off`'s `set_events` (N2).",
+  "line_rev8": 752,
+  "class": "P",
+  "witness": "model property STALE; X152; G_FI C5 (global_events 0)"
+ },
+ "407": {
+  "text": "In `rev5/spec_rev5_eventpath.py`'s fault sweep, every trial in the close path left either nothing or a dead anchor with S set, never S set with no anchor.",
+  "line_rev8": 753,
+  "class": "C",
+  "witness": "rev5/spec_rev5_eventpath.py"
+ },
+ "459": {
+  "text": "The implementation must provide them with exactly these meanings, and no exam case may read them:",
+  "line_rev8": 852,
+  "class": "G",
+  "witness": "G_ATOM interface (the gate itself)"
+ },
+ "468": {
+  "text": "- **NOT_EXERCISED.** The fixed sentence reads: \"work on other threads, pools, executors, child processes or asyncio tasks is credited only to a section that work opens itself; generator and coroutine objects created before the trace are never credited; a call counts only when it returns, yields or raises from inside its body while the tracer is active\".",
+  "line_rev8": 868,
+  "class": "P",
+  "witness": "X72, X72b; SM2 normalizer"
+ },
+ "470": {
+  "text": "- **check_metrics.** It never raises for a JSON-shaped result: dicts, lists, str, bool, None, floats and ints of any size.",
+  "line_rev8": 870,
+  "class": "P",
+  "witness": "X117, X117b, X117c, X103b, X117e"
+ },
+ "483": {
+  "text": "- every `sys.setprofile` call; styxx never calls `sys.setprofile`, `threading.setprofile`, `sys.settrace` or `threading.settrace` (G_HYG, revision 7);",
+  "line_rev8": 893,
+  "class": "P",
+  "witness": "G_HYG (setprofile/settrace clause); leftover check"
+ },
+ "521": {
+  "text": "No threading lock exists, so a skipped release cannot hang anyone.",
+  "line_rev8": 939,
+  "class": "P",
+  "witness": "G_HYG (no lock clause); G_SIG (0 user-lock leaks, 0 hangs)"
+ },
+ "524": {
+  "text": "Revision 4's claim here, \"a clearer never waits for anything, so no cycle of waits exists inside the machinery\", was false.",
+  "line_rev8": 943,
+  "class": "H",
+  "witness": "history"
+ },
+ "527": {
+  "text": "No fault, no instrument and no re-entrant code clears the event under a registered anchor (U1), so a fault cannot cause `UNWIND_LOST`.",
+  "line_rev8": 947,
+  "class": "P",
+  "witness": "model properties U1 and FALSEFLAG; G_FI C4"
+ },
+ "533": {
+  "text": "- Inside `_commit` (revision 3), at any point, including inside `_unwind_on` (a fault lands before or after its one call, never inside): the fault is inside `_run`'s `try`, so the `finally`'s `_detach` pops the anchor if it was stored (by `o.frame`, which only this `finally` releases, after the pop) and clears the event in the same call if no anchor is left.",
+  "line_rev8": 967,
+  "class": "P",
+  "witness": "X144; G_FI C5"
+ },
+ "542": {
+  "text": "A fault loses at most that one credit and can never add one: an entry killed before its store has no pending entry, and a pending entry killed at its entry offset never publishes.",
+  "line_rev8": 975,
+  "class": "P",
+  "witness": "X135; G_FI callback-only scenario (C1)"
+ },
+ "549": {
+  "text": "Every write of events or local events is now a one-call step gated on the name (X154), and the one read on the close path, `get_events`, never raises.",
+  "line_rev8": 983,
+  "class": "P",
+  "witness": "X154; rev5/out_freed_id_calls.txt (C)"
+ },
+ "559": {
+  "text": "A switch cannot land inside a one-call step, so the event path has no greenlet exposure (`greenlet: [close(X), open(X)] || open(Y)`: revisions 5 and 6 clean; revision 4 has U1 violations and 2 end states whose loss is silent).",
+  "line_rev8": 996,
+  "class": "P",
+  "witness": "model greenlet configurations (rev5..rev8 m*_modelcheck.py, property U1); X137f"
+ },
+ "586": {
+  "text": "Every code is a literal at its own emission site (G7) and must survive the literal-census refusal gate (G_REF).",
+  "line_rev8": 1037,
+  "class": "G",
+  "witness": "G_REF"
+ },
+ "611": {
+  "text": "Transitions exclude each other through the robust mutex (dead owners stolen, REENTRANT, MACHINERY_BUSY), and the callbacks never run at a C call. 3.11 is refused because its only mechanism re-creates the user-code form of this bug. | H6, H7, X138, X139, X140",
+  "line_rev8": 1096,
+  "class": "S",
+  "witness": "Blockers row: X138, X139, X37"
+ },
+ "642": {
+  "text": "styxx never calls `setprofile`, so no profiler is ever called, chained, replaced or removed (V33, V48, V57–V60).",
+  "line_rev8": 1190,
+  "class": "S",
+  "witness": "V33, V48, V57-V60"
+ },
+ "643": {
+  "text": "Among sys.monitoring tools, styxx adopts only an id that carries its own per-copy name, and never changes events or local events on an id that lost that name (X137, X142, X154).",
+  "line_rev8": 1190,
+  "class": "S",
+  "witness": "X137, X142, X154"
+ },
+ "664": {
+  "text": "**Event loops must run outside the section.** `cov.run(name, asyncio.run, main())` counts nothing (X73).",
+  "line_rev8": 1220,
+  "class": "D",
+  "witness": "X73"
+ },
+ "682": {
+  "text": "A tracer inherited across fork cannot exit in the child (a no-op), and its `record()` refuses TRACE_INCOMPLETE there.",
+  "line_rev8": 1267,
+  "class": "D",
+  "witness": "V47"
+ },
+ "685": {
+  "text": "Frozen objects dying and `gc.unfreeze()` only lower the count, so they never trigger it (p4).",
+  "line_rev8": 1279,
+  "class": "C",
+  "witness": "rev1/p4_freeze.py; V36b"
+ },
+ "695": {
+  "text": "If a function sharing either code is alive then, such as `FunctionType(Handle._run.__code__, g)` built by a module imported at start-up, that code is \"shareable\" and never enters the cut, and every `coverage_trace()` in the process refuses CUT_UNAVAILABLE for as long as the clone lives (`critic3/c9_x34b_fixture_poisons_first_e2.py`).",
+  "line_rev8": 1291,
+  "class": "D",
+  "witness": "X34b (fixture rule), over-blocking #21"
+ },
+ "716": {
+  "text": "A pending asynchronous exception therefore takes effect only after the handler has started, and the handler's first instructions, up to its first eval-breaker check, always run.",
+  "line_rev8": 1349,
+  "class": "C",
+  "witness": "H10 untraced cell"
+ },
+ "737": {
+  "text": "- **An id another tool took is not written, with one bounded exception (revision 6 narrows revision 5's claim).** styxx changes no event or local event there, so it cannot clobber the new owner's events.",
+  "line_rev8": 1388,
+  "class": "P",
+  "witness": "X154, X155, X154b (the bounded exception)"
+ },
+ "738": {
+  "text": "Every such write is a one-call step gated on the name, so a tool that frees and re-takes the id between two of styxx's statements is never written to (the fifth critic's N1;",
+  "line_rev8": 1388,
+  "class": "P",
+  "witness": "X154"
+ },
+ "750": {
+  "text": "A switch cannot land inside a one-call step, so the event path has no greenlet exposure.",
+  "line_rev8": 1394,
+  "class": "P",
+  "witness": "model greenlet configurations; X137f"
+ },
+ "752": {
+  "text": "On 3.10.20 and 3.11.15 (revision 8, N8: pinned by patch level, with their builds recorded like the verified ones') the runner executes X37 and every scoring-only case, and those outcomes must equal the verified interpreters' ones.",
+  "line_rev8": 1401,
+  "class": "G",
+  "witness": "G_XVER"
+ },
+ "756": {
+  "text": "Before the self-trace nothing is minted, so `_v5_faultpoints()` returns the code that runs, and the self-trace's own calls cannot be faulted.",
+  "line_rev8": 1407,
+  "class": "G",
+  "witness": "placement rule (the harness itself)"
+ },
+ "766": {
+  "text": "- *Fresh wrapper per case.* Every case that binds a function as `Handle._run` or `BaseEventLoop._run_once` uses a wrapper whose code object has never been bound, scanned or put in the cut in that process: a top-level `def` of its own in a fixture module, used by no other case, with no other function sharing its code except where the case's shape requires one (X35c's twin).",
+  "line_rev8": 1411,
+  "class": "G",
+  "witness": "fresh-wrapper rule (the harness itself)"
+ },
+ "784": {
+  "text": "No timeout decides anything: the interference is a sequence of complete transitions that never waits for T.",
+  "line_rev8": 1425,
+  "class": "G",
+  "witness": "instruction-sweep rule"
+ },
+ "790": {
+  "text": "Revision 5 tolerates that everywhere, because no callback can run inside a one-call step (M7), so the tool is not an instrument the machinery must be protected from.",
+  "line_rev8": 1426,
+  "class": "G",
+  "witness": "fault-tool rule"
+ },
+ "794": {
+  "text": "- *No other instruction-level tool (revision 3, N5).* While the injector is armed, no other sys.monitoring tool has LINE, INSTRUCTION, JUMP or BRANCH events on a machinery code object, unless it never returns `DISABLE` for machinery code.",
+  "line_rev8": 1432,
+  "class": "G",
+  "witness": "injector rule"
+ },
+ "806": {
+  "text": "A handler tripped from inside a monitoring callback cannot be used: code it runs raises no monitoring events (`rev1/p16_handler_events.py`).",
+  "line_rev8": 1460,
+  "class": "C",
+  "witness": "rev1/p16_handler_events.py"
+ },
+ "816": {
+  "text": "a `__wrapped__` chain link whose class defines a Python `__dict__` property (never called), with no accepting link before it",
+  "line_rev8": 1489,
+  "class": "N",
+  "witness": "X30d"
+ },
+ "836": {
+  "text": "The scenario runs to completion and never waits for the offset, so no trial can hang.",
+  "line_rev8": 1548,
+  "class": "N",
+  "witness": "X140"
+ },
+ "905": {
+  "text": "Only the `[V5:UNSUPPORTED_VERSION]` prefix is checked (revision 7, N6: revision 6 quoted a text, \"set_events is not the C builtin\", that the harness rules never compare).",
+  "line_rev8": 1581,
+  "class": "N",
+  "witness": "X156"
+ },
+ "987": {
+  "text": "X146c / X145 (sweep) / X152 / X143 (sweep) / X143 (sweep) / X146e / X137d / X153 / X153 / X154 / X155 / X137e / X138b / V52 (the second transaction of any trace walks a cycle and never returns, so every case with an exit fails;",
+  "line_rev8": 1727,
+  "class": "G",
+  "witness": "Mutation audit (the table itself)"
+ },
+ "1002": {
+  "text": "It marks every corpus entry with exactly one comparison class, assigned by a frozen rule from the entry's source and never by judgement:",
+  "line_rev8": 1782,
+  "class": "G",
+  "witness": "SM2 manifest rule"
+ },
+ "1016": {
+  "text": "Before the freeze, the exam author must do one of two things for every UNWITNESSED row:",
+  "line_rev8": 1808,
+  "class": "G",
+  "witness": "SM1 procedure"
+ },
+ "1026": {
+  "text": "P04 \"no cycle detection\" is expected UNWITNESSED: the walk is bounded at 16 hops and a revisited link repeats its own verdict, so the outcome cannot change.",
+  "line_rev8": 1834,
+  "class": "G",
+  "witness": "SM1 P04 (EQUIVALENT_BY_SPEC argument, signed before the freeze)"
+ },
+ "1057": {
+  "text": "**SM2 on v5e.** SM2's generator, run on v5e, with instruments (a) and (d) only, must report EXAM_HOLE > 0 (revision 2, M11):",
+  "line_rev8": 1932,
+  "class": "G",
+  "witness": "positive control"
+ },
+ "1088": {
+  "text": "Every sentinel gate scores NOT_EXERCISED or a refusal, never PASS.",
+  "line_rev8": 1964,
+  "class": "G",
+  "witness": "G_FI C1"
+ },
+ "1093": {
+  "text": "Since the sweep covers every faultpoint code, that allowance was always granted (the fourth critic's N4).",
+  "line_rev8": 1973,
+  "class": "H",
+  "witness": "history"
+ },
+ "1132": {
+  "text": "So `set_events` is callable only in `_unwind_on` and `_unwind_off`, and `_register` cannot write S.",
+  "line_rev8": 2024,
+  "class": "P",
+  "witness": "G_HYG index clause; K13"
+ },
+ "1157": {
+  "text": "A line that no pass reaches is dead code and must be deleted.",
+  "line_rev8": 2045,
+  "class": "G",
+  "witness": "G_COVER"
+ },
+ "1161": {
+  "text": "It uses sys.monitoring tool id 0, which no exam tool or case uses, with global LINE events, because the self-trace mints some region functions and their minted copies must count.",
+  "line_rev8": 2047,
+  "class": "G",
+  "witness": "G_COVER"
+ },
+ "1164": {
+  "text": "There is no settrace pass: settrace silences the id-5 injector (F1), so a crash sweep run under it never reaches the lines only a fault reaches.",
+  "line_rev8": 2047,
+  "class": "G",
+  "witness": "G_COVER; rev2/p5b_settrace_blinds_injector.py (C)"
+ },
+ "1179": {
+  "text": "- **After the freeze.** An implementation line in a named function that no frozen driver scenario reaches is dead code, like any other, and must be deleted.",
+  "line_rev8": 2070,
+  "class": "G",
+  "witness": "G_COVER"
+ },
+ "1205": {
+  "text": "Each must be detected in the same run, or G_ATOM fails** (revision 8, M4: revision 7 said \"the run is void\" and gave no rule for what follows a void run; see \"No void run\" below).",
+  "line_rev8": 2098,
+  "class": "G",
+  "witness": "G_ATOM"
+ },
+ "1209": {
+  "text": "**Static-only controls (revision 8, M2), run and reported, not gated here.** K12 (`_unwind_on` with its own-anchor gate read by `in` and a subscript in statement 1, `critic8/c2`) and K12b (the same read as a tuple display in the pipeline statement) pass all 67 cases on both versions, because G_ATOM cannot see bytecode.",
+  "line_rev8": 2115,
+  "class": "G",
+  "witness": "G_HYG step controls"
+ },
+ "1215": {
+  "text": "Its control is K7's `_unwind_off`, which must show a trial that raises RecursionError after its pop (measured: n0 = 4,998 on both versions; 31 full and 30 none per step;",
+  "line_rev8": 2121,
+  "class": "G",
+  "witness": "G_ATOM part R control K7"
+ },
+ "1229": {
+  "text": "- **G_ATOM (revision 6; revision 7 criteria; revision 8 matrix, floors and controls)** passes on every patch level in `_VERIFIED`, run on `ref_v5f.py` at the freeze and on the implementation before any scoring: all 67 cases pass, the t1, D2 and R parts meet their count floors within `T_MAX`, K1–K3 are detected in the same run, and K4–K11, K13 and K14 (patches of `ref_v5f.py`, each in its own process) fail, as they must, in the same run.",
+  "line_rev8": 2147,
+  "class": "G",
+  "witness": "G_ATOM"
+ }
+}

@@ -1,0 +1,305 @@
+1	P	L13	[]	_RETURN or PY_YIELD, or at a PY_UNWIND whose offset is past the entry offset. PY_THROW is never used. `_retire`, reconciliation and the at-fork handler dro
+2	G	L16	[]	5. **Mutation-gate additions.** The G_SEM positive control (the gate must fail on v5e with v5e's frozen exam); the every-site generic
+3	D	L21	[]	_DEFINITION. `'<'`-compiled code in the module's own globals is a pinned residual (R05b), never an open door.
+4	P	L22	[]	the freeze count since the mint was made, together with D1's visible-referrer accounting, never on "count > 0". The draft said "delta"; revision 1 makes it
+5	G	L31	[]	- The ported v5e cases are run against `ref_v5f.py` at freeze time, and their delta must equal the "v5e cases whose outcome changes" table.
+6	H	L40	[Decisions where the judges disagree]	les; mask N ≥ 5 | **Both are adopted** (revision 1: exactly N = 5, and UNDISTINGUISHED is never judged equivalent). The two positions do not conflict. An e
+7	P	L47	[Decisions where the designs disagree and]	(D1): in another pid, `run()` just calls fn | Fork-pool jobs keep working. Child work was never credited. |
+8	P	L54	[Decisions where the designs disagree and]	s an exec'd copy as the lab's runners use, takes the other id or refuses MONITOR_BUSY. It never overwrites the first copy's callbacks (R1-B4). **Revision 2
+9	P	L56	[Decisions where the designs disagree and]	frame**, per mint (not D3's global bare-id map) | While an entry is pending, its frame id cannot be reused. Retiring a mint drops its entries in one `clear(
+10	P	L57	[Decisions where the designs disagree and]	| Where asyncio is imported | In `coverage_trace()` (the constructor), never at `styxx.protocol` import and never inside `__enter__` or 
+11	P	L57	[Decisions where the designs disagree and]	 imported | In `coverage_trace()` (the constructor), never at `styxx.protocol` import and never inside `__enter__` or `__exit__` | Scoring-only users do no
+12	C	L91	[Verified in scratch, and what was not]	 sys.monitoring callback. A staticmethod's own `__dict__` has no `__wrapped__`. PY_UNWIND cannot be a local event (ValueError). `gc.get_freeze_count()` at s
+13	G	L116	[Verified in scratch, and what was not]	- `p6_faultpoint_identity`: which code object an injector must instrument while the self-trace has minted it.
+14	H	L147	[Verified in scratch, and what was not]	_callback` raises one inside `_register` (the sixth critic's B1); part D's control showed 0 violations, so part D is not evidence (M5).
+15	G	L162	[Verified in scratch, and what was not]	unting on every thread. Every D1 measurement above was taken with publish-at-PY_START and must be re-run on the v5f implementation (G_FI, G_SIG, G_XVER). 
+16	P	L171	[Delta from v5e, section by section]	e(obj), ModuleType / type)`, `type(obj) is staticmethod or type(obj) is classmethod`) and never reads `obj.__class__`. No type test is a tuple membership: 
+17	P	L171	[Delta from v5e, section by section]	through C descriptors; a Python-level `__dict__` descriptor stops the step or walk and is never called. staticmethod and classmethod are unwrapped at every
+18	P	L171	[Delta from v5e, section by section]	d are unwrapped at every step. PEP 562 `__getattr__` is called twice and the two products must be identical (else UNRESOLVED). INHERITED searches the whol
+19	P	L172	[Delta from v5e, section by section]	T is its *real callee* (the unique FunctionType among `gc.get_referents(wrapper)`), which must be the own-dict `__wrapped__`. Also refused: a callee bound
+20	P	L173	[Delta from v5e, section by section]	| **Provenance** | The declared module must have an exact-str, non-`.pyc`/`.pyo` `__file__`. Every Func
+21	P	L173	[Delta from v5e, section by section]	str, non-`.pyc`/`.pyo` `__file__`. Every FunctionType link the walk visits, F_T included, must be *coherent*: its `co_filename` starts with `'<'`, or its 
+22	P	L215	[Resolution (at `__enter__`, every target]	mong the class dicts of `type(obj)`'s MRO, read with `_TYPE_DICT`/`_TYPE_MRO`. That entry must be a `types.GetSetDescriptorType` or `types.MemberDescripto
+23	P	L215	[Resolution (at `__enter__`, every target]	`types.MemberDescriptorType`, and is read with `desc.__get__(obj, type(obj))`. The result must be an exact dict; otherwise `_own_dict` returns None. A Pyt
+24	P	L215	[Resolution (at `__enter__`, every target]	n exact dict; otherwise `_own_dict` returns None. A Python-level `__dict__` descriptor is never called.
+25	P	L234	[Resolution (at `__enter__`, every target]	ision 2: both bindings are read from the class dicts captured by `coverage_trace()` (M1), never from `asyncio.events.Handle` afresh, so the constructor, E2
+26	P	L236	[Resolution (at `__enter__`, every target]	   - **(a) The module.** `mf = dict.get(module_dict, '__file__')` must be an exact str not ending in `.pyc` or `.pyo`. Otherwise r
+27	P	L238	[Resolution (at `__enter__`, every target]	     - **FunctionType.** `cur` must be **coherent**, else refuse FOREIGN_DEFINITION: "the code 
+28	P	L243	[Resolution (at `__enter__`, every target]	   - F_T is always the first FunctionType the walk visits, so F_T itself is al
+29	P	L243	[Resolution (at `__enter__`, every target]	   - F_T is always the first FunctionType the walk visits, so F_T itself is always checked for coherence. This closes the swapped-wrapper shap
+30	H	L263	[Tripwires (recorded; each refuses every ]	ame and list. Message: "gc.freeze() ran while the minted code existed: N references to it cannot be attributed".
+31	P	L269	[Tripwires (recorded; each refuses every ]	eEventLoop`, read through `_TYPE_DICT` by the first `coverage_trace()` of the process and never re-read. `_cut_ok()` is true iff, for each of h and r, `typ
+32	H	L271	[Why class A cannot reopen, and the doors]	### Why class A cannot reopen, and the doors that remain
+33	D	L272	[Why class A cannot reopen, and the doors]	 *other* code objects. A `code.replace()` copy of M_T carries no monitoring events and is never observed (R22, revision 7). Two things are new:
+34	P	L274	[Why class A cannot reopen, and the doors]	- **The pre-trace swap is closed.** F_T's own code must have been compiled from its module's file, and so must ever
+35	P	L274	[Why class A cannot reopen, and the doors]	e swap is closed.** F_T's own code must have been compiled from its module's file, and so must every link the walk visits. A stub from another file instal
+36	P	L275	[Why class A cannot reopen, and the doors]	- **The cache body is what the wrapper calls,** never what its writable `__wrapped__` says (X24b).
+37	D	L277	[Why class A cannot reopen, and the doors]	**The doors that remain are never claimed closed:**
+38	P	L302	[Rule (one sentence)]	t is a C function and runs no user code. An event loop started inside a section therefore never credits that section, whatever its dispatch runs through, p
+39	D	L325	[Sections are calls]	in one frame, in its `finally`, so they are LIFO per stack by construction. An event loop must run outside the section. A task inside any loop may open it
+40	P	L332	[At open (raised before fn runs; every re]	 `type(section) is not str`: a str subclass becomes `str.__str__(section)`, an exact str (never `'Sec.G'`). Anything else refuses **UNDECLARED_SECTION** wi
+41	H	L338	[At open (raised before fn runs; every re]	Y_UNWIND stayed set for the rest of the process and `_on_entry`'s empty-registry shortcut never applied again (the fourth critic's B1; `rev4/b1_open_races_
+42	P	L352	[At a hit]	 can result, and PY_UNWIND is off, so a pending entry for a frame that later raises would never be popped.
+43	P	L356	[At a hit]	e unwind offset differs from the entry offset. A frame that died at its entry instruction never ran its body.
+44	P	L358	[At a hit]	 `throw()` or `close()` resumption fires only PY_THROW and has no pending entry, so it is never counted, even when a handler in the body runs. Names are ex
+45	C	L364	[At close and at exit]	o.core.flags['UNWIND_LOST']`. Revision 5 drops the name test from this read. `get_events` never raises, even on a freed id (`rev5/out_freed_id_calls.txt`: 
+46	P	L370	[What score credits]	- Notes (OPEN_AT_EXIT, LAZY_RESULT, MONITOR_LOST) and `end != "returned"` never refuse. They are printed in the NOT_EXERCISED message.
+47	P	L371	[What score credits]	- `ambiguous` and `uncredited` never count.
+48	H	L374	[Why class B cannot reopen through the ru]	### Why class B cannot reopen through the runtime, and the door that stays open
+49	P	L377	[Why class B cannot reopen through the ru]	child it clears `_ANCHORS` and retires every mint, and the pid pass-through means a child never opens a section or credits one.
+50	G	L381	[Why class B cannot reopen through the ru]	res the original binding before the hit and dispatches without `Handle._run`; the harness must also call that `_run_once` itself from inside the section. 
+51	P	L383	[Why class B cannot reopen through the ru]	Confirmation adds one more condition and never removes one, so it can only lose credit (I1).
+52	P	L397	[M0. Version gate]	ecks this. Both read `sys.implementation`, `sys.version_info` and the build at call time, never at import (revision 7, N6), so a version check cannot be sa
+53	P	L397	[M0. Version gate]	on_info` and the build at call time, never at import (revision 7, N6), so a version check cannot be satisfied by state captured when the module was imported
+54	P	L397	[M0. Version gate]	 satisfied by state captured when the module was imported (X37b). `import styxx.protocol` never touches `sys.monitoring` or asyncio, so scoring works on ev
+55	C	L399	[M0. Version gate]	considered and rejected: its audit-event half needs an audit hook, and `sys.addaudithook` cannot be undone, so the self-test would leave a permanent hook in
+56	H	L401	[M0. Version gate]	hanges (Ubuntu 24.04's `3.12.3-1ubuntu0.x` series, for example) passes M0 although G_ATOM never ran on it. The verified 3.12.3 is itself one such build (Ub
+57	P	L403	[M0. Version gate]	**Revision 6 (M1), revision 7 (M3): the bound functions must be the C builtins, checked at every `coverage_trace()`.** E
+58	H	L403	[M0. Version gate]	talled after the first `coverage_trace()` and before a reload was bound by the reload and never checked (the seventh critic's M3; `rev7/w7_witnesses.py` X1
+59	C	L405	[M0. Version gate]	e`, `x.__flags__ & (1 << 8)` (Py_TPFLAGS_IMMUTABLETYPE, which CPython sets on C types and never on a class statement's result), and `(x.__module__, x.__qua
+60	G	L407	[M0. Version gate]	a wrapper or subclass was installed before this coverage_trace()): styxx's one-call steps must call C functions only". Only its `[V5:UNSUPPORTED_VERSION]`
+61	H	L419	[M1. Module state]	_MINTED  = {}   # id(M_T) -> _Mint        (the mint holds M_T, so the id cannot be reused)
+62	P	L440	[M1. Module state]	_entry, _on_entry, _on_exit, _on_exit, _on_unwind)   # data: passed to register_callback, never called in a step
+63	P	L447	[M1. Module state]	 by the first `coverage_trace()`, alongside `_HANDLE_DICT`. `import styxx.protocol` still never touches `sys.monitoring`, which 3.10 and 3.11 lack (M0). A 
+64	H	L449	[M1. Module state]	stead had two effects in `rev2/p10_reload.py`: a mint held across the reload was lost and never retired, and each reload used up a tool id under a new name
+65	P	L449	[M1. Module state]	nce", on the first trace to exit; with the count it lands on every trace live then. Notes never refuse, so the effect is a MONITOR_LOST note on those trace
+66	P	L469	[M1. Module state]	 in its own coroutine frame for the section's whole life, and a dropped facade would then never die while its section runs (X146c).
+67	P	L470	[M1. Module state]	e machinery may retain** belong to module-level functions whose own locals hold the core, never the facade: `_run`'s frame, `_run_async`'s coroutine frame,
+68	H	L470	[M1. Module state]	eeps its anchor frame in `o.frame` until its own `finally` releases it. If that `finally` never finishes (a fault in it, or `_run_async`'s `finally` skippe
+69	H	L470	[M1. Module state]	by the opening until the core is dropped. Revision 3's X3 released it at exit; revision 4 cannot, because a release by any thread other than the owner is wh
+70	P	L475	[M2. The robust mutex]	alizes enter and exit transactions only. `_open`, `_detach`, the callbacks and `record()` never take it (V68, revision 7's self-audit).
+71	P	L483	[M2. The robust mutex]	d at import (M1; revision 5, N3), so a frozen `time.monotonic` or a replaced `time.sleep` cannot remove the bound (X138b).
+72	P	L486	[M2. The robust mutex]	 CPython #130279 (a signal at a loop back-edge escapes the enclosing `try` table on 3.13) cannot leave anything held.
+73	P	L492	[M3. Reconciliation (the first step of ev]	er is then another tool, which every live trace's exit notes (its registration on that id cannot be complete), or None, and the id is re-taken and counted l
+74	D	L492	[M3. Reconciliation (the first step of ev]	 Tool acquisition prefix). The id is left named, since step 1 took it, and the re-take is never counted: no later reconciliation finds the id freed. A call
+75	H	L492	[M3. Reconciliation (the first step of ev]	 told of the free (revision 7, F25; X157b pins it). Revision 6's L-MONITOR said a free is always noted; that is corrected there.
+76	P	L494	[M3. Reconciliation (the first step of ev]	 styxx's process exits. An id that another tool holds when a write's gate is evaluated is never written by that write. The one write that can still land on
+77	P	L503	[M3. Reconciliation (the first step of ev]	t stop (`h.by_code = {}`), because it has no observable effect. A dead holder's record is never read again. A dead facade leaves nothing to call `record()`
+78	P	L503	[M3. Reconciliation (the first step of ev]	ead facade leaves nothing to call `record()` on. A dead exiting token means X1 ran and X8 never will, so `record()` refuses TRACE_INCOMPLETE for good. A fo
+79	P	L507	[M3. Reconciliation (the first step of ev]	 this write is one C call with its gate: an id that no longer carries this copy's name is never touched by it, not even by another tool freeing and re-taki
+80	P	L511	[M3. Reconciliation (the first step of ev]	at retire). Every pop now clears in the same call when it leaves no anchor, so retirement never leaves the event to clear. The reconciliation's last step c
+81	P	L513	[M3. Reconciliation (the first step of ev]	 A key maps to one opening only (it is that opening's `_run` frame), so the unguarded pop cannot remove another opening's anchor.
+82	D	L527	[M4. `__enter__` (the facade calls `_ente]	 function created *after* E2 that reuses a cut code is not caught. That is an over-block, never an over-credit (#21).
+83	H	L537	[M4. `__enter__` (the facade calls `_ente]	ut called every such case a rebinding. Its prototype counted only `t != i`, and its model never re-took the same id: three rules for one path (the seventh 
+84	P	L538	[M4. `__enter__` (the facade calls `_ente]	     - An id carrying any other name is never adopted. That includes another loaded copy's `styxx.protoco
+85	P	L549	[M5. `__exit__` (the facade calls `_exit(]	### M5. `__exit__` (the facade calls `_exit(core)`; it never raises GateSpecError, and it returns False unless an except
+86	H	L550	[M5. `__exit__` (the facade calls `_exit(]	Revision 6 (B1 item 5) corrects the heading. Revision 5 said "always returns False". An exception raised inside X5's transaction
+87	P	L613	[M6. The event path: tool id 4 or 3, call]	- **Where callbacks run.** They never run at a C call: the only events are PY_START, PY_RESUME, P
+88	P	L613	[M6. The event path: tool id 4 or 3, call]	l) and PY_UNWIND (global, and from revision 2 set only while some section is open). styxx never enables INSTRUCTION, LINE, JUMP or BRANCH events. On 3.12.3
+89	C	L613	[M6. The event path: tool id 4 or 3, call]	sys.monitoring callback raises no events for any tool (synth/p_syn1.py), so the callbacks cannot re-enter themselves.
+90	P	L629	[M7. `_open`, `_commit`, `_run`, `_run_as]	    t = type(result)                            # `is` chain, never `in` (see Resolution)
+91	P	L667	[M7. `_open`, `_commit`, `_run`, `_run_as]	    fr = o.frame                                # never assigned here: every detacher pops by the anchor's own key
+92	C	L703	[M7. `_open`, `_commit`, `_run`, `_run_as]	ofile function and no sys.monitoring callback fires for calls made from C. RecursionError cannot land after a step's first write: every pipeline callable is
+93	P	L704	[M7. `_open`, `_commit`, `_run`, `_run_as]	conciliation (U3). In `_unwind_on` the exception propagates out of `_commit`, so the body never runs (U1 is unaffected). This matters only when the process
+94	C	L708	[M7. `_open`, `_commit`, `_run`, `_run_as]	de the clearing function. Each trial registers an anchor at that event. The one-call step never clears after an anchor registered while the event was set: 
+95	C	L708	[M7. `_open`, `_commit`, `_run`, `_run_as]	event. The one-call step never clears after an anchor registered while the event was set: 0 violations in 48 / 32 / 0 / 3 / 48 trials per version. The BRANCH row 
+96	H	L710	[M7. `_open`, `_commit`, `_run`, `_run_as]	vision 5 wrote "none, from any one-call step"; `_take`, `_register` and `_set_local` were never probed, and `_register` raises five (B1). G_ATOM now probes
+97	H	L711	[M7. `_open`, `_commit`, `_run`, `_run_as]	sion 6).* Revision 5's part D did not discriminate: its two-statement control also showed 0 violations (the sixth critic's M5), because its finalizer and handler 
+98	C	L711	[M7. `_open`, `_commit`, `_run`, `_run_as]	M handler, each registering an anchor, at gc threshold 1, 3 s per form: the one-call step 0 violations in 8,701 / 9,162 closes (3.12.3 / 3.13.12); the Python-call
+99	P	L718	[M7. `_open`, `_commit`, `_run`, `_run_as]	, an audit hook, a thread switch or a greenlet switch can land between two exchanges, but never between an exchange and its count. So no repair is ever lef
+100	C	L722	[M7. `_open`, `_commit`, `_run`, `_run_as]	Revision 5 called `_register` a one-call step. Registration cannot be made atomic from Python: the audit event is raised insid
+101	C	L722	[M7. `_open`, `_commit`, `_run`, `_run_as]	e audit event is raised inside `register_callback` itself, before the exchange, and styxx cannot remove it. Registration is kept to where it is needed: the 
+102	H	L722	[M7. `_open`, `_commit`, `_run`, `_run_as]	ly way to learn a callback (sys.monitoring has no getter). Registering once at import and never again was considered: it would leave a replaced callback un
+103	P	L741	[M7. `_open`, `_commit`, `_run`, `_run_as]	- **U1. An armed section's body never runs with S clear while its core is crediting and alive.** 
+104	P	L741	[M7. `_open`, `_commit`, `_run`, `_run_as]	f a dead core. After X3 nothing counts. After a prune the core is dead, and its record is never read again (M3). A fault in the machinery never clears S: f
+105	P	L741	[M7. `_open`, `_commit`, `_run`, `_run_as]	prune the core is dead, and its record is never read again (M3). A fault in the machinery never clears S: faults only cut a step sequence short, and a faul
+106	C	L741	[M7. `_open`, `_commit`, `_run`, `_run_as]	fault in the machinery never clears S: faults only cut a step sequence short, and a fault cannot land inside a one-call step, other than a MemoryError from 
+107	P	L741	[M7. `_open`, `_commit`, `_run`, `_run_as]	all step, and a fault from an audit hook can land inside it (revision 6, B1); `_register` never writes S. The model check takes the atomicity of `_unwind_o
+108	P	L743	[M7. `_open`, `_commit`, `_run`, `_run_as]	- **U3. A set S with no anchor never exists**, fault-free or after a fault, except after an outs
+109	P	L744	[M7. `_open`, `_commit`, `_run`, `_run_as]	ult sweep, every trial in the close path left either nothing or a dead anchor with S set, never S set with no anchor.
+110	P	L799	[M8. `record()` is pure]	 `'entering'` is present without `'active'`. Refuse **TRACE_ACTIVE** with "the tracer was never entered" when `'entering'` is absent (v5e's X91, unchanged)
+111	P	L799	[M8. `record()` is pure]	 with "the tracer is active: record() was called inside its with-block, or its `__exit__` never started, and then one call of `__exit__()` completes it".
+112	P	L816	[M9. The at-fork handler]	nciliation compare `core.pid` with `os.getpid()`, so they are correct even if the handler never ran or was aborted at any step. G_FI's fork scenario sweeps
+113	C	L831	[M10. The introspection interface (frozen]	at is the self-trace's M_T, which is the code that actually runs. Code captured at import never fires then (`rev2/p6_faultpoint_identity.py`). Its key set 
+114	H	L840	[M10. The introspection interface (frozen]	and the id given back to styxx after a case in which another tool held it. The public API cannot build these. Revision 6 said G_ATOM needed only `_v5_faultp
+115	G	L840	[M10. The introspection interface (frozen]	te names are frozen as a published test interface, like `_v5_state()`. The implementation must provide them with exactly these meanings, and no exam case 
+116	P	L856	[M11. Scoring and check_metrics]	tion that work opens itself; generator and coroutine objects created before the trace are never credited; a call counts only when it returns, yields or rai
+117	P	L858	[M11. Scoring and check_metrics]	- **check_metrics.** It never raises for a JSON-shaped result: dicts, lists, str, bool, N
+118	P	L862	[M11. Scoring and check_metrics]	 with " (smoke run: score(smoke=True) does not read coverage)" appended when smoke, so it always starts with the refusal's `[V5:CODE]`.
+119	H	L873	[Cost]	ack (`rev2/p11_cost.py`; critic2/t_unwind_cost.py measured ×1.49–×2.17 under revision 1's always-on scope) |
+120	P	L881	[What is removed from v5e]	- every `sys.setprofile` call; styxx never calls `sys.setprofile`, `threading.setprofile`, `sys.settra
+121	H	L905	[Exception-safety model]	`_named`, revision 5), so no foreign `__eq__` runs. The machinery's correctness arguments never use the absence of an eval-breaker check between two byteco
+122	P	L917	[Invariants preserved by every prefix of ]	d anchor whose frame died (an interrupted close, or a skipped `_run_async` `finally`) can never be on a live chain. A frame killed at its entry never publi
+123	P	L917	[Invariants preserved by every prefix of ]	skipped `_run_async` `finally`) can never be on a live chain. A frame killed at its entry never publishes (X135, H8).
+124	P	L923	[Invariants preserved by every prefix of ]	with `_unwind_off(None)`, which repairs that case. An anchor whose section's body may run always has the event set (U1). Revision 2 said "set only while som
+125	P	L927	[Invariants preserved by every prefix of ]	 a clock bound at import (MACHINERY_BUSY). No threading lock exists, so a skipped release cannot hang anyone. Opens, closes and callbacks never wait for any
+126	P	L927	[Invariants preserved by every prefix of ]	reading lock exists, so a skipped release cannot hang anyone. Opens, closes and callbacks never wait for anything (V68, revision 7). Revision 4's opener wa
+127	H	L931	[Invariants preserved by every prefix of ]	  Revision 4's claim here, "a clearer never waits for anything, so no cycle of waits exists inside the 
+128	P	L935	[Invariants preserved by every prefix of ]	rument and no re-entrant code clears the event under a registered anchor (U1), so a fault cannot cause `UNWIND_LOST`. Revision 3 had to allow MONITOR_LOST h
+129	P	L939	[Invariants preserved by every prefix of ]	  A fault never causes any of these: over-credit; a hang; a mint left insta
+130	P	L941	[Invariants preserved by every prefix of ]	  A fault never swallows an exception, with one exception. An asynchronous 
+131	C	L955	[Per-transition prefixes]	 at any point, including inside `_unwind_on` (a fault lands before or after its one call, never inside): the fault is inside `_run`'s `try`, so the `finall
+132	P	L955	[Per-transition prefixes]	lears the event in the same call if no anchor is left. The opening ends `"raised"` and fn never runs. `o.armed` is still False, so no `UNWIND_LOST`. A seco
+133	P	L963	[Per-transition prefixes]	ops, single-key increments and clone flags. A fault loses at most that one credit and can never add one: an entry killed before its store has no pending en
+134	P	L963	[Per-transition prefixes]	led before its store has no pending entry, and a pending entry killed at its entry offset never publishes. A pending entry whose confirmation never arrives
+135	D	L963	[Per-transition prefixes]	ding entry killed at its entry offset never publishes. A pending entry whose confirmation never arrives stays until `_retire` clears it. It keeps its frame
+136	C	L971	[Per-transition prefixes]	one-call step gated on the name (X154), and the one read on the close path, `get_events`, never raises. Revision 5 said the same of `register_callback`; re
+137	D	L971	[Per-transition prefixes]	es it under styxx's own name object, which it can read with `get_tool`. The identity test cannot tell that tool from styxx (L-MONITOR). No library does this
+138	D	L975	[Residuals, disclosed]	- **L-ZOMBIE.** A tracer whose exit never began stays active.
+139	C	L984	[Residuals, disclosed]	py`, `ext+greenlet: [exit(X), rec] || open(X)`). Only a transaction is affected. A switch cannot land inside a one-call step, so the event path has no green
+140	G	L992	[Residuals, disclosed]	**Evidence and what must be re-run.** D1's crash sweep, run with its monitoring adap
+141	G	L992	[Residuals, disclosed]	etected. That machine published at PY_START and gated on per-thread sets. The v5f machine must pass the same sweep, extended to two threads, `run_async`, 
+142	G	L1014	[Version policy]	efusal cases (X37) and every scoring-only case with a prebuilt `/3` trace. Their outcomes must be identical to those on the verified interpreters. No real
+143	P	L1018	[Version policy]	on 2 left 0 with the id's events cleared. If another tool takes the freed id first, styxx never touches it, and styxx's PY_UNWIND callback keeps firing the
+144	G	L1025	[Reason codes]	ext), **same**, or **retired**. Every code is a literal at its own emission site (G7) and must survive the literal-census refusal gate (G_REF).
+145	P	L1033	[Reason codes]	ring', me)` loses: a second or concurrent entry, or a retry after a failed enter | raise; always appended to problems |
+146	P	L1037	[Reason codes]	wn dict is missing, lacks the name, or is served by a Python-level `__dict__` descriptor (never called) | raise |
+147	P	L1043	[Reason codes]	ther thread held the machinery (the robust mutex) for more than 10 s. Revision 5: an open never waits, so it never raises this. Revision 4's open-side case
+148	P	L1043	[Reason codes]	e machinery (the robust mutex) for more than 10 s. Revision 5: an open never waits, so it never raises this. Revision 4's open-side case is deleted | enter
+149	P	L1046	[Reason codes]	_SECTION | changed | open: no gate declares the section, **or the section is not a str** (never compared). Str subclasses are normalized first | raise + re
+150	P	L1051	[Reason codes]	| TRACE_ACTIVE | changed (text) | `record()` on a tracer that was never entered (its own text), inside its with-block, or a zombie 
+151	P	L1060	[Reason codes]	ged | exit: the opening was still open; also "pruned: the trace's own exit did not run" | never refuses |
+152	P	L1061	[Reason codes]	oroutine or async generator back; new text; "(its body had not started)" when unstarted | never refuses |
+153	P	L1062	[Reason codes]	e was cut short by a raising audit hook is not noted on a trace that lost nothing (F25) | never refuses; appended to every opening of the trace |
+154	P	L1063	[Reason codes]	| FOREIGN_PROFILER | **retired** | styxx never touches profilers; every profiler coexists | a `/3` trace c
+155	H	L1065	[Reason codes]	 SIGNAL_TIMER (D1), UNSTABLE_ATTRIBUTE and GENERATOR_TARGET (D2), MACHINERY_BROKEN (D3) | never adopted | — | — |
+156	S	L1083	[Blockers (6)]	nce | FIXED | Coherence on every visited function link, F_T included. The declared module must have a source `__file__`. L-STUB and the J1-X1 row are rewr
+157	S	L1084	[Blockers (6)]	rough the robust mutex (dead owners stolen, REENTRANT, MACHINERY_BUSY), and the callbacks never run at a C call. 3.11 is refused because its only mechanism
+158	S	L1085	[Blockers (6)]	from-writable-wrapped | FIXED | F_T is the wrapper's real callee (`gc.get_referents`) and must be its own-dict `__wrapped__`, else NOT_A_FUNCTION naming t
+159	S	L1086	[Blockers (6)]	B4 | unstarted-generator-credited-py310-311 | FIXED | Confirmed-entry credit: PY_THROW is never used, and a frame killed at entry never publishes. 3.10 and
+160	S	L1086	[Blockers (6)]	311 | FIXED | Confirmed-entry credit: PY_THROW is never used, and a frame killed at entry never publishes. 3.10 and 3.11 are refused. | X119, X135, H8 |
+161	S	L1096	[Spec-false (7)]	X | #14 is rewritten. Code run directly inside a trace, profile or monitoring callback is never credited; code run through `sys.call_tracing` (pdb `debug`)
+162	S	L1105	[Defects (15)]	| D2 | pretrace-generator-objects-never-credited | DISCLOSED_LIMIT | #12 extended, L-WHERE narrowed
+163	S	L1107	[Defects (15)]	| D4 | hook-self-removal-uninstalls-chaining-profiler | FIXED (structural) | styxx never calls `sys.setprofile`. | V37 |
+164	S	L1136	[Exam holes (29)]	| E7 | examhole-declared-section-field-never-scored | EXAM_CASE_ONLY | V42, V43, X121, X78g |
+165	S	L1164	[Round-4 items outside the 58]	| yappi-silently-replaced | surfaced, unverified | Moot: styxx never calls `sys.setprofile`. yappi is expected to coexist but is
+166	S	L1176	[Finding closure, rounds 1–3 (rows that c]	D_S | Unchanged (X40–X48). Generator objects created before the trace are under-credited, never over-credited (R14). |
+167	S	L1177	[Finding closure, rounds 1–3 (rows that c]	CLOSED_S | Unchanged anchor rule, plus the loop boundary: a loop started inside a section never credits it, uvloop included. The cut holds every `Handle._r
+168	S	L1177	[Finding closure, rounds 1–3 (rows that c]	nce` code seen (revision 2). It is monotone and by identity, refuses shareable codes, and cannot be minted. CUT_MOVED is checked on both bindings at every h
+169	S	L1178	[Finding closure, rounds 1–3 (rows that c]	| R1-B4 C profiler crash or destroyed | CLOSED_S (structural, was: refusal) | styxx never calls `setprofile`, so no profiler is ever called, chained,
+170	S	L1178	[Finding closure, rounds 1–3 (rows that c]	ong sys.monitoring tools, styxx adopts only an id that carries its own per-copy name, and never changes events or local events on an id that lost that name
+171	S	L1178	[Finding closure, rounds 1–3 (rows that c]	rted and noted (L-MONITOR; X154b). Revision 7's self-audit corrects this row, which said "never registers callbacks". |
+172	S	L1182	[Finding closure, rounds 1–3 (rows that c]	losed leak:** if *another tool* takes the freed id before styxx's next transaction, styxx never touches it, and styxx's PY_UNWIND callback keeps firing on 
+173	S	L1183	[Finding closure, rounds 1–3 (rows that c]	 hook | CLOSED_S | Callbacks are not dropped when they raise. A frame killed at its entry never publishes (V27, X135). |
+174	D	L1207	[Over-blocking, disclosed]	1. **Off-stack work never counts.** This covers threads and grandchildren, thread poo
+175	D	L1208	[Over-blocking, disclosed]	2. **Event loops must run outside the section.** `cov.run(name, asyncio.run, main
+176	D	L1209	[Over-blocking, disclosed]	3. **Sections must be calls.** A generator or coroutine returned by fn gets LA
+177	P	L1219	[Over-blocking, disclosed]	overage_trace()`, and do not reload `styxx.protocol` while it is installed; the machinery never calls a wrapper installed on `sys.monitoring` after the fir
+178	P	L1227	[Over-blocking, disclosed]	ction re-takes it and clears its events (revision 2). If another tool has taken it, styxx never touches it, and any events styxx had set there stay until t
+179	D	L1252	[Over-blocking, disclosed]	ted before the trace, or in an earlier trace, keep T's original code, so their frames are never credited, even when resumed inside a section (R14). Create 
+180	D	L1254	[Over-blocking, disclosed]	14. **Code run directly inside a trace, profile or sys.monitoring callback is never credited.** That includes code run by finalizers that CPyth
+181	P	L1255	[Over-blocking, disclosed]	`run()` passes through: no section, no credit, no refusal. A tracer inherited across fork cannot exit in the child (a no-op), and its `record()` refuses TRA
+182	D	L1260	[Over-blocking, disclosed]	    - frames that never return, yield or unwind, such as `os._exit()`, or a thread 
+183	D	L1263	[Over-blocking, disclosed]	 joined, the mint can be older than this trace. In that case any reference to M_T that gc cannot see at exit refuses:
+184	D	L1267	[Over-blocking, disclosed]	    Frozen objects dying and `gc.unfreeze()` only lower the count, so they never trigger it (p4).
+185	H	L1277	[Over-blocking, disclosed]	 still `dispatched` (`critic3/c10_aiodebug_overblock.py`, both versions). The remedy text cannot be applied to a third-party patch. **Remedy:** call `log_sl
+186	D	L1279	[Over-blocking, disclosed]	e._run.__code__, g)` built by a module imported at start-up, that code is "shareable" and never enters the cut, and every `coverage_trace()` in the process
+187	D	L1280	[Over-blocking, disclosed]	not CUT_MOVED (`critic3/c8_cut_order_dependence.py`). Both effects are toward acceptance, never over-credit: the code is a cut code, so attribution stops a
+188	D	L1281	[Over-blocking, disclosed]	monotone. The effect is an under-credit (NOT_EXERCISED with the call under `dispatched`), never an over-credit (R20, revision 7).
+189	D	L1303	[Stated limits]	r here. Work dispatched by a loop started inside a section fails the loop boundary and is never credited. v5e disclosed uvloop's Cython handles as a hole i
+190	D	L1304	[Stated limits]	and 3.13 (R12). Code run directly inside any trace, profile or sys.monitoring callback is never credited.
+191	P	L1334	[Stated limits]	 profile or trace function. So the lock-release hazard of hook-exception-leaves-lock-held cannot arise from styxx on 3.12/3.13. D1 measured 0 user-lock leak
+192	C	L1337	[Stated limits]	er has started, and the handler's first instructions, up to its first eval-breaker check, always run. The measured consequence is below: 0 lost handlers unt
+193	D	L1362	[Stated limits]	- **L-ZOMBIE (new).** A tracer whose exit never began stays active, and `record()` refuses TRACE_ACTIVE. Th
+194	P	L1376	[Stated limits]	ision 6 narrows revision 5's claim).** styxx changes no event or local event there, so it cannot clobber the new owner's events. Every such write is a one-c
+195	P	L1376	[Stated limits]	n the name, so a tool that frees and re-takes the id between two of styxx's statements is never written to (the fifth critic's N1; X154). The exception is 
+196	D	L1376	[Stated limits]	the id under styxx's own name object, read with `get_tool`, is taken for styxx, and styxx cannot tell it from itself (R21 pins it, revision 7). The cost fal
+197	D	L1378	[Stated limits]	  - **Pending entries.** A pending entry whose confirmation never arrives keeps its frame (and that frame's callers) alive un
+198	P	L1381	[Stated limits]	 somewhere in the process (revision 2: a hit while no section is open stores nothing). It never sees code inside callbacks or unconfirmed calls, and it is 
+199	P	L1381	[Stated limits]	open stores nothing). It never sees code inside callbacks or unconfirmed calls, and it is never evidence.
+200	C	L1382	[Stated limits]	nsactions can interleave, and the model finds no property violated when they do. A switch cannot land inside a one-call step, so the event path has no green
+201	G	L1389	[Exam harness rules (frozen with the prer]	 On 3.10 and 3.11 the runner executes X37 and every scoring-only case, and those outcomes must equal the verified interpreters' ones. The scoring-only cas
+202	G	L1395	[Exam harness rules (frozen with the prer]	minted, so `_v5_faultpoints()` returns the code that runs, and the self-trace's own calls cannot be faulted.
+203	G	L1397	[Exam harness rules (frozen with the prer]	xture path. These are the cases that need tool ids in a state the process-long self-trace cannot give: X36, X137's `free_tool_id` variant, X137b, X142 and X
+204	G	L1397	[Exam harness rules (frozen with the prer]	race()`, which binds once per process), and X157 (an audit hook, which `sys.addaudithook` cannot remove). Revision 7 adds X158 and X158b (they replace a cal
+205	G	L1399	[Exam harness rules (frozen with the prer]	nction as `Handle._run` or `BaseEventLoop._run_once` uses a wrapper whose code object has never been bound, scanned or put in the cut in that process: a to
+206	G	L1401	[Exam harness rules (frozen with the prer]	- **A fresh tracer per case.** A case never reuses a tracer, a fixture wrapper, or a clone that another
+207	G	L1413	[Exam harness rules (frozen with the prer]	 No timeout decides anything: the interference is a sequence of complete transitions that never waits for T. The sweep places the interference between ever
+208	G	L1414	[Exam harness rules (frozen with the prer]	lback can run inside a one-call step (M7), so the tool is not an instrument the machinery must be protected from. Each case states the events it registers
+209	G	L1418	[Exam harness rules (frozen with the prer]	t_events()` (`rev2/p5b_settrace_blinds_injector.py`, 3.12.3 and 3.13.12). So the injector never runs while a settrace or setprofile function is set, and it
+210	G	L1420	[Exam harness rules (frozen with the prer]	g tool has LINE, INSTRUCTION, JUMP or BRANCH events on a machinery code object, unless it never returns `DISABLE` for machinery code. A LINE tool returning
+211	G	L1427	[v5e cases whose outcome changes (the fre]	### v5e cases whose outcome changes (the freeze-time delta against `ref_v5f.py` must equal this table)
+212	G	L1442	[v5e cases whose outcome changes (the fre]	| X91 | `record()` before enter: TRACE_ACTIVE | same code; text "the tracer was never entered" | text per case (M8) |
+213	G	L1448	[v5e cases whose outcome changes (the fre]	, appended last, is still registered. A handler tripped from inside a monitoring callback cannot be used: code it runs raises no monitoring events (`rev1/p1
+214	N	L1466	[New violation cases (expected code)]	ef` also bound at module level (v5e's message said "declare power_ref", which the wrapper never calls) | NOT_A_FUNCTION; the message names `fast`, never `p
+215	N	L1466	[New violation cases (expected code)]	re power_ref", which the wrapper never calls) | NOT_A_FUNCTION; the message names `fast`, never `power_ref` | B3 |
+216	N	L1477	[New violation cases (expected code)]	| X30d | a `__wrapped__` chain link whose class defines a Python `__dict__` property (never called), with no accepting link before it | FOREIGN_DEFINIT
+217	N	L1498	[New violation cases (expected code)]	n_once()`, which runs a job another task scheduled that calls f. Revision 3 (N6): the job must be the first handle W dispatches, because W restores the bi
+218	N	L1502	[New violation cases (expected code)]	| X78e | the harness swallows `cov.run('G_typo', f)` and never opens G's section | UNDECLARED_SECTION (not SECTION_ABSENT)
+219	N	L1510	[New violation cases (expected code)]	| X96c | a genuine trace with `gates_sha256` popped | BAD_TRACE (never KeyError or STALE_TRACE) | E15 |
+220	N	L1511	[New violation cases (expected code)]	d | `gates_sha256: 5`; `tracer` given as a str subclass whose `__eq__` raises (the raiser never runs) | BAD_TRACE / WRONG_TRACER | graft 4 |
+221	N	L1518	[New violation cases (expected code)]	| X117c | `smoke` is an object whose `__bool__` raises | REPORTED; `__bool__` never called | S5 |
+222	N	L1523	[New violation cases (expected code)]	| X122 | a declaring gate whose bar fails (m=0.0), and a harness that never calls one declared target | NOT_EXERCISED (never the table'
+223	N	L1523	[New violation cases (expected code)]	se bar fails (m=0.0), and a harness that never calls one declared target | NOT_EXERCISED (never the table's FAIL row) | E14 |
+224	N	L1529	[New violation cases (expected code)]	etAsyncExc` at the target's PY_START (t_confirm_det3 / cr_det3) | NOT_EXERCISED; the body never ran | B4, graft 2 |
+225	N	L1536	[New violation cases (expected code)]	scenario; `rev2/p5_cover_driver.py` shows the injector firing there. A trial whose offset never executes in its scenario is recorded UNREACHED and counts a
+226	N	L1536	[New violation cases (expected code)]	alls has a back-edge (`rev5/spec_rev5_eventpath.py`). The scenario runs to completion and never waits for the offset, so no trial can hang. UNREACHED trial
+227	N	L1543	[New violation cases (expected code)]	e store and step 8 and before the set | `Injected` propagates from T1's `run()`; the body never ran; A's end is `"raised"`; the trace's notes contain no MO
+228	N	L1544	[New violation cases (expected code)]	ONITOR_LOST. Without the anchor test in `_detach`, exit's X3 re-detaches A (its `finally` never released `o.frame`) and notes MONITOR_LOST (`rev5/w5_witnes
+229	N	L1549	[New violation cases (expected code)]	tracer declaring g, whose reconciliation prunes A's dead core (claiming A; `'exiting'` is never set). Then T1 is released | `co` raises TRACE_INACTIVE; `an
+230	N	L1560	[New violation cases (expected code)]	 times. With the mutex reading `time.monotonic` and `time.sleep` at call time, the waiter never raises and waits until the owner releases, and the wrapper 
+231	N	L1563	[New violation cases (expected code)]	er` sweep witnesses only that its gates are inside its one statement. An INSTRUCTION tool cannot run code inside the C call, so this sweep never places the 
+232	N	L1563	[New violation cases (expected code)]	e its one statement. An INSTRUCTION tool cannot run code inside the C call, so this sweep never places the interference inside `register_callback`, where t
+233	N	L1569	[New violation cases (expected code)]	, N6: revision 6 quoted a text, "set_events is not the C builtin", that the harness rules never compare). Without the binding check, `critic6/a3_wrapped_mo
+234	N	L1576	[New violation cases (expected code)]	ts, found PY_UNWIND clear under A's armed, registered anchor, and flagged it. The reclaim never counted (F25), so `_LOST` does not note it. With the close'
+235	N	L1621	[New valid cases (expected union counts)]	in the probe, raises MACHINERY_BUSY (`rev7/w7_audit.py` X138c, both versions) | M2: opens never take the mutex; MACHINERY_BUSY never at open |
+236	N	L1621	[New valid cases (expected union counts)]	`rev7/w7_audit.py` X138c, both versions) | M2: opens never take the mutex; MACHINERY_BUSY never at open |
+237	N	L1622	[New valid cases (expected union counts)]	, both versions) | M0: a wrapper on `sys.monitoring` installed after the first binding is never called |
+238	N	L1627	[New documented residuals (pinned outcome]	f the declared wrapper's body, held in another module, is called. The declared wrapper is never called. Outcome: PASS.
+239	N	L1634	[New documented residuals (pinned outcome]	f:1}`. The clone is a cut frame between f and A's anchor: cut poisoning under-credits and never over-credits (`rev7/w7_audit.py` R20, both versions).
+240	N	L1635	[New documented residuals (pinned outcome]	n('A', f)` again, and exit. Outcome: PASS `{f:2}` with no MONITOR_LOST. The identity test cannot tell the hostile tool from styxx, and CPython keeps the eve
+241	N	L1636	[New documented residuals (pinned outcome]	- **R22 (revision 7, self-audit; "a `code.replace()` copy of M_T is never observed").** Inside the trace, `FunctionType(f.__code__.re
+242	N	L1656	[The exam-hole kill cases, from each veri]	| examhole-declared-section-field-never-scored | "two gates sharing a declared section … or one gat
+243	N	L1663	[The exam-hole kill cases, from each veri]	| exam-hole-coverage-on-failing-bar | "a declaring gate whose bar fails (m=0.0) … never calls one declared target (and a second run with a swallowe
+244	N	L1664	[The exam-hole kill cases, from each veri]	| exam-hole-score-step-order | "a valid trace with 'gates_sha256' popped must refuse BAD_TRACE, not raise KeyError … swallows cov.run('G_
+245	N	L1666	[The exam-hole kill cases, from each veri]	-mut-stop-cleared-by-inner-exit | "V15's shape … then X65's shape in the outer tracer … A must refuse NOT_EXERCISED with dispatched {f:n}" | X65b |
+246	G	L1683	[Hazard sweeps (main thread, before the s]	-entering finalizer. **Mutant:** the robust mutex replaced by `threading.Lock`. The sweep must detect a hang.
+247	G	L1684	[Hazard sweeps (main thread, before the s]	ated and 20/20 PASS. **Mutant:** the callbacks wrapped in `except Exception`. Propagation must drop below 20/20.
+248	G	L1688	[Hazard sweeps (main thread, before the s]	ed under G_FI) hold. **Mutants** (SM1 rows, witnesses as listed there): M1 (`with RLock`) must hang; M2–M7 must be detected. M8 (per-thread counters) is r
+249	G	L1688	[Hazard sweeps (main thread, before the s]	ld. **Mutants** (SM1 rows, witnesses as listed there): M1 (`with RLock`) must hang; M2–M7 must be detected. M8 (per-thread counters) is retired with `_TH`
+250	G	L1689	[Hazard sweeps (main thread, before the s]	locks left held and 0 hangs. **Mutant:** a setprofile-based event source (v5e's hook). It must leak more than 0.
+251	G	L1691	[Hazard sweeps (main thread, before the s]	th _M:`, where `_M` is a `threading.Lock` that `_exit_txn` also takes (v5e's shape). X140 must detect it on both versions: the exception raised at the bac
+252	G	L1692	[Hazard sweeps (main thread, before the s]	SM1 row): PY_UNWIND set at mint time and cleared at retire (revision 1's scope). Cell (a) must detect it: `rev2/p4_unwind_scope.py` measured 171,683 (3.12
+253	G	L1712	[Mutation audit (every rule has a mutant;]	 X154 / X155 / X137e / X138b / V52 (the second transaction of any trace walks a cycle and never returns, so every case with an exit fails; V52 is named; `r
+254	G	L1747	[The semantic-mutation gate (G_SEM), froz]	quivalence is decided mechanically or by a written argument signed before the freeze, and never by a reviewer after it.
+255	G	L1766	[Frozen artifacts]	 with exactly one comparison class, assigned by a frozen rule from the entry's source and never by judgement:
+256	G	L1770	[Frozen artifacts]	st is validated on `ref_v5f.py`. Each `equality` entry is run N = 5 times per version and must give identical spec-fixed observables. An entry that fails 
+257	G	L1790	[SM1: catalog power, computed at freeze t]	 rows.** A row failing condition 3 is **UNWITNESSED**. Before the freeze, the exam author must do one of two things for every UNWITNESSED row:
+258	G	L1796	[SM1: catalog power, computed at freeze t]	T_BY_SPEC with the I6 argument, and it is also the control that SM2's envelope comparison must *not* flag.
+259	G	L1798	[SM1: catalog power, computed at freeze t]	**Gate.** Both must hold:
+260	G	L1816	[SM1: catalog power, computed at freeze t]	e walk is bounded at 16 hops and a revisited link repeats its own verdict, so the outcome cannot change. The exam author either finds a witness or files it 
+261	G	L1822	[SM1: catalog power, computed at freeze t]	  - M4 entering token always live → C7;
+262	G	L1825	[SM1: catalog power, computed at freeze t]	  - M7 exiting token always live → C7;
+263	G	L1835	[SM1: catalog power, computed at freeze t]	the fifth critic's reading (MF4); `mech5.py` passes its tracer object to `_run_async` and cannot show it. `rev5/m5_modelcheck.py mutants` also finds a prope
+264	G	L1840	[SM1: catalog power, computed at freeze t]	 from the waiter's start (revision 2, M12). `_BUSY_SECONDS` is a float, which O7 (int ±1) never touches. So SM1 carries explicit rows for 0.5 s, ×0.5 and ×
+265	G	L1885	[SM2: operator mutants on the real implem]	e or problem code, the baseline is unclean and G_SEM fails: the spec fixes those, so they must not vary.
+266	G	L1887	[SM2: operator mutants on the real implem]	**`envelope` entries** (revision 2, M5: "faulted" is now defined by the manifest) are never compared for equality. Each mutant output is checked agains
+267	G	L1911	[Positive controls (frozen; run before an]	### Positive controls (frozen; run before any v5f scoring; each must come out as stated, or G_SEM is void)
+268	G	L1913	[Positive controls (frozen; run before an]	2. **SM2 on v5e.** SM2's generator, run on v5e, with instruments (a) and (d) only, must report EXAM_HOLE > 0 (revision 2, M11):
+269	G	L1918	[Positive controls (frozen; run before an]	`cut`, `cut_current`, `tool`, `tool_ours`, `global_events`) read as their `S0` values. It must report at least one non-clean point on 3.12 and on 3.13. Th
+270	G	L1919	[Positive controls (frozen; run before an]	4. **G_SIG on v5e.** G_SIG must show v5e leaking on 3.12 and 3.13 (D3 sig_sweep: 2521 and 2
+271	G	L1919	[Positive controls (frozen; run before an]	ng on 3.12 and 3.13 (D3 sig_sweep: 2521 and 2265 leaks), and H8's publish-at-entry mutant must fail on 3.12.
+272	G	L1920	[Positive controls (frozen; run before an]	5. **G_REF blind shapes.** A planted blind-shape emission must be caught by G_HYG, for each of the 8 shapes in `mutation_g
+273	G	L1930	[Companion gates]	(MF5): the discovery run is made twice, at the start of the sweep, and the two point sets must be identical, or the G_FI run is void and counts as a failu
+274	G	L1945	[Companion gates]	side that gate's declared section. Every sentinel gate scores NOT_EXERCISED or a refusal, never PASS.
+275	G	L1952	[Companion gates]	    A point whose fault never fired is UNREACHED, counts as clean and is reported.
+276	G	L1954	[Companion gates]	on `_unwind_off`'s code. Since the sweep covers every faultpoint code, that allowance was always granted (the fourth critic's N4). Revision 4 removes it, be
+277	G	L1983	[Companion gates]	 ident, no settrace, `restart_events()` before each trial, and a self-check. A trial that never fires is UNREACHED, counts as clean, and is reported.
+278	G	L1992	[Companion gates]	- **G_HYG (static).** These must hold:
+279	G	L2011	[Companion gates]	  - **Scope (revision 6).** This lint checks the pipelines' *shape* only. It cannot see an audit event raised inside a C function, a wrapper bo
+280	G	L2012	[Companion gates]	  - (revision 4) `_detach` never assigns `o.frame`. `o.frame` is assigned only in `_open` an
+281	G	L2017	[Companion gates]	four passes below. No pragma exempts a line. A line that no pass reaches is dead code and must be deleted. Revision 3 drops revision 2's "or folded onto i
+282	G	L2019	[Companion gates]	l LINE events, because the self-trace mints some region functions and their minted copies must count. Its callback records `(co_filename, line)` for code 
+283	G	L2019	[Companion gates]	rotocol.py`'s path and returns None there. For all other code it returns `DISABLE`. So it never disables a location in machinery code (the injector rule of
+284	G	L2019	[Companion gates]	no settrace pass: settrace silences the id-5 injector (F1), so a crash sweep run under it never reaches the lines only a fault reaches.
+285	G	L2041	[Companion gates]	* Lines of other functions executed by the driver do not count toward G_COVER. The driver cannot be used to cover anything else. `rev2/p5_cover_driver.py` s
+286	G	L2042	[Companion gates]	a named function that no frozen driver scenario reaches is dead code, like any other, and must be deleted. No exemption is granted after the freeze, and n
+287	G	L2051	[Companion gates]	  - **Pass, per case (all must hold).**
+288	G	L2052	[Companion gates]	t splits its work into a Python helper, or consumes with anything but the bound consumer, never opens the interval, and a vacuous 0-and-0 count fails here 
+289	G	L2068	[Companion gates]	  - **Controls (frozen). Each must be detected, or the run is void.**
+290	G	L2073	[Companion gates]	in a fresh process on `ref_v5f.py` with one step replaced by a frozen text patch. The run must FAIL. These test the hookup to the implementation's steps, 
+291	G	L2075	[Companion gates]	      - K5: `_unwind_off` through a Python helper, the classic split (interval never opened, PY_START outside);
+292	G	L2076	[Companion gates]	      - K6: `_unwind_off` consumed by a deque built at call time (interval never opened: the consumer is not `_CONSUME`);
+293	G	L2081	[Companion gates]	ting.py`'s part D2 are frozen with G_ATOM. Each has a floor on the work its one-call form must see, and a control that must violate. A count below its flo
+294	G	L2081	[Companion gates]	 with G_ATOM. Each has a floor on the work its one-call form must see, and a control that must violate. A count below its floor voids the run.
+295	G	L2082	[Companion gates]	    - Part A, per instrument, for the one-call form: 0 violations, with at least 40 trials fired under INSTRUCTION, 25 under 
+296	G	L2082	[Companion gates]	48, 32, 3 and 48 on both versions). Each of those four instruments' two-statement control must show at least 1 violation. The BRANCH row fires 0 events in
+297	G	L2085	[Companion gates]	    - Part D2: 3 s per form. The one-call step shows 0 violations in at least 5,000 closes and 5,000 interrupts (measured: 8,
+298	G	L2088	[Companion gates]	itic's c3 shapes are K5 and K6. `rev6/atom6.py`'s criterion passed them with the interval never opened (`critic7/out_c3.txt`). Revision 6's own prototype r
+299	G	L2096	[Process gates for the v5f prereg]	ns the runner, `ref_v5f.py`, the SM1 catalog, `sm1_result.json` and every gate script. It must be an ancestor of the first commit that carries the `/3` tr
+300	G	L2097	[Process gates for the v5f prereg]	._check_coverage`, `_resolve_target`, `_open`, `_exit` and `_run` (frozen names, M10) and must PASS (V34).
+301	G	L2106	[Process gates for the v5f prereg]	s ported to the `_v5_state()` interface are run against `ref_v5f.py`. Their outcome delta must equal the "v5e cases whose outcome changes" table exactly.
+302	G	L2110	[Process gates for the v5f prereg]	the same run, and K4–K10 (patches of `ref_v5f.py`, each in its own process) fail, as they must, in the same run. A patch level is added to `_VERIFIED` onl
+303	H	L2122	[What round 5 should attack first]	   - Credit an entry whose body never ran: C-level resumption (`map(next, gens)`, itertools, the 
+304	H	L2136	[What round 5 should attack first]	   - `'exiting'` holders racing another thread's join, which must not yield a false CODE_SWAPPED.
+305	H	L2141	[What round 5 should attack first]	 and envelope.** A nondeterministic baseline field could mask a real regression. The mask must be minimal, and its size is reported.

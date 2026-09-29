@@ -1,0 +1,8 @@
+3.13.12 ref_v5f.py sha256 e4fbf0f53c7b56ba
+X10c   spec                   {"I": ["UNRESOLVED", "ValueError"], "A": ["UNRESOLVED", "KeyError"]}
+X10c   mut_import_no_chain    {"I": ["UNRESOLVED", null], "A": ["UNRESOLVED", "KeyError"]}
+X10c   mut_getattr_no_chain   {"I": ["UNRESOLVED", "ValueError"], "A": ["UNRESOLVED", null]}
+X14d   spec                   ["INHERITED", "declare the defining class ?:Base"]
+X14d   mut_inherited_str      ["INHERITED", "declare the defining class 5:Base"]
+V73    spec                   ["[V5:OPEN_AT_EXIT]", "[V5:LAZY_RESULT]", "[V5:MONITOR_LOST]"]
+V73    mut_notes_order        ["[V5:LAZY_RESULT]", "[V5:OPEN_AT_EXIT]", "[V5:MONITOR_LOST]"]

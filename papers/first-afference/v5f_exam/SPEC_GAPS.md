@@ -143,6 +143,8 @@ SM2 compares "exactly these message substrings" and names the three NO_TRACE wor
 
 ## Revision 9 follow-ups (raised after the revision-9 text; for the spec owner)
 
+*Status: resolved in revision 10.* "Revision 10: verifier findings on revision 9" answers GAP-28 to GAP-31 and GAP-W001 to GAP-W344 through the Revision 10 table and Appendix A's revision-10 data. The reconciliation re-run on that data is in "Revision 10 follow-ups" below.
+
 These come from two sources. The first is reconciling `rules_v5f.json` with Appendix A's classified lists (revision 9, GAP-27: "The classified lists are spec data"). The second is a read of the revision-9 text for contradictions. The atoms were re-extracted from the revision-9 text with the revision-8 algorithm, and each atom's `rev8_ids` field links it to its revision-8 atom. The reconciliation followed the three rules of Appendix A. Rule 1 was applied only to the wide list, `rev9/appendix_a/wide_claims_classified.json`: the revision-7 list is outside what this author may read (see GAP-30). `rules_v5f.json`'s `meta.reconciliation` states the rule-2 reading used. The verifier's commit 2e8cc8a0 added `rev9/appendix_a/rev9_new_sentences_classified.json` and `.txt` to the branch while this reconciliation ran. The revision-9 text does not name them as spec data (Appendix A names the revision-7 list and the wide list only), so they were neither read nor used here, and the atoms that hold a revision-9 sentence are classed by rule 2. Once the text adopts that list, the reconciliation is re-run with it under rule 1.
 
 **Counts.** 2,478 atoms: P 905, D 203, C 50, G 632, N 260, S 128, H 300. 852 take their class from the wide list (rule 1). 1,626 are classed by rule 2: 67 of these match a wide-list row that defers to the revision-7 list, and 99 contain a sentence of `rev9_new_sentences.json`. Of the 1,158 P, D and C atoms, 814 have a witness. The other **344** have none (P 305, D 39, C 0), and each is a gap below (GAP-W001 to GAP-W344). The wide list's 1,241 sentences: 1,072 fall inside an atom. The rest were changed by revision 9, or split differently by the two extractions, and rule 2 classes the atoms that now hold them.
@@ -524,3 +526,59 @@ Each row is one atom of `rules_v5f.json`, and each atom has `needs_witness: true
 | GAP-W342 | R-STATED_LIMITS-069 | 1431 | D | Stated limits | Revision 2 keeps PY_UNWIND and narrows it to open sections instead. |
 | GAP-W343 | R-STATED_LIMITS-070 | 1431 | D | Stated limits | That meets the measured case, unrelated code outside sections, at a cost of about 3 µs per section. - **L-ZOMBIE (new).** A tracer whose exit never began stays active, a… |
 | GAP-W344 | R-STATED_LIMITS-071 | ? | D | Stated limits | The causes: - an exception at `__exit__`'s entry; - a foreign tool raising at `__enter__`'s return; - a harness `with` body ending in a loop on 3.13 hit by a signal at i… |
+
+## Revision 10 follow-ups (raised on the revision-10 text; for the spec owner)
+
+`rules_v5f.json` was re-extracted from the revision-10 text (`tools/extract_rules.py`) and reconciled with Appendix A's revision-10 data (`tools/reconcile10.py`). Rule 1 was applied in the stated order of precedence: `rev9_new_sentences_classified_rev10.json`, `wide_old_rows_resolved.json`, the wide list, then the revision-7 list. For the revision-7 list, the witness is taken from Appendix A's own revision-7 tables by audit id, since the list has classes only. Then `pointer_witness_map.json` and `atom_witness_map.json` were applied by atom id. A witness counts only if it names a checkable object, under Appendix A's revision-10 definition. Appendix A's convention that "model" means the model-check file with the property named is applied, so "model U1" counts. "Reading" dispositions (R9-7, F37, F38, and revision 7's untestable D claim) are counted apart. Atoms whose text is unchanged keep their revision-9 ids, which the maps are keyed by. New atoms get `-R10-` ids.
+
+**Counts.** 2,505 atoms (2,468 keep their revision-9 id, 37 are new): P 853, D 166, C 56, G 653, N 272, S 193, H 312.
+- P/D/C atoms: 1,075. 1,060 have a checkable witness, 12 are resolved by reading, and **3** have none (GAP-33 to GAP-35).
+- Map ids that no longer exist: R-MECHANISM_AND_LIFECYCLE_M10-006, R-REASON_CODES-006. Revision 10 edited both sentences, and the new atoms name their own witnesses (V72; X156g–X156i). No map text mismatched its atom.
+- In no list and no map: **1,119** atoms (S 86, C 13, P 258, H 149, D 94, G 348, N 171). 1,017 of them contain none of the lists' keywords. 102 contain one; 33 of all unlisted atoms are new or edited text in revision 10. Every unlisted P, D or C atom has a witness by rule 2 (GAP-32).
+- Disputed `definition` rows: 10 (GAP-36).
+
+| gap | section | blocks the freeze? |
+|---|---|---|
+| GAP-32 | The revised rule 3 ("in no list and no map") vs rule 2: 1,119 atoms are unlisted by construction | **yes**, as the status line reads ("with no atom left unlisted"), until the owner rules |
+| GAP-33 | R-MECHANISM_AND_LIFECYCLE_M3-030: its witness names a model mutant and a pointer | **yes** (rule 3) |
+| GAP-34 | R-OVER_BLOCKING_DISCLOSED-075: a D claim pinned only by a probe | **yes** (rule 3) |
+| GAP-35 | R-OVER_BLOCKING_DISCLOSED-090: the verifier list's witness is stale ("none pinned"); X84 now pins it | no (data fix; the atom's paragraph names X84) |
+| GAP-36 | 10 `definition` rows the exam author disputes as D claims with no checkable witness | **yes** if the owner agrees they are D; no if the owner keeps them S |
+
+**GAP-32. Rule 3 as revision 10 words it vs rule 2.**
+- *The contradiction.* Revision 10's required change says: "An atom that is P, D or C and still has no witness, or that appears in no list and no map, is a new gap". The status line says the freeze waits for `rules_v5f.json` "with no atom left unlisted". But the lists hold only sentences with a list keyword (*must, never, always, cannot, nothing, no, none, only, every*), and the maps hold only the 344 GAP-W atoms and the 40 pointer atoms. Rule 2 ("any other atom is classed by the table") still exists for every other atom. 1,017 unlisted atoms have no keyword, so no list could hold them. The other 102 contain a keyword: text new or edited in revision 10, which no list has seen yet, or table rows and list items split differently from the wide extraction.
+- *Reading taken.* Rule 2 classes every unlisted atom, and it takes a witness from the atom, from a revision-9 or revision-10 table row it cites, or from its enclosing paragraph. No unlisted P, D or C atom is left without a witness. Every unlisted atom is marked `listed: false`, so the owner can see each one.
+- *Fix needed.* Either say that rule 2 classes unlisted atoms and that only rule 3's witness test applies to them, or extend the lists or maps to every atom. If they are extended, the wide extraction must also be re-run on the revision-10 text, which Appendix A already requires of the frozen text.
+
+**GAP-33. R-MECHANISM_AND_LIFECYCLE_M3-030** (line 539, class P, rule1:rev7_list).
+- *Atom.* A dead exiting token means X1 ran and X8 never will, so `record()` refuses TRACE_INCOMPLETE for good.
+- *Witness given.* model (`prune_credit_stop` restored changes nothing); M8's refusals
+- *What is missing.* Appendix A's revision-7 table gives "model (`prune_credit_stop` restored changes nothing); M8's refusals": a model mutant name and a pointer, with no case and no named property.
+- *Fix needed.* Name the case that shows `record()` refusing TRACE_INCOMPLETE for a dead exiting token (an interrupted exit such as X92b), or the model property.
+
+**GAP-34. R-OVER_BLOCKING_DISCLOSED-075** (line 1346, class D, rule1:wide_list).
+- *Atom.* While it is enabled, every `coverage_trace()` in the process refuses.
+- *Witness given.* critic3/c10_aiodebug_overblock.py (a disclosure pinned by its probe; no exam case)
+- *What is missing.* The asyncio-debug over-block is pinned only by `critic3/c10_aiodebug_overblock.py`. Under revision 10's definition a probe witnesses only C claims, and this is a D claim with no exam case.
+- *Fix needed.* Add a case: with asyncio debug mode on, `coverage_trace()` refuses. Or file it as reading.
+
+**GAP-35. R-OVER_BLOCKING_DISCLOSED-090** (line 1353, class D, rule1:rev9_new_sentences_classified_rev10).
+- *Atom.* An open with a same-core opening of the running loop below such an anchor refuses NESTED_SECTION, although a hit under it would credit only the new opening.
+- *Witness given.* none pinned (as #132; verify/p_ref_findings.py FB)
+- *What is missing.* The verifier list row still says "none pinned (as #132; verify/p_ref_findings.py FB)". Revision 10 added X84, which pins over-blocking #23, in the next sentence of the same item.
+- *Fix needed.* Give the row `witness_rev10: X84`.
+
+**GAP-36. `definition` rows disputed (10).** Revision 10's weakest point 2 invites this. Each row below is a disclosure (a door, a leak or a user-code site the design admits), so class D by Appendix A's table rather than S. Its map witnesses name no checkable object: a limit's name (L-CLONE, L-MONITOR, L-ZOMBIE), "over-blocking #19", a probe (which witnesses only C claims), or nothing. `rules_v5f.json` keeps the map's class and records the dispute in `disputed_by_exam_author`. If the owner agrees, each needs a pinned residual or case, or a reading disposition.
+
+| atom | map gap | map witnesses | the dispute | atom text |
+|---|---|---|---|---|
+| R-TARGET_IDENTITY-111 | GAP-W066 | over-blocking #19 (definition: disclosure) | D: freeze0 can predate the trace (a disclosure); "over-blocking #19" is a list item, not a pinned case | `m.freeze0` is read when the mint is made, so for a mint this tracer joined it can predate this trace (over-blocking #1… |
+| R-TARGET_IDENTITY-130 | GAP-W072 | L-CLONE, R-rows of the residual table (documented residuals… | D: a disclosed door of L-CLONE; "R-rows of the residual table" names no residual id | builds a same-globals function and drops it before exit; |
+| R-TARGET_IDENTITY-131 | GAP-W073 | L-CLONE | D: a disclosed door of L-CLONE (exec of M_T); "L-CLONE" names no residual id | runs `exec(M_T, T.__globals__)`; |
+| R-TARGET_IDENTITY-132 | GAP-W074 | L-CLONE | D: a disclosed door of L-CLONE (a swap-and-restore); "L-CLONE" names no residual id | does `U.__code__ = M_T` and swaps it back before exit; |
+| R-TARGET_IDENTITY-134 | GAP-W076 | L-CLONE, rev1/p4_freeze.py | D: when the freeze count does not rise; a probe witnesses only C claims | That happens if frozen objects died, or if `gc.unfreeze()` then `gc.freeze()` ran with fewer tracked objects. |
+| R-MECHANISM_AND_LIFECYCLE_M1-061 | GAP-W130 | L-ZOMBIE, L-MONITOR (definition: disclosure) | D: a dead retained frame keeps its callers alive; limit names only | A retained frame that has died still keeps its callers' frames alive, and so possibly the facade; see L-ZOMBIE and L-MO… |
+| R-MECHANISM_AND_LIFECYCLE_M3-020 | GAP-W141 | L-MONITOR (definition: disclosed leak) | D: a foreign tool's events and callbacks stay on the id for the process; "L-MONITOR" only | Any other global or local events and callbacks that tool left stay on the id, now under styxx's name, until styxx's pro… |
+| R-MECHANISM_AND_LIFECYCLE_M11-028 | GAP-W224 | rev1/p2_dict_collide.py (definition: disclosure) | D: check_metrics can run two kinds of user method; a probe witnesses only C claims | For in-process results carrying user objects, it can run two kinds of user method: a `__float__` override on an int or … |
+| R-MECHANISM_AND_LIFECYCLE_M11-029 | GAP-W225 | (definition: disclosure) | D (or C): "a JSON-loaded result has exact-str keys"; no witness at all | The second is contrived: a JSON-loaded result has exact-str keys. |
+| R-EXCEPTION_SAFETY_MODEL-119 | GAP-W279 | L-MONITOR | D: the kept frame keeps its callers alive until then; "L-MONITOR" only | It keeps its frame, and that frame's callers, alive until then (L-MONITOR). |

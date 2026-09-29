@@ -598,6 +598,10 @@ Readings the text does not fix. None is chosen here: each is recorded, and the r
 | GAP-38 | Tripwires, CLONE_ALIVE (b): on 3.12.3 the gc freeze count rises with no `gc.freeze()`, which gives a false CLONE_ALIVE and different outcomes on the two verified interpreters | **yes** (a false refusal whose message claims `gc.freeze()` ran; G_XVER) |
 | GAP-39 | Harness rules, case hygiene: "gc.get_freeze_count() no higher than before the case" vs the same 3.12.3 behaviour | **yes** (the leftover check fails a correct case that follows an unfreezing case) |
 | GAP-40 | X154: "none of styxx's five callbacks is registered on the id" vs CPython keeping a freed id's callbacks (p3) | **yes** (the row cannot pass as written; not run) |
+| GAP-41 | X154d variant (b): what the hook does at the 2nd register_callback event | no (variant (b) not run; (a) runs) |
+| GAP-42 | X137h: P and S open no section, so the score order gives SECTION_ABSENT, not the row's NOT_EXERCISED | **yes** (the row's outcome contradicts the score order) |
+| GAP-43 | X154c: "frees styxx's id (from `_v5_state()["tool"]`)" while `tool` is still None at the first acquisition | no (the row's outcome names id 4) |
+| GAP-44 | X158d: `ref_v5f.py` gives P CODE_SWAPPED, not the row's PASS `{f:1}` | **yes** (the row's outcome contradicts the mechanism text under greenlets) |
 
 **GAP-38. CLONE_ALIVE (b) reads a freeze-count rise that no `gc.freeze()` caused.**
 - *What the text says.* Tripwires: (b) fires when `gc.get_freeze_count() > m.freeze0` and references remain unexplained, with the message "gc.freeze() ran while the minted code existed". The paragraph after it says the count falls with no freeze call, and that `gc.unfreeze()` sets it to 0. It adds that "only a `gc.freeze()` made after the mint can freeze" a clone, "and that call raises the count".
@@ -621,4 +625,31 @@ Readings the text does not fix. None is chosen here: each is recorded, and the r
 - *The conflict.* `sys.monitoring.free_tool_id` keeps the id's callbacks on 3.12.3 and 3.13.12 (the text's own p3; checked again here). After `use_tool_id` by the other tool, styxx's PY_START callback is still registered on both versions. So the stated outcome is false for every trial unless the interference also clears the five callbacks, and the row does not say it does.
 - *Readings left open.* Either the interference registers None for the five events after taking the id, or the check means "no callback styxx registered after the take". The two give different witnesses of the name gate.
 - *In the runner.* X154 is not run. Its four sweeps would each need one fresh subprocess per trial (harness rule, revision 7, M4).
+
+**GAP-41. X154d variant (b).**
+- *What the row says.* "Variant (b): at the 1st event the hook's thread frees the id and another tool takes it, so E4 rebinds to id 3."
+- *What is missing.* Variant (a)'s hook acts at the 1st *and* 2nd events. The row does not say whether (b)'s hook still frees "styxx's id" at the 2nd event. If it does, that id is now the other tool's id 4, and freeing it changes the outcome.
+- *In the runner.* Variant (a) runs and passes; (b) is not run.
+
+**GAP-42. X137h: NOT_EXERCISED for traces that open no section.**
+- *What the row says.* "P refuses NOT_EXERCISED for g with MONITOR_LOST … Q refuses NOT_EXERCISED for h with MONITOR_LOST. S refuses NOT_EXERCISED for g with no MONITOR_LOST." It also says "The other three traces open no section."
+- *The contradiction.* M11's score order puts SECTION_ABSENT (step 8) before NOT_EXERCISED (step 9). A trace whose gate's section was never opened refuses SECTION_ABSENT. `ref_v5f.py` gives P and S SECTION_ABSENT, on both versions. For Q, whose declared section is B, the same holds. MONITOR_LOST, which lives in opening notes and in NOT_EXERCISED's message, cannot then appear for P or Q.
+- *In the runner.* X137h asserts the row as written. It fails, and the receipt reports it under this gap. The part about R (NOT_EXERCISED for t with MONITOR_LOST) and the tool id holds.
+- *Fix needed.* Give P, Q and S the code the score order implies, or give them a section each.
+
+**GAP-43. X154c: the id to free during the first acquisition.**
+- *The wording.* X154c uses "X154b's hook with k = 5", and X154b's hook "frees styxx's id (from `_v5_state()["tool"]`)". During the first enter's registration, `_v5_state()["tool"]` is still None, so that read names no id.
+- *What fixes it.* X154c's own outcome ("the other tool owns id 4") names the id. The runner frees id 4 when `tool` is None, and X154c passes on both versions.
+- *Fix needed.* Say "the id being registered" in X154b's hook.
+
+**GAP-44. X158d: CODE_SWAPPED on P under greenlets.**
+- *What the row says.* P PASS `{f:1}` with MONITOR_LOST; Q NOT_EXERCISED with MONITOR_LOST; Q's exit ran inside P's registration.
+- *What `ref_v5f.py` gives, on 3.12.3 and 3.13.12 with greenlet 3.5.6.* P refuses **CODE_SWAPPED** ("fx_v5f:f.__code__ was replaced during the trace"); Q's outcome and both MONITOR_LOST notes match; the finalizer ran.
+- *Why, by the text.*
+  - A token is live iff a frame on `sys._current_frames()[tid]`'s `f_back` chain matches it (M1, `_Txn`). While g2 runs, P's exit frames sit in the suspended main greenlet and are not on that chain.
+  - So Q's exit, in g2, finds P's exit token dead and steals the mutex. Its reconciliation prunes P's holdership (an exiting core with a dead token), Q's X5 step 3 empties the mint's holders, and `_retire` restores `f.__code__`.
+  - When P's exit resumes, its step 3 finds `m.fn.__code__ is not m.code`, because `held` was snapshotted at step 1, before the finalizer ran, and records CODE_SWAPPED.
+
+  The row's expectation matched the revision-8 prototype, which the exam author may not read. The reference follows the text.
+- *Fix needed.* Either change X158d's expected outcome, or state how the liveness test or the exit treats a core pruned during its own exit transaction.
 

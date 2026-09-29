@@ -589,3 +589,36 @@ Each row is one atom of `rules_v5f.json`, and each atom has `needs_witness: true
 - *Reading taken.* The receipt lists the v5e tables, and the delta rows V26, V28 and X82/V33, as not yet covered (`tables_not_yet_covered`, `delta_table_rows`).
 - *Fix needed.* Either add the v5e design's case tables to the exam author's reading as spec data, or restate the kept v5e cases, with their v5f placements, in the v5f text.
 
+## Revision 11 follow-ups (raised while writing the runner's remaining tables; for the spec owner)
+
+Readings the text does not fix. None is chosen here: each is recorded, and the runner either keeps the rule literal or leaves the row unrun, as the entry says.
+
+| gap | section | blocks the freeze? |
+|---|---|---|
+| GAP-38 | Tripwires, CLONE_ALIVE (b): on 3.12.3 the gc freeze count rises with no `gc.freeze()`, which gives a false CLONE_ALIVE and different outcomes on the two verified interpreters | **yes** (a false refusal whose message claims `gc.freeze()` ran; G_XVER) |
+| GAP-39 | Harness rules, case hygiene: "gc.get_freeze_count() no higher than before the case" vs the same 3.12.3 behaviour | **yes** (the leftover check fails a correct case that follows an unfreezing case) |
+| GAP-40 | X154: "none of styxx's five callbacks is registered on the id" vs CPython keeping a freed id's callbacks (p3) | **yes** (the row cannot pass as written; not run) |
+
+**GAP-38. CLONE_ALIVE (b) reads a freeze-count rise that no `gc.freeze()` caused.**
+- *What the text says.* Tripwires: (b) fires when `gc.get_freeze_count() > m.freeze0` and references remain unexplained, with the message "gc.freeze() ran while the minted code existed". The paragraph after it says the count falls with no freeze call, and that `gc.unfreeze()` sets it to 0. It adds that "only a `gc.freeze()` made after the mint can freeze" a clone, "and that call raises the count".
+- *What CPython does* (`v5f_exam/tools/probe_freeze_rise.py`). On 3.12.3, after `gc.unfreeze()` (count 0), the next full `gc.collect()` sets the count back to 375, the boot value, with no `gc.freeze()` call. `collect(0)` and `collect(1)` do not. On 3.13.12 the count stays 0.
+- *Consequence on `ref_v5f.py`.* A harness that unfroze earlier in the process, then keeps `M_T` in a tuple (`keep = (f.__code__,)`: no function and no clone), and then runs a full collection inside the trace:
+  - on 3.12.3, gets **CLONE_ALIVE** with the message "gc.freeze() ran while the minted code existed", where no `gc.freeze()` ran;
+  - on 3.13.12, gets PASS `{f:1}`.
+
+  The same program therefore has two outcomes on the two verified interpreters.
+- *Fix needed.* Either state and disclose this over-block (and restrict the cases that could meet it), or change the rule's premise.
+- *Case hygiene cited, and the mechanism untouched.* The runner's X57b and X58b call `gc.collect()` after their `gc.unfreeze()` (see GAP-39).
+
+**GAP-39. The leftover check's freeze-count clause vs 3.12.3.**
+- *What the text says.* "A case that calls `gc.freeze()` calls `gc.unfreeze()` before it returns. The leftover check then requires `gc.get_freeze_count()` to be no higher than before the case."
+- *What happens.* On 3.12.3, after such a case the count is 0. The next case that runs a full `gc.collect()` ends with 375, above its "before" 0, and the leftover check fails it. The runner met this with X58b followed by X133, which fails X133 though X133 freezes nothing.
+- *What the runner does meanwhile.* The rule stays as written. The unfreezing cases (X57b, X58b) run `gc.collect()` after their `gc.unfreeze()`, so each leaves the count where 3.12.3 settles it. That is a choice of case body, not a reading of the rule, and it hides the problem rather than solving it.
+- *Fix needed.* State how the clause treats a rise that no case caused (for example, compare after a full collection on both sides, or exempt the rise to the interpreter's boot count), or drop the clause.
+
+**GAP-40. X154's expected outcome vs CPython keeping a freed id's callbacks.**
+- *What the row says.* The interference frees styxx's id; another tool takes it, registers a RAISE callback, and sets its global events to RAISE and its local events on the target's minted code to LINE. "Every trial: afterwards … none of styxx's five callbacks is registered on the id."
+- *The conflict.* `sys.monitoring.free_tool_id` keeps the id's callbacks on 3.12.3 and 3.13.12 (the text's own p3; checked again here). After `use_tool_id` by the other tool, styxx's PY_START callback is still registered on both versions. So the stated outcome is false for every trial unless the interference also clears the five callbacks, and the row does not say it does.
+- *Readings left open.* Either the interference registers None for the five events after taking the id, or the check means "no callback styxx registered after the take". The two give different witnesses of the name gate.
+- *In the runner.* X154 is not run. Its four sweeps would each need one fresh subprocess per trial (harness rule, revision 7, M4).
+

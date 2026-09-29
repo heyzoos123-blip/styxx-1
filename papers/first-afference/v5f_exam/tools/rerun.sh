@@ -7,10 +7,13 @@ P12=$1; P13=$2; P10=$3; P11=$4
 for P in "$P12" "$P13"; do "$P" smoke_cases.py | tail -1; "$P" tools/lint_region.py ref_v5f.py; done
 for P in "$P10" "$P11"; do [ -n "$P" ] && "$P" smoke_cases.py | tail -1; done
 python3 tools/mutants_v5f.py "$P12" "$P13"
-# rules_v5f.json (revision 10): extract to a scratch file, reconcile, compare with the committed file
+# rules_v5f.json (revision 11): extract to a scratch file, reconcile, compare with the committed file
 TMP=$(mktemp -d)
 python3 tools/extract_rules.py "$TMP/atoms.json" >/dev/null
-git show 99a2cc76:papers/first-afference/v5f_exam/rules_v5f.json > "$TMP/rules_rev9.json"
+git show b88fd3a2:papers/first-afference/v5f_exam/rules_v5f.json > "$TMP/rules_rev10.json"
 cp rules_v5f.json "$TMP/committed.json"
-python3 tools/reconcile10.py "$TMP/atoms.json" "$TMP/rules_rev9.json" --write > "$TMP/counts.json"
+python3 tools/reconcile11.py "$TMP/atoms.json" "$TMP/rules_rev10.json" --write > "$TMP/counts.json"
 if cmp -s rules_v5f.json "$TMP/committed.json"; then echo "rules_v5f.json: reproduced"; else echo "rules_v5f.json: DIFFERS"; cp "$TMP/committed.json" rules_v5f.json; fi
+# v5e_port.py (revision 11, GAP-37): regenerated from the frozen v5e runner
+python3 tools/gen_v5e_port.py --check
+# the runner: tools/runner_mutants_v5f.py "$P12" "$P13" runs every weakening against the runner (long)

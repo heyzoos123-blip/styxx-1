@@ -1,0 +1,15 @@
+3.12.3 ref_v5f.py sha256 e4fbf0f53c7b56ba
+V72b   spec                     {"record_before": "TRACE_INCOMPLETE", "record_after_next_trace": "TRACE_INCOMPLETE"}
+V72b   mut_prune_marks_exited   {"record_before": "TRACE_INCOMPLETE", "record_after_next_trace": "a record"}
+X35e   spec                     ["CUT_UNAVAILABLE", "CUT_UNAVAILABLE", "constructed"]
+X35e   mut_no_locals_clause     ["constructed", "constructed", "constructed"]
+X35e   mut_cut_before_scan      ["CUT_UNAVAILABLE", "constructed", "constructed"]
+X57d   spec                     {"Q_problems": ["[V5:CLONE_ALIVE]"], "P_problems": []}
+X57d   mut_freeze0_at_join      {"Q_problems": [], "P_problems": []}
+R23    spec                     {"score": ["PASS", {"G": {"fx_r11:f": 2}}], "problems": []}
+R24    spec                     {"count_not_risen": true, "score": ["PASS", {"G": {"fx_r11:f": 1}}], "problems": []}
+R24    mut_freeze_ne            {"count_not_risen": true, "score": ["REFUSE", "CLONE_ALIVE"], "problems": ["[V5:CLONE_ALIVE]"]}
+X117g  spec                     {"usable": true, "calls": {"float": 1, "bool": 0}}
+X117g  mut_cm_bool              {"usable": true, "calls": {"float": 1, "bool": 1}}
+J225   spec                     {"all_exact_str": true}
+X137j  spec                     {"tool_ours": true, "global_events": 0, "local_events_u": 1, "line_callback_is_foreign": true, "py_start_callback_is_foreign": false}

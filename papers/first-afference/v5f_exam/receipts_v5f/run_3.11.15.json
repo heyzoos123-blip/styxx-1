@@ -1,10 +1,10 @@
 {
  "runner": "run_protocol_v5f_exam.py",
- "runner_sha256": "1134c2d120e7c91a3ffe0b16afeccacc1775fddef49637b0a679cd5fbbc3051a",
+ "runner_sha256": "479a3fcf804e3f96f56fcc19eb2e722f06de8c2e4fbc73e8dd554db61aa4c4fe",
  "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "impl_module": "ref_v5f",
  "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
- "spec_sha256": "ebb6a16f35b16019d5a965c15b9916e6567ce170966e67febd47f3c8ec2bcc85",
+ "spec_sha256": "949c99da8752f7ba53c37f0a06bc619618846fbe513da9efa6051e7b8ea41d97",
  "python": "3.11.15",
  "build": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
  "python_build": [
@@ -21,7 +21,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.011
   },
   "X96d": {
    "table": "new violation cases",
@@ -30,7 +30,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.004
   },
   "X103c": {
    "table": "new violation cases",
@@ -39,7 +39,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.005
   },
   "X112b": {
    "table": "new violation cases",
@@ -48,7 +48,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.005
   },
   "X117b": {
    "table": "new violation cases",
@@ -57,7 +57,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.004
   },
   "X117c": {
    "table": "new violation cases",
@@ -66,7 +66,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X95b": {
    "table": "new violation cases",
@@ -75,7 +75,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X122": {
    "table": "new violation cases",
@@ -84,7 +84,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X109": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -93,7 +93,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.006
   },
   "X93e": {
    "table": "new violation cases",
@@ -102,7 +102,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X117e": {
    "table": "new violation cases",
@@ -111,7 +111,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X117f": {
    "table": "new violation cases",
@@ -120,7 +120,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X95": {
    "table": "v5e cases whose outcome changes",
@@ -129,7 +129,70 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
+  },
+  "X96c": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a genuine trace with gates_sha256 popped -> BAD_TRACE (never KeyError or STALE_TRACE)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X103b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "end as a list and as a dict -> BAD_TRACE; check_metrics REPORTED without raising",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.007
+  },
+  "X105d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a /3 trace carrying a retired note (PROFILER_LOST) or problem (FOREIGN_PROFILER) -> BAD_TRACE",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X109b": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "an old trace scored against a gates block that also adds a declared target -> STALE_TRACE",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.005
+  },
+  "X117d": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "a smoke result carrying a trace that refuses NOT_EXERCISED -> the check_metrics note starts with [V5:NOT_EXERCISED]",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "V53": {
+   "table": "new valid cases",
+   "placement": "self-trace",
+   "row": "a defaultdict result carrying the exact-dict record -> PASS",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "X117g": {
+   "table": "new violation cases",
+   "placement": "self-trace",
+   "row": "rev. 11 (GAP-36, W224): check_metrics({'m': I(3)}), I an int subclass counting __float__ and __bool__ -> usable; __float__ called exactly once, __bool__ never",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
   },
   "X37": {
    "table": "new violation cases",
@@ -138,7 +201,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.005
   }
  },
  "not_run": {
@@ -202,13 +265,352 @@
   "X157": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X157b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "V48": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
-  "V49": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12"
+  "V49": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X07b / X07c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X14b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X16b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X24c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X24d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X24e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X25c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X25d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X26c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X26d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X26e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X26f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X29b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X30d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X32d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X34b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X34c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X35": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X35b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X35c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X36": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X55d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X57b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X57c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X58b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X59c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X59d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X65c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X65d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X65e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X65f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X65g": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X76b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X78e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X78g": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X83": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X92c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X120": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X121": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X122b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X123": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X133": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X135": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X139": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X138": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X138b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X141": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X141b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X141c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X142": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X142b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X37b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X156d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X92b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X131": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X132": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X143": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X143b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X144": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X145": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X146": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X146b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X146c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X146d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X146e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X147": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X148": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X152": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X153": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137g": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137i": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137h": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X154b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X154c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X154d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X154e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X155": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X157c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X158": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X158c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X158b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X158e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X158d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V10b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V11c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V15b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V19b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V35": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V36": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V36b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V37": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V38": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V39": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V40": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V40b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V41": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V42": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V43": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V44": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V45": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V47": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V50": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V51": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V57": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V58": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V59": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V60": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V61": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V62": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V63": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V64": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V65": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V68": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V69": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V70": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V71": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V72b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X35e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X57d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R24": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X137j": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R23": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X72b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X65b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X30b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H1": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H2": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H3": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H4": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H5": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H7": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H8": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H10": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "H6": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X140": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X71c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X140f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R01": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R02": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R03": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R04": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R05": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R06": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R07": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R08": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R09": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R10": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:R11": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V01": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V02": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V03": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V04": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V05": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V06": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V07": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V08": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V09": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V10": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V11": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V11b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V12": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V13": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V14": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V15": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V16": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V17": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V18": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V19": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V20": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V21": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V22": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V23": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V24": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V25": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V25b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V25c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V26": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V27": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V28": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V29": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:V32": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X01": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X02": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X02b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X03": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X04": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X05": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X06": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X07": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X08": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X10": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X11": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X12": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X12b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X13": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X14": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X15": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X16": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X17": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X18": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X19": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X20": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X21": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X22": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X23": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X24": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X25": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X25b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X26": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X27": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X28": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X29": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X30": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X30b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X30c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X31": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X31b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X32": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X32b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X33": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X40": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X41": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X42": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X43": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X44": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X45": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X46": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X47": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X48": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X49": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X50": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X51": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X52": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X53": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X54": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X55": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X55b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X55c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X56": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X57": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X58": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X59": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X59b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X60": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X61": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X62": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X63": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X64": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X65": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X66": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X67": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X68": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X69": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X70": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X71": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X72": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X73": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X74": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X74b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X74c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X76": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X77": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X78": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X78b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X78c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X78d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X79": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X79b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X79c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X90": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X91": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X92": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X93": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X93b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X94": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X95": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X96": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X96b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X97": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X97b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X97c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X98": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X98b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X99": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X99b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X99c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X100": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X100b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X100c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X101": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X101b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X102": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X102b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X103": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X104": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X104b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X104c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X104d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X104e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X105": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X105b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X105c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X106": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X106b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X107": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X107b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X107c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108c": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108d": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108e": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108f": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108g": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108h": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108i": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108j": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108k": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X108m": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X109": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X110": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X110b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X111": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X112": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X113": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X114": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X115": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X115b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X116": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X117": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "v5e:X118": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12"
  },
  "self_trace": null,
  "tables": {
   "new violation cases": {
-   "run": 12,
-   "passed": 12,
+   "run": 18,
+   "passed": 18,
    "ids": [
     "X93d",
     "X96d",
@@ -221,6 +623,12 @@
     "X93e",
     "X117e",
     "X117f",
+    "X96c",
+    "X103b",
+    "X105d",
+    "X109b",
+    "X117d",
+    "X117g",
     "X37"
    ]
   },
@@ -237,20 +645,27 @@
    "ids": [
     "X95"
    ]
+  },
+  "new valid cases": {
+   "run": 1,
+   "passed": 1,
+   "ids": [
+    "V53"
+   ]
   }
  },
  "coverage_of_design_tables": {
   "new violation cases": {
-   "rows_in_design": 137,
-   "cases_in_runner": 36
+   "rows_in_design": 140,
+   "cases_in_runner": 140
   },
   "new valid cases": {
-   "rows_in_design": 45,
-   "cases_in_runner": 11
+   "rows_in_design": 46,
+   "cases_in_runner": 46
   },
   "new documented residuals": {
-   "rows_in_design": 12,
-   "cases_in_runner": 12
+   "rows_in_design": 15,
+   "cases_in_runner": 15
   },
   "exam-hole kill cases": {
    "rows_in_design": 30,
@@ -259,6 +674,10 @@
   "v5e cases whose outcome changes": {
    "rows_in_design": 20,
    "cases_in_runner": 2
+  },
+  "v5e cases kept (revision 11 spec data)": {
+   "rows_in_design": 202,
+   "cases_in_runner": 195
   }
  },
  "delta_table_rows": {
@@ -281,6 +700,193 @@
   "port: H1 and H2 mutants": "NOT YET: hazard sweeps",
   "port: H5 (gc cost)": "NOT YET"
  },
+ "kill_cases": {
+  "exam-mut-section-decl-clauses": {
+   "cases": [
+    "X07b / X07c"
+   ],
+   "covered": false
+  },
+  "examhole-clone-alive-single-tracer": {
+   "cases": [
+    "X57c"
+   ],
+   "covered": false
+  },
+  "examhole-clone-called-first-tracer": {
+   "cases": [
+    "X55d"
+   ],
+   "covered": false
+  },
+  "examhole-code-swapped-single-tracer": {
+   "cases": [
+    "X59c"
+   ],
+   "covered": false
+  },
+  "examhole-stop-read-before-mint": {
+   "cases": [
+    "X34"
+   ],
+   "covered": false
+  },
+  "examhole-union-over-all-sections": {
+   "cases": [
+    "X120",
+    "V41"
+   ],
+   "covered": false
+  },
+  "examhole-declared-section-field-never-scored": {
+   "cases": [
+    "V42",
+    "V43",
+    "X121",
+    "X78g"
+   ],
+   "covered": false
+  },
+  "examhole-dispatch-cut-by-name": {
+   "cases": [
+    "V44"
+   ],
+   "covered": false
+  },
+  "examhole-walk-bound-2-hops": {
+   "cases": [
+    "V11c",
+    "X30b"
+   ],
+   "covered": false
+  },
+  "examhole-class-step-exact-type": {
+   "cases": [
+    "V45",
+    "X14b"
+   ],
+   "covered": false
+  },
+  "examhole-module-step-exact-type": {
+   "cases": [
+    "V10b",
+    "X16b"
+   ],
+   "covered": false
+  },
+  "examhole-inherited-direct-base-only": {
+   "cases": [
+    "X14c"
+   ],
+   "covered": false
+  },
+  "examhole-cache-body-module-check": {
+   "cases": [
+    "X25c",
+    "X25d"
+   ],
+   "covered": false
+  },
+  "exam-hole-coverage-on-failing-bar": {
+   "cases": [
+    "X122",
+    "X122b"
+   ],
+   "covered": false
+  },
+  "exam-hole-score-step-order": {
+   "cases": [
+    "X96c",
+    "X78e"
+   ],
+   "covered": false
+  },
+  "exam-hole-diagnostic-texts": {
+   "cases": [
+    "X72b"
+   ],
+   "covered": false
+  },
+  "exam-mut-stop-cleared-by-inner-exit": {
+   "cases": [
+    "X65b"
+   ],
+   "covered": false
+  },
+  "exam-mut-nested-by-section-name": {
+   "cases": [
+    "V15b"
+   ],
+   "covered": false
+  },
+  "exam-mut-restore-over-swapped-code": {
+   "cases": [
+    "X59d"
+   ],
+   "covered": false
+  },
+  "exam-mut-close-removes-foreign-profiler": {
+   "cases": [
+    "V58"
+   ],
+   "covered": false
+  },
+  "exam-mut-exit-removes-foreign-profiler": {
+   "cases": [
+    "V57"
+   ],
+   "covered": false
+  },
+  "exam-mut-double-exit-state-leak": {
+   "cases": [
+    "V52"
+   ],
+   "covered": false
+  },
+  "exam-mut-hop-close-drops-closer-hook": {
+   "cases": [
+    "V28b"
+   ],
+   "covered": false
+  },
+  "exam-mut-foreign-profiler-first-open-only": {
+   "cases": [
+    "V59"
+   ],
+   "covered": false
+  },
+  "exam-mut-target-set-before-stale": {
+   "cases": [
+    "X109b"
+   ],
+   "covered": true
+  },
+  "exam-mut-profiler-lost-only-if-none": {
+   "cases": [
+    "V60",
+    "X137"
+   ],
+   "covered": false
+  },
+  "exam-mut-bad-trace-end-type": {
+   "cases": [
+    "X103c"
+   ],
+   "covered": true
+  },
+  "exam-mut-problems-before-bad-count": {
+   "cases": [
+    "X112b"
+   ],
+   "covered": true
+  },
+  "exam-mut-uncredited-last-thread-wins": {
+   "cases": [
+    "X123"
+   ],
+   "covered": false
+  }
+ },
  "tables_not_yet_covered": [
   "exam-hole kill cases",
   "v5e cases whose outcome changes",
@@ -289,8 +895,245 @@
   "the rest of the new violation and valid cases",
   "the v5e cases kept (the v5e case tables)"
  ],
- "n_cases_run": 14,
- "n_passed": 14,
+ "instruction_sweeps_counted_trials": {},
+ "v5e_kept_coverage": {
+  "rows": 208,
+  "retired_not_run": [
+   "V30",
+   "V31",
+   "X75",
+   "X80",
+   "X80b",
+   "X81"
+  ],
+  "covered_elsewhere": {
+   "H1": "H1",
+   "H2": "H2",
+   "H3": "H3",
+   "H4": "H4",
+   "V34": "V34 (the self-trace; the delta row's frozen names)",
+   "X71c": "X71c (the port row)"
+  },
+  "ported_cases": [
+   "v5e:R01",
+   "v5e:R02",
+   "v5e:R03",
+   "v5e:R04",
+   "v5e:R05",
+   "v5e:R06",
+   "v5e:R07",
+   "v5e:R08",
+   "v5e:R09",
+   "v5e:R10",
+   "v5e:R11",
+   "v5e:V01",
+   "v5e:V02",
+   "v5e:V03",
+   "v5e:V04",
+   "v5e:V05",
+   "v5e:V06",
+   "v5e:V07",
+   "v5e:V08",
+   "v5e:V09",
+   "v5e:V10",
+   "v5e:V11",
+   "v5e:V11b",
+   "v5e:V12",
+   "v5e:V13",
+   "v5e:V14",
+   "v5e:V15",
+   "v5e:V16",
+   "v5e:V17",
+   "v5e:V18",
+   "v5e:V19",
+   "v5e:V20",
+   "v5e:V21",
+   "v5e:V22",
+   "v5e:V23",
+   "v5e:V24",
+   "v5e:V25",
+   "v5e:V25b",
+   "v5e:V25c",
+   "v5e:V26",
+   "v5e:V27",
+   "v5e:V28",
+   "v5e:V29",
+   "v5e:V32",
+   "v5e:X01",
+   "v5e:X02",
+   "v5e:X02b",
+   "v5e:X03",
+   "v5e:X04",
+   "v5e:X05",
+   "v5e:X06",
+   "v5e:X07",
+   "v5e:X08",
+   "v5e:X10",
+   "v5e:X100",
+   "v5e:X100b",
+   "v5e:X100c",
+   "v5e:X101",
+   "v5e:X101b",
+   "v5e:X102",
+   "v5e:X102b",
+   "v5e:X103",
+   "v5e:X104",
+   "v5e:X104b",
+   "v5e:X104c",
+   "v5e:X104d",
+   "v5e:X104e",
+   "v5e:X105",
+   "v5e:X105b",
+   "v5e:X105c",
+   "v5e:X106",
+   "v5e:X106b",
+   "v5e:X107",
+   "v5e:X107b",
+   "v5e:X107c",
+   "v5e:X108",
+   "v5e:X108b",
+   "v5e:X108c",
+   "v5e:X108d",
+   "v5e:X108e",
+   "v5e:X108f",
+   "v5e:X108g",
+   "v5e:X108h",
+   "v5e:X108i",
+   "v5e:X108j",
+   "v5e:X108k",
+   "v5e:X108m",
+   "v5e:X109",
+   "v5e:X11",
+   "v5e:X110",
+   "v5e:X110b",
+   "v5e:X111",
+   "v5e:X112",
+   "v5e:X113",
+   "v5e:X114",
+   "v5e:X115",
+   "v5e:X115b",
+   "v5e:X116",
+   "v5e:X117",
+   "v5e:X118",
+   "v5e:X12",
+   "v5e:X12b",
+   "v5e:X13",
+   "v5e:X14",
+   "v5e:X15",
+   "v5e:X16",
+   "v5e:X17",
+   "v5e:X18",
+   "v5e:X19",
+   "v5e:X20",
+   "v5e:X21",
+   "v5e:X22",
+   "v5e:X23",
+   "v5e:X24",
+   "v5e:X25",
+   "v5e:X25b",
+   "v5e:X26",
+   "v5e:X27",
+   "v5e:X28",
+   "v5e:X29",
+   "v5e:X30",
+   "v5e:X30b",
+   "v5e:X30c",
+   "v5e:X31",
+   "v5e:X31b",
+   "v5e:X32",
+   "v5e:X32b",
+   "v5e:X33",
+   "v5e:X40",
+   "v5e:X41",
+   "v5e:X42",
+   "v5e:X43",
+   "v5e:X44",
+   "v5e:X45",
+   "v5e:X46",
+   "v5e:X47",
+   "v5e:X48",
+   "v5e:X49",
+   "v5e:X50",
+   "v5e:X51",
+   "v5e:X52",
+   "v5e:X53",
+   "v5e:X54",
+   "v5e:X55",
+   "v5e:X55b",
+   "v5e:X55c",
+   "v5e:X56",
+   "v5e:X57",
+   "v5e:X58",
+   "v5e:X59",
+   "v5e:X59b",
+   "v5e:X60",
+   "v5e:X61",
+   "v5e:X62",
+   "v5e:X63",
+   "v5e:X64",
+   "v5e:X65",
+   "v5e:X66",
+   "v5e:X67",
+   "v5e:X68",
+   "v5e:X69",
+   "v5e:X70",
+   "v5e:X71",
+   "v5e:X72",
+   "v5e:X73",
+   "v5e:X74",
+   "v5e:X74b",
+   "v5e:X74c",
+   "v5e:X76",
+   "v5e:X77",
+   "v5e:X78",
+   "v5e:X78b",
+   "v5e:X78c",
+   "v5e:X78d",
+   "v5e:X79",
+   "v5e:X79b",
+   "v5e:X79c",
+   "v5e:X90",
+   "v5e:X91",
+   "v5e:X92",
+   "v5e:X93",
+   "v5e:X93b",
+   "v5e:X94",
+   "v5e:X95",
+   "v5e:X96",
+   "v5e:X96b",
+   "v5e:X97",
+   "v5e:X97b",
+   "v5e:X97c",
+   "v5e:X98",
+   "v5e:X98b",
+   "v5e:X99",
+   "v5e:X99b",
+   "v5e:X99c"
+  ],
+  "no_registration": [
+   "V33",
+   "X82"
+  ]
+ },
+ "v5e_kept_sha256": "5160cecb4f0a3e8d888385b748f4526a21ded0ea62e898810aab460430aa4bf1",
+ "v5e_port_sha256": "286d8b1bc914340406dc654d0a09ab4c979a72e4523f9e9aa3b52b4a7974ec79",
+ "h2_report": {},
+ "h4_performance_report": {},
+ "h8_report": {},
+ "h6_report": {},
+ "h10_report": {},
+ "x71c_report": {},
+ "x140_report": {},
+ "x140f_report": {},
+ "n_cases_run": 21,
+ "n_passed": 21,
+ "n_failed_known_spec_gaps": 0,
+ "known_spec_gaps": {
+  "X137h": "GAP-42 (P and S open no section, so SECTION_ABSENT precedes NOT_EXERCISED)",
+  "X158d": "GAP-44 (under greenlets the reference gives P CODE_SWAPPED, not PASS)",
+  "v5e:X72": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)",
+  "v5e:X73": "GAP-46 (the kept v5e sub-assertion requires v5e's NOT_EXERCISED sentence; v5f's fixed sentence differs)"
+ },
  "verdict": "REFUSED_TRACING_UNSUPPORTED_INTERPRETER; scoring-only cases PASS",
- "seconds": 0.04
+ "seconds": 0.09
 }

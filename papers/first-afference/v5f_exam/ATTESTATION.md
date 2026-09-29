@@ -52,6 +52,59 @@ Where the text was ambiguous or incomplete I did not guess from, and did not loo
 
 Six gaps are marked freeze-blocking: GAP-02, 03, 05, 07, 08 and 15.
 
+## Round 3 and revision 11 update (2026-09-29)
+
+The same exam author, continuing in a separate context: the runner's remaining tables (round 3), then revision 11's queue. `ref_v5f.py` is unchanged (sha256 prefix `e4fbf0f53c7b56ba`).
+
+### What I read for this update
+1. The design text at revisions 10 and 11:
+   - every row of "New violation cases", "New valid cases", "New documented residuals" and "The exam-hole kill cases" that the runner covers, and the hazard sweeps H1–H10;
+   - the Stated limits' L-DELIVERY paragraphs and "G_SIG (frozen decision)";
+   - G_FI (C1–C9, the probe cycle, discovery runs), G_SIG ("wrong result", "Poison"), G_COVER's direct-call driver;
+   - the port table "v5e cases and harness parts that read a private name" and "The kept v5e cases as spec data";
+   - the Revision 11 section in full, and Appendix A's "The three rules as revision 11 states them";
+   - the NOT_EXERCISED fixed sentence (Scoring), for GAP-46.
+2. Spec data, as data through scripts:
+   - `protocol_v5f_design/rev11/v5e_cases_kept.json` (all 208 rows);
+   - `protocol_v5f_design/rev11/appendix_a/atom_witness_overrides_rev11.json` and `rev9_new_sentences_classified_rev11.json`;
+   - the revision-10 and revision-9 appendix data named above, again.
+3. `papers/first-afference/run_protocol_v5e.py`, now as spec data (revision 11, GAP-37: its named registrations):
+   - the fixtures, P1 loader and helpers (lines 157–876);
+   - every case registration and body in `violations()`, `x118_p1_retro`, `valids()`, `v34_nested`, `v32_stress` and `residuals()` (lines 877–2800);
+   - `_registries`, `_snapshot`, `_leftover`, `run_case` (2802–2903);
+   - the hazard trials `_spin`, `_h2_trials`, `_h3_trials`, the H1 constants and `_install_mutant` (2922–3145), and the hazard block of `main()` (3220–3250);
+   - `main()`'s case loop (3540–3560), for how X118 and the valid rows are judged.
+
+   `tools/gen_v5e_port.py` copies the registrations, fixtures and helpers into `v5e_port.py` (checked by sha256) and applies a listed port table.
+4. Import lines only (grep) of `styxx/__init__.py`, `papers/first-afference/run_p1.py` and `styxx/power_QUARANTINED.py.txt`. I read them to see whether P1's harness would import the v5e implementation; it would, so the port loads `styxx.power` under a bare package module.
+5. The rev11 directory listing (names only).
+6. Third-party wheels, installed into the scratchpad only: greenlet 3.5.6 and coverage 7.16.0, for X158d and V50.
+7. My own artifacts, and `git show` of my own revision-10 `rules_v5f.json` (b88fd3a2).
+
+### What I did not read for this update
+- `protocol_v5f_design/rev11/p_rev11.py`, `out_rev11_*.txt`, `build_v5e_cases_kept.py`, `rev11/appendix_a/build_appendix_rev11.py`;
+- `protocol_v5f_design/rev10/p_rev10*.py` and their outputs;
+- anything else under `protocol_v5f_design/`;
+- the critiques;
+- any prototype;
+- the v5e implementation (`styxx/protocol.py`), which the port never imports;
+- the v5e design document (the runner registrations were enough for every kept row);
+- the spec owner's working notes.
+
+Every new v5f case and every weakening was written from the rows' own words. The kept v5e rows run the v5e registrations as the data file directs, with the port table in `tools/gen_v5e_port.py`.
+
+### Runs
+Commits, local only and not pushed: `df220859` (smoke cases and weakenings), `eec5b8c2` (the runner), `78895e18` (`rules_v5f.json`), and this file's commit with the receipts.
+
+| what | 3.12.3 | 3.13.12 | 3.10.20 | 3.11.15 |
+|---|---|---|---|---|
+| `smoke_cases.py` | 66/66 | 66/66 | 3/3 (scoring-only) | 3/3 (scoring-only) |
+| `tools/mutants_v5f.py` (36 weakenings, each against its named witness) | all detected | all detected | — | — |
+| `run_protocol_v5f_exam.py` against `ref_v5f.py` (`receipts_v5f/`) | 419/423; the 4 failures are GAP-42, GAP-44, GAP-46 (x2); X154 not run (GAP-40); self-trace V34 PASS | the same | 21/21 scoring-only; tracing refused cleanly | the same |
+| `tools/runner_mutants_v5f.py` (the 36 weakenings plus 8 hazard mutants, against the runner) | 43 of 44 killed; `mut_h9_x3_in_lock` survives (GAP-49) | the same | — | — |
+
+`rules_v5f.json` (revision 11): 2,531 atoms; 1,087 P/D/C; 1,051 with a checkable witness, 11 by reading, 25 D atoms without a case witness (GAP-48).
+
 Signed: the v5f exam author (Claude Code subagent), 2026-09-29.
 
 ## Revision 9 update (2026-09-29)

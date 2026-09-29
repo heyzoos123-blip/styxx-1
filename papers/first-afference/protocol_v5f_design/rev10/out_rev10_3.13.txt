@@ -1,0 +1,28 @@
+3.13.12 ref_v5f.py sha256 e4fbf0f53c7b56ba
+X78f_ext   spec                   {"refusal": "UNDECLARED_SECTION", "counters": {"eq": 0, "hash": 0, "repr": 0, "str": 0, "format": 0, "meta_qual": 0}}
+X78f_ext   mut_sec_repr           {"refusal": "UNDECLARED_SECTION", "counters": {"eq": 0, "hash": 0, "repr": 1, "str": 0, "format": 0, "meta_qual": 0}}
+X78f_ext   mut_sec_attrqual       {"refusal": "UNDECLARED_SECTION", "counters": {"eq": 0, "hash": 0, "repr": 0, "str": 0, "format": 0, "meta_qual": 1}}
+X78h       spec                   {"before_enter": "TRACE_INACTIVE", "after_exit": "TRACE_INACTIVE", "counters": {"eq": 0, "hash": 0, "repr": 0, "str": 0, "format": 0, "meta_qual": 0}}
+X78h       mut_inactive_repr      {"before_enter": "TRACE_INACTIVE", "after_exit": "TRACE_INACTIVE", "counters": {"eq": 0, "hash": 0, "repr": 2, "str": 0, "format": 0, "meta_qual": 0}}
+X78h       mut_inactive_attrqual  {"before_enter": "TRACE_INACTIVE", "after_exit": "TRACE_INACTIVE", "counters": {"eq": 0, "hash": 0, "repr": 0, "str": 0, "format": 0, "meta_qual": 2}}
+X93e       spec                   {"first": "the result is a R, not a dict", "third": "'coverage_trace' is a MD, not an exact dict (e.g. loaded with object_pairs_hook)", "meta_qual": 0}
+X93e       mut_notrace1_attrqual  {"first": "the result is a R, not a dict", "third": "'coverage_trace' is a MD, not an exact dict (e.g. loaded with object_pairs_hook)", "meta_qual": 1}
+X93e       mut_notrace3_attrqual  {"first": "the result is a R, not a dict", "third": "'coverage_trace' is a MD, not an exact dict (e.g. loaded with object_pairs_hook)", "meta_qual": 1}
+X24f       spec                   {"L": ["NOT_A_FUNCTION", "the wrapper calls no single Python function; its __wrapped__ names a different object (a builtin_function_or_method)"], "S": ["NOT_A_FUNCTION", "the wrapper calls fx_r10:_body; its __wrapped__ names a different object (a Stamp)"], "fixture_counters": {"qual": 0, "repr": 0}}
+X24f       mut_stamp_attrqual     {"L": ["NOT_A_FUNCTION", "the wrapper calls no single Python function; its __wrapped__ names a different object (a builtin_function_or_method)"], "S": ["NOT_A_FUNCTION", "the wrapper calls fx_r10:_body; its __wrapped__ names a different object (a Stamp)"], "fixture_counters": {"qual": 1, "repr": 0}}
+X24f       mut_callee_none_text   {"L": ["NOT_A_FUNCTION", "the wrapper calls None; its __wrapped__ names a different object (a builtin_function_or_method)"], "S": ["NOT_A_FUNCTION", "the wrapper calls fx_r10:_body; its __wrapped__ names a different object (a Stamp)"], "fixture_counters": {"qual": 0, "repr": 0}}
+X84        spec                   {"open_Q": "NESTED_SECTION", "problems": ["[V5:NESTED_SECTION]"]}
+X84        mut_nested_mirror      {"open_Q": "opened", "problems": []}
+X156h      spec                   {"first": ["PASS", {"G": {"fx_r10:f": 1}}], "second": ["RAISE", "UNSUPPORTED_VERSION"]}
+X156h      mut_grl_check_once     {"first": ["PASS", {"G": {"fx_r10:f": 1}}], "second": ["PASS", {"G": {"fx_r10:f": 1}}]}
+X156i      spec                   {"first": "UNSUPPORTED_VERSION", "state_after_refusal": {"tool": null, "tool_ours": false, "cut": 0, "cut_current": true}, "second_with_wrapper": ["RAISE", "UNSUPPORTED_VERSION"]}
+X156i      mut_bind_before_asyncio {"first": "UNSUPPORTED_VERSION", "state_after_refusal": {"tool": null, "tool_ours": false, "cut": 0, "cut_current": true}, "second_with_wrapper": ["PASS", {"G": {"fx_r10:f": 1}}]}
+X117e      spec                   {"present_usable": [true, true], "missing": [false, false], "user_calls": 0}
+X117e      mut_cm_resolve         {"present_usable": [true, true], "missing": [false, false], "user_calls": 7}
+X117e      mut_cm_get             {"present_usable": [true, true], "missing": [false, false], "user_calls": 4}
+X117f      spec                   {"smoke_off": "[V5:NO_TRACE] |2nd wording", "smoke_on": "smoke run"}
+X117f      mut_cm_smoke           {"smoke_off": "smoke run|?", "smoke_on": "smoke run"}
+V72        spec                   {"inside": "held", "exit": "RuntimeError", "after": "dead", "next": ["PASS", {"G": {"fx_r10:f": 1}}], "end": "free"}
+V72        mut_guard_no_alive     {"inside": "held", "exit": "RuntimeError", "after": "held", "next": ["PASS", {"G": {"fx_r10:f": 1}}], "end": "free"}
+V72        mut_guard_never_held   {"inside": "dead", "exit": "RuntimeError", "after": "dead", "next": ["PASS", {"G": {"fx_r10:f": 1}}], "end": "free"}
+LEFTOVER   spec                   {"differ": ["cut", "tool", "tool_ours"], "violations_rev9_rule": ["tool_ours"], "violations_rev10_rule": []}

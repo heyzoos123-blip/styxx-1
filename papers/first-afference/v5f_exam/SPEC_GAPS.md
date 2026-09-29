@@ -715,3 +715,25 @@ Readings the text does not fix. None is chosen here: each is recorded, and the r
 - *Readings left open.* The mutant may need a different shape (for example the `with` inside the loop, or a loop in a `try` whose range ends before the back-edge, as in #130279), or the witness may be a different case. The exam author does not choose one.
 - *In the runner.* X140 runs both variants; `mut_h9_x3_in_lock` is reported SURVIVED under this gap.
 
+
+## Revision 12 follow-ups (raised while building the frozen exam artifacts; for the spec owner)
+
+Readings the text does not fix, and inputs outside the exam author's read scope. None is chosen here.
+
+| gap | section | blocks the freeze? |
+|---|---|---|
+| GAP-50 | G_REF: "the literal census finds 0 coded literals outside a mutable site" — "mutable site" is not defined | **yes** (the census verdict depends on the reading) |
+| GAP-51 | positive control #5 (G_REF blind shapes) names `mutation_gate_blindspots.json`, outside the exam author's read scope | **yes** (the control's frozen list is unavailable) |
+
+**GAP-50. What is a mutable site?**
+- *What the text says.* G_SEM, SM2 gate: "G_REF: 100% of O13 mutants KILLED, and the literal census finds 0 coded literals outside a mutable site." O13 is an SM2 operator, and SM2 applies its operators inside the Region (the `_v5_faultpoints()` functions, the five scoring functions, and the M1 binding statements).
+- *What the census finds on `ref_v5f.py`* (`refcensus_v5f.py`, both versions): 94 coded literals inside region function bodies, and 6 outside them. Five are the DECL and SECTION_DECL raises in `Experiment.__init__` (prereg parsing, a v4-era method outside the Region), and one is the module-level `_CODE_RE` pattern `\[V5:([A-Z_]+)\] ` (a regex that reads codes, not an emission).
+- *Readings left open.* (a) A mutable site is a statement inside the SM2 Region: the census fails on the DECL raises, which the text places in the parse. (b) Any statement O13 could replace, anywhere in the module: only `_CODE_RE` is outside, and whether a pattern that reads codes is a "coded literal" is open too. (c) Coded *emissions* only: 0 outside.
+- *In the artifact.* The census reports all six and gives G_REF's census verdict as OPEN (GAP-50). G_HYG passes.
+
+**GAP-51. The eight blind shapes.**
+- *What the text says.* Positive control #5: "A planted blind-shape emission must be caught by G_HYG, for each of the 8 shapes in `mutation_gate_blindspots.json`." G_HYG's first clause: "0 coded emissions in a blind shape".
+- *The problem.* That file is not in the exam author's read scope (the spec text, the exam artifacts, and the named spec-data directories).
+- *In the artifact.* `refcensus_v5f.py` checks the shapes the text itself implies (a code prefix split across literals, `str.format`, `%`-formatting, a code from an f-string's formatted value) and plants each as a control; all four are caught on both versions. Whether they are the eight is unknown.
+- *Fix needed.* State the eight shapes in the text, or declare the file spec data.
+

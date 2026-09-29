@@ -1,0 +1,133 @@
+{
+ "impl": "ref_v5f.py",
+ "impl_sha256": "2a1781e66975a8aa82fd77f67bbfef6f8826a9f6651c098a2836229f983ed34f",
+ "python": "3.13.12",
+ "G_REF_census": {
+  "coded_literals": 94,
+  "outside_mutable_site": [
+   {
+    "line": 778,
+    "stmt_line": 778,
+    "stmt_end": 778,
+    "func": null,
+    "code": "",
+    "fstring": false
+   },
+   {
+    "line": 362,
+    "stmt_line": 361,
+    "stmt_end": 363,
+    "func": null,
+    "code": "SECTION_DECL",
+    "fstring": true
+   },
+   {
+    "line": 367,
+    "stmt_line": 366,
+    "stmt_end": 368,
+    "func": null,
+    "code": "DECL",
+    "fstring": true
+   },
+   {
+    "line": 372,
+    "stmt_line": 371,
+    "stmt_end": 373,
+    "func": null,
+    "code": "DECL",
+    "fstring": true
+   },
+   {
+    "line": 376,
+    "stmt_line": 375,
+    "stmt_end": 376,
+    "func": null,
+    "code": "DECL",
+    "fstring": true
+   },
+   {
+    "line": 380,
+    "stmt_line": 379,
+    "stmt_end": 380,
+    "func": null,
+    "code": "SECTION_DECL",
+    "fstring": true
+   }
+  ],
+  "blind": []
+ },
+ "G_HYG_violations": [],
+ "G_HYG_step_controls": {
+  "K11": {
+   "applied": true,
+   "rejected": true,
+   "by": [
+    "no backward jump",
+    "statement count"
+   ]
+  },
+  "K12": {
+   "applied": true,
+   "rejected": true,
+   "by": [
+    "statement 1 binds exactly the frozen set"
+   ]
+  },
+  "K12b": {
+   "applied": true,
+   "rejected": true,
+   "by": [
+    "operator ban"
+   ]
+  },
+  "K13": {
+   "applied": true,
+   "rejected": true,
+   "by": [
+    "pipeline vocabulary",
+    "statement 1 binds exactly the frozen set"
+   ]
+  },
+  "K14": {
+   "applied": true,
+   "rejected": true,
+   "by": [
+    "statement count"
+   ]
+  }
+ },
+ "G_REF_blind_controls": {
+  "split": {
+   "applied": true,
+   "caught": true,
+   "by": [
+    "a code prefix split across literals"
+   ]
+  },
+  "format": {
+   "applied": true,
+   "caught": true,
+   "by": [
+    "str.format",
+    "a code prefix split across literals"
+   ]
+  },
+  "percent": {
+   "applied": true,
+   "caught": true,
+   "by": [
+    "%-formatted code"
+   ]
+  },
+  "fstring_code": {
+   "applied": true,
+   "caught": true,
+   "by": [
+    "code from a formatted value"
+   ]
+  }
+ },
+ "G_HYG_verdict": "PASS",
+ "G_REF_census_verdict": "OPEN (GAP-50)",
+ "verdict": "PASS"
+}

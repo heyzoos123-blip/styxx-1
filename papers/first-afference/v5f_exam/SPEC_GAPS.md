@@ -1,12 +1,48 @@
 # v5f spec gaps found while writing `ref_v5f.py` (exam author, pre-freeze)
 
-Source text: `papers/first-afference/DESIGN_protocol_v5f_DRAFT_2026_09_25.md` (the revision-8 draft plus Appendix A). Each gap names the section, what is missing or contradictory, and the reading `ref_v5f.py` implements. `ref_v5f.py` cites each one as `GAP-nn` where it applies.
+Source text: `papers/first-afference/DESIGN_protocol_v5f_DRAFT_2026_09_25.md`. GAP-01 to GAP-27 were raised on the revision-8 draft plus Appendix A. Revision 9 resolves all 27 in the text ("Revision 9: spec gaps from the exam author"). The "Revision 9 follow-ups" at the end were raised on the revision-9 text. Each gap names the section, what is missing or contradictory, and the reading `ref_v5f.py` implements. `ref_v5f.py` cites each one as `GAP-nn` where it applies.
 
 The readings were taken from the text alone. No prototype was consulted to settle any of them (see `ATTESTATION.md`). The spec owner should fix the text; `ref_v5f.py` then follows the fix.
 
 **Freeze-blocking** means one of two things. Either a frozen gate or exam check (G_HYG, SM2's normalizer, the leftover check, G_FI's C5) would judge a faithful implementation differently depending on which reading it took, or two normative sentences contradict each other.
 
-## Summary
+## Status after revision 9 (GAP-01 to GAP-27: all resolved and applied)
+
+Revision 9 resolves every gap below in the text; each row gives its section there. `ref_v5f.py` applies each resolution at commit `c7de7761`: C1-C3 of "Required changes to ref_v5f.py", C4's comments, and the GAP-19 return shape. At that commit, `smoke_cases.py` passes 47 of 47 on CPython 3.12.3 and 3.13.12, including the new cases X59e, V69b, X156f and X156g. `rules_v5f.json` is reconciled at `3002c140` (GAP-27). The readings below are kept as they were written, for the record. Where revision 9 differs from a reading, the row says so.
+
+| gap | status | revision-9 resolution | in `ref_v5f.py` | commit |
+|---|---|---|---|---|
+| GAP-01 | resolved and applied | the literal masks are the first line of M1 | ref matched; unchanged | `c7de7761` |
+| GAP-02 | resolved and applied | `_get_running_loop` is an M1 name, checked as `_asyncio`'s builtin after `import asyncio` and re-bound at every `coverage_trace()`; new case X156g | C2 applied | `c7de7761` |
+| GAP-03 | resolved and applied | `get_local_events` is `_MON[0][6]`, in the binding check; X5 and `_v5_state()` read it there; new cases V69b, X156f | C1 and C3 applied | `c7de7761` |
+| GAP-04 | resolved and applied | `getattr(sys, '_is_gil_enabled', None)` | ref matched; unchanged | `c7de7761` |
+| GAP-05 | resolved and applied | `cut_current` is `_HANDLE_DICT[0] is None or _cut_ok()`; the other pre-capture fields stated | ref matched; unchanged | `c7de7761` |
+| GAP-06 | resolved and applied | `_GUARD` bound through `globals().get`, set right after `class _Txn` | ref matched; unchanged | `c7de7761` |
+| GAP-07 | resolved and applied | the stamp is named by its type only | ref matched; unchanged | `c7de7761` |
+| GAP-08 | resolved and applied | the SM2 region names `_finite`; no `_count_dicts`; the facade has no `__init__`; the v4-era set named | ref matched; `_finite`'s docstring updated | `c7de7761` |
+| GAP-09 | resolved and applied | the order of `coverage_trace()` is M0 steps 1-10; nothing is bound before every check passes | C2 applied (`_MON` bound after `import asyncio` and the `_get_running_loop` check) | `c7de7761` |
+| GAP-10 | resolved and applied | one refusal text for every refused interpreter; only the prefix is fixed | ref matched; unchanged | `c7de7761` |
+| GAP-11 | resolved and applied | the NESTED walk skips a foreign-loop anchor (over-blocking #23) | ref matched; unchanged | `c7de7761` |
+| GAP-12 | resolved and applied | the one-sentence rule now says a foreign-loop anchor ends the walk (M6) | ref matched; unchanged | `c7de7761` |
+| GAP-13 | resolved and applied | `qualname` is F_T's module by Provenance (d)'s rule | ref matched; unchanged | `c7de7761` |
+| GAP-14 | resolved and applied | `core.pid` read once, at construction | ref matched; unchanged | `c7de7761` |
+| GAP-15 | resolved and applied | M11 "Spec-fixed texts" gives each text byte-exact | ref matched; X93d's smoke case now checks the exact text | `c7de7761` |
+| GAP-16 | resolved and applied | a non-str section is named `of type <T>` | ref matched; unchanged | `c7de7761` |
+| GAP-17 | resolved and applied | "smoke run" iff smoke and not present; else `str(e)`, suffix iff smoke | ref matched; unchanged | `c7de7761` |
+| GAP-18 | resolved and applied | `check_metrics` walks with `issubclass(type(x), dict)` and `dict.get`; `score()` keeps `_resolve` | ref matched; unchanged | `c7de7761` |
+| GAP-19 | resolved and applied | `_exit_txn` returns `(held, (swapped, lost))`; the order of problems is normative; new case X59e | applied: the return shape, `held` snapshotted after X5 step 1, and the `_locked`-error-or-`swapped` order | `c7de7761` |
+| GAP-20 | resolved and applied | `visible` counts identity occurrences in `gc.get_referents(r)` | ref matched; unchanged | `c7de7761` |
+| GAP-21 | resolved and applied | the interval starts at the first live-owner observation | ref matched; unchanged | `c7de7761` |
+| GAP-22 | resolved and applied | notes are fin notes, `o.lazy`, `core.lost_note`, in that order | ref matched; unchanged | `c7de7761` |
+| GAP-23 | resolved and applied | each import and reload registers one more idempotent handler | ref matched; unchanged | `c7de7761` |
+| GAP-24 | resolved and applied | the handler returns at once iff `_MON[0] is None` | ref matched; unchanged | `c7de7761` |
+| GAP-25 | resolved and applied | `<module>` is the defining class's own-dict `__module__` if an exact str, else `?` | ref matched; unchanged | `c7de7761` |
+| GAP-26 | resolved and applied | the exam's entry points are `score()` and `check_metrics()`; `_check_coverage` is not one | ref unaffected; `smoke_cases.py` now judges scoring cases through `score()` | `c7de7761` |
+| GAP-27 | resolved and applied | Appendix A's classified lists are spec data; `rules_v5f.json` is reconciled by the author | applied in `rules_v5f.json`; the new gaps are under "Revision 9 follow-ups" | `3002c140` |
+
+Three resolutions differ from the reading taken, and `ref_v5f.py` changed for each. GAP-02: the reading re-bound `_get_running_loop` without a check; revision 9 adds the builtin check (C2, X156g). GAP-03: the reading used a call-time `sys.monitoring.get_local_events`; revision 9 rejects that (V69b) and binds `_MON[0][6]` (C1, C3). GAP-09: the reading bound `_MON` before `import asyncio`; revision 9 binds it after every check (C2). GAP-19 keeps the reading's order and names the return shape, which the ref now uses literally. Revision 9 adopts every other reading.
+
+## Summary (as raised, before revision 9)
 
 | gap | section | blocks the freeze? |
 |---|---|---|
@@ -23,17 +59,20 @@ The readings were taken from the text alone. No prototype was consulted to settl
 ## Freeze-blocking gaps
 
 **GAP-03. M0/M1 (`_MON` is exactly six functions) vs M5 X5 and M10 (local events are read).**
+*Status: resolved in revision 9 and applied (`c7de7761`).*
 - *What is missing.* X5's MONITOR_LOST test says "a held mint's local events on `tool` differ from `_LOCAL`". `_v5_state()["mints"][i]["local_events"]` also reports them. Both need `sys.monitoring.get_local_events`, which is not among `_MON`'s six bound functions (`get_tool, get_events, set_events, set_local_events, register_callback, use_tool_id`).
 - *The contradiction.* M0 and V69 claim that "a wrapper installed on `sys.monitoring` after the first binding is neither checked nor called". Any call-time read of `sys.monitoring.get_local_events` breaks that claim. G_HYG freezes each step's `_MON[0]` indices 0 to 5, and G_ATOM's binding check covers exactly six names.
 - *Reading taken.* `_exit_txn` and `_v5_state` call `sys.monitoring.get_local_events` at call time. This call is outside every one-call step and makes no write. The M0/V69 claim is therefore false for this one read-only function in `ref_v5f.py`.
 - *Fix needed.* Either add `get_local_events` to `_MON` as index 6, with the binding check and the G_HYG index sets updated, or state the exemption and narrow V69's claim.
 
 **GAP-07. Resolution step 4 (the cache-wrapper NOT_A_FUNCTION message) vs X24c.**
+*Status: resolved in revision 9 and applied (`c7de7761`).*
 - *The contradiction.* The step-4 template reads "the wrapper calls `<callee module:qualname>`; its `__wrapped__` names `<stamped>`; declare the function the wrapper calls". X24c requires "the message names `fast`, never `power_ref`". But `<stamped>` *is* `power_ref` in X24c.
 - *Reading taken.* `<stamped>` is rendered by type only: "its `__wrapped__` names a different object (a function)". The message then names the callee and never the stamp. This satisfies X24c and keeps the callee name, which is the only part SM2's normalizer fixes.
 - *Fix needed.* Say how `<stamped>` is rendered, or restate X24c's assertion.
 
 **GAP-15. M11 NO_TRACE wordings, and the placeholders in spec-fixed texts (SM2 normalizer).**
+*Status: resolved in revision 9 and applied (`c7de7761`).*
 SM2 compares "exactly these message substrings" and names the three NO_TRACE wordings, the two NESTED_SECTION texts, the LAZY_RESULT text, the TRACE_ACTIVE texts, and the `dispatched {…}, unattributed {…}` labels. The text does not fix how their placeholders render:
 - *NO_TRACE.* "'coverage_trace' is a `` `<type>` ``, not an exact dict" in M11, and "is a `` `OrderedDict` ``" in X93d. Are the backticks literal, or markdown? Is `<type>` the `__name__` or the `__qualname__`?
 - *NESTED_SECTION.* How are S, S1 and S2 rendered in "a call there would be on the stack of two openings of section S" and "one call would count for both sections S1 and S2"? Bare, or `repr()` with quotes? In which order do S1 and S2 appear?
@@ -45,11 +84,13 @@ SM2 compares "exactly these message substrings" and names the three NO_TRACE wor
 *Fix needed.* Write each spec-fixed text as a byte-exact template, because SM2 masks nothing else.
 
 **GAP-02. M1/M6/M7: the binding of `_get_running_loop`.**
+*Status: resolved in revision 9 and applied (`c7de7761`).*
 - *What is missing.* `_open` (step 5) and `_outcome` call `_get_running_loop()`, which is `asyncio.events._get_running_loop`. M1 has no such name, and asyncio may not be imported at module import (M0). G_HYG requires that "exactly the names M1's reload paragraph lists are bound through `globals().get`". X146b speaks of "its CALL of `asyncio.events._get_running_loop`".
 - *Reading taken.* `_get_running_loop` is a module global that every `coverage_trace()` re-binds from `asyncio.events` after its `import asyncio`. At module level it is `globals().get("_get_running_loop")`, so a reload keeps it. This adds one name to the reload list, and the name is not binding-checked.
 - *Fix needed.* Name it in M1, choose its reload behaviour, and decide whether M0 checks that it is the C builtin.
 
 **GAP-08. M10 and G_HYG: the frozen function and class set.**
+*Status: resolved in revision 9 and applied (`c7de7761`).*
 - *What is missing.* M10 and G_HYG say the region defines exactly the frozen functions plus the scoring functions, and that "the facade … and the plain-data classes have no other methods".
   - M11 itself names `_finite`, which is in neither list.
   - v5e's scoring helper `_count_dicts` is not listed.
@@ -61,36 +102,38 @@ SM2 compares "exactly these message substrings" and names the three NO_TRACE wor
 - *Fix needed.* List `_finite` (and any other scoring helper) in the SM2 region's name set, and state how the facade is constructed.
 
 **GAP-05. M10 `cut_current` and `_cut_ok()` before the first `coverage_trace()`.**
+*Status: resolved in revision 9 and applied (`c7de7761`).*
 - *What is missing.* `_cut_ok()` reads `_HANDLE_DICT[0].get('_run')`, and `_HANDLE_DICT[0]` is None until the first `coverage_trace()`. `_v5_state()` is specified to return `_cut_ok()`, so a snapshot taken before any tracer exists would raise. That covers G_FI's `S0` in a fresh process, and the leftover snapshot of a subprocess case.
 - *Reading taken.* `cut_current` is True while nothing has been captured, meaning no captured binding has moved.
 - *Fix needed.* Define the pre-capture value, because the leftover check and C5 compare this field.
 
 **GAP-19. M5 X5 to X7: `held, more` and the order of problems.**
+*Status: resolved in revision 9 and applied (`c7de7761`).*
 - *What is missing.* `held, more = _locked(_exit_txn, core)` never defines `more`. The order in which CLONE_CALLED (X4), CODE_SWAPPED (X5 step 3), CLONE_ALIVE and CUT_MOVED (X6), and a REENTRANT or MACHINERY_BUSY from `_locked` enter `core.problems` is implied but not stated. It is observable, because score refuses with the *first* problem's code.
 - *Reading taken.* `more = (CODE_SWAPPED texts, lost flag)`. The problem order is X4, then the `_locked` error, then X5 step 3, then X6 (CLONE_ALIVE per held mint, then CUT_MOVED).
 
 ## Non-blocking gaps (readings recorded)
 
-- **GAP-01 (M1).** The code uses PY_START, PY_RESUME, PY_RETURN, PY_YIELD and PY_UNWIND, but `import styxx.protocol` may not touch `sys.monitoring` (M0), and 3.10 and 3.11 lack it. *Reading:* literal ints 1, 2, 4, 8 and 4096, verified on 3.12.3 and 3.13.12. They are not checked at binding.
-- **GAP-04 (M0).** The gate reads `getattr(sys, '_is_gil_enabled', lambda: True)()`, and the lambda is a nested code object, which G_HYG forbids in `coverage_trace` and `_enter`. *Reading:* `getattr(..., None)`, with None read as "GIL enabled".
-- **GAP-06 (M1).** `_GUARD = {"hint": _Txn(None, 0, None)}` sits in the block that "precedes every function", but `_Txn` is a class defined later. *Reading:* `_GUARD = globals().get("_GUARD", None)` in the block, and `{"hint": _Txn(None, 0, None)}` assigned right after `_Txn` is defined when it is None.
-- **GAP-09 (M0).** The order of checks in `coverage_trace()` is not given: version, the Experiment type check, NOTHING_DECLARED, the binding check, `import asyncio`, the dict capture, E2. *Reading:* that order.
-- **GAP-10 (M0).** The refusal text is given only for other 3.12.x and 3.13.x patch levels. *Reading:* one text for every refused interpreter. Only the `[V5:UNSUPPORTED_VERSION]` prefix is fixed.
-- **GAP-11 (At open step 5 vs M6).** M6 says an anchor whose loop is not the running loop *ends the attribution walk*. Step 5's NESTED walk says only that a same-core opening counts as nesting if its loop is the running loop, not whether a foreign-loop anchor ends the walk. *Reading:* the NESTED walk continues to the cut or the root. Both readings are fail-closed.
-- **GAP-12 (Attribution rule vs M6).** The one-sentence rule does not say that a foreign-loop anchor ends the walk, but M6's walk does (outcome `d`). They differ when an opening with the running loop lies *below* a foreign-loop anchor on one stack. *Reading:* M6.
-- **GAP-13 (Minting, M10).** `_Mint.qualname` and `_v5_state()["mints"][i]["target"]` are "F_T's `module:qualname`", but it is not said which module name. *Reading:* F_T's own `__globals__['__name__']` when it is an exact str, else `co_filename` (as Provenance (d)). This matters for a cache wrapper whose callee lives elsewhere.
-- **GAP-14 (M1).** It is not said when `_Core.pid` is read. *Reading:* at construction, in `coverage_trace()`.
-- **GAP-16 (At open steps 2 and 3).** Formatting a non-str section into a refusal would run user `__repr__`. *Reading:* a non-str section is never formatted; its type's `__qualname__` is named instead. X78f's counters stay 0.
-- **GAP-17 (M11 check_metrics).** "'smoke run' only when the trace is absent" does not settle what happens when the trace is absent and the result is not a smoke run. *Reading:* "smoke run" iff smoke and the NO_TRACE test fails. Otherwise `str(e)`, with the smoke suffix when smoke.
-- **GAP-18 (M11 check_metrics).** M11 forbids user `get`, `__missing__` and `__bool__`, but does not say to replace v4's `_resolve` (`isinstance`, `in`, `[]`). *Reading:* `check_metrics` walks paths with `issubclass(type(x), dict)` and `dict.get`. `score()` keeps `_resolve` and v5e's `isinstance(_v, numbers.Real)` guard, with only the `float()` OverflowError change M11 names.
-- **GAP-20 (CLONE_ALIVE (b)).** "`visible` counts the references to M_T held by members of `refs`…" does not say how a referrer's references are counted. *Reading:* identity occurrences of M_T in `gc.get_referents(r)`, excluding the mint, F_T, the scan's own frame and the `refs` list.
-- **GAP-21 (M2).** "After `_BUSY_SECONDS`" does not say from when. *Reading:* from the first observation of a live owner in this `_acquire`.
-- **GAP-22 (M8).** The order of an opening's notes is not given: its fin notes, `o.lazy` and `core.lost_note`. *Reading:* that order. The exam should compare notes as a set of codes.
-- **GAP-23 (M9).** `register_at_fork` "at import" also runs on every `importlib.reload`, which registers a second, idempotent handler. *Reading:* accepted; noted.
-- **GAP-24 (M9).** "a no-op until a tracer has been constructed" does not say how that is detected. *Reading:* `_MON[0] is None`.
-- **GAP-25 (Resolution, INHERITED).** It is not said where the module of "declare the defining class `<module>:<qualname>`" comes from. *Reading:* the defining class's own dict `'__module__'` if it is an exact str, else `?`.
-- **GAP-26 (exam harness).** The text does not say whether a scoring violation case is judged through `score()` or through `Experiment._check_coverage`/`check_metrics`. `score()` resolves each gate's metric first, and a metric-less result raises an uncoded GateSpecError before NO_TRACE. *For the runner:* judge coverage refusals through the entry point each row implies. X122 implies `score()`; X93d and X103b imply the coverage check or `check_metrics`.
-- **GAP-27 (rules_v5f.json).** Appendix A's claim classification lives in scratch files outside what the exam author may read (`rev7/audit_*`, `verify8/*classify*`). *Reading:* the atoms' classes are this author's heuristic by section. Witnesses are the ids each atom names, or those its enclosing paragraph or row names. 531 property and disclosure atoms name no witness in their own paragraph. Many are headings, definitions, or claims whose witness Appendix A gives elsewhere. The spec owner should reconcile these with Appendix A's tables before the freeze.
+- **GAP-01 (M1).** The code uses PY_START, PY_RESUME, PY_RETURN, PY_YIELD and PY_UNWIND, but `import styxx.protocol` may not touch `sys.monitoring` (M0), and 3.10 and 3.11 lack it. *Reading:* literal ints 1, 2, 4, 8 and 4096, verified on 3.12.3 and 3.13.12. They are not checked at binding. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-04 (M0).** The gate reads `getattr(sys, '_is_gil_enabled', lambda: True)()`, and the lambda is a nested code object, which G_HYG forbids in `coverage_trace` and `_enter`. *Reading:* `getattr(..., None)`, with None read as "GIL enabled". *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-06 (M1).** `_GUARD = {"hint": _Txn(None, 0, None)}` sits in the block that "precedes every function", but `_Txn` is a class defined later. *Reading:* `_GUARD = globals().get("_GUARD", None)` in the block, and `{"hint": _Txn(None, 0, None)}` assigned right after `_Txn` is defined when it is None. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-09 (M0).** The order of checks in `coverage_trace()` is not given: version, the Experiment type check, NOTHING_DECLARED, the binding check, `import asyncio`, the dict capture, E2. *Reading:* that order. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-10 (M0).** The refusal text is given only for other 3.12.x and 3.13.x patch levels. *Reading:* one text for every refused interpreter. Only the `[V5:UNSUPPORTED_VERSION]` prefix is fixed. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-11 (At open step 5 vs M6).** M6 says an anchor whose loop is not the running loop *ends the attribution walk*. Step 5's NESTED walk says only that a same-core opening counts as nesting if its loop is the running loop, not whether a foreign-loop anchor ends the walk. *Reading:* the NESTED walk continues to the cut or the root. Both readings are fail-closed. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-12 (Attribution rule vs M6).** The one-sentence rule does not say that a foreign-loop anchor ends the walk, but M6's walk does (outcome `d`). They differ when an opening with the running loop lies *below* a foreign-loop anchor on one stack. *Reading:* M6. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-13 (Minting, M10).** `_Mint.qualname` and `_v5_state()["mints"][i]["target"]` are "F_T's `module:qualname`", but it is not said which module name. *Reading:* F_T's own `__globals__['__name__']` when it is an exact str, else `co_filename` (as Provenance (d)). This matters for a cache wrapper whose callee lives elsewhere. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-14 (M1).** It is not said when `_Core.pid` is read. *Reading:* at construction, in `coverage_trace()`. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-16 (At open steps 2 and 3).** Formatting a non-str section into a refusal would run user `__repr__`. *Reading:* a non-str section is never formatted; its type's `__qualname__` is named instead. X78f's counters stay 0. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-17 (M11 check_metrics).** "'smoke run' only when the trace is absent" does not settle what happens when the trace is absent and the result is not a smoke run. *Reading:* "smoke run" iff smoke and the NO_TRACE test fails. Otherwise `str(e)`, with the smoke suffix when smoke. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-18 (M11 check_metrics).** M11 forbids user `get`, `__missing__` and `__bool__`, but does not say to replace v4's `_resolve` (`isinstance`, `in`, `[]`). *Reading:* `check_metrics` walks paths with `issubclass(type(x), dict)` and `dict.get`. `score()` keeps `_resolve` and v5e's `isinstance(_v, numbers.Real)` guard, with only the `float()` OverflowError change M11 names. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-20 (CLONE_ALIVE (b)).** "`visible` counts the references to M_T held by members of `refs`…" does not say how a referrer's references are counted. *Reading:* identity occurrences of M_T in `gc.get_referents(r)`, excluding the mint, F_T, the scan's own frame and the `refs` list. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-21 (M2).** "After `_BUSY_SECONDS`" does not say from when. *Reading:* from the first observation of a live owner in this `_acquire`. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-22 (M8).** The order of an opening's notes is not given: its fin notes, `o.lazy` and `core.lost_note`. *Reading:* that order. The exam should compare notes as a set of codes. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-23 (M9).** `register_at_fork` "at import" also runs on every `importlib.reload`, which registers a second, idempotent handler. *Reading:* accepted; noted. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-24 (M9).** "a no-op until a tracer has been constructed" does not say how that is detected. *Reading:* `_MON[0] is None`. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-25 (Resolution, INHERITED).** It is not said where the module of "declare the defining class `<module>:<qualname>`" comes from. *Reading:* the defining class's own dict `'__module__'` if it is an exact str, else `?`. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-26 (exam harness).** The text does not say whether a scoring violation case is judged through `score()` or through `Experiment._check_coverage`/`check_metrics`. `score()` resolves each gate's metric first, and a metric-less result raises an uncoded GateSpecError before NO_TRACE. *For the runner:* judge coverage refusals through the entry point each row implies. X122 implies `score()`; X93d and X103b imply the coverage check or `check_metrics`. *Status: resolved in revision 9 and applied (`c7de7761`).*
+- **GAP-27 (rules_v5f.json).** Appendix A's claim classification lives in scratch files outside what the exam author may read (`rev7/audit_*`, `verify8/*classify*`). *Reading:* the atoms' classes are this author's heuristic by section. Witnesses are the ids each atom names, or those its enclosing paragraph or row names. 531 property and disclosure atoms name no witness in their own paragraph. Many are headings, definitions, or claims whose witness Appendix A gives elsewhere. The spec owner should reconcile these with Appendix A's tables before the freeze. *Status: resolved in revision 9 and applied (`3002c140`).*
 
 ## Checked and found consistent (no gap)
 

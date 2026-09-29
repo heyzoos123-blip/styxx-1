@@ -211,6 +211,10 @@ PREREGS = {
     "X117E": gates({"G": ["fx_v5f:f"]}, metric="a.b"),
     "BLK": gates({"G": ["fx_r11:blk"]}),
     "A_F": gates({"A": ["fx_v5f:f"]}),
+    "A_G": gates({"A": ["fx_v5f:g"]}),
+    "B_G": gates({"B": ["fx_v5f:g"]}),
+    "B_OTHER": gates({"B": ["fx_v5f:other"]}),
+    "A_T": gates({"A": ["fx_v5f:t"]}),
 }
 for key, spec in PREREGS.items():
     with open(os.path.join(REPO, f"PREREG_{key}.md"), "w") as fh:
@@ -1346,7 +1350,7 @@ def x57d():
             w.join(30)
         gc.unfreeze()
         keep.clear()
-        gc.collect()        # GAP-39: 3.12.3 restores its boot count at a full collection
+        gc.collect()        # case hygiene (revision 12): gc.unfreeze(), then a full gc.collect()
     expect(_codes(rq["problems"]) == ["CLONE_ALIVE"], f"Q problems {rq['problems']}")
     expect(rp["problems"] == [], f"P problems {rp['problems']}")
 
@@ -1374,7 +1378,7 @@ def r24():
         gc.unfreeze()
         keep.clear()
         box.clear()
-        gc.collect()        # GAP-39
+        gc.collect()        # case hygiene (revision 12)
     expect(counts["refrozen"] <= counts["mint"], f"precondition: the count rose {counts}")
     expect_pass(score(exp, rec), {"A": {"fx_v5f:f": 1}})
     expect(not any(p.startswith("[V5:CLONE_ALIVE]") for p in rec["problems"]), f"{rec['problems']}")
@@ -1498,6 +1502,151 @@ def _sub_v72b():
 def v72b():
     r = run_sub("V72b")
     expect(r == {"first": "TRACE_INCOMPLETE", "second_trace": ["PASS", {"G": {"fx_v5f:f": 1}}], "again": "TRACE_INCOMPLETE"}, f"{r}")
+
+
+
+# -- revision 12: R25 (GAP-38; over-blocking #24; version-keyed) ---------------------------------------
+def _r25_part():
+    exp = EXP("F")
+    box = []
+    with P.coverage_trace(exp) as cov:
+        def body():
+            fx_v5f.f()
+            box.append((fx_v5f.f.__code__,))          # M_T in a tuple gc untracks
+            gc.collect()
+        cov.run("G", body)
+    rec = cov.record()
+    out = list(score(exp, rec)[:2])
+    if out[0] == "REFUSE":
+        out.append([p for p in rec["problems"] if p.startswith("[V5:CLONE_ALIVE]")][:1])
+    box.clear()
+    return out
+
+@sub("R25")
+def _sub_r25():
+    one = _r25_part()
+    gc.unfreeze()
+    two = _r25_part()
+    gc.unfreeze()
+    gc.collect()
+    three = _r25_part()
+    return {"1": one, "2": two, "3": three, "version": ".".join(map(str, sys.version_info[:3]))}
+
+R25_TEXT = "[V5:CLONE_ALIVE] the gc freeze count rose while the minted code existed: "
+
+@case("R25", "residual", "revision 12 (GAP-38; over-blocking #24; version-keyed), fresh subprocess: (1) in section G, f called, M_T kept in an untracked tuple, gc.collect(); (2) gc.unfreeze(), then the same; (3) gc.unfreeze() and a full gc.collect(), then the same -> (1) PASS {f:1}; (2) CLONE_ALIVE ('the gc freeze count rose ...') on 3.12.3, PASS {f:1} on 3.13.12; (3) PASS {f:1}")
+def r25():
+    r = run_sub("R25")
+    ok = ["PASS", {"G": {"fx_v5f:f": 1}}]
+    expect(r["1"] == ok and r["3"] == ok, f"{r}")
+    if r["version"] == "3.12.3":
+        expect(r["2"][:2] == ["REFUSE", "CLONE_ALIVE"] and r["2"][2] and r["2"][2][0].startswith(R25_TEXT), f"{r}")
+    else:
+        expect(r["2"] == ok, f"{r}")
+
+
+
+# -- revision 12: X137h (empty sections) and X154d (b), as the runner has them ---------------------------
+MON = getattr(sys, "monitoring", None)       # 3.12+ only (the tracing cases); None on 3.10/3.11
+E5 = ("PY_START", "PY_RESUME", "PY_RETURN", "PY_YIELD", "PY_UNWIND")
+
+def _any_score(exp, rec):
+    out = score(exp, rec)
+    return ["PASS", out[1]] if out[0] == "PASS" else ["REFUSE", out[1]]
+
+def _lost(rec, sec):
+    return any(n.startswith("[V5:MONITOR_LOST]") for o in rec["sections"].get(sec, []) for n in o["notes"])
+
+def _in_thread(fn):
+    th = threading.Thread(target=fn)
+    th.start()
+    th.join(30)
+
+def _other_takes(tid, name="other", five=False, raise_cb=False):
+    MON.use_tool_id(tid, name)
+    if five:
+        for e in E5:
+            MON.register_callback(tid, getattr(MON.events, e), (lambda *a: None))
+    if raise_cb:
+        MON.register_callback(tid, MON.events.RAISE, (lambda *a: None))
+
+def _audit_on_register(actions):
+    me = threading.get_ident()
+    st = {"n": 0, "armed": True}
+    last = max(actions)
+    def hook(event, args):
+        if st["armed"] and event == "sys.monitoring.register_callback" and threading.get_ident() == me:
+            st["n"] += 1
+            a = actions.get(st["n"])
+            if st["n"] >= last:
+                st["armed"] = False
+            if a is not None:
+                a()
+    sys.addaudithook(hook)
+
+@sub("X137h")
+def _sub_x137h():
+    expP, expQ, expR, expS = EXP("A_G"), EXP("B_OTHER"), EXP("A_T"), EXP("A_G")
+    nothing = lambda: None
+    P_ = P.coverage_trace(expP); P_.__enter__(); P_.run("A", nothing)
+    MON.free_tool_id(4)
+    _other_takes(4, name="U", raise_cb=True)
+    Q_ = P.coverage_trace(expQ); Q_.__enter__(); Q_.run("B", nothing)
+    R_ = P.coverage_trace(expR); R_.__enter__()
+    def body():
+        MON.free_tool_id(3)
+        _other_takes(3, name="V", five=True)
+        try:
+            fx_v5f.t()
+        except ValueError:
+            pass
+    R_.run("A", body)
+    MON.register_callback(4, MON.events.RAISE, None)
+    MON.free_tool_id(4)
+    S_ = P.coverage_trace(expS); S_.__enter__()
+    tool_after_S = P._v5_state()["tool"]
+    S_.run("A", nothing)
+    for c in (S_, Q_, R_, P_):
+        c.__exit__(None, None, None)
+    out = {"tool_after_S": tool_after_S}
+    for name, c, e, sec in (("P", P_, expP, "A"), ("Q", Q_, expQ, "B"), ("R", R_, expR, "A"), ("S", S_, expS, "A")):
+        rec = c.record()
+        out[name] = _any_score(e, rec)[:2] + [_lost(rec, sec)]
+    return out
+
+@case("X137h", "monitoring", "revision 12 form, fresh subprocess: P, Q and S each open their section once, calling nothing; U takes id 4 (RAISE only), Q rebinds to 3, V takes id 3 inside R's A, t raises; U frees 4; S rebinds to 4 -> tool 4; P, Q, R NOT_EXERCISED with MONITOR_LOST; S NOT_EXERCISED, no MONITOR_LOST")
+def x137h():
+    r = run_sub("X137h")
+    ne = ["REFUSE", "NOT_EXERCISED"]
+    expect(r == {"tool_after_S": 4, "P": ne + [True], "Q": ne + [True], "R": ne + [True], "S": ne + [False]}, f"{r}")
+
+@sub("X154d_b")
+def _sub_x154d_b():
+    expP, expQ = EXP("A_F"), EXP("B_G")
+    P_ = P.coverage_trace(expP); P_.__enter__()
+    P_.run("A", fx_v5f.f)
+    t0 = P._v5_state()["tool"]
+    MON.free_tool_id(t0)
+    def free_and_take():
+        def th():
+            MON.free_tool_id(t0)
+            _other_takes(t0)
+        _in_thread(th)
+    _audit_on_register({1: free_and_take})
+    Q_ = P.coverage_trace(expQ); Q_.__enter__()
+    t1 = P._v5_state()["tool"]
+    Q_.run("B", fx_v5f.g)
+    Q_.__exit__(None, None, None)
+    P_.__exit__(None, None, None)
+    rp, rq = P_.record(), Q_.record()
+    return {"tool": t1, "P": _any_score(expP, rp), "P_lost": _lost(rp, "A"), "Q": _any_score(expQ, rq),
+            "Q_notes": [n for o in rq["sections"].get("B", []) for n in o["notes"]]}
+
+@case("X154d(b)", "monitoring", "revision 12 (GAP-41), fresh subprocess: P runs A(f); styxx's id freed; at the 1st register_callback event of Q's enter only, the id is freed and another tool takes it -> tool 3; P PASS {f:1} with MONITOR_LOST; Q PASS {g:1}, no note")
+def x154d_b():
+    r = run_sub("X154d_b")
+    expect(r == {"tool": 3, "P": ["PASS", {"A": {"fx_v5f:f": 1}}], "P_lost": True,
+                 "Q": ["PASS", {"B": {"fx_v5f:g": 1}}], "Q_notes": []}, f"{r}")
 
 
 SCORING_ONLY = {"X117e", "X117f", "X117g"}                  # scoring-only: also run on 3.10 and 3.11

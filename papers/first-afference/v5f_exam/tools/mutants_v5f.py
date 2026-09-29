@@ -118,6 +118,10 @@ M = {
  "mut_unwind_off_pyu_only": (["X137j"], [("                                               _map(_not, (_ANCHORS,))), _ZERO1)))",
                                           "                                               _map(_not, (_ANCHORS,))),\n"
                                           "                    ((_MON[0][1](t) & ~PY_UNWIND) if t is not None and get_tool(t) is _TOOL_NAME else 0,))))")]),
+ # revision 12
+ "mut_freeze_premise_deleted": (["R25"], [("    if gc.get_freeze_count() > m.freeze0:", "    if True:")]),
+ "mut_rebind_nocount": (["X137h"], [("                    _LOST.append(True)\n                    for m in list(_MINTED.values()):",
+                                     "                    pass\n                    for m in list(_MINTED.values()):")]),
  "mut_clone_by_referrers": (["R23"], [("    if f.f_globals is not m.globals:                # CLONE_CALLED: credits nothing",
                                        "    if f.f_globals is not m.globals or [r for r in gc.get_referrers(code) if type(r) is FunctionType and r is not m.fn]:")]),
 }

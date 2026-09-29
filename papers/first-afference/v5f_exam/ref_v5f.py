@@ -1408,7 +1408,7 @@ def _clone_alive(m):
                 if x is code:
                     visible += 1
         if excess - visible > 0:
-            return (f"[V5:CLONE_ALIVE] gc.freeze() ran while the minted code existed: "
+            return (f"[V5:CLONE_ALIVE] the gc freeze count rose while the minted code existed: "
                     f"{excess - visible} references to it cannot be attributed")
     return None
 

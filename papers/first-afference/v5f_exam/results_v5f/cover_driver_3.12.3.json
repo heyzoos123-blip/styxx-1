@@ -1,0 +1,232 @@
+{
+ "impl": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
+ "python": "3.12.3",
+ "scenarios": {
+  "non_minted": {
+   "score": [
+    "PASS",
+    {
+     "G": {
+      "fx_v5f:f": 1
+     }
+    }
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "cut_moved": {
+   "score": [
+    "REFUSE",
+    "CUT_MOVED"
+   ],
+   "problems": [
+    "[V5:CUT_MOVED] asyncio.events.Handle._run or asyncio.base_ev"
+   ],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "clone_called": {
+   "score": [
+    "REFUSE",
+    "CLONE_CALLED"
+   ],
+   "problems": [
+    "[V5:CLONE_CALLED] the minted code of fx_v5f:f ran under glob"
+   ],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "no_anchor": {
+   "score": [
+    "PASS",
+    {
+     "G": {
+      "fx_v5f:f": 1
+     }
+    }
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "kind_c": {
+   "score": [
+    "PASS",
+    {
+     "G": {
+      "fx_v5f:f": 1
+     }
+    }
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "kind_a": {
+   "score": [
+    "REFUSE",
+    "NOT_EXERCISED"
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "kind_d": {
+   "score": [
+    "REFUSE",
+    "NOT_EXERCISED"
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {
+     "fx_v5f:f": 1
+    },
+    "unattributed": {}
+   }
+  },
+  "kind_d_loop": {
+   "score": [
+    "REFUSE",
+    "NOT_EXERCISED"
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {
+     "fx_v5f:f": 1
+    },
+    "unattributed": {}
+   }
+  },
+  "kind_u": {
+   "score": [
+    "REFUSE",
+    "NOT_EXERCISED"
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {
+     "fx_v5f:f": 1
+    }
+   }
+  },
+  "two_holders": {
+   "1": {
+    "score": [
+     "PASS",
+     {
+      "G": {
+       "fx_v5f:f": 1
+      }
+     }
+    ],
+    "problems": [],
+    "uncredited": {
+     "dispatched": {},
+     "unattributed": {}
+    }
+   },
+   "2": {
+    "score": [
+     "PASS",
+     {
+      "G": {
+       "fx_v5f:f": 1
+      }
+     }
+    ],
+    "problems": [],
+    "uncredited": {
+     "dispatched": {},
+     "unattributed": {}
+    }
+   }
+  },
+  "py_return": {
+   "score": [
+    "PASS",
+    {
+     "G": {
+      "fx_v5f:f": 1
+     }
+    }
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "unwind_at_entry": {
+   "score": [
+    "REFUSE",
+    "NOT_EXERCISED"
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "unwind_past": {
+   "score": [
+    "PASS",
+    {
+     "G": {
+      "fx_v5f:f": 1
+     }
+    }
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  },
+  "after_stop": {
+   "score": [
+    "REFUSE",
+    "NOT_EXERCISED"
+   ],
+   "problems": [],
+   "uncredited": {
+    "dispatched": {},
+    "unattributed": {}
+   }
+  }
+ },
+ "children": {
+  "forget_noop": {
+   "ok": true
+  },
+  "forget_ours": {
+   "ok": true
+  },
+  "forget_foreign": {
+   "ok": true
+  }
+ },
+ "executable": {
+  "_on_entry": 12,
+  "_on_exit": 4,
+  "_on_unwind": 4,
+  "_outcome": 29,
+  "_publish": 13,
+  "_forget_in_child": 18
+ },
+ "missing": {},
+ "verdict": "PASS"
+}

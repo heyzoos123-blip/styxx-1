@@ -1,0 +1,8 @@
+3.12.3 ref_v5f.py sha256 e4fbf0f53c7b56ba
+spec                   {'jump_backward_only': {'offsets': 5, 'fired': 2, 'first_hang_at': None}, 'loop_body_set': {'offsets': 106, 'fired': 50, 'first_hang_at': None}}
+mut_h9_for_in_lock     {'jump_backward_only': {'offsets': 6, 'fired': 2, 'first_hang_at': None}, 'loop_body_set': {'offsets': 152, 'fired': 82, 'first_hang_at': None}}
+mut_h9_while_in_lock   {'jump_backward_only': {'offsets': 6, 'fired': 1, 'first_hang_at': [422, 'the next trace hung']}}
+3.13.12 ref_v5f.py sha256 e4fbf0f53c7b56ba
+spec                   {'jump_backward_only': {'offsets': 5, 'fired': 2, 'first_hang_at': None}, 'loop_body_set': {'offsets': 109, 'fired': 53, 'first_hang_at': None}}
+mut_h9_for_in_lock     {'jump_backward_only': {'offsets': 6, 'fired': 2, 'first_hang_at': None}, 'loop_body_set': {'offsets': 155, 'fired': 83, 'first_hang_at': None}}
+mut_h9_while_in_lock   {'jump_backward_only': {'offsets': 6, 'fired': 1, 'first_hang_at': [436, 'the next trace hung']}}

@@ -55,12 +55,16 @@ def trial(off):
     t = threading.Thread(target=other, daemon=True); t.start(); t.join(5)
     return st['fired'], bool(done)
 res = {}
-for name, offs in (('loop_body_set', in_loop), ('jump_backward_only', only_back)):
+for name, offs in (('jump_backward_only', only_back), ('loop_body_set', in_loop)):
     hang = None; fired = 0
     for off in offs:
-        f, ok = trial(off); fired += f
-        if not ok: hang = off; break
+        box = []
+        th = threading.Thread(target=lambda: box.append(trial(off)), daemon=True); th.start(); th.join(15)
+        if not box: hang = [off, 'the faulted thread hung']; break
+        f, ok = box[0]; fired += f
+        if not ok: hang = [off, 'the next trace hung']; break
     res[name] = {'offsets': len(offs), 'fired': fired, 'first_hang_at': hang}
+    if hang: break
 print(res); sys.stdout.flush(); os._exit(0)
 '''
 def main():
@@ -76,6 +80,7 @@ def main():
     subprocess.run(git + ['commit', '-q', '-m', 'p'], cwd=repo, check=True)
     prog = os.path.join(work, 'case.py'); open(prog, 'w').write(CASE)
     for v, reps in MUTANTS.items():
+        if len(sys.argv) > 1 and v not in sys.argv[1:]: continue
         s = src
         for old, new in reps:
             assert s.count(old) == 1, (v, old[:40]); s = s.replace(old, new)

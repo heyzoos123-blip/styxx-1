@@ -1,10 +1,30 @@
-3.12.3
+== 3.12 ref9
 exit-only ['[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
   score refuses [V5:CLONE_CALLED]
 with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
   score refuses [V5:UNDECLARED_SECTION]
-3.13.12
+== 3.12 mut_order_cut_first
+exit-only ['[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CUT_MOVED]', '[V5:CLONE_ALIVE]']
+  score refuses [V5:CLONE_CALLED]
+with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CUT_MOVED]', '[V5:CLONE_ALIVE]']
+  score refuses [V5:UNDECLARED_SECTION]
+== 3.12 mut_order_swapped_first
+exit-only ['[V5:CODE_SWAPPED]', '[V5:CLONE_CALLED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:CODE_SWAPPED]
+with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CODE_SWAPPED]', '[V5:CLONE_CALLED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:UNDECLARED_SECTION]
+== 3.13 ref9
 exit-only ['[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
   score refuses [V5:CLONE_CALLED]
 with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:UNDECLARED_SECTION]
+== 3.13 mut_order_cut_first
+exit-only ['[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CUT_MOVED]', '[V5:CLONE_ALIVE]']
+  score refuses [V5:CLONE_CALLED]
+with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CUT_MOVED]', '[V5:CLONE_ALIVE]']
+  score refuses [V5:UNDECLARED_SECTION]
+== 3.13 mut_order_swapped_first
+exit-only ['[V5:CODE_SWAPPED]', '[V5:CLONE_CALLED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:CODE_SWAPPED]
+with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CODE_SWAPPED]', '[V5:CLONE_CALLED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
   score refuses [V5:UNDECLARED_SECTION]

@@ -44,3 +44,35 @@ open(os.path.join(OUT, "mut_gle_nocheck.py"), "w").write(rep(s, '''"register_cal
 open(os.path.join(OUT, "mut_grl_nocheck.py"), "w").write(rep(s, '''    if not (type(grl) is BuiltinFunctionType and grl.__name__ == "_get_running_loop"
             and grl.__self__ is sys.modules.get("_asyncio")):''', '''    if False:'''))
 print("built")
+# mutant for X59e (GAP-19): X6 records CUT_MOVED before the CLONE_ALIVE texts
+a = '''    for m in held:                                   # X6: tripwires, outside the mutex
+        txt = _clone_alive(m)
+        if txt is not None:
+            probs.append(txt)
+    if 'CUT_MOVED' in core.flags or not _cut_ok():
+        probs.append(
+            "[V5:CUT_MOVED] asyncio.events.Handle._run or asyncio.base_events.BaseEventLoop."
+            "_run_once was rebound, or its code replaced, while this trace saw it: dispatch through "
+            "the moved binding is not cut")
+'''
+b = '''    if 'CUT_MOVED' in core.flags or not _cut_ok():
+        probs.append(
+            "[V5:CUT_MOVED] asyncio.events.Handle._run or asyncio.base_events.BaseEventLoop."
+            "_run_once was rebound, or its code replaced, while this trace saw it: dispatch through "
+            "the moved binding is not cut")
+    for m in held:                                   # X6: tripwires, outside the mutex
+        txt = _clone_alive(m)
+        if txt is not None:
+            probs.append(txt)
+'''
+open(os.path.join(OUT, "mut_order_cut_first.py"), "w").write(rep(s, a, b))
+# mutant for X59e: the transaction's CODE_SWAPPED texts recorded before X4's CLONE_CALLED texts
+a2 = '''    probs = []                                       # X4
+    for cid, q in list(dict(core.clone_called).items()):'''
+b2 = '''    probs = []                                       # X4
+    early = probs
+    for cid, q in list(dict(core.clone_called).items()):'''
+m2 = rep(s, a2, b2)
+m2 = rep(m2, "    probs.extend(more[0])\n", "    probs[0:0] = more[0]\n")
+open(os.path.join(OUT, "mut_order_swapped_first.py"), "w").write(m2)
+print("built order mutants")

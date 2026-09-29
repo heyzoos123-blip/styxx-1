@@ -1,0 +1,18 @@
+3.12.3 events 1 2 4 8 4096
+gle True True get_local_events
+unused 0
+owned 1
+freed 1
+taken by other 1
+audit events from get_local_events: []
+grl <class 'builtin_function_or_method'> True _get_running_loop <module '_asyncio' from '/usr/lib/python3.12/lib-dynload/_asyncio.cpython-312-x86_64-linux-gnu.so'> _asyncio True
+same as asyncio._get_running_loop True is events.get_running_loop's c? <built-in function get_running_loop>
+3.13.12 events 1 2 4 8 4096
+gle True True get_local_events
+unused 0
+owned 1
+freed 1
+taken by other 1
+audit events from get_local_events: []
+grl <class 'builtin_function_or_method'> True _get_running_loop <module '_asyncio' from '/usr/lib/python3.13/lib-dynload/_asyncio.cpython-313-x86_64-linux-gnu.so'> _asyncio True
+same as asyncio._get_running_loop True is events.get_running_loop's c? <built-in function get_running_loop>

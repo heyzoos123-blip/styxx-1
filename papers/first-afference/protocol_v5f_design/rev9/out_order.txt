@@ -1,0 +1,10 @@
+3.12.3
+exit-only ['[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:CLONE_CALLED]
+with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:UNDECLARED_SECTION]
+3.13.12
+exit-only ['[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:CLONE_CALLED]
+with an open-time refusal ['[V5:UNDECLARED_SECTION]', '[V5:CLONE_CALLED]', '[V5:CODE_SWAPPED]', '[V5:CLONE_ALIVE]', '[V5:CUT_MOVED]']
+  score refuses [V5:UNDECLARED_SECTION]

@@ -1,6 +1,6 @@
 {
  "runner": "run_protocol_v5f_exam.py",
- "runner_sha256": "c4327e55a78082af76b82b042541095670e3117d3141a874f8c1c2f84b7651d5",
+ "runner_sha256": "1134c2d120e7c91a3ffe0b16afeccacc1775fddef49637b0a679cd5fbbc3051a",
  "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "impl_module": "ref_v5f",
  "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
@@ -48,7 +48,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X117b": {
    "table": "new violation cases",
@@ -75,7 +75,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.002
   },
   "X122": {
    "table": "new violation cases",
@@ -84,7 +84,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.002
   },
   "X109": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -102,7 +102,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X117e": {
    "table": "new violation cases",
@@ -111,7 +111,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.002
   },
   "X117f": {
    "table": "new violation cases",
@@ -120,7 +120,16 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
+  },
+  "X95": {
+   "table": "v5e cases whose outcome changes",
+   "placement": "self-trace",
+   "row": "a /1 trace -> WRONG_TRACER (the delta table: same as v5e; X95b adds /2)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
   },
   "X37": {
    "table": "new violation cases",
@@ -191,7 +200,9 @@
   "R21": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "R22": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X157": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
-  "X157b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12"
+  "X157b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V48": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "V49": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12"
  },
  "self_trace": null,
  "tables": {
@@ -219,6 +230,13 @@
    "ids": [
     "X109"
    ]
+  },
+  "v5e cases whose outcome changes": {
+   "run": 1,
+   "passed": 1,
+   "ids": [
+    "X95"
+   ]
   }
  },
  "coverage_of_design_tables": {
@@ -228,7 +246,7 @@
   },
   "new valid cases": {
    "rows_in_design": 45,
-   "cases_in_runner": 9
+   "cases_in_runner": 11
   },
   "new documented residuals": {
    "rows_in_design": 12,
@@ -240,8 +258,28 @@
   },
   "v5e cases whose outcome changes": {
    "rows_in_design": 20,
-   "cases_in_runner": 1
+   "cases_in_runner": 2
   }
+ },
+ "delta_table_rows": {
+  "X75": "retired; replaced by V49 (covered)",
+  "X80": "retired; replaced by V48 (covered)",
+  "X81 (<=3.11)": "retired (3.11 refused): covered by X37 on 3.10/3.11",
+  "V26": "NOT YET: needs v5e's V26 shape",
+  "V28": "NOT YET: needs v5e's V28 shape",
+  "V30": "retired (no epochs); V28b covers hops (covered)",
+  "V31": "retired; the leftover check requires getprofile()/gettrace() unchanged (applied to every case)",
+  "X82, V33": "NOT YET: needs v5e's shapes (unkeyed on 3.12+)",
+  "X95": "covered (X95)",
+  "H1 mutant": "NOT YET: hazard sweeps",
+  "H2 mutant": "NOT YET: hazard sweeps",
+  "V34": "covered (the self-trace, V34)",
+  "X91": "covered (X90/X91)",
+  "port: X71c": "NOT YET",
+  "port: leftover snapshot": "applied to every case (snap/leftover_diff)",
+  "port: self-trace code list": "applied (V34's frozen names)",
+  "port: H1 and H2 mutants": "NOT YET: hazard sweeps",
+  "port: H5 (gc cost)": "NOT YET"
  },
  "tables_not_yet_covered": [
   "exam-hole kill cases",
@@ -251,8 +289,8 @@
   "the rest of the new violation and valid cases",
   "the v5e cases kept (the v5e case tables)"
  ],
- "n_cases_run": 13,
- "n_passed": 13,
+ "n_cases_run": 14,
+ "n_passed": 14,
  "verdict": "REFUSED_TRACING_UNSUPPORTED_INTERPRETER; scoring-only cases PASS",
  "seconds": 0.04
 }

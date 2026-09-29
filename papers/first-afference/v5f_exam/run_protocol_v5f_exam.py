@@ -1642,6 +1642,50 @@ def x157b():
                  "R": ["PASS", {"A": {"fx_v5f:g": 1}}], "R_lost": False, "after": ["free", 0, 0]}, f"{r}")
 
 
+# -- v5e cases whose outcome changes (the delta table) -------------------------------------------------
+@case("V48", "valid", "a pure-Python setprofile profiler installed before open (replaces X80) -> {f:1}; the profiler still installed; it saw the call")
+def v48():
+    exp = EXP("F")
+    saw = []
+    def prof(frame, event, arg):
+        if event == "call" and frame.f_code is fx_v5f.f.__code__:
+            saw.append(1)
+    prev = sys.getprofile()
+    sys.setprofile(prof)
+    try:
+        with P.coverage_trace(exp) as cov:
+            cov.run("G", fx_v5f.f)
+        still = sys.getprofile() is prof
+    finally:
+        sys.setprofile(prev)
+    expect_pass(score(exp, cov.record()), {"G": {"fx_v5f:f": 1}})
+    expect(still and saw, f"profiler installed {still}, saw {len(saw)} call(s)")
+
+@case("V49", "valid", "the harness calls sys.setprofile(None) and sys.settrace(None) before the target (replaces X75) -> {f:1}, no note")
+def v49():
+    exp = EXP("F")
+    prev = (sys.getprofile(), sys.gettrace())
+    try:
+        with P.coverage_trace(exp) as cov:
+            def body():
+                sys.setprofile(None)
+                sys.settrace(None)
+                return fx_v5f.f()
+            cov.run("G", body)
+    finally:
+        sys.setprofile(prev[0])
+        sys.settrace(prev[1])
+    rec = cov.record()
+    expect_pass(score(exp, rec), {"G": {"fx_v5f:f": 1}})
+    expect(rec["sections"]["G"][0]["notes"] == [], f"notes {rec['sections']['G'][0]['notes']}")
+
+@case("X95", "scoring", "a /1 trace -> WRONG_TRACER (the delta table: same as v5e; X95b adds /2)")
+def x95():
+    exp, rec = _genuine_trace()
+    r = dict(rec); r["tracer"] = "styxx.protocol.coverage_trace/1"
+    expect_refuse(gate_outcome(exp, r, "G"), "WRONG_TRACER")
+
+
 # =================================================================================================
 # The exam's case metadata: each case's table in the design and its placement (harness rules)
 # =================================================================================================
@@ -1666,14 +1710,17 @@ for _cid in ("V54", "V55", "V67", "V52", "V28b", "V69b", "V69b-v", "V72", "V73")
 for _cid in ("V01", "X40", "X55", "X59", "V07", "X33", "X73", "V18", "X76", "X60", "V14", "X109",
              "X90", "X32"):
     TABLE[_cid] = "v5e cases kept (every other v5e case keeps its id and outcome)"
-TABLE["X90/X91"] = "v5e cases whose outcome changes"       # X91's row: same code, the text per case (M8)
+TABLE["X90/X91"] = "v5e cases whose outcome changes"
+for _cid in ("V48", "V49"):
+    TABLE[_cid] = "new valid cases"                  # V49 replaces X75 and V48 replaces X80 (the delta table)
+TABLE["X95"] = "v5e cases whose outcome changes"       # X91's row: same code, the text per case (M8)
 TABLE["M10-S0"] = "M10 property (not a table row): _v5_state() before any tracer"
 
 # Placements, from the harness rules' lists (only the cases this runner covers are listed).
 MAIN = {"X137c", "X143c", "X59e", "X59e-v", "V67", "V73", "R18a", "R18b", "R20"}
 CHILD = {"X137-free"}                                  # the whole case in a fresh subprocess
 SPAWNS = {"R21", "X157", "X157b", "M10-S0", "V69b", "V69b-v", "X156f", "X156g", "X156g-ctl", "X156h", "X156i", "V72"}  # the case body spawns it
-SCORING = {"X93d", "X93e", "X96d", "X103c", "X112b", "X117b", "X117c", "X117e", "X117f", "X95b",
+SCORING = {"X95", "X93d", "X93e", "X96d", "X103c", "X112b", "X117b", "X117c", "X117e", "X117f", "X95b",
            "X122", "X109", "X37"}                      # read prebuilt traces; run on every interpreter
 SELF_TARGETS = [f"{IMPL_MOD}:{q}" for q in ("Experiment._check_coverage", "_resolve_target", "_open",
                                           "_exit", "_run")]
@@ -1693,6 +1740,21 @@ def placement(cid):
 TABLES_ALL = ["v5e cases whose outcome changes", "new violation cases", "new valid cases",
               "new documented residuals", "exam-hole kill cases", "hazard sweeps",
               "mutation audit (SM1 witnesses)", "v5e cases kept (every other v5e case keeps its id and outcome)"]
+# The delta table's rows ("v5e cases whose outcome changes"; the port table below it) and where each is
+# covered, or why it is not run.
+DELTA_ROWS = {
+    "X75": "retired; replaced by V49 (covered)", "X80": "retired; replaced by V48 (covered)",
+    "X81 (<=3.11)": "retired (3.11 refused): covered by X37 on 3.10/3.11",
+    "V26": "NOT YET: needs v5e's V26 shape", "V28": "NOT YET: needs v5e's V28 shape",
+    "V30": "retired (no epochs); V28b covers hops (covered)",
+    "V31": "retired; the leftover check requires getprofile()/gettrace() unchanged (applied to every case)",
+    "X82, V33": "NOT YET: needs v5e's shapes (unkeyed on 3.12+)",
+    "X95": "covered (X95)", "H1 mutant": "NOT YET: hazard sweeps", "H2 mutant": "NOT YET: hazard sweeps",
+    "V34": "covered (the self-trace, V34)", "X91": "covered (X90/X91)",
+    "port: X71c": "NOT YET", "port: leftover snapshot": "applied to every case (snap/leftover_diff)",
+    "port: self-trace code list": "applied (V34's frozen names)", "port: H1 and H2 mutants": "NOT YET: hazard sweeps",
+    "port: H5 (gc cost)": "NOT YET",
+}
 TABLE_ROWS = {"new violation cases": 137, "new valid cases": 45, "new documented residuals": 12,
               "exam-hole kill cases": 30, "v5e cases whose outcome changes": 20}
 
@@ -1909,6 +1971,7 @@ def main():
         "tables": tables,
         "coverage_of_design_tables": {
             t: {"rows_in_design": n, "cases_in_runner": covered_new.get(t, 0)} for t, n in TABLE_ROWS.items()},
+        "delta_table_rows": DELTA_ROWS,
         "tables_not_yet_covered": ["exam-hole kill cases",
                                    "v5e cases whose outcome changes", "hazard sweeps (H1-H10)",
                                    "mutation audit witnesses not already in the case tables",

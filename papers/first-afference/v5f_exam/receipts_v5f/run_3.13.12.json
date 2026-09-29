@@ -1,6 +1,6 @@
 {
  "runner": "run_protocol_v5f_exam.py",
- "runner_sha256": "c4327e55a78082af76b82b042541095670e3117d3141a874f8c1c2f84b7651d5",
+ "runner_sha256": "1134c2d120e7c91a3ffe0b16afeccacc1775fddef49637b0a679cd5fbbc3051a",
  "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "impl_module": "ref_v5f",
  "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
@@ -21,7 +21,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.007
   },
   "V67": {
    "table": "new valid cases",
@@ -30,7 +30,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X143c": {
    "table": "new violation cases",
@@ -39,7 +39,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X59e": {
    "table": "new violation cases",
@@ -48,7 +48,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.01
+   "seconds": 0.009
   },
   "X59e-v": {
    "table": "new violation cases",
@@ -102,7 +102,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.162
+   "seconds": 0.167
   },
   "M10-S0": {
    "table": "M10 property (not a table row): _v5_state() before any tracer",
@@ -111,7 +111,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.139,
+   "seconds": 0.153,
    "note": "the case body runs its own fresh subprocess"
   },
   "V69b": {
@@ -121,7 +121,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.149,
+   "seconds": 0.185,
    "note": "the case body runs its own fresh subprocess"
   },
   "V69b-v": {
@@ -131,7 +131,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.157,
+   "seconds": 0.203,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156f": {
@@ -141,7 +141,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.153,
+   "seconds": 0.138,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156g": {
@@ -151,7 +151,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.147,
+   "seconds": 0.129,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156g-ctl": {
@@ -161,7 +161,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.13,
+   "seconds": 0.151,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156h": {
@@ -171,7 +171,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.163,
+   "seconds": 0.167,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156i": {
@@ -181,7 +181,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.158,
+   "seconds": 0.187,
    "note": "the case body runs its own fresh subprocess"
   },
   "V72": {
@@ -191,7 +191,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.151,
+   "seconds": 0.205,
    "note": "the case body runs its own fresh subprocess"
   },
   "R21": {
@@ -201,7 +201,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.137,
+   "seconds": 0.196,
    "note": "the case body runs its own fresh subprocess"
   },
   "X157": {
@@ -211,7 +211,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.198,
+   "seconds": 0.159,
    "note": "the case body runs its own fresh subprocess"
   },
   "X157b": {
@@ -221,7 +221,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.173,
+   "seconds": 0.162,
    "note": "the case body runs its own fresh subprocess"
   },
   "V01": {
@@ -231,7 +231,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "X40": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -240,7 +240,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "X55": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -267,7 +267,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "X24b": {
    "table": "new violation cases",
@@ -276,7 +276,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X13b": {
    "table": "new violation cases",
@@ -294,7 +294,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X17b": {
    "table": "new violation cases",
@@ -321,7 +321,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X33": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -375,7 +375,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "V54": {
    "table": "new valid cases",
@@ -384,7 +384,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "V55": {
    "table": "new valid cases",
@@ -411,7 +411,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.005
   },
   "X74d": {
    "table": "new violation cases",
@@ -429,7 +429,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X96d": {
    "table": "new violation cases",
@@ -438,7 +438,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.005
   },
   "X103c": {
    "table": "new violation cases",
@@ -447,7 +447,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X112b": {
    "table": "new violation cases",
@@ -465,7 +465,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X117c": {
    "table": "new violation cases",
@@ -501,7 +501,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.005
   },
   "X90/X91": {
    "table": "v5e cases whose outcome changes",
@@ -510,7 +510,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.005
   },
   "V52": {
    "table": "new valid cases",
@@ -519,7 +519,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.012
+   "seconds": 0.01
   },
   "X32": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -537,7 +537,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.005
   },
   "X78h": {
    "table": "new violation cases",
@@ -546,7 +546,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "X93e": {
    "table": "new violation cases",
@@ -564,7 +564,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.006
   },
   "X84": {
    "table": "new violation cases",
@@ -573,7 +573,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.006
   },
   "X10c": {
    "table": "new violation cases",
@@ -582,7 +582,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.007
   },
   "X14d": {
    "table": "new violation cases",
@@ -591,7 +591,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X117e": {
    "table": "new violation cases",
@@ -609,7 +609,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "R05b": {
    "table": "new documented residuals",
@@ -618,7 +618,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.007
+   "seconds": 0.006
   },
   "R12": {
    "table": "new documented residuals",
@@ -627,7 +627,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.006
   },
   "R13": {
    "table": "new documented residuals",
@@ -636,7 +636,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "R14": {
    "table": "new documented residuals",
@@ -645,7 +645,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "R16": {
    "table": "new documented residuals",
@@ -654,7 +654,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.004
   },
   "R22": {
    "table": "new documented residuals",
@@ -664,6 +664,33 @@
    "detail": "",
    "leftover": [],
    "seconds": 0.004
+  },
+  "V48": {
+   "table": "new valid cases",
+   "placement": "self-trace",
+   "row": "a pure-Python setprofile profiler installed before open (replaces X80) -> {f:1}; the profiler still installed; it saw the call",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "V49": {
+   "table": "new valid cases",
+   "placement": "self-trace",
+   "row": "the harness calls sys.setprofile(None) and sys.settrace(None) before the target (replaces X75) -> {f:1}, no note",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "X95": {
+   "table": "v5e cases whose outcome changes",
+   "placement": "self-trace",
+   "row": "a /1 trace -> WRONG_TRACER (the delta table: same as v5e; X95b adds /2)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
   },
   "V34": {
    "table": "v5e cases whose outcome changes",
@@ -694,20 +721,20 @@
    "PASS",
    {
     "G0": {
-     "ref_v5f:Experiment._check_coverage": 49,
-     "ref_v5f:_resolve_target": 49,
-     "ref_v5f:_open": 32,
-     "ref_v5f:_exit": 45,
-     "ref_v5f:_run": 32
+     "ref_v5f:Experiment._check_coverage": 52,
+     "ref_v5f:_resolve_target": 51,
+     "ref_v5f:_open": 34,
+     "ref_v5f:_exit": 47,
+     "ref_v5f:_run": 34
     }
    }
   ],
   "union": {
-   "ref_v5f:Experiment._check_coverage": 49,
-   "ref_v5f:_resolve_target": 49,
-   "ref_v5f:_open": 32,
-   "ref_v5f:_exit": 45,
-   "ref_v5f:_run": 32
+   "ref_v5f:Experiment._check_coverage": 52,
+   "ref_v5f:_resolve_target": 51,
+   "ref_v5f:_open": 34,
+   "ref_v5f:_exit": 47,
+   "ref_v5f:_run": 34
   },
   "problems": [],
   "detail": {
@@ -1212,6 +1239,38 @@
       "ambiguous": {},
       "end": "returned",
       "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
      }
     ]
    },
@@ -1270,8 +1329,8 @@
    ]
   },
   "new valid cases": {
-   "run": 9,
-   "passed": 9,
+   "run": 11,
+   "passed": 11,
    "ids": [
     "V67",
     "V73",
@@ -1281,7 +1340,9 @@
     "V54",
     "V55",
     "V52",
-    "V28b"
+    "V28b",
+    "V48",
+    "V49"
    ]
   },
   "new documented residuals": {
@@ -1329,10 +1390,11 @@
    ]
   },
   "v5e cases whose outcome changes": {
-   "run": 2,
-   "passed": 2,
+   "run": 3,
+   "passed": 3,
    "ids": [
     "X90/X91",
+    "X95",
     "V34"
    ]
   }
@@ -1344,7 +1406,7 @@
   },
   "new valid cases": {
    "rows_in_design": 45,
-   "cases_in_runner": 9
+   "cases_in_runner": 11
   },
   "new documented residuals": {
    "rows_in_design": 12,
@@ -1356,8 +1418,28 @@
   },
   "v5e cases whose outcome changes": {
    "rows_in_design": 20,
-   "cases_in_runner": 1
+   "cases_in_runner": 2
   }
+ },
+ "delta_table_rows": {
+  "X75": "retired; replaced by V49 (covered)",
+  "X80": "retired; replaced by V48 (covered)",
+  "X81 (<=3.11)": "retired (3.11 refused): covered by X37 on 3.10/3.11",
+  "V26": "NOT YET: needs v5e's V26 shape",
+  "V28": "NOT YET: needs v5e's V28 shape",
+  "V30": "retired (no epochs); V28b covers hops (covered)",
+  "V31": "retired; the leftover check requires getprofile()/gettrace() unchanged (applied to every case)",
+  "X82, V33": "NOT YET: needs v5e's shapes (unkeyed on 3.12+)",
+  "X95": "covered (X95)",
+  "H1 mutant": "NOT YET: hazard sweeps",
+  "H2 mutant": "NOT YET: hazard sweeps",
+  "V34": "covered (the self-trace, V34)",
+  "X91": "covered (X90/X91)",
+  "port: X71c": "NOT YET",
+  "port: leftover snapshot": "applied to every case (snap/leftover_diff)",
+  "port: self-trace code list": "applied (V34's frozen names)",
+  "port: H1 and H2 mutants": "NOT YET: hazard sweeps",
+  "port: H5 (gc cost)": "NOT YET"
  },
  "tables_not_yet_covered": [
   "exam-hole kill cases",
@@ -1367,8 +1449,8 @@
   "the rest of the new violation and valid cases",
   "the v5e cases kept (the v5e case tables)"
  ],
- "n_cases_run": 72,
- "n_passed": 72,
+ "n_cases_run": 75,
+ "n_passed": 75,
  "verdict": "PASS",
- "seconds": 2.3
+ "seconds": 2.48
 }

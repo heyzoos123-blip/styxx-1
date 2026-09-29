@@ -1,0 +1,26 @@
+rev9_new_sentences_classified: the verifier's classing of the 164 sentences in rev9_new_sentences.json
+(Appendix A, "The classified lists are spec data"; the weakest point 1 of revision 9).
+
+Method. Classes and witness conventions are Appendix A's table. 40 sentences are verbatim in the revision-8
+wide list and inherit its row (rule 1). 124 were classed by hand: 116 new texts and 8 verbatim rows re-checked
+to name their case (class N unchanged). The classification is data in ../verify/classify_rev9.py. CPython facts were probed
+on 3.12.3 and 3.13.12 (../verify/p_cpython_rev9.py, out_cpython_rev9_3.1{2,3}.txt: every claim holds). The
+witness gaps were shown on ref_v5f.py, read-only, with in-memory single-rule mutants
+(../verify/p_ref_findings.py, out_ref_findings_3.1{2,3}.txt; identical on both versions).
+
+Counts by class: P 65, D 10, C 6, G 29, N 26, S 1, H 17, old 10, total 164.
+With the 10 "old" rows resolved by the table: P 66, D 12, C 8, G 32, N 26, S 1, H 19.
+P, D and C: 86. 63 of them name a full witness; 23 are tied to a finding below.
+
+Findings (sentence ids are rev9_new_sentences.json ids):
+- R9-1 [freeze-blocking] GAP-16/GAP-15 "runs no user code" when rendering a non-str section or a type name (#128, #130, #528, #91): X78f's variant counts only __eq__/__hash__, so a mutant that formats the section with repr() or reads type(x).__qualname__ passes it; no TRACE_INACTIVE (step 2) case with a non-str section. Fix: count __repr__/__str__/__format__ and a metaclass __getattribute__ in the variant, plus a step-2 variant (p_ref_findings.py FA). Sentences: 91, 128, 130, 528.
+- R9-2 [freeze-blocking (Appendix A rule 3: a D claim with no pinned outcome)] Over-blocking #23 / GAP-11 (#132, #766): the disclosed NESTED_SECTION shape has no pinned case or residual. It is buildable with asyncio.events._set_running_loop, and ref_v5f.py refuses NESTED_SECTION on it (p_ref_findings.py FB). Sentences: 132, 766.
+- R9-3 [freeze-blocking] GAP-02 "re-checked and re-bound at every coverage_trace()" (#194, #221, #227): X156g replaces _get_running_loop before the first coverage_trace(), so a check-only-when-unbound mutant survives. A replacement after the first trace refuses UNSUPPORTED_VERSION under the spec and passes under the mutant (p_ref_findings.py FD). Sentences: 194, 221, 227.
+- R9-4 [freeze-blocking] GAP-09 order and "a refusal at any step binds and captures nothing" (#199, #200, #203, #204): no case. The pre-C2 order (bind _MON before import asyncio, the exact ref bug C2 fixes) survives X156g. After a step-6 refusal, a wrapper installed on sys.monitoring then passes where the spec refuses (p_ref_findings.py FC). The G_HYG reload clause places _get_running_loop after steps 4-7 but _MON only "after the M0 builtin check", which the pre-C2 order also satisfies. Sentences: 199, 200, 203, 204.
+- R9-5 [freeze-blocking] M11 check_metrics, GAP-17/GAP-18 (#519, #520, #524): no case drives check_metrics through a dict subclass with a user __getitem__/__contains__/get/__missing__ on a metric path; the non-smoke absent-trace branch (NO_TRACE text, not "smoke run") has no case, and X117d covers only smoke with a present trace. Sentences: 519, 520, 524.
+- R9-6 [freeze-blocking (contradiction)] The Exam harness leftover check ("_v5_state() equals the before snapshot, except the monotone fields cut and tool") contradicts M10's pre-binding fields (#498, #500; #496 names the subprocess before-snapshot). In a fresh subprocess whose case makes the first tracer, tool_ours goes False -> True, so every such case (V71, X154e, X137i, X158e, ...) fails the leftover rule as written; ref_v5f.py shows it on both versions (p_ref_findings.py FE). Fix: except tool_ours too, or when the before snapshot's tool is None. Sentences: 498, 500.
+- R9-7 [not blocking] GAP-24 / GAP-23 at-fork (#483, #485): the no-op test and "extra handler runs change nothing" are unobservable by outcome; no case forks before a tracer or after a reload. The C facts hold (p_cpython_rev9.py #484/#485: one handler per load, oldest first, all reading the same globals). File them EQUIVALENT_BY_SPEC or as reading. Sentences: 483, 485.
+- R9-8 [not blocking] _v5_state()["guard"] rule (#494, F36): only "free" is witnessed (the leftover check). No case reads "held" or "dead". Sentences: 494.
+- R9-9 [not blocking] NOT_A_FUNCTION's callee-None text "no single Python function" (#90) is SM2-compared, but no v5f case builds a cache wrapper over a non-function, so SM2 never sees it. Sentences: 90.
+- R9-10 [not blocking] F34 LAZY_RESULT cross-version shape (#170): the aclose()-unawaited async generator is CREATED on 3.12.3 and CLOSED on 3.13.12 (p_cpython_rev9.py confirms F34); deliberately unpinned, no case uses it. Sentences: 170.
+- R9-11 [not blocking (method)] Only 116 of the 164 sentences are new text. 48 are verbatim in the revision-8 list (same text, section and keywords): the diff behind rev9_new_sentences.json matches (line, text), and those 48 moved lines. Appendix A's "164 are not in the revision-8 list" should say "116 texts"; the 48 inherit their rows (rule 1). Sentences: (method).

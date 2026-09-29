@@ -1,0 +1,10 @@
+3.12.3 ref_v5f.py sha256 e4fbf0f53c7b56ba
+FA_x78f_ext          spec                     {"refusal": "UNDECLARED_SECTION", "counters": {"eq": 0, "hash": 0, "repr": 0, "str": 0, "format": 0, "meta_qualname": 0}, "x78f_variant_sees_it": false, "extended_variant_sees_it": false}
+FA_x78f_ext          mut_sec_repr             {"refusal": "UNDECLARED_SECTION", "counters": {"eq": 0, "hash": 0, "repr": 1, "str": 0, "format": 0, "meta_qualname": 0}, "x78f_variant_sees_it": false, "extended_variant_sees_it": true}
+FA_x78f_ext          mut_sec_attrqual         {"refusal": "UNDECLARED_SECTION", "counters": {"eq": 0, "hash": 0, "repr": 0, "str": 0, "format": 0, "meta_qualname": 1}, "x78f_variant_sees_it": false, "extended_variant_sees_it": true}
+FB_overblock23       spec                     {"open_Q": "NESTED_SECTION", "record_problems": ["[V5:NESTED_SECTION] section 'G' opened on the stack of an op"]}
+FC_order_step6       spec                     {"first": "UNSUPPORTED_VERSION", "_MON_bound_after_refusal": false, "second_with_wrapper": ["RAISE", "UNSUPPORTED_VERSION"]}
+FC_order_step6       mut_bind_before_asyncio  {"first": "UNSUPPORTED_VERSION", "_MON_bound_after_refusal": true, "second_with_wrapper": ["PASS", {"G": {"fx_r9:f": 1}}]}
+FD_grl_every_trace   spec                     {"first": ["PASS", {"G": {"fx_r9:f": 1}}], "second_after_replacement": ["RAISE", "UNSUPPORTED_VERSION"]}
+FD_grl_every_trace   mut_grl_check_once       {"first": ["PASS", {"G": {"fx_r9:f": 1}}], "second_after_replacement": ["PASS", {"G": {"fx_r9:f": 1}}]}
+FE_leftover_first_trace spec                     {"differ": ["cut", "tool", "tool_ours"], "beyond_cut_and_tool": ["tool_ours"], "tool_ours": [false, true]}

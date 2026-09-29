@@ -1,0 +1,39 @@
+3.13.12 cpython
+#223 event masks 1,2,4,8,4096                OK   (1, 2, 4, 8, 4096)
+#181 Py_GIL_DISABLED falsy                   OK   0
+#181 g is None or g()                        OK   g=<built-in function _is_gil_enabled>
+#194 type BuiltinFunctionType                OK   builtin_function_or_method
+#194 __name__                                OK   
+#194 __self__ is _asyncio                    OK   <module '_asyncio' from '/usr/lib/python3.13/lib-dynload/_asyncio.cpython-313-x86_64-linux-gnu.so'>
+#369 get_tool raises no audit event          OK   []
+#369 get_events raises no audit event        OK   []
+#369 get_local_events raises no audit event  OK   []
+#369 set_events raises no audit event        OK   []
+#369 set_local_events raises no audit event  OK   []
+#369 use_tool_id raises no audit event       OK   []
+#958 register_callback raises one audit event OK   ['sys.monitoring.register_callback']
+#958 exchange-and-restore: 10 events         OK   10
+#958 no callback getter in sys.monitoring    OK   ['register_callback']
+#493 get_local_events unused id              OK   0
+#493 get_local_events freed id               OK   4
+#493 get_local_events foreign-held id        OK   4
+#548 id() raises builtins.id                 OK   ['builtins.id']
+#548 frame.f_code raises object.__getattr__  OK   ['object.__getattr__']
+#548 sys._getframe raises sys._getframe      OK   ['sys._getframe']
+#193 deque(maxlen=0).extend builtin method   OK   
+#193 extend consumes and keeps nothing       OK   
+#528 descriptor read runs no metaclass code  OK   ('X', [])
+#528 (control) attribute read runs it        OK   LIE
+#91 NoneType / function qualnames            OK   
+#898 OrderedDict qualname                    OK   
+#169 gen fresh: CREATED test == inspect      OK   GEN_CREATED
+#169 gen started/other: test == inspect      OK   GEN_SUSPENDED
+#169 co fresh: CREATED test == inspect       OK   CORO_CREATED
+#169 co started/other: test == inspect       OK   CORO_CLOSED
+#169 agen fresh: CREATED test == inspect     OK   AGEN_CREATED
+#169 agen started/other: test == inspect     OK   AGEN_CREATED
+#169 F34 shape (aclose unawaited): state     OK   created_test=False inspect=AGEN_CLOSED ag_frame_is_None=True
+#485 reload re-runs module in the same dict  OK   2
+child handler registered by load 1 reads _ME = 2
+child handler registered by load 2 reads _ME = 2
+#484 expect above: load 1 then load 2 (oldest first), each reading _ME = 2 (same globals)

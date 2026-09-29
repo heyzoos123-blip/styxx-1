@@ -76,8 +76,9 @@ _ap.add_argument("--make-traces", action="store_true")
 _ap.add_argument("--child-case", default=None)
 _ap.add_argument("--sub", default=None)
 _ap.add_argument("--pre-import-patch", default=None, help="chain|deque: replaced before the implementation is imported (X156b, X156d)")
-_ap.add_argument("--greenlet-path", default=os.environ.get("V5F_GREENLET_PATH"),
-                 help="a directory holding the pinned greenlet 3.5.6 (X137f, X158d)")
+_ap.add_argument("--deps-path", "--greenlet-path", dest="greenlet_path", default=os.environ.get("V5F_DEPS_PATH"),
+                 help="a directory holding the exam's pinned third-party libraries for this interpreter: "
+                      "greenlet 3.5.6 (X137f, X158d) and coverage 7.16 (V50)")
 ARGS = _ap.parse_args()
 
 def _sha(path):
@@ -115,7 +116,7 @@ GateSpecError = P.GateSpecError
 def _impl_args():
     a = (["--impl-module", ARGS.impl_module] if ARGS.impl_module else ["--impl", IMPL_PATH])
     if ARGS.greenlet_path:
-        a += ["--greenlet-path", ARGS.greenlet_path]
+        a += ["--deps-path", ARGS.greenlet_path]
     return a
 
 def load_trace(name):
@@ -236,6 +237,25 @@ FIXTURES = {
             return 1
         def clonebox(): return 0            # X34b binds its clone here, inside the case
         def h137(): return 137
+        import enum
+        class Color(enum.Enum):
+            RED = 1
+            def fit(self): return 1
+        def _run(cfg):
+            import fx_v5f
+            return fx_v5f.f() + cfg
+        def fw(ev=None, inside=None):
+            if ev is not None:
+                inside.set()
+                ev.wait(30)
+            return 36
+        E70 = []
+        def f70(box=None):
+            if box is not None:
+                E70[0].set()
+                E70[1].wait(30)
+                raise KeyError("f70")
+            return 1
     ''',
     "fx_x16b_pkg/__init__.py": '''
     ''',
@@ -376,11 +396,99 @@ FIXTURES = {
             return ORIG_RUN(self)
         def w141b(self):                               # X141b: a reimplementation
             self._context.run(self._callback, *self._args)
+        def w61(self):                                 # V61 (and V64, which names V61's wrapper): calls the original
+            return ORIG_RUN(self)
+        def w62(self):                                 # V62: rebound and restored with no hit between
+            return ORIG_RUN(self)
         def w141c(self):                               # X141c: runs ready callbacks, no restore
             for _ in range(len(self._ready)):
                 h = self._ready.popleft()
                 if not h._cancelled:
                     h._context.run(h._callback, *h._args)
+    ''',
+    # valid-case fixtures
+    "fx_v10b.py": '''
+        import sys, types
+        def _thing(): return 10
+        def __getattr__(name):
+            if name == "thing":
+                return _thing
+            raise AttributeError(name)
+        class _M(types.ModuleType):
+            pass
+        sys.modules[__name__].__class__ = _M
+    ''',
+    "fx_v11clib.py": '''
+        import functools
+        def wrap(fn):
+            @functools.wraps(fn)
+            def w(*a, **k):
+                return fn(*a, **k)
+            return w
+    ''',
+    "fx_v11c.py": '''
+        import fx_v11clib
+        def base(): return 11
+        _t = base
+        for _ in range(16):
+            _t = fx_v11clib.wrap(_t)
+        target = _t
+    ''',
+    "fx_v38lib.py": '''
+        import functools
+        def logged(fn):
+            @functools.wraps(fn)
+            def inner(*a, **k):
+                return fn(*a, **k)
+            return inner
+    ''',
+    "fx_v38.py": '''
+        import functools
+        from fx_v38lib import logged
+        class Memo:
+            def __init__(self, fn):
+                functools.update_wrapper(self, fn)
+                self.fn = fn
+            def __call__(self, *a):
+                return self.fn(*a)
+        @logged
+        @Memo
+        def fit(): return 38
+    ''',
+    "fx_v40.py": '''
+        COUNT = {"n": 0}
+        def _fit(): return 40
+        class Reg:
+            def __getattribute__(self, name):
+                COUNT["n"] += 1
+                raise KeyError(name)
+        registry = Reg()
+        object.__setattr__(registry, "fit", _fit)
+        class Meta(type):
+            def __getattribute__(cls, name):
+                COUNT["n"] += 1
+                raise KeyError(name)
+        class K(metaclass=Meta):
+            def fit(self): return 41
+    ''',
+    "fx_v40b.py": '''
+        COUNT = {"eq": 0}
+        def _fit(): return 40
+        class Meta(type):
+            def __eq__(cls, other):
+                COUNT["eq"] += 1
+                raise RuntimeError("the metaclass __eq__ ran")
+            __hash__ = type.__hash__
+        class Reg(metaclass=Meta):
+            pass
+        registry = Reg()
+        registry.fit = _fit
+    ''',
+    "fx_v47.py": '''
+        COV = None
+        def job(x):
+            import fx_v5f
+            return COV.run("B", fx_v5f.g) + x
     ''',
     # residual fixtures
     "fx_r05b.py": '''
@@ -514,6 +622,18 @@ PREREGS = {
     "B_G": gates({"B": ["fx_v5f:g"]}),
     "B_H": gates({"B": ["fx_b1:h137"]}),
     "B_F": gates({"B": ["fx_v5f:f"]}),
+    "V10B": gates({"G": ["fx_v10b:thing"]}),
+    "V11C": gates({"G": ["fx_v11c:target"]}),
+    "F_G0": gates({"G0": ["fx_v5f:f"]}),
+    "FW": gates({"G": ["fx_b1:fw"]}),
+    "V38": gates({"G": ["fx_v38:fit"]}),
+    "V40": gates({"G": ["fx_v40:registry.fit", "fx_v40:K.fit"]}),
+    "V40B": gates({"G": ["fx_v40b:registry.fit"]}),
+    "AB_FF": gates({"A": ["fx_v5f:f"], "B": ["fx_v5f:f"]}),
+    "V42": gates({"G_fast": ["fx_v5f:f"], "G_slow": ["fx_v5f:g"]}, sections={"G_fast": "run", "G_slow": "run"}),
+    "V45": gates({"G": ["fx_b1:ABase.fit", "fx_b1:Color.fit"]}),
+    "F70": gates({"A": ["fx_b1:f70"]}),
+    "A_T135": gates({"A": ["fx_b1:t135"]}),
     "B_FG": gates({"B": ["fx_v5f:f", "fx_v5f:g"]}),
     "C_F": gates({"C": ["fx_v5f:f"]}),
     "D_F": gates({"D": ["fx_v5f:f"]}),
@@ -4249,6 +4369,650 @@ def x158d():
                  "finalizer_ran": True}, f"{r}")
 
 
+# -- New valid cases (expected union counts) ---------------------------------------------------------
+def pass_counts(exp, rec, counts):
+    expect_pass(score(exp, rec), counts)
+
+@case("V10b", "valid", "a module whose __class__ is a ModuleType subclass serves the target only through PEP 562 -> {target:1}")
+def v10b():
+    m = importlib.import_module("fx_v10b")
+    exp = EXP("V10B")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", lambda: m.thing())
+    pass_counts(exp, cov.record(), {"G": {"fx_v10b:thing": 1}})
+
+@case("V11c", "valid", "the target sits exactly 16 hops down a foreign functools.wraps chain -> {target:1}")
+def v11c():
+    m = importlib.import_module("fx_v11c")
+    exp = EXP("V11C")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", m.target)
+    pass_counts(exp, cov.record(), {"G": {"fx_v11c:target": 1}})
+
+@case("V15b", "valid", "outer and inner preregs both name their gate and section 'G', nested on one stack; variant: a case section named like the self-trace section (G0) -> both {f:1}")
+def v15b():
+    for key, sec in (("F", "G"), ("F_G0", "G0")):
+        eo, ei = EXP(key), EXP(key)
+        with P.coverage_trace(eo) as co, P.coverage_trace(ei) as ci:
+            co.run(sec, lambda: ci.run(sec, fx_v5f.f))
+        pass_counts(eo, co.record(), {sec: {"fx_v5f:f": 1}})
+        pass_counts(ei, ci.record(), {sec: {"fx_v5f:f": 1}})
+
+@case("V19b", "valid", "in a task of a running loop L, section A calls L._run_once(), which runs a callback that opens section B of the same tracer and calls g -> B opens (no NESTED_SECTION); B {g:1}")
+def v19b():
+    import asyncio
+    exp = EXP("AB")
+    L = asyncio.new_event_loop()
+    try:
+        with P.coverage_trace(exp) as cov:
+            async def other():
+                L.call_soon(lambda: cov.run("B", fx_v5f.g))
+            async def main():
+                t = asyncio.ensure_future(other())
+                await asyncio.sleep(0)
+                cov.run("A", L._run_once)
+                await t
+            L.run_until_complete(main())
+        rec = cov.record()
+    finally:
+        L.close()
+    expect(rec["problems"] == [], f"problems {rec['problems']}")
+    expect([o["calls"] for o in rec["sections"]["B"]] == [{"fx_v5f:g": 1}], f"B {rec['sections'].get('B')}")
+
+@case("V35", "valid", "an eager child does await asyncio.sleep(0), then cov.run_async('B', ...) -> exact counts, PASS")
+def v35():
+    import asyncio
+    exp = EXP("AB")
+    with P.coverage_trace(exp) as cov:
+        async def gb():
+            return fx_v5f.g()
+        async def child():
+            await asyncio.sleep(0)
+            await cov.run_async("B", gb)
+        async def ab():
+            fx_v5f.f()
+            asyncio.get_running_loop().set_task_factory(asyncio.eager_task_factory)
+            await asyncio.create_task(child())
+        asyncio.run(cov.run_async("A", ab))
+    pass_counts(exp, cov.record(), {"A": {"fx_v5f:f": 1}, "B": {"fx_v5f:g": 1}})
+
+@case("V36", "valid", "a benign gc.freeze() inside a section, with no clone -> {f:1}")
+def v36():
+    exp = EXP("F")
+    try:
+        with P.coverage_trace(exp) as cov:
+            def body():
+                fx_v5f.f()
+                gc.freeze()
+            cov.run("G", body)
+        rec = cov.record()
+    finally:
+        gc.unfreeze()
+        gc.collect()        # GAP-39
+    pass_counts(exp, rec, {"G": {"fx_v5f:f": 1}})
+
+@case("V36b", "valid", "a frozen list of 1,000 objects before the trace; inside: f once, then the list deleted (the count falls); a worker enters f after __enter__ and is inside it while the tracer exits -> PASS {f:1}, no CLONE_ALIVE")
+def v36b():
+    exp = EXP("FW")
+    ev = threading.Event()
+    box = {"objs": [object() for _ in range(1000)]}
+    try:
+        gc.freeze()
+        expect(gc.get_freeze_count() > 0, "the freeze count is 0")
+        inside = threading.Event()
+        with P.coverage_trace(exp) as cov:
+            w = threading.Thread(target=lambda: fx_b1.fw(ev, inside))
+            w.start()
+            inside.wait(30)
+            def body():
+                fx_b1.fw()
+                box.pop("objs")
+            cov.run("G", body)
+        rec = cov.record()
+        ev.set()
+        w.join(30)
+    finally:
+        ev.set()
+        gc.unfreeze()
+        gc.collect()        # GAP-39
+    pass_counts(exp, rec, {"G": {"fx_b1:fw": 1}})
+    expect(not any(p.startswith("[V5:CLONE_ALIVE]") for p in rec["problems"]), f"{rec['problems']}")
+
+@case("V37", "valid", "a pure-Python profiler that forwards events, started inside a section -> {f:1}; still installed after close and exit; it saw the later call")
+def v37():
+    exp = EXP("F")
+    saw = []
+    prev = sys.getprofile()
+    def prof(frame, event, arg):
+        if event == "call" and frame.f_code is fx_v5f.f.__code__:
+            saw.append(1)
+        if prev is not None:
+            prev(frame, event, arg)
+    try:
+        with P.coverage_trace(exp) as cov:
+            def body():
+                sys.setprofile(prof)
+                fx_v5f.f()
+            cov.run("G", body)
+            still_after_close = sys.getprofile() is prof
+        still_after_exit = sys.getprofile() is prof
+    finally:
+        sys.setprofile(prev)
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+    expect(still_after_close and still_after_exit and saw, f"installed {still_after_close}/{still_after_exit}, saw {saw}")
+
+@case("V38", "valid", "@logged @Memo def fit: wraps over a class-based wrapper whose instance's own __dict__ has __wrapped__ (update_wrapper) -> {fit:1}")
+def v38():
+    m = importlib.import_module("fx_v38")
+    exp = EXP("V38")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", m.fit)
+    pass_counts(exp, cov.record(), {"G": {"fx_v38:fit": 1}})
+
+@case("V39", "valid", "sections given as a StrEnum, a (str, Enum) member and a numpy.str_-like subclass -> PASS; the record's keys are exact str")
+def v39():
+    import enum
+    class SE(enum.StrEnum):
+        G = "G"
+    class SM(str, enum.Enum):
+        G = "G"
+    class NpStr(str):                                   # numpy.str_-like: a plain str subclass
+        pass
+    exp = EXP("F")
+    with P.coverage_trace(exp) as cov:
+        for sec in (SE.G, SM.G, NpStr("G")):
+            cov.run(sec, fx_v5f.f)
+    rec = cov.record()
+    pass_counts(exp, rec, {"G": {"fx_v5f:f": 3}})
+    expect(all(type(k) is str for k in rec["sections"]), f"keys {[type(k) for k in rec['sections']]}")
+
+@case("V40", "valid", "a registry whose __getattribute__ raises KeyError; a class whose metaclass __getattribute__ raises -> {target:1} each; no user side effects")
+def v40():
+    m = importlib.import_module("fx_v40")
+    m.COUNT["n"] = 0
+    exp = EXP("V40")
+    with P.coverage_trace(exp) as cov:
+        def body():
+            m._fit()
+            type.__dict__["__dict__"].__get__(m.K)["fit"](None)
+        cov.run("G", body)
+    pass_counts(exp, cov.record(), {"G": {"fx_v40:registry.fit": 1, "fx_v40:K.fit": 1}})
+    expect(m.COUNT["n"] == 0, f"user __getattribute__ ran {m.COUNT['n']} time(s)")
+
+@case("V40b", "valid", "a step through an instance registry whose class's metaclass defines a raising, counting __eq__; target mod:registry.fit in its own __dict__; variant: fn of a section returns such an instance -> {fit:1}; the __eq__ counter 0 in both")
+def v40b():
+    m = importlib.import_module("fx_v40b")
+    m.COUNT["eq"] = 0
+    exp = EXP("V40B")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", m._fit)
+        cov.run("G", lambda: m.registry)                 # the variant: fn returns such an instance
+    pass_counts(exp, cov.record(), {"G": {"fx_v40b:registry.fit": 1}})
+    expect(m.COUNT["eq"] == 0, f"__eq__ ran {m.COUNT['eq']} time(s)")
+
+@case("V41", "valid", "gates A and B both declare f; each section calls f once -> A {f:1}, B {f:1}")
+def v41():
+    exp = EXP("AB_FF")
+    with P.coverage_trace(exp) as cov:
+        cov.run("A", fx_v5f.f)
+        cov.run("B", fx_v5f.f)
+    pass_counts(exp, cov.record(), {"A": {"fx_v5f:f": 1}, "B": {"fx_v5f:f": 1}})
+
+@case("V42", "valid", "G_fast[f] and G_slow[g] share section 'run'; one cov.run('run', ...) calls both -> both PASS")
+def v42():
+    exp = EXP("V42")
+    with P.coverage_trace(exp) as cov:
+        cov.run("run", lambda: (fx_v5f.f(), fx_v5f.g()))
+    pass_counts(exp, cov.record(), {"G_fast": {"fx_v5f:f": 1}, "G_slow": {"fx_v5f:g": 1}})
+
+@case("V43", "valid", "a gate whose section is 'harness', not its name -> PASS")
+def v43():
+    exp = EXP("X78G")
+    with P.coverage_trace(exp) as cov:
+        cov.run("harness", fx_v5f.f)
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+
+@case("V44", "valid", "cov.run('G', _run, 1) with def _run(cfg): return f() + cfg -> {f:1}")
+def v44():
+    exp = EXP("F")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", fx_b1._run, 1)
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+
+@case("V45", "valid", "a method of an abc.ABC subclass; a method of an Enum -> {target:1} each")
+def v45():
+    exp = EXP("V45")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", lambda: (fx_b1.ALeaf().fit(), fx_b1.Color.RED.fit()))
+    pass_counts(exp, cov.record(), {"G": {"fx_b1:ABase.fit": 1, "fx_b1:Color.fit": 1}})
+
+@sub("V47")
+def _sub_v47():
+    import warnings, concurrent.futures, multiprocessing
+    m = importlib.import_module("fx_v47")
+    exp = EXP("AB")
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        with P.coverage_trace(exp) as cov:
+            m.COV = cov
+            def body():
+                fx_v5f.f()
+                with concurrent.futures.ProcessPoolExecutor(2, mp_context=multiprocessing.get_context("fork")) as ex:
+                    return list(ex.map(m.job, [1, 2, 3]))
+            vals = cov.run("A", body)
+        m.COV = None
+    rec = cov.record()
+    st = P._v5_state()
+    return {"vals": vals, "A": [o["calls"] for o in rec["sections"]["A"]], "B_in_trace": "B" in rec["sections"],
+            "score": any_score(exp, rec), "fork_warning": any(issubclass(x.category, DeprecationWarning) and "fork" in str(x.message) for x in w),
+            "state": [st["anchors"], st["global_events"], st["mints"]]}
+
+@case("V47", "valid", "fresh subprocess: a fork ProcessPoolExecutor inside section A whose jobs call COV.run('B', g) -> A PASS; the jobs return their values; B SECTION_ABSENT in the parent's trace; _v5_state() clean; no multi-threaded-fork DeprecationWarning")
+def v47():
+    r = run_sub("V47")
+    expect(r == {"vals": [3, 4, 5], "A": [{"fx_v5f:f": 1}], "B_in_trace": False, "score": ["REFUSE", "SECTION_ABSENT"],
+                 "fork_warning": False, "state": [0, 0, []]}, f"{r}")
+
+def _coverage_core(core):
+    try:
+        import coverage
+    except ImportError:
+        raise NotRun("coverage 7.16 is not importable (pass --deps-path)")
+    os.environ["COVERAGE_CORE"] = core
+    try:
+        c = coverage.Coverage(data_file=None, include=[os.path.join(FIX, "*")])
+    finally:
+        os.environ.pop("COVERAGE_CORE", None)
+    exp = EXP("F")
+    c.start()
+    try:
+        with P.coverage_trace(exp) as cov:
+            cov.run("G", fx_v5f.f)
+    finally:
+        c.stop()
+    lines = c.get_data().lines(fx_v5f.__file__) or []
+    return exp, cov.record(), lines, getattr(c, "_collector", None)
+
+@case("V50", "valid", "coverage.py 7.16, sysmon core and ctrace core, running across the section -> {f:1}; coverage records the minted function's lines")
+def v50():
+    fline = fx_v5f.f.__code__.co_firstlineno
+    for core in ("sysmon", "ctrace"):
+        exp, rec, lines, _ = _coverage_core(core)
+        pass_counts(exp, rec, {"G": {"fx_v5f:f": 1}})
+        expect(fline in lines, f"{core}: coverage lines {sorted(lines)[:10]}, f at {fline}")
+
+@case("V51", "valid", "a pdb/bdb settrace tracer active over the section (no debug command) -> exact counts")
+def v51():
+    import bdb
+    exp = EXP("F")
+    db = bdb.Bdb()
+    with P.coverage_trace(exp) as cov:
+        def body():
+            db.reset()
+            sys.settrace(db.trace_dispatch)
+            try:
+                return fx_v5f.f()
+            finally:
+                sys.settrace(None)
+        cov.run("G", body)
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+
+@case("V53", "valid", "a defaultdict result carrying the exact-dict record -> PASS")
+def v53():
+    exp, rec = _genuine_trace()
+    v = exp.score(collections.defaultdict(float, {"m": 1.0, "coverage_trace": rec}))
+    expect(v.coverage == {"G": {"fx_v5f:f": 1}}, f"{v.coverage}")
+
+def _profiler():
+    saw = []
+    def prof(frame, event, arg):
+        if event == "call":
+            saw.append(frame.f_code)
+    return prof, saw
+
+@case("V57", "valid", "the case thread installs a pure-Python profiler on itself before entering; the section runs on a worker thread -> after exit sys.getprofile() on the case thread is that profiler; {f:1}")
+def v57():
+    exp = EXP("F")
+    prof, _ = _profiler()
+    prev = sys.getprofile()
+    sys.setprofile(prof)
+    try:
+        with P.coverage_trace(exp) as cov:
+            in_thread(lambda: cov.run("G", fx_v5f.f))
+        after = sys.getprofile() is prof
+    finally:
+        sys.setprofile(prev)
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+    expect(after, "the case thread's profiler was changed")
+
+@case("V58", "valid", "on a case-owned thread: cov.run('G', body), body calls f then sys.setprofile(prof) -> after run, sys.getprofile() is prof; {f:1}; no note")
+def v58():
+    exp = EXP("F")
+    prof, _ = _profiler()
+    got = {}
+    with P.coverage_trace(exp) as cov:
+        def th():
+            def body():
+                fx_v5f.f()
+                sys.setprofile(prof)
+            cov.run("G", body)
+            got["after"] = sys.getprofile() is prof
+            sys.setprofile(None)
+        in_thread(th)
+    rec = cov.record()
+    pass_counts(exp, rec, {"G": {"fx_v5f:f": 1}})
+    expect(got.get("after") and rec["sections"]["G"][0]["notes"] == [], f"{got} {rec['sections']['G']}")
+
+@case("V59", "valid", "a pure-Python profiler installed while another opening is open on the same thread (another task on the same loop), then a section opens -> the open succeeds; exact counts")
+def v59():
+    import asyncio
+    exp = EXP("AB")
+    prof, _ = _profiler()
+    prev = sys.getprofile()
+    try:
+        with P.coverage_trace(exp) as cov:
+            async def main():
+                gate = asyncio.Event()
+                async def a1():
+                    fx_v5f.f()
+                    await gate.wait()
+                async def b1():
+                    return fx_v5f.g()
+                t1 = asyncio.ensure_future(cov.run_async("A", a1))
+                await asyncio.sleep(0)
+                sys.setprofile(prof)
+                await cov.run_async("B", b1)
+                gate.set()
+                await t1
+            asyncio.run(main())
+            sys.setprofile(prev)
+    finally:
+        sys.setprofile(prev)
+    pass_counts(exp, cov.record(), {"A": {"fx_v5f:f": 1}, "B": {"fx_v5f:g": 1}})
+
+@case("V60", "valid", "inside G: call f, install a foreign pure-Python profiler, call g; removed after close -> {f:1, g:1}, no note; the profiler saw g")
+def v60():
+    exp = EXP("FG")
+    prof, saw = _profiler()
+    prev = sys.getprofile()
+    try:
+        with P.coverage_trace(exp) as cov:
+            def body():
+                fx_v5f.f()
+                sys.setprofile(prof)
+                fx_v5f.g()
+            cov.run("G", body)
+            sys.setprofile(prev)
+    finally:
+        sys.setprofile(prev)
+    rec = cov.record()
+    pass_counts(exp, rec, {"G": {"fx_v5f:f": 1, "fx_v5f:g": 1}})
+    expect(rec["sections"]["G"][0]["notes"] == [] and fx_v5f.g.__code__ in saw or any(c.co_name == "g" for c in saw),
+           "the profiler did not see g")
+
+@case("V61", "valid", "after coverage_trace() and before __enter__, Handle._run rebound to a top-level fixture wrapper that calls the original; a section calls f; restored after exit -> PASS {f:1}, no CUT_MOVED")
+def v61():
+    import asyncio
+    H = asyncio.events.Handle
+    exp = EXP("F")
+    try:
+        cov = P.coverage_trace(exp)
+        H._run = fx_cutw.w61
+        with cov:
+            cov.run("G", fx_v5f.f)
+    finally:
+        H._run = fx_cutw.ORIG_RUN
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+
+@case("V62", "valid", "inside the trace, Handle._run rebound and restored with no declared call in between; then G calls f -> PASS {f:1}")
+def v62():
+    import asyncio
+    H = asyncio.events.Handle
+    exp = EXP("F")
+    try:
+        with P.coverage_trace(exp) as cov:
+            H._run = fx_cutw.w62
+            H._run = fx_cutw.ORIG_RUN
+            cov.run("G", fx_v5f.f)
+    finally:
+        H._run = fx_cutw.ORIG_RUN
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+
+@case("V63", "valid", "cov.run('A', loop.run_until_complete, main()) with X65d's loop, main opens cov.run_async('B', ...) calling g -> B opens, no NESTED_SECTION; B {g:1}; A counts nothing from the loop")
+def v63():
+    import asyncio, operator
+    exp = EXP("AB")
+    class L(asyncio.SelectorEventLoop):
+        def _run_once(self):
+            hs = [self._ready.popleft() for _ in range(len(self._ready))]
+            list(map(operator.call, [functools.partial(h._context.run, h._callback, *h._args)
+                                     for h in hs if not h._cancelled]))
+    loop = L()
+    try:
+        with P.coverage_trace(exp) as cov:
+            async def gb():
+                return fx_v5f.g()
+            async def main():
+                return await cov.run_async("B", gb)
+            cov.run("A", loop.run_until_complete, main())
+        rec = cov.record()
+    finally:
+        loop.close()
+    expect(rec["problems"] == [], f"problems {rec['problems']}")
+    expect([o["calls"] for o in rec["sections"]["B"]] == [{"fx_v5f:g": 1}], f"B {rec['sections'].get('B')}")
+    expect([o["calls"] for o in rec["sections"]["A"]] == [{}], f"A {rec['sections'].get('A')}")
+
+@case("V64", "valid", "an outer tracer entered; Handle._run rebound to V61's module-level wrapper; an inner tracer entered and exited; restored; then the outer's section calls f -> outer PASS {f:1}, no CUT_MOVED")
+def v64():
+    import asyncio
+    H = asyncio.events.Handle
+    exp = EXP("F")
+    try:
+        with P.coverage_trace(exp) as cov:
+            H._run = fx_cutw.w61
+            with P.coverage_trace(EXP("A_G")):
+                pass
+            H._run = fx_cutw.ORIG_RUN
+            cov.run("G", fx_v5f.f)
+    finally:
+        H._run = fx_cutw.ORIG_RUN
+    pass_counts(exp, cov.record(), {"G": {"fx_v5f:f": 1}})
+
+@case("V65", "valid", "X138 with the block set to 7 s from the waiter's start -> the waiter's enter succeeds after waiting at least 6 s; both traces PASS")
+def v65():
+    exp1 = EXP("F")
+    cov1 = P.coverage_trace(exp1)
+    cov1.__enter__()
+    cov1.run("G", fx_v5f.f)
+    blocking, waiter_started = threading.Event(), threading.Event()
+    code = P._v5_faultpoints()["_exit_txn"]
+    out = {}
+    pc, real_sleep = time.perf_counter, time.sleep
+    tool = FaultTool()
+    def on_start(c, off):
+        if c is code and not blocking.is_set():
+            blocking.set()
+            waiter_started.wait(30)
+            t0 = pc()
+            while pc() - t0 < 7.0:
+                real_sleep(0.05)
+    def waiter():
+        blocking.wait(30)
+        exp2 = EXP("F")
+        cov2 = P.coverage_trace(exp2)
+        waiter_started.set()
+        t0 = pc()
+        cov2.__enter__()
+        out["waited"] = pc() - t0
+        cov2.run("G", fx_v5f.f)
+        cov2.__exit__(None, None, None)
+        out["s"] = score(exp2, cov2.record())
+    th = threading.Thread(target=waiter)
+    th.start()
+    try:
+        tool.on(code, MON.events.PY_START, on_start)
+        cov1.__exit__(None, None, None)
+    finally:
+        tool.close()
+    th.join(60)
+    pass_counts(exp1, cov1.record(), {"G": {"fx_v5f:f": 1}})
+    expect(out.get("waited", 0) >= 6.0, f"waited {out.get('waited')}")
+    expect_pass(out.get("s", ("none",)), {"G": {"fx_v5f:f": 1}})
+
+@case("V68", "valid", "the id-3 tool blocks the exit transaction 3 s; meanwhile a third thread runs cov2.run('B', g) on a tracer entered before -> it returns within 1 s; cov2 PASS {g:1}; the first trace completes")
+def v68():
+    exp1, exp2 = EXP("F"), EXP("B_G")
+    cov1 = P.coverage_trace(exp1); cov1.__enter__()
+    cov1.run("G", fx_v5f.f)
+    cov2 = P.coverage_trace(exp2); cov2.__enter__()
+    code = P._v5_faultpoints()["_exit_txn"]
+    blocking = threading.Event()
+    out = {}
+    pc, real_sleep = time.perf_counter, time.sleep
+    tool = FaultTool()
+    def on_start(c, off):
+        if c is code and not blocking.is_set():
+            blocking.set()
+            t0 = pc()
+            while pc() - t0 < 3.0:
+                real_sleep(0.05)
+    def third():
+        blocking.wait(30)
+        t0 = pc()
+        out["v"] = cov2.run("B", fx_v5f.g)
+        out["dt"] = pc() - t0
+    th = threading.Thread(target=third)
+    th.start()
+    try:
+        tool.on(code, MON.events.PY_START, on_start)
+        cov1.__exit__(None, None, None)
+    finally:
+        tool.close()
+    th.join(30)
+    cov2.__exit__(None, None, None)
+    expect(out.get("v") == 2 and out.get("dt", 9) < 1.0, f"{out}")
+    pass_counts(exp2, cov2.record(), {"B": {"fx_v5f:g": 1}})
+    pass_counts(exp1, cov1.record(), {"G": {"fx_v5f:f": 1}})
+
+@sub("V69")
+def _sub_v69():
+    n = [0]
+    real = MON.set_events
+    def se(*a):
+        n[0] += 1
+        return real(*a)
+    exp = EXP("F")
+    P.coverage_trace(exp)
+    MON.set_events = se
+    try:
+        with P.coverage_trace(exp) as cov:
+            cov.run("G", fx_v5f.f)
+    finally:
+        MON.set_events = real
+    rec = cov.record()
+    return {"score": any_score(exp, rec), "lost": lost(rec, "G"), "calls": n[0]}
+
+@case("V69", "valid", "fresh subprocess: after the first coverage_trace(), sys.monitoring.set_events replaced by a counting pass-through; a trace calling f -> PASS {f:1}, no MONITOR_LOST, the counter 0")
+def v69():
+    r = run_sub("V69")
+    expect(r == {"score": ["PASS", {"G": {"fx_v5f:f": 1}}], "lost": False, "calls": 0}, f"{r}")
+
+@case("V70", "valid", "a stranded pending entry of f on T2 (its unwind not delivered after the last anchor closed), then f(None) with no anchor -> P NOT_EXERCISED; calls {}, unattributed {}, dispatched {}; no MONITOR_LOST")
+def v70():
+    exp = EXP("F70")
+    entered, go = threading.Event(), threading.Event()
+    fx_b1.E70[:] = [entered, go]
+    t2_go = threading.Event()
+    def t2():
+        t2_go.wait(30)
+        try:
+            fx_b1.f70(True)
+        except KeyError:
+            pass
+        fx_b1.f70(None)
+    T2 = threading.Thread(target=t2)
+    with P.coverage_trace(exp) as cov:
+        T2.start()
+        def body():
+            t2_go.set()
+            entered.wait(30)
+        cov.run("A", body)
+        go.set()
+        T2.join(30)
+    rec = cov.record()
+    expect_refuse(score(exp, rec), "NOT_EXERCISED")
+    expect([o["calls"] for o in rec["sections"]["A"]] == [{}] and rec["uncredited"] == {"dispatched": {}, "unattributed": {}},
+           f"{rec['sections']} {rec['uncredited']}")
+    expect(not lost(rec, "A"), "MONITOR_LOST")
+
+@sub("V71")
+def _sub_v71(event):
+    exp = EXP("A_T135")
+    box = []
+    me = threading.get_ident()
+    st = {"armed": False}
+    def hook(ev_, args):
+        if st["armed"] and ev_ == event and threading.get_ident() == me:
+            st["armed"] = False
+            raise RuntimeError("V71 hook")
+    sys.addaudithook(hook)
+    with P.coverage_trace(exp) as cov:
+        st["armed"] = True
+        try:
+            cov.run("A", fx_b1.t135, box)
+            first = None
+        except RuntimeError:
+            first = "RuntimeError"
+        st["armed"] = False
+        ran_first = list(box)
+        anchors = P._v5_state()["anchors"]
+        cov.run("A", fx_b1.t135, box)
+    rec = cov.record()
+    return {"first": first, "ran_first": ran_first, "anchors": anchors, "n_openings": len(rec["sections"]["A"]),
+            "notes": rec["sections"]["A"][0]["notes"], "problems": rec["problems"], "score": any_score(exp, rec)}
+
+@case("V71", "valid", "fresh subprocess: an audit hook raises at the first sys._getframe (variants: object.__getattr__, builtins.id) event of one cov.run('A', f); then cov.run('A', f) again -> the first raises; f did not run; anchors 0; one opening of A, PASS {f:1}, no OPEN_AT_EXIT, no problem")
+def v71():
+    for event in ("sys._getframe", "object.__getattr__", "builtins.id"):
+        r = run_sub(f"V71:{event}")
+        expect(r == {"first": "RuntimeError", "ran_first": [], "anchors": 0, "n_openings": 1, "notes": [], "problems": [],
+                     "score": ["PASS", {"A": {"fx_b1:t135": 1}}]}, f"{event}: {r}")
+
+@sub("V72b")
+def _sub_v72b():
+    exp = EXP("F")
+    cov = P.coverage_trace(exp)
+    cov.__enter__()
+    cov.run("G", fx_v5f.f)
+    me = threading.get_ident()
+    arm = {"on": True}
+    def hook(event, args):
+        if arm["on"] and event == "sys.monitoring.register_callback" and threading.get_ident() == me:
+            arm["on"] = False
+            raise RuntimeError("V72 hook")
+    sys.addaudithook(hook)
+    try:
+        cov.__exit__(None, None, None)
+    except RuntimeError:
+        pass
+    def rd():
+        try:
+            cov.record()
+            return None
+        except GateSpecError as e:
+            return code_of(e)
+    first = rd()
+    exp2 = EXP("F")
+    with P.coverage_trace(exp2) as c2:
+        c2.run("G", fx_v5f.f)
+    return {"first": first, "second_trace": any_score(exp2, c2.record()), "again": rd()}
+
+@case("V72b", "valid", "fresh subprocess: V72's first tracer (its __exit__ raised inside X5): record() TRACE_INCOMPLETE; a second tracer runs (prunes the first core); record() again -> TRACE_INCOMPLETE both times")
+def v72b():
+    r = run_sub("V72b")
+    expect(r == {"first": "TRACE_INCOMPLETE", "second_trace": ["PASS", {"G": {"fx_v5f:f": 1}}], "again": "TRACE_INCOMPLETE"}, f"{r}")
+
+
 # =================================================================================================
 # The exam's case metadata: each case's table in the design and its placement (harness rules)
 # =================================================================================================
@@ -4274,6 +5038,8 @@ for _cid in ('X137b', 'X137e', 'X137g', 'X137i', 'X137h', 'X154b', 'X154c', 'X15
     TABLE[_cid] = "new violation cases"
 for _cid in ("R05b", "R12", "R13", "R14", "R16", "R18a", "R18b", "R20", "R21", "R22", "X157", "X157b"):
     TABLE[_cid] = "new documented residuals"
+for _cid in ('V10b', 'V11c', 'V15b', 'V19b', 'V35', 'V36', 'V36b', 'V37', 'V38', 'V39', 'V40', 'V40b', 'V41', 'V42', 'V43', 'V44', 'V45', 'V47', 'V50', 'V51', 'V53', 'V57', 'V58', 'V59', 'V60', 'V61', 'V62', 'V63', 'V64', 'V65', 'V68', 'V69', 'V70', 'V71', 'V72b'):
+    TABLE[_cid] = "new valid cases"
 for _cid in ("V54", "V55", "V67", "V52", "V28b", "V69b", "V69b-v", "V72", "V73"):
     TABLE[_cid] = "new valid cases"
 for _cid in ("V01", "X40", "X55", "X59", "V07", "X33", "X73", "V18", "X76", "X60", "V14", "X109",
@@ -4286,13 +5052,13 @@ TABLE["X95"] = "v5e cases whose outcome changes"       # X91's row: same code, t
 TABLE["M10-S0"] = "M10 property (not a table row): _v5_state() before any tracer"
 
 # Placements, from the harness rules' lists (only the cases this runner covers are listed).
-MAIN = {"X92b", "X131", "X132", "X143", "X143b", "X144", "X145", "X146", "X146b", "X146c", "X146d", "X146e",
+MAIN = {"V61", "V62", "V64", "V65", "V68", "V70", "X92b", "X131", "X132", "X143", "X143b", "X144", "X145", "X146", "X146b", "X146c", "X146d", "X146e",
         "X147", "X148", "X152", "X153", "X137d", "X35", "X35b", "X35c", "X65e", "X65f", "X65g", "X141", "X141b", "X141c", "X138", "X138b", "X139",
         "X137c", "X143c", "X59e", "X59e-v", "V67", "V73", "R18a", "R18b", "R20"}
 CHILD = {"X137-free"}                                  # the whole case in a fresh subprocess
-SPAWNS = {"X137b", "X137e", "X137g", "X137i", "X137h", "X154b", "X154c", "X154d", "X154e", "X155", "X157c",
+SPAWNS = {"V47", "V69", "V71", "V72b", "X137b", "X137e", "X137g", "X137i", "X137h", "X154b", "X154c", "X154d", "X154e", "X155", "X157c",
           "X158", "X158c", "X158b", "X158e", "X137f", "X158d", "X36", "X142", "X142b", "X156", "X156b", "X37b", "X156c", "X156d", "R21", "X157", "X157b", "M10-S0", "V69b", "V69b-v", "X156f", "X156g", "X156g-ctl", "X156h", "X156i", "V72"}  # the case body spawns it
-SCORING = {"X96c", "X103b", "X105d", "X109b", "X117d", "X95", "X93d", "X93e", "X96d", "X103c", "X112b", "X117b", "X117c", "X117e", "X117f", "X95b",
+SCORING = {"V53", "X96c", "X103b", "X105d", "X109b", "X117d", "X95", "X93d", "X93e", "X96d", "X103c", "X112b", "X117b", "X117c", "X117e", "X117f", "X95b",
            "X122", "X109", "X37"}                      # read prebuilt traces; run on every interpreter
 SELF_TARGETS = [f"{IMPL_MOD}:{q}" for q in ("Experiment._check_coverage", "_resolve_target", "_open",
                                           "_exit", "_run")]

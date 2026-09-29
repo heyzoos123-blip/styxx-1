@@ -1,6 +1,6 @@
 {
  "runner": "run_protocol_v5f_exam.py",
- "runner_sha256": "fd0cabf5d6228522b4ce3bb285a3b3284ba3f728584c92f01323e524b6211d97",
+ "runner_sha256": "c4327e55a78082af76b82b042541095670e3117d3141a874f8c1c2f84b7651d5",
  "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "impl_module": "ref_v5f",
  "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
@@ -21,7 +21,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.008
   },
   "V67": {
    "table": "new valid cases",
@@ -30,7 +30,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X143c": {
    "table": "new violation cases",
@@ -39,7 +39,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.003
   },
   "X59e": {
    "table": "new violation cases",
@@ -48,7 +48,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.012
   },
   "X59e-v": {
    "table": "new violation cases",
@@ -57,7 +57,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.011
   },
   "V73": {
    "table": "new valid cases",
@@ -68,6 +68,33 @@
    "leftover": [],
    "seconds": 0.004
   },
+  "R18a": {
+   "table": "new documented residuals",
+   "placement": "main",
+   "row": "(a) X65d's loop (map(operator.call, ...)); in a task, section A calls loop._run_once(), which runs a job another task scheduled with call_soon(f) -> PASS, credited to A",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "R18b": {
+   "table": "new documented residuals",
+   "placement": "main",
+   "row": "(b) the stdlib loop; after __enter__ BaseEventLoop._run_once is rebound to W, which restores the binding and runs the ready callbacks without Handle._run -> PASS, credited to A",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.003
+  },
+  "R20": {
+   "table": "new documented residuals",
+   "placement": "main",
+   "row": "W bound as Handle._run across one coverage_trace() and __enter__, then restored; FunctionType(W.__code__, g) runs f in section A -> NOT_EXERCISED, dispatched {f:1}",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.011
+  },
   "X137-free": {
    "table": "new violation cases",
    "placement": "subprocess",
@@ -75,7 +102,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.157
+   "seconds": 0.176
   },
   "M10-S0": {
    "table": "M10 property (not a table row): _v5_state() before any tracer",
@@ -84,7 +111,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.172,
+   "seconds": 0.168,
    "note": "the case body runs its own fresh subprocess"
   },
   "V69b": {
@@ -94,7 +121,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.164,
+   "seconds": 0.17,
    "note": "the case body runs its own fresh subprocess"
   },
   "V69b-v": {
@@ -104,7 +131,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.205,
+   "seconds": 0.142,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156f": {
@@ -114,7 +141,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.172,
+   "seconds": 0.188,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156g": {
@@ -124,7 +151,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.137,
+   "seconds": 0.159,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156g-ctl": {
@@ -134,7 +161,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.162,
+   "seconds": 0.149,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156h": {
@@ -144,7 +171,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.163,
+   "seconds": 0.153,
    "note": "the case body runs its own fresh subprocess"
   },
   "X156i": {
@@ -154,7 +181,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.141,
+   "seconds": 0.15,
    "note": "the case body runs its own fresh subprocess"
   },
   "V72": {
@@ -164,7 +191,37 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.163,
+   "seconds": 0.179,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "R21": {
+   "table": "new documented residuals",
+   "placement": "subprocess",
+   "row": "fresh subprocess: after one run, another tool frees styxx's id and re-takes it with styxx's name object; a second run -> PASS {f:2}, no MONITOR_LOST",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.151,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X157": {
+   "table": "new documented residuals",
+   "placement": "subprocess",
+   "row": "fresh subprocess: an audit hook raises Denied at the 2nd register_callback of the exit -> Denied from __exit__; record TRACE_INCOMPLETE; guard dead; a tracer on g PASS {g:1}, no MONITOR_LOST; then guard free, anchors 0, global_events 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.175,
+   "note": "the case body runs its own fresh subprocess"
+  },
+  "X157b": {
+   "table": "new documented residuals",
+   "placement": "subprocess",
+   "row": "fresh subprocess: styxx's id freed; an audit hook raises at the 2nd register_callback of Q's enter -> Denied from Q's __enter__, Q TRACE_INCOMPLETE; tool_ours True, guard dead; P PASS {f:1} no MONITOR_LOST; R on g PASS {g:1}; then guard free, anchors 0, global_events 0",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.137,
    "note": "the case body runs its own fresh subprocess"
   },
   "V01": {
@@ -183,7 +240,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X55": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -201,7 +258,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X26b": {
    "table": "new violation cases",
@@ -219,7 +276,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.003
   },
   "X13b": {
    "table": "new violation cases",
@@ -237,7 +294,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X17b": {
    "table": "new violation cases",
@@ -273,7 +330,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X73": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -300,7 +357,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X60": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -309,7 +366,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X78f": {
    "table": "new violation cases",
@@ -318,7 +375,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.003
   },
   "V54": {
    "table": "new valid cases",
@@ -327,7 +384,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "V55": {
    "table": "new valid cases",
@@ -345,7 +402,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X119": {
    "table": "new violation cases",
@@ -354,7 +411,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.006
   },
   "X74d": {
    "table": "new violation cases",
@@ -363,7 +420,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X93d": {
    "table": "new violation cases",
@@ -381,7 +438,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X103c": {
    "table": "new violation cases",
@@ -408,7 +465,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X117c": {
    "table": "new violation cases",
@@ -417,7 +474,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X95b": {
    "table": "new violation cases",
@@ -426,7 +483,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X122": {
    "table": "new violation cases",
@@ -435,7 +492,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.004
   },
   "X109": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -444,7 +501,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.007
   },
   "X90/X91": {
    "table": "v5e cases whose outcome changes",
@@ -453,7 +510,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "V52": {
    "table": "new valid cases",
@@ -462,7 +519,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.009
+   "seconds": 0.011
   },
   "X32": {
    "table": "v5e cases kept (every other v5e case keeps its id and outcome)",
@@ -471,7 +528,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "V28b": {
    "table": "new valid cases",
@@ -480,7 +537,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.005
   },
   "X78h": {
    "table": "new violation cases",
@@ -489,7 +546,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.004
   },
   "X93e": {
    "table": "new violation cases",
@@ -498,7 +555,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X24f": {
    "table": "new violation cases",
@@ -507,7 +564,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.005
+   "seconds": 0.007
   },
   "X84": {
    "table": "new violation cases",
@@ -516,7 +573,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.007
   },
   "X10c": {
    "table": "new violation cases",
@@ -525,7 +582,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.006
+   "seconds": 0.007
   },
   "X14d": {
    "table": "new violation cases",
@@ -534,7 +591,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.008
+   "seconds": 0.004
   },
   "X117e": {
    "table": "new violation cases",
@@ -543,7 +600,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.003
+   "seconds": 0.004
   },
   "X117f": {
    "table": "new violation cases",
@@ -552,7 +609,61 @@
    "ok": true,
    "detail": "",
    "leftover": [],
+   "seconds": 0.004
+  },
+  "R05b": {
+   "table": "new documented residuals",
+   "placement": "self-trace",
+   "row": "a '<stub>'-compiled stub exec'd into the declared module and bound before the trace; variant: co_filename forged to mod.__file__ -> PASS (deliberate only)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.007
+  },
+  "R12": {
+   "table": "new documented residuals",
+   "placement": "self-trace",
+   "row": "a settrace callback runs T on a section's stack through sys.call_tracing -> PASS, credited; calling T directly in the callback -> NOT_EXERCISED",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.007
+  },
+  "R13": {
+   "table": "new documented residuals",
+   "placement": "self-trace",
+   "row": "a sibling cache wrapper of the declared wrapper's body, held in another module, is called; the declared wrapper never -> PASS",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
+  },
+  "R14": {
+   "table": "new documented residuals",
+   "placement": "self-trace",
+   "row": "a generator object of the declared generator function created before the trace, resumed inside a section -> NOT_EXERCISED",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
    "seconds": 0.003
+  },
+  "R16": {
+   "table": "new documented residuals",
+   "placement": "self-trace",
+   "row": "the id-3 tool raises at the target's PY_RETURN -> the caller sees it; the call is counted {f:1} (L-DELIVERY)",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.006
+  },
+  "R22": {
+   "table": "new documented residuals",
+   "placement": "self-trace",
+   "row": "FunctionType(f.__code__.replace(), f.__globals__) called inside section A -> NOT_EXERCISED; the copy in no bucket; no problem",
+   "ok": true,
+   "detail": "",
+   "leftover": [],
+   "seconds": 0.004
   },
   "V34": {
    "table": "v5e cases whose outcome changes",
@@ -583,20 +694,20 @@
    "PASS",
    {
     "G0": {
-     "ref_v5f:Experiment._check_coverage": 41,
-     "ref_v5f:_resolve_target": 41,
-     "ref_v5f:_open": 24,
-     "ref_v5f:_exit": 37,
-     "ref_v5f:_run": 24
+     "ref_v5f:Experiment._check_coverage": 49,
+     "ref_v5f:_resolve_target": 49,
+     "ref_v5f:_open": 32,
+     "ref_v5f:_exit": 45,
+     "ref_v5f:_run": 32
     }
    }
   ],
   "union": {
-   "ref_v5f:Experiment._check_coverage": 41,
-   "ref_v5f:_resolve_target": 41,
-   "ref_v5f:_open": 24,
-   "ref_v5f:_exit": 37,
-   "ref_v5f:_run": 24
+   "ref_v5f:Experiment._check_coverage": 49,
+   "ref_v5f:_resolve_target": 49,
+   "ref_v5f:_open": 32,
+   "ref_v5f:_exit": 45,
+   "ref_v5f:_run": 32
   },
   "problems": [],
   "detail": {
@@ -1029,6 +1140,78 @@
       "ambiguous": {},
       "end": "returned",
       "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2,
+       "ref_v5f:_exit": 2,
+       "ref_v5f:_open": 2,
+       "ref_v5f:_resolve_target": 2,
+       "ref_v5f:_run": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 2,
+       "ref_v5f:_exit": 2,
+       "ref_v5f:_open": 2,
+       "ref_v5f:_resolve_target": 2,
+       "ref_v5f:_run": 2
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
+     },
+     {
+      "calls": {
+       "ref_v5f:Experiment._check_coverage": 1,
+       "ref_v5f:_exit": 1,
+       "ref_v5f:_open": 1,
+       "ref_v5f:_resolve_target": 1,
+       "ref_v5f:_run": 1
+      },
+      "ambiguous": {},
+      "end": "returned",
+      "notes": []
      }
     ]
    },
@@ -1101,6 +1284,24 @@
     "V28b"
    ]
   },
+  "new documented residuals": {
+   "run": 12,
+   "passed": 12,
+   "ids": [
+    "R18a",
+    "R18b",
+    "R20",
+    "R21",
+    "X157",
+    "X157b",
+    "R05b",
+    "R12",
+    "R13",
+    "R14",
+    "R16",
+    "R22"
+   ]
+  },
   "M10 property (not a table row): _v5_state() before any tracer": {
    "run": 1,
    "passed": 1,
@@ -1146,8 +1347,8 @@
    "cases_in_runner": 9
   },
   "new documented residuals": {
-   "rows_in_design": 10,
-   "cases_in_runner": 0
+   "rows_in_design": 12,
+   "cases_in_runner": 12
   },
   "exam-hole kill cases": {
    "rows_in_design": 30,
@@ -1159,7 +1360,6 @@
   }
  },
  "tables_not_yet_covered": [
-  "new documented residuals (R05b-R22)",
   "exam-hole kill cases",
   "v5e cases whose outcome changes",
   "hazard sweeps (H1-H10)",
@@ -1167,8 +1367,8 @@
   "the rest of the new violation and valid cases",
   "the v5e cases kept (the v5e case tables)"
  ],
- "n_cases_run": 60,
- "n_passed": 60,
+ "n_cases_run": 72,
+ "n_passed": 72,
  "verdict": "PASS",
- "seconds": 1.86
+ "seconds": 2.39
 }

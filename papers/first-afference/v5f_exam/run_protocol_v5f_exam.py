@@ -201,6 +201,37 @@ FIXTURES = {
         stamped = functools.lru_cache(None)(_mk())
         stamped.__wrapped__ = Stamp()
     ''',
+    # residual fixtures
+    "fx_r05b.py": '''
+        def real(): return "real"
+    ''',
+    "fx_r13a.py": '''
+        import functools
+        def _mk():
+            def body(x): return x + 13
+            return body
+        cached = functools.lru_cache(None)(_mk())
+    ''',
+    "fx_r13b.py": '''
+        import functools, fx_r13a
+        sibling = functools.lru_cache(None)(fx_r13a.cached.__wrapped__)   # a sibling in another module
+    ''',
+    "fx_r18.py": '''
+        # R18 (b)'s fresh wrapper: a top-level def of its own, used by no other case (harness rules)
+        import asyncio.base_events
+        ORIG_RUN_ONCE = asyncio.base_events.BaseEventLoop._run_once
+        def w18(self):
+            asyncio.base_events.BaseEventLoop._run_once = ORIG_RUN_ONCE     # first restore the binding
+            for _ in range(len(self._ready)):                                # then run the ready callbacks
+                h = self._ready.popleft()
+                if not h._cancelled:
+                    h._context.run(h._callback, *h._args)
+    ''',
+    "fx_r20.py": '''
+        # R20's fresh wrapper W (harness rules): its body calls its argument
+        def w20(x):
+            return x()
+    ''',
     "fx_pep.py": '''
         def __getattr__(name):
             if name == "thing":
@@ -213,6 +244,7 @@ for fname, body in FIXTURES.items():
     with open(os.path.join(FIX, fname), "w") as fh:
         fh.write(textwrap.dedent(body))
 import fx_v5f, fx_stub, fx_swap, fx_pep, fx_x59e, fx_x14d, fx_x24f   # noqa: E402
+import fx_r05b, fx_r13a, fx_r13b, fx_r18, fx_r20                   # noqa: E402
 
 ORIG = {}
 for mod in (fx_v5f, fx_stub, fx_swap):
@@ -263,6 +295,11 @@ PREREGS = {
     "X24F_LEN": gates({"G": ["fx_x24f:cached_len"]}),
     "X24F_STAMP": gates({"G": ["fx_x24f:stamped"]}),
     "X117E": gates({"G": ["fx_v5f:f"]}, metric="a.b"),
+    # residuals
+    "A_F": gates({"A": ["fx_v5f:f"]}),
+    "A_G": gates({"A": ["fx_v5f:g"]}),
+    "R05B": gates({"G": ["fx_r05b:real"]}),
+    "R13": gates({"G": ["fx_r13a:cached"]}),
 }
 for key, spec in PREREGS.items():
     with open(os.path.join(REPO, f"PREREG_{key}.md"), "w") as fh:
@@ -1321,6 +1358,290 @@ def v72():
                  "second": ["PASS", {"G": {"fx_v5f:f": 1}}], "final": "free"}, f"{r}")
 
 
+# -- New documented residuals (pinned outcome) --------------------------------------------------------
+def _resid_score(exp, rec):
+    return score(exp, rec)
+
+@case("R05b", "residual", "a '<stub>'-compiled stub exec'd into the declared module and bound before the trace; variant: co_filename forged to mod.__file__ -> PASS (deliberate only)")
+def r05b():
+    mod = fx_r05b
+    real = mod.real
+    try:
+        for forged in (False, True):
+            code = compile("def real():\n    return 'stub'\n", "<stub>", "exec")
+            if not forged:
+                exec(code, mod.__dict__)                 # binds mod.real to the stub
+            else:
+                fcode = [c for c in code.co_consts if isinstance(c, types.CodeType)][0]
+                mod.real = types.FunctionType(fcode.replace(co_filename=mod.__file__), mod.__dict__, "real")
+            exp = EXP("R05B")
+            with P.coverage_trace(exp) as cov:
+                cov.run("G", mod.real)
+            expect_pass(score(exp, cov.record()), {"G": {"fx_r05b:real": 1}})
+    finally:
+        mod.real = real
+
+@case("R12", "residual", "a settrace callback runs T on a section's stack through sys.call_tracing -> PASS, credited; calling T directly in the callback -> NOT_EXERCISED")
+def r12():
+    for via in ("call_tracing", "direct"):
+        exp = EXP("F")
+        def marker():
+            return 0
+        def tracer(frame, event, arg):
+            if event == "call" and frame.f_code is marker.__code__:
+                if via == "call_tracing":
+                    sys.call_tracing(fx_v5f.f, ())
+                else:
+                    fx_v5f.f()
+            return None
+        prev = sys.gettrace()
+        with P.coverage_trace(exp) as cov:
+            def body():
+                sys.settrace(tracer)
+                try:
+                    marker()
+                finally:
+                    sys.settrace(prev)
+            cov.run("G", body)
+        out = score(exp, cov.record())
+        if via == "call_tracing":
+            expect_pass(out, {"G": {"fx_v5f:f": 1}})
+        else:
+            expect_refuse(out, "NOT_EXERCISED")
+
+@case("R13", "residual", "a sibling cache wrapper of the declared wrapper's body, held in another module, is called; the declared wrapper never -> PASS")
+def r13():
+    exp = EXP("R13")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", fx_r13b.sibling, 1)
+    expect_pass(score(exp, cov.record()), {"G": {"fx_r13a:cached": 1}})
+
+@case("R14", "residual", "a generator object of the declared generator function created before the trace, resumed inside a section -> NOT_EXERCISED")
+def r14():
+    exp = EXP("GEN")
+    g = fx_v5f.gen()
+    try:
+        with P.coverage_trace(exp) as cov:
+            cov.run("G", next, g)
+        expect_refuse(score(exp, cov.record()), "NOT_EXERCISED")
+    finally:
+        g.close()
+
+@case("R16", "residual", "the id-3 tool raises at the target's PY_RETURN -> the caller sees it; the call is counted {f:1} (L-DELIVERY)")
+def r16():
+    mon = sys.monitoring
+    class Boom(Exception):
+        pass
+    exp = EXP("F")
+    seen = []
+    mon.use_tool_id(3, "exam-fault-tool")
+    try:
+        with P.coverage_trace(exp) as cov:
+            code = fx_v5f.f.__code__
+            def on_ret(c, off, val):
+                if c is code:
+                    raise Boom()
+            mon.register_callback(3, mon.events.PY_RETURN, on_ret)
+            mon.set_local_events(3, code, mon.events.PY_RETURN)
+            def body():
+                try:
+                    fx_v5f.f()
+                except Boom:
+                    seen.append("Boom")
+            try:
+                cov.run("G", body)
+            finally:
+                mon.set_local_events(3, code, 0)
+    finally:
+        mon.register_callback(3, mon.events.PY_RETURN, None)
+        mon.free_tool_id(3)
+    expect(seen == ["Boom"], f"the caller saw {seen}")
+    expect_pass(score(exp, cov.record()), {"G": {"fx_v5f:f": 1}})
+
+def _r18(variant):
+    import asyncio, operator
+    exp = EXP("A_F")
+    class L(asyncio.SelectorEventLoop):
+        def _run_once(self):                      # X65d's loop: ready callbacks through map(operator.call, ...)
+            hs = [self._ready.popleft() for _ in range(len(self._ready))]
+            list(map(operator.call, [functools.partial(h._context.run, h._callback, *h._args)
+                                     for h in hs if not h._cancelled]))
+    loop = L() if variant == "a" else asyncio.new_event_loop()
+    try:
+        with P.coverage_trace(exp) as cov:
+            async def other():
+                loop.call_soon(fx_v5f.f)
+            async def main():
+                t = asyncio.ensure_future(other())
+                await asyncio.sleep(0)
+                if variant == "b":
+                    asyncio.base_events.BaseEventLoop._run_once = fx_r18.w18
+                try:
+                    cov.run("A", loop._run_once)
+                finally:
+                    asyncio.base_events.BaseEventLoop._run_once = fx_r18.ORIG_RUN_ONCE
+                await t
+            loop.run_until_complete(main())
+        rec = cov.record()
+    finally:
+        asyncio.base_events.BaseEventLoop._run_once = fx_r18.ORIG_RUN_ONCE
+        loop.close()
+    expect_pass(score(exp, rec), {"A": {"fx_v5f:f": 1}})
+
+@case("R18a", "residual", "(a) X65d's loop (map(operator.call, ...)); in a task, section A calls loop._run_once(), which runs a job another task scheduled with call_soon(f) -> PASS, credited to A")
+def r18a():
+    _r18("a")
+
+@case("R18b", "residual", "(b) the stdlib loop; after __enter__ BaseEventLoop._run_once is rebound to W, which restores the binding and runs the ready callbacks without Handle._run -> PASS, credited to A")
+def r18b():
+    _r18("b")
+
+@case("R20", "residual", "W bound as Handle._run across one coverage_trace() and __enter__, then restored; FunctionType(W.__code__, g) runs f in section A -> NOT_EXERCISED, dispatched {f:1}")
+def r20():
+    import asyncio
+    H = asyncio.events.Handle
+    run0 = H.__dict__["_run"]
+    try:
+        H._run = fx_r20.w20
+        cov0 = P.coverage_trace(EXP("A_G"))
+        cov0.__enter__()
+        cov0.__exit__(None, None, None)
+    finally:
+        H._run = run0
+    clone = types.FunctionType(fx_r20.w20.__code__, vars(fx_v5f))
+    try:
+        exp = EXP("A_F")
+        with P.coverage_trace(exp) as cov:
+            cov.run("A", clone, fx_v5f.f)
+        rec = cov.record()
+    finally:
+        del clone
+        gc.collect()
+    out = score(exp, rec)
+    expect_refuse(out, "NOT_EXERCISED")
+    expect(rec["uncredited"]["dispatched"] == {"fx_v5f:f": 1}, f"uncredited {rec['uncredited']}")
+
+@sub("R21")
+def _sub_r21():
+    mon = sys.monitoring
+    exp = EXP("A_F")
+    with P.coverage_trace(exp) as cov:
+        cov.run("A", fx_v5f.f)
+        t = P._v5_state()["tool"]
+        name = mon.get_tool(t)
+        mon.free_tool_id(t)
+        mon.use_tool_id(t, name)                  # the hostile tool re-takes it with styxx's own name object
+        cov.run("A", fx_v5f.f)
+    rec = cov.record()
+    notes = [n for o in rec["sections"]["A"] for n in o["notes"]]
+    return {"score": _outcome_json(score(exp, rec)), "lost": any(n.startswith("[V5:MONITOR_LOST]") for n in notes)}
+
+@case("R21", "residual", "fresh subprocess: after one run, another tool frees styxx's id and re-takes it with styxx's name object; a second run -> PASS {f:2}, no MONITOR_LOST")
+def r21():
+    r = run_sub("R21")
+    expect(r == {"score": ["PASS", {"A": {"fx_v5f:f": 2}}], "lost": False}, f"{r}")
+
+@case("R22", "residual", "FunctionType(f.__code__.replace(), f.__globals__) called inside section A -> NOT_EXERCISED; the copy in no bucket; no problem")
+def r22():
+    exp = EXP("A_F")
+    with P.coverage_trace(exp) as cov:
+        def body():
+            types.FunctionType(fx_v5f.f.__code__.replace(), fx_v5f.f.__globals__)(0)   # no defaults on the copy
+        cov.run("A", body)
+    rec = cov.record()
+    expect_refuse(score(exp, rec), "NOT_EXERCISED")
+    expect(rec["uncredited"] == {"dispatched": {}, "unattributed": {}} and rec["problems"] == [],
+           f"uncredited {rec['uncredited']} problems {rec['problems']}")
+
+def _denied_hook(nth):
+    class Denied(Exception):
+        pass
+    me = threading.get_ident()
+    st = {"n": 0, "armed": True}
+    def hook(event, args):
+        if st["armed"] and event == "sys.monitoring.register_callback" and threading.get_ident() == me:
+            st["n"] += 1
+            if st["n"] == nth:
+                st["armed"] = False
+                raise Denied("denied")
+    sys.addaudithook(hook)
+    return Denied
+
+@sub("X157")
+def _sub_x157():
+    exp = EXP("A_F")
+    cov = P.coverage_trace(exp)
+    cov.__enter__()
+    cov.run("A", fx_v5f.f)
+    Denied = _denied_hook(2)
+    try:
+        cov.__exit__(None, None, None)
+        raised = None
+    except Denied:
+        raised = "Denied"
+    try:
+        cov.record()
+        rec = None
+    except GateSpecError as e:
+        rec = code_of(e)
+    guard = P._v5_state()["guard"]
+    exp2 = EXP("A_G")
+    with P.coverage_trace(exp2) as cov2:
+        cov2.run("A", fx_v5f.g)
+    rec2 = cov2.record()
+    st = P._v5_state()
+    return {"raised": raised, "record": rec, "guard": guard, "second": _outcome_json(score(exp2, rec2)),
+            "lost": any(n.startswith("[V5:MONITOR_LOST]") for o in rec2["sections"]["A"] for n in o["notes"]),
+            "after": [st["guard"], st["anchors"], st["global_events"]]}
+
+@case("X157", "residual", "fresh subprocess: an audit hook raises Denied at the 2nd register_callback of the exit -> Denied from __exit__; record TRACE_INCOMPLETE; guard dead; a tracer on g PASS {g:1}, no MONITOR_LOST; then guard free, anchors 0, global_events 0")
+def x157():
+    r = run_sub("X157")
+    expect(r == {"raised": "Denied", "record": "TRACE_INCOMPLETE", "guard": "dead",
+                 "second": ["PASS", {"A": {"fx_v5f:g": 1}}], "lost": False, "after": ["free", 0, 0]}, f"{r}")
+
+@sub("X157b")
+def _sub_x157b():
+    mon = sys.monitoring
+    expP = EXP("A_F")
+    covP = P.coverage_trace(expP)
+    covP.__enter__()
+    covP.run("A", fx_v5f.f)
+    mon.free_tool_id(P._v5_state()["tool"])       # an outside party frees styxx's id; nobody takes it
+    Denied = _denied_hook(2)
+    covQ = P.coverage_trace(EXP("A_G"))
+    try:
+        covQ.__enter__()
+        q = None
+    except Denied:
+        q = "Denied"
+    try:
+        covQ.record()
+        qrec = None
+    except GateSpecError as e:
+        qrec = code_of(e)
+    st = P._v5_state()
+    mid = [st["tool_ours"], st["guard"]]
+    covP.__exit__(None, None, None)
+    recP = covP.record()
+    expR = EXP("A_G")
+    with P.coverage_trace(expR) as covR:
+        covR.run("A", fx_v5f.g)
+    recR = covR.record()
+    st = P._v5_state()
+    lost = lambda rec: any(n.startswith("[V5:MONITOR_LOST]") for o in rec["sections"]["A"] for n in o["notes"])
+    return {"q": q, "qrec": qrec, "mid": mid, "P": _outcome_json(score(expP, recP)), "P_lost": lost(recP),
+            "R": _outcome_json(score(expR, recR)), "R_lost": lost(recR),
+            "after": [st["guard"], st["anchors"], st["global_events"]]}
+
+@case("X157b", "residual", "fresh subprocess: styxx's id freed; an audit hook raises at the 2nd register_callback of Q's enter -> Denied from Q's __enter__, Q TRACE_INCOMPLETE; tool_ours True, guard dead; P PASS {f:1} no MONITOR_LOST; R on g PASS {g:1}; then guard free, anchors 0, global_events 0")
+def x157b():
+    r = run_sub("X157b")
+    expect(r == {"q": "Denied", "qrec": "TRACE_INCOMPLETE", "mid": [True, "dead"],
+                 "P": ["PASS", {"A": {"fx_v5f:f": 1}}], "P_lost": False,
+                 "R": ["PASS", {"A": {"fx_v5f:g": 1}}], "R_lost": False, "after": ["free", 0, 0]}, f"{r}")
+
+
 # =================================================================================================
 # The exam's case metadata: each case's table in the design and its placement (harness rules)
 # =================================================================================================
@@ -1338,6 +1659,8 @@ for _cid in ("X26b", "X24b", "X13b", "X14c", "X17b", "X34", "X78f", "X119", "X13
              "X59e-v", "X156f", "X156g", "X156g-ctl", "X78h", "X93e", "X24f", "X84", "X10c", "X14d",
              "X117e", "X117f", "X156h", "X156i", "X37"):
     TABLE[_cid] = "new violation cases"
+for _cid in ("R05b", "R12", "R13", "R14", "R16", "R18a", "R18b", "R20", "R21", "R22", "X157", "X157b"):
+    TABLE[_cid] = "new documented residuals"
 for _cid in ("V54", "V55", "V67", "V52", "V28b", "V69b", "V69b-v", "V72", "V73"):
     TABLE[_cid] = "new valid cases"
 for _cid in ("V01", "X40", "X55", "X59", "V07", "X33", "X73", "V18", "X76", "X60", "V14", "X109",
@@ -1347,9 +1670,9 @@ TABLE["X90/X91"] = "v5e cases whose outcome changes"       # X91's row: same cod
 TABLE["M10-S0"] = "M10 property (not a table row): _v5_state() before any tracer"
 
 # Placements, from the harness rules' lists (only the cases this runner covers are listed).
-MAIN = {"X137c", "X143c", "X59e", "X59e-v", "V67", "V73"}
+MAIN = {"X137c", "X143c", "X59e", "X59e-v", "V67", "V73", "R18a", "R18b", "R20"}
 CHILD = {"X137-free"}                                  # the whole case in a fresh subprocess
-SPAWNS = {"M10-S0", "V69b", "V69b-v", "X156f", "X156g", "X156g-ctl", "X156h", "X156i", "V72"}  # the case body spawns it
+SPAWNS = {"R21", "X157", "X157b", "M10-S0", "V69b", "V69b-v", "X156f", "X156g", "X156g-ctl", "X156h", "X156i", "V72"}  # the case body spawns it
 SCORING = {"X93d", "X93e", "X96d", "X103c", "X112b", "X117b", "X117c", "X117e", "X117f", "X95b",
            "X122", "X109", "X37"}                      # read prebuilt traces; run on every interpreter
 SELF_TARGETS = [f"{IMPL_MOD}:{q}" for q in ("Experiment._check_coverage", "_resolve_target", "_open",
@@ -1370,7 +1693,7 @@ def placement(cid):
 TABLES_ALL = ["v5e cases whose outcome changes", "new violation cases", "new valid cases",
               "new documented residuals", "exam-hole kill cases", "hazard sweeps",
               "mutation audit (SM1 witnesses)", "v5e cases kept (every other v5e case keeps its id and outcome)"]
-TABLE_ROWS = {"new violation cases": 137, "new valid cases": 45, "new documented residuals": 10,
+TABLE_ROWS = {"new violation cases": 137, "new valid cases": 45, "new documented residuals": 12,
               "exam-hole kill cases": 30, "v5e cases whose outcome changes": 20}
 
 # =================================================================================================
@@ -1586,7 +1909,7 @@ def main():
         "tables": tables,
         "coverage_of_design_tables": {
             t: {"rows_in_design": n, "cases_in_runner": covered_new.get(t, 0)} for t, n in TABLE_ROWS.items()},
-        "tables_not_yet_covered": ["new documented residuals (R05b-R22)", "exam-hole kill cases",
+        "tables_not_yet_covered": ["exam-hole kill cases",
                                    "v5e cases whose outcome changes", "hazard sweeps (H1-H10)",
                                    "mutation audit witnesses not already in the case tables",
                                    "the rest of the new violation and valid cases",

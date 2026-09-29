@@ -1,6 +1,6 @@
 {
  "runner": "run_protocol_v5f_exam.py",
- "runner_sha256": "fd0cabf5d6228522b4ce3bb285a3b3284ba3f728584c92f01323e524b6211d97",
+ "runner_sha256": "c4327e55a78082af76b82b042541095670e3117d3141a874f8c1c2f84b7651d5",
  "impl_path": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "impl_module": "ref_v5f",
  "impl_sha256": "e4fbf0f53c7b56baed32825de43d0897c5a4a3a441c751b43c194bd656353e5a",
@@ -66,7 +66,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.004
   },
   "X95b": {
    "table": "new violation cases",
@@ -93,7 +93,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.005
   },
   "X93e": {
    "table": "new violation cases",
@@ -111,7 +111,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.002
+   "seconds": 0.004
   },
   "X117f": {
    "table": "new violation cases",
@@ -129,7 +129,7 @@
    "ok": true,
    "detail": "",
    "leftover": [],
-   "seconds": 0.004
+   "seconds": 0.005
   }
  },
  "not_run": {
@@ -179,7 +179,19 @@
   "V73": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X156h": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
   "X156i": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
-  "V72": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12"
+  "V72": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R05b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R12": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R13": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R14": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R16": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R18a": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R18b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R20": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R21": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "R22": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X157": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12",
+  "X157b": "not run: tracing cases run only on CPython 3.12.3 and 3.13.12"
  },
  "self_trace": null,
  "tables": {
@@ -219,8 +231,8 @@
    "cases_in_runner": 9
   },
   "new documented residuals": {
-   "rows_in_design": 10,
-   "cases_in_runner": 0
+   "rows_in_design": 12,
+   "cases_in_runner": 12
   },
   "exam-hole kill cases": {
    "rows_in_design": 30,
@@ -232,7 +244,6 @@
   }
  },
  "tables_not_yet_covered": [
-  "new documented residuals (R05b-R22)",
   "exam-hole kill cases",
   "v5e cases whose outcome changes",
   "hazard sweeps (H1-H10)",

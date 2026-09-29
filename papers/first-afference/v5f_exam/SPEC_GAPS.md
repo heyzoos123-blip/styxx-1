@@ -724,6 +724,11 @@ Readings the text does not fix, and inputs outside the exam author's read scope.
 |---|---|---|
 | GAP-50 | G_REF: "the literal census finds 0 coded literals outside a mutable site" — "mutable site" is not defined | **yes** (the census verdict depends on the reading) |
 | GAP-51 | positive control #5 (G_REF blind shapes) names `mutation_gate_blindspots.json`, outside the exam author's read scope | **yes** (the control's frozen list is unavailable) |
+| GAP-52 | `crash_sweep_v5f.py` is "the lab's `fault_injection_v5.py` and D1's `t_crash_sweep.py` merged and ported"; both are outside the read scope | no (the sweep implements C1-C9 as G_FI writes them) |
+| GAP-53 | SM1's required content and positive controls #1 and #2 need files outside the read scope: the 63 census mutants, `semantic_mutation_census.json`, the round-4 kill shapes' mutants, and v5e's implementation | **yes** (SM1 cannot hold the census rows; controls #1 and #2 cannot run) |
+| GAP-54 | D1's M3 ("register before append") and M5 ("exit claim not idempotent"), re-targeted, are not caught by C5 on `ref_v5f.py` | **yes** (UNWITNESSED rows need a witness or a signed EQUIVALENT_BY_SPEC argument before the freeze) |
+| GAP-55 | `corpus_v5f/` must hold the round 1-4 repros from `protocol_v5_redteam/`, outside the read scope | **yes** (the corpus is incomplete without them) |
+| GAP-56 | G_SIG names its measured quantities and the three L-DELIVERY cells, but not its other cells | **yes** (the frozen harness's cell list is the exam author's reading) |
 
 **GAP-50. What is a mutable site?**
 - *What the text says.* G_SEM, SM2 gate: "G_REF: 100% of O13 mutants KILLED, and the literal census finds 0 coded literals outside a mutable site." O13 is an SM2 operator, and SM2 applies its operators inside the Region (the `_v5_faultpoints()` functions, the five scoring functions, and the M1 binding statements).
@@ -736,4 +741,29 @@ Readings the text does not fix, and inputs outside the exam author's read scope.
 - *The problem.* That file is not in the exam author's read scope (the spec text, the exam artifacts, and the named spec-data directories).
 - *In the artifact.* `refcensus_v5f.py` checks the shapes the text itself implies (a code prefix split across literals, `str.format`, `%`-formatting, a code from an f-string's formatted value) and plants each as a control; all four are caught on both versions. Whether they are the eight is unknown.
 - *Fix needed.* State the eight shapes in the text, or declare the file spec data.
+
+**GAP-52. The crash sweep's provenance.**
+- *What the text says.* "`crash_sweep_v5f.py`. The lab's `fault_injection_v5.py` and D1's `t_crash_sweep.py` merged and ported to the v5f interfaces." D1's file is under `crashcons/`, which the exam author attests not to read, and the lab's file is outside the read scope.
+- *In the artifact.* The sweep is written from G_FI's text: the injector, C1-C9, the scenario list, K = 2, the twice-made discovery run, the frozen enumeration order and stride. It is clean on `ref_v5f.py` on both versions (about 20,000 points each), and D1's M2, M4 and M7, re-targeted, fail C7 as the text names.
+- *Fix needed.* Say whether "merged and ported" constrains anything beyond C1-C9 and the scenario list.
+
+**GAP-53. SM1 content and positive controls outside the read scope.**
+- *What the text says.* SM1's required content includes "all 63 round-4 census mutants (`protocol_v5_redteam/round4_exam_mutation/mutants.py`)" (15 retired, 1 adopted, 47 re-targeted, by id) and "the 29 round-4 exam-hole kill shapes, each as a row". Positive control #1 runs SM1's machinery "on v5e's frozen exam with the 63 census mutants applied to v5e unchanged" and compares with `semantic_mutation_census.json`; control #2 runs SM2's generator on v5e.
+- *The problem.* The census mutants, the census result, the kill shapes' mutant definitions and v5e's implementation are outside the exam author's read scope, and controls #1 and #2 execute v5e's implementation.
+- *In the artifacts.* `weakenings_v5f.py` holds the rows the exam author could write from the text (59 at this commit; the Mutation-audit rows are being added). The 47 re-targeted census rows and the 29 kill-shape rows are not written. `controls_v5f.py` will state controls #1 and #2 as not runnable under this gap.
+- *Fix needed.* Declare those files spec data (as revision 11 did for the v5e cases), or restate the 47 re-targeted rules and the 29 shapes in the text.
+
+**GAP-54. D1's M3 and M5 against `ref_v5f.py`.**
+- *What the text says.* "M3 register before append → C5 (anchors left)"; "M5 exit claim not idempotent → C5 (openings left)".
+- *What happens.* Re-targeted as (M3) `_open` storing the anchor before appending the opening and (M5) exit's X1 claim replaced by an unconditional store, the full crash sweep is clean on 3.12.3 for both. For M3, a fault between the store and the append leaves an anchor, but the next reconciliation prunes cores reached from anchors (revision 4, B1), so C5 sees nothing. For M5, no sweep scenario exits one tracer twice concurrently. The Mutation-audit table names V52 for "exit claim replaced by an unconditional store".
+- *Readings left open.* Whether M3 and M5 are equivalent under v5f's reconciliation (EQUIVALENT_BY_SPEC needs an argument signed by a reviewer who is neither the exam author nor the implementer), or whether their re-targeted form should be different.
+
+**GAP-55. The corpus's round 1-4 repros.**
+- *What the text says.* `corpus_v5f/` holds "the round 1-4 repros, rewritten by the exam author against the public API from `protocol_v5_redteam/round1_module/` through `round4/` and `round4/closure-audit/r1/held_battery.py`".
+- *The problem.* Those directories are outside the read scope.
+- *In the artifact.* The corpus will hold the exam cases, the fuzzer's programs and the crash-sweep points, and list this part as missing.
+
+**GAP-56. G_SIG's cells.**
+- *What the text says.* G_SIG requires "0 user-lock leaks, 0 hangs, 0 poison, 0 wrong results, and credited <= body runs", defines "wrong result" and poison, and fixes three L-DELIVERY cells; "every other G_SIG harness flow uses only with/finally for cleanup and checks results only on iterations in which no asynchronous exception was delivered". It does not list the other flows.
+- *In the artifact.* `sigflood_v5f.py` runs three cells for the named quantities (a `with lock:` loop, H8's credit shape, a result check) beside the three L-DELIVERY cells. That cell list is a reading.
 

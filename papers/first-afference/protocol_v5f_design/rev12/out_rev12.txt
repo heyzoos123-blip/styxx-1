@@ -1,0 +1,10 @@
+3.12.3 ref_v5f.py sha256 e4fbf0f53c7b56ba
+X137h    spec                 {"tool_after_S_enter": 4, "P": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "Q": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "R": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "S": ["NOT_EXERCISED", []]}
+X137h    mut_rebind_nocount   {"tool_after_S_enter": 4, "P": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "Q": ["NOT_EXERCISED", []], "R": ["NOT_EXERCISED", []], "S": ["NOT_EXERCISED", []]}
+X154d_b  spec                 {"tool_after_Q_enter": 3, "P": ["PASS", ["[V5:MONITOR_LOST]"]], "Q": ["PASS", []]}
+X38      spec                 {"fresh_process": ["PASS", []], "after_unfreeze": ["CLONE_ALIVE", []], "after_unfreeze_then_collect": ["PASS", []]}
+3.13.12 ref_v5f.py sha256 e4fbf0f53c7b56ba
+X137h    spec                 {"tool_after_S_enter": 4, "P": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "Q": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "R": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "S": ["NOT_EXERCISED", []]}
+X137h    mut_rebind_nocount   {"tool_after_S_enter": 4, "P": ["NOT_EXERCISED", ["[V5:MONITOR_LOST]"]], "Q": ["NOT_EXERCISED", []], "R": ["NOT_EXERCISED", []], "S": ["NOT_EXERCISED", []]}
+X154d_b  spec                 {"tool_after_Q_enter": 3, "P": ["PASS", ["[V5:MONITOR_LOST]"]], "Q": ["PASS", []]}
+X38      spec                 {"fresh_process": ["PASS", []], "after_unfreeze": ["PASS", []], "after_unfreeze_then_collect": ["PASS", []]}

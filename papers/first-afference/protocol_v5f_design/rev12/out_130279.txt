@@ -1,0 +1,48 @@
+3.12.3 while_try            direct skipped at ['38:JUMP_BACKWARD']
+3.12.3 while_try            signal skipped at ['38:JUMP_BACKWARD']
+3.12.3 for_try              direct skipped at ['18:NOP']
+3.12.3 for_try              signal skipped at ['18:NOP']
+3.12.3 for_if_tail_try      direct skipped at ['18:JUMP_BACKWARD', '24:NOP']
+3.12.3 for_if_tail_try      signal skipped at ['18:JUMP_BACKWARD', '24:NOP']
+3.12.3 for_call_tail_try    direct skipped at ['50:NOP']
+3.12.3 for_call_tail_try    signal skipped at ['50:NOP']
+3.12.3 while_continue_try   direct skipped at ['50:JUMP_BACKWARD']
+3.12.3 while_continue_try   signal skipped at ['50:JUMP_BACKWARD']
+3.12.3 while_with           direct skipped at ['58:JUMP_BACKWARD']
+3.12.3 while_with           signal skipped at ['58:JUMP_BACKWARD']
+3.12.3 for_with             direct skipped at ['38:NOP']
+3.12.3 for_with             signal skipped at ['38:NOP']
+3.12.3 for_call_tail_with   direct skipped at ['68:NOP']
+3.12.3 for_call_tail_with   signal skipped at ['68:NOP']
+3.12.3 with_in_try_loop     direct skipped at ['40:NOP']
+3.12.3 with_in_try_loop     signal skipped at ['40:NOP']
+3.12.3 while_try            SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.12.3 for_try              SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.12.3 while_with           SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.12.3 for_with             SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.12.3 for_call_tail_with   SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.12.3 with_in_try_loop     SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.13.12 while_try            direct skipped at ['38:JUMP_BACKWARD']
+3.13.12 while_try            signal skipped at ['38:JUMP_BACKWARD']
+3.13.12 for_try              direct skipped at none
+3.13.12 for_try              signal skipped at none
+3.13.12 for_if_tail_try      direct skipped at ['24:POP_JUMP_IF_TRUE', '28:JUMP_BACKWARD']
+3.13.12 for_if_tail_try      signal skipped at ['24:POP_JUMP_IF_TRUE', '28:JUMP_BACKWARD']
+3.13.12 for_call_tail_try    direct skipped at none
+3.13.12 for_call_tail_try    signal skipped at none
+3.13.12 while_continue_try   direct skipped at ['62:JUMP_BACKWARD']
+3.13.12 while_continue_try   signal skipped at ['62:JUMP_BACKWARD']
+3.13.12 while_with           direct skipped at ['58:JUMP_BACKWARD']
+3.13.12 while_with           signal skipped at ['58:JUMP_BACKWARD']
+3.13.12 for_with             direct skipped at none
+3.13.12 for_with             signal skipped at none
+3.13.12 for_call_tail_with   direct skipped at none
+3.13.12 for_call_tail_with   signal skipped at none
+3.13.12 with_in_try_loop     direct skipped at none
+3.13.12 with_in_try_loop     signal skipped at none
+3.13.12 while_try            SIGALRM uninstrumented: exit/finally skipped in 200 of 200 landed in the body (200 trials)
+3.13.12 for_try              SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.13.12 while_with           SIGALRM uninstrumented: exit/finally skipped in 200 of 200 landed in the body (200 trials)
+3.13.12 for_with             SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.13.12 for_call_tail_with   SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)
+3.13.12 with_in_try_loop     SIGALRM uninstrumented: exit/finally skipped in 0 of 200 landed in the body (200 trials)

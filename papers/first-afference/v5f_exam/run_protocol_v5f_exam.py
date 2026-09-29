@@ -72,6 +72,8 @@ _ap.add_argument("--impl", default=os.path.join(HERE, "ref_v5f.py"))
 _ap.add_argument("--impl-module", default=None)
 _ap.add_argument("--only", default=None, help="comma-separated case ids")
 _ap.add_argument("--list", action="store_true", help="print the case ids and exit")
+_ap.add_argument("--mutation", default=None, help="mutation mode (revision 4, N7): run exactly one case (or ALL) in its frozen placement in this fresh process and report its outcome")
+_ap.add_argument("--fast", action="store_true", help="G_COVER pass 1: every case once, skipping the hazard sweeps H1-H10, X140f and the G_SIG cells")
 _ap.add_argument("--out", default=None)
 _ap.add_argument("--make-traces", action="store_true")
 _ap.add_argument("--child-case", default=None)
@@ -514,6 +516,11 @@ FIXTURES = {
         def h(): return 3
         def body():
             return f() + g() + h()
+        def gen():                 # crash_sweep_v5f.py's generator-target scenario
+            yield f()
+            yield g()
+        def forker(cb):            # crash_sweep_v5f.py's fork scenario: the fork runs inside a target's frame
+            return cb()
     ''',
     # residual fixtures
     "fx_r05b.py": '''
@@ -681,6 +688,11 @@ PREREGS = {
     "HB": gates({"G": ["fx_b1:hbody"]}),
     "PROBE": gates({"P": ["fx_probe:probe"]}),
     "GFI": gates({"A": ["fx_gfi:f", "fx_gfi:g"], "S": ["fx_gfi:h"]}),
+    # crash_sweep_v5f.py's scenarios (each with the sentinel gate S on h)
+    "CS_TWO": gates({"A": ["fx_gfi:f"], "B": ["fx_gfi:g"], "S": ["fx_gfi:h"]}),
+    "CS_GEN": gates({"A": ["fx_gfi:gen"], "S": ["fx_gfi:h"]}),
+    "CS_BG": gates({"BG": ["fx_gfi:f"]}),
+    "CS_FORK": gates({"A": ["fx_gfi:forker"], "S": ["fx_gfi:h"]}),
     "X140": gates({"A": ["fx_gfi:f"], "B": ["fx_gfi:g"], "C": ["fx_gfi:h"]}),
     "DRV": gates({"A": ["fx_gfi:f"]}),
     "DRV2": gates({"B": ["fx_gfi:f"]}),
@@ -6671,7 +6683,11 @@ def main():
         return 0
     t0 = time.monotonic()
     only = set(ARGS.only.split(",")) if ARGS.only else None
+    if ARGS.mutation and ARGS.mutation != "ALL":
+        only = {ARGS.mutation}
     ids = [cid for cid, _, _, _ in CASES if not only or cid in only]
+    if ARGS.fast:
+        ids = [c for c in ids if not (re.fullmatch(r"H(10|[1-9])", c) or c == "X140f")]
     res = {}
     def record(cid, ok, detail, left, secs, note=None):
         if isinstance(detail, str) and detail.startswith("NOT RUN:"):
@@ -6735,6 +6751,13 @@ def main():
                                  "_open, _exit and _run; PASS: each has a union count >= 1",
                           "ok": selfinfo["ok"], "detail": "" if selfinfo["ok"] else json.dumps(selfinfo_debug)[:1500],
                           "leftover": [], "seconds": 0.0}
+    if ARGS.mutation and ARGS.mutation not in ("ALL", "V34"):
+        res.pop("V34", None)                          # one case's outcome is reported, not the self-trace's
+        selfinfo = None
+    if ARGS.mutation:
+        mr = {c: {"ok": r["ok"], "detail": str(r.get("detail", ""))[:300], "leftover": r.get("leftover")}
+              for c, r in res.items()}
+        print("MUTATION_RESULT " + json.dumps({"case": ARGS.mutation, "results": mr, "not_run": skipped}))
     tables = collections.OrderedDict()
     for cid, r in res.items():
         t = tables.setdefault(r["table"], {"run": 0, "passed": 0, "ids": []})

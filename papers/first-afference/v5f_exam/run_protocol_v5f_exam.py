@@ -250,6 +250,10 @@ FIXTURES = {
                 ev.wait(30)
             return 36
         E70 = []
+        BODY = [0]
+        def hbody():
+            BODY[0] += 1
+            return 1
         def f70(box=None):
             if box is not None:
                 E70[0].set()
@@ -490,6 +494,14 @@ FIXTURES = {
             import fx_v5f
             return COV.run("B", fx_v5f.g) + x
     ''',
+    "fx_x30b.py": '''
+        import fx_v11clib
+        def _deep_inner(x): return x
+        _t = _deep_inner
+        for _ in range(17):
+            _t = fx_v11clib.wrap(_t)
+        deep17 = _t                    # X30b: this module's code only 17 hops down
+    ''',
     # residual fixtures
     "fx_r05b.py": '''
         def real(): return "real"
@@ -623,6 +635,9 @@ PREREGS = {
     "B_H": gates({"B": ["fx_b1:h137"]}),
     "B_F": gates({"B": ["fx_v5f:f"]}),
     "V10B": gates({"G": ["fx_v10b:thing"]}),
+    "X30B": gates({"G": ["fx_x30b:deep17"]}),
+    "H_F": gates({"H": ["fx_v5f:f"]}),
+    "HB": gates({"G": ["fx_b1:hbody"]}),
     "V11C": gates({"G": ["fx_v11c:target"]}),
     "F_G0": gates({"G0": ["fx_v5f:f"]}),
     "FW": gates({"G": ["fx_b1:fw"]}),
@@ -5013,6 +5028,294 @@ def v72b():
     expect(r == {"first": "TRACE_INCOMPLETE", "second_trace": ["PASS", {"G": {"fx_v5f:f": 1}}], "again": "TRACE_INCOMPLETE"}, f"{r}")
 
 
+# -- X72b, X65b, X30b (their v5e base shapes are spec data from revision 11) --------------------------
+@case("X72b", "scoring", "X72's trace (gather children inside run_async): the message contains exactly dispatched {'fx_v5f:f': 2}, unattributed {}; check_metrics G:exercises usable False, note [V5:NOT_EXERCISED]")
+def x72b():
+    import asyncio
+    exp = EXP("F")
+    with P.coverage_trace(exp) as cov:
+        async def main():
+            async def child():
+                fx_v5f.f()
+            await asyncio.gather(child(), child())
+        asyncio.run(cov.run_async("G", main))
+    rec = cov.record()
+    out = score(exp, rec)
+    expect_refuse(out, "NOT_EXERCISED")
+    expect("dispatched {'fx_v5f:f': 2}, unattributed {}" in out[2], out[2][:300])
+    cm = exp.check_metrics({"m": 1.0, "coverage_trace": rec})["G:exercises"]
+    expect(cm["usable"] is False and cm["note"].startswith("[V5:NOT_EXERCISED]"), f"{cm}")
+
+@case("X65b", "cut", "V15's inner tracer entered and exited inside the outer; then section A runs a loop serving another thread's run_coroutine_threadsafe and call_soon_threadsafe jobs calling f -> A: NOT_EXERCISED with dispatched {f:2}")
+def x65b():
+    import asyncio
+    exp, e_in = EXP("AB"), EXP("H_F")
+    ready, bdone, box = threading.Event(), threading.Event(), {}
+    with P.coverage_trace(exp) as cov:
+        with P.coverage_trace(e_in) as inner:              # V15's inner tracer, inside the outer
+            inner.run("H", fx_v5f.f)
+        async def main_a():
+            box["loop"] = asyncio.get_running_loop()
+            ready.set()
+            while not bdone.is_set():
+                await asyncio.sleep(0.005)
+        async def job():
+            fx_v5f.f()
+        def b():
+            try:
+                ready.wait(10)
+                fx_v5f.g()
+                asyncio.run_coroutine_threadsafe(job(), box["loop"]).result(10)
+                done = threading.Event()
+                box["loop"].call_soon_threadsafe(fx_v5f.f)
+                box["loop"].call_soon_threadsafe(done.set)
+                done.wait(10)
+            finally:
+                bdone.set()
+        ta = threading.Thread(target=lambda: cov.run("A", asyncio.run, main_a()))
+        tb = threading.Thread(target=lambda: cov.run("B", b))
+        ta.start(); tb.start()
+        ta.join(30); tb.join(30)
+    rec = cov.record()
+    out = score(exp, rec)
+    expect_refuse(out, "NOT_EXERCISED")
+    expect("gate 'A'" in out[2], out[2][:200])
+    expect(rec["uncredited"]["dispatched"] == {"fx_v5f:f": 2}, f"uncredited {rec['uncredited']}")
+
+@case("X30b", "identity", "this module's code 17 hops down a foreign wraps chain: the walk is bounded -> FOREIGN_DEFINITION")
+def x30b():
+    importlib.import_module("fx_x30b")
+    enter_refuses("X30B", "FOREIGN_DEFINITION")
+
+
+# -- Hazard sweeps (main thread, before the self-trace) -----------------------------------------------
+import signal as _signal
+
+class Timeout(Exception):
+    pass
+
+ARMED = [True]          # the flood raises only while this is set: the harness's own loop is flood-safe
+
+def _flood(interval, exc):
+    def handler(signum, frame):
+        if ARMED[0]:
+            raise exc()
+    old = _signal.signal(_signal.SIGALRM, handler)
+    _signal.setitimer(_signal.ITIMER_REAL, interval, interval)
+    return old
+
+def _unflood(old):
+    _signal.setitimer(_signal.ITIMER_REAL, 0, 0)
+    _signal.signal(_signal.SIGALRM, old)
+
+@case("H1", "hazard", "finalizers (a cycle whose __del__ calls a target, or enters and exits a tracer) at gen-0 thresholds 1-40 across open, close, record, the callbacks, enter and exit, 10 s watchdog -> no hang; no problem other than REENTRANT")
+def h1():
+    unraisable = []
+    old_hook, old_thr = sys.unraisablehook, gc.get_threshold()
+    sys.unraisablehook = lambda u: unraisable.append(type(u.exc_value).__name__)
+    bad = []
+    class Cyc:
+        def __init__(self, kind):
+            self.kind, self.me = kind, self
+        def __del__(self):
+            if self.kind == "call":
+                fx_v5f.f()
+            else:
+                with P.coverage_trace(EXP("A_G")):
+                    pass
+    def junk(n):
+        for i in range(n):
+            Cyc("call" if i % 2 else "trace")
+    try:
+        for t in range(1, 41):
+            out = {}
+            def trial():
+                gc.set_threshold(t)
+                exp = EXP("F")
+                junk(20)
+                cov = P.coverage_trace(exp)
+                junk(20)
+                with cov:
+                    junk(20)
+                    cov.run("G", lambda: (junk(10), fx_v5f.f(), junk(10)))
+                    junk(20)
+                junk(20)
+                out["rec"] = cov.record()
+                gc.set_threshold(*old_thr)
+            th = threading.Thread(target=trial, daemon=True)
+            th.start()
+            th.join(10.0)
+            if th.is_alive():
+                bad.append((t, "HANG"))
+                break
+            rec = out.get("rec")
+            if rec is None:
+                bad.append((t, "no record"))
+                continue
+            extra = set(_problem_codes(rec)) - {"REENTRANT"}
+            if extra:
+                bad.append((t, sorted(extra)))
+    finally:
+        gc.set_threshold(*old_thr)
+        sys.unraisablehook = old_hook
+        gc.collect()
+    expect(not bad, f"{bad[:5]}")
+
+@case("H2", "hazard", "Timeout(Exception) from SIGALRM in a tight traced loop after a target call, 20 trials -> 20/20 propagated and 20/20 PASS")
+def h2():
+    prop, passed = 0, 0
+    for _ in range(20):
+        exp = EXP("F")
+        with P.coverage_trace(exp) as cov:
+            def body():
+                fx_v5f.f()
+                while True:
+                    pass
+            old = _flood(0.02, Timeout)
+            try:
+                cov.run("G", body)
+            except Timeout:
+                prop += 1
+            finally:
+                _unflood(old)
+        out = score(exp, cov.record())
+        passed += out[0] == "PASS" and out[1] == {"G": {"fx_v5f:f": 1}}
+    expect(prop == 20 and passed == 20, f"propagated {prop}/20, PASS {passed}/20")
+
+@case("H3", "hazard", "KeyboardInterrupt raised from a signal, 5 trials -> it propagates 5/5; _v5_state() clean after exit")
+def h3():
+    prop, bad = 0, []
+    for _ in range(5):
+        exp = EXP("F")
+        with P.coverage_trace(exp) as cov:
+            def body():
+                fx_v5f.f()
+                while True:
+                    pass
+            old = _flood(0.02, KeyboardInterrupt)
+            try:
+                cov.run("G", body)
+            except KeyboardInterrupt:
+                prop += 1
+            finally:
+                _unflood(old)
+        quiet, st = state_quiet()
+        if not quiet or st["mints"]:
+            bad.append(st)
+    expect(prop == 5 and not bad, f"propagated {prop}/5; states {bad[:2]}")
+
+@case("H4", "hazard", "performance: the Cost table re-measured (reported, not gated)")
+def h4():
+    n = 20000
+    exp = EXP("F")
+    t0 = time.perf_counter()
+    for _ in range(n):
+        fx_v5f.f()
+    base = time.perf_counter() - t0
+    with P.coverage_trace(exp) as cov:
+        def body():
+            for _ in range(n):
+                fx_v5f.f()
+        t0 = time.perf_counter()
+        cov.run("G", body)
+        traced = time.perf_counter() - t0
+        t0 = time.perf_counter()
+        for _ in range(200):
+            cov.run("G", fx_v5f.g)
+        sections = (time.perf_counter() - t0) / 200
+    H4_REPORT.update(untraced_call_us=round(base / n * 1e6, 3), traced_call_us=round(traced / n * 1e6, 3),
+                     section_open_close_us=round(sections * 1e6, 2))
+
+H4_REPORT = {}
+
+@case("H5", "hazard", "gc cost: no gc call at resolution or close; the exit scan is refcount-gated (read from gc's audit events on a trace whose target has no extra reference)")
+def h5():
+    me = threading.get_ident()
+    st = {"on": False, "events": []}
+    def hook(event, args):
+        if st["on"] and event.startswith("gc.") and threading.get_ident() == me:
+            st["events"].append(event)
+    sys.addaudithook(hook)
+    exp = EXP("F")
+    with P.coverage_trace(exp):                           # the cut and the codes are now known
+        pass
+    try:
+        st["on"] = True
+        cov = P.coverage_trace(exp)
+        with cov:
+            cov.run("G", fx_v5f.f)
+        st["on"] = False
+    finally:
+        st["on"] = False
+    expect(st["events"] == [], f"gc audit events during resolution, open/close and exit: {st['events']}")
+    expect_pass(score(exp, cov.record()), {"G": {"fx_v5f:f": 1}})
+
+@case("H7", "hazard", "user locks: a `with lock:` loop inside a section under a SIGALRM flood for 30 s -> 0 harness locks left held; 0 hangs")
+def h7():
+    exp = EXP("F")
+    lock = threading.Lock()
+    deadline = time.monotonic() + 30.0
+    n = [0]
+    with P.coverage_trace(exp) as cov:
+        def body():
+            fx_v5f.f()
+            while time.monotonic() < deadline:
+                try:
+                    with lock:
+                        n[0] += 1
+                except Timeout:
+                    pass
+        ARMED[0] = False
+        old = _flood(0.0005, Timeout)
+        try:
+            while True:
+                try:
+                    ARMED[0] = False
+                    if time.monotonic() >= deadline:
+                        break
+                    ARMED[0] = True
+                    cov.run("G", body)
+                    ARMED[0] = False
+                except Timeout:
+                    ARMED[0] = False
+        finally:
+            ARMED[0] = False
+            _unflood(old)
+            ARMED[0] = True
+    expect(not lock.locked(), "the harness lock is left held")
+    expect(n[0] > 0, "the loop never ran")
+
+@case("H8", "hazard", "body-less credit: a SIGALRM flood with one section per call, each call counting its body runs, 8 s -> credited <= body runs")
+def h8():
+    exp = EXP("HB")
+    fx_b1.BODY[0] = 0
+    deadline = time.monotonic() + 8.0
+    with P.coverage_trace(exp) as cov:
+        ARMED[0] = False
+        old = _flood(0.0002, Timeout)
+        try:
+            while True:
+                try:
+                    ARMED[0] = False
+                    if time.monotonic() >= deadline:
+                        break
+                    ARMED[0] = True
+                    cov.run("G", fx_b1.hbody)
+                    ARMED[0] = False
+                except Timeout:
+                    ARMED[0] = False
+        finally:
+            ARMED[0] = False
+            _unflood(old)
+            ARMED[0] = True
+    rec = cov.record()
+    credited = sum(o["calls"].get("fx_b1:hbody", 0) for o in rec["sections"].get("G", []))
+    H8_REPORT.update(credited=credited, body_runs=fx_b1.BODY[0])
+    expect(credited <= fx_b1.BODY[0], f"credited {credited} > body runs {fx_b1.BODY[0]}")
+
+H8_REPORT = {}
+
+
 # =================================================================================================
 # The exam's case metadata: each case's table in the design and its placement (harness rules)
 # =================================================================================================
@@ -5036,6 +5339,10 @@ for _cid in ('X92b', 'X131', 'X132', 'X143', 'X143b', 'X144', 'X145', 'X146', 'X
     TABLE[_cid] = "new violation cases"
 for _cid in ('X137b', 'X137e', 'X137g', 'X137i', 'X137h', 'X154b', 'X154c', 'X154d', 'X154e', 'X155', 'X157c', 'X158', 'X158c', 'X158b', 'X158e', 'X137f', 'X158d'):
     TABLE[_cid] = "new violation cases"
+for _cid in ("X72b", "X65b", "X30b"):
+    TABLE[_cid] = "new violation cases"
+for _cid in ("H1", "H2", "H3", "H4", "H5", "H7", "H8"):
+    TABLE[_cid] = "hazard sweeps"
 for _cid in ("R05b", "R12", "R13", "R14", "R16", "R18a", "R18b", "R20", "R21", "R22", "X157", "X157b"):
     TABLE[_cid] = "new documented residuals"
 for _cid in ('V10b', 'V11c', 'V15b', 'V19b', 'V35', 'V36', 'V36b', 'V37', 'V38', 'V39', 'V40', 'V40b', 'V41', 'V42', 'V43', 'V44', 'V45', 'V47', 'V50', 'V51', 'V53', 'V57', 'V58', 'V59', 'V60', 'V61', 'V62', 'V63', 'V64', 'V65', 'V68', 'V69', 'V70', 'V71', 'V72b'):
@@ -5052,7 +5359,7 @@ TABLE["X95"] = "v5e cases whose outcome changes"       # X91's row: same code, t
 TABLE["M10-S0"] = "M10 property (not a table row): _v5_state() before any tracer"
 
 # Placements, from the harness rules' lists (only the cases this runner covers are listed).
-MAIN = {"V61", "V62", "V64", "V65", "V68", "V70", "X92b", "X131", "X132", "X143", "X143b", "X144", "X145", "X146", "X146b", "X146c", "X146d", "X146e",
+MAIN = {"H1", "H2", "H3", "H4", "H5", "H7", "H8", "V61", "V62", "V64", "V65", "V68", "V70", "X92b", "X131", "X132", "X143", "X143b", "X144", "X145", "X146", "X146b", "X146c", "X146d", "X146e",
         "X147", "X148", "X152", "X153", "X137d", "X35", "X35b", "X35c", "X65e", "X65f", "X65g", "X141", "X141b", "X141c", "X138", "X138b", "X139",
         "X137c", "X143c", "X59e", "X59e-v", "V67", "V73", "R18a", "R18b", "R20"}
 CHILD = {"X137-free"}                                  # the whole case in a fresh subprocess
@@ -5065,7 +5372,7 @@ SELF_TARGETS = [f"{IMPL_MOD}:{q}" for q in ("Experiment._check_coverage", "_reso
 GATE_OF = {"new violation cases": "VIOL", "new valid cases": "VALID",
            "v5e cases kept (every other v5e case keeps its id and outcome)": "V5E",
            "M10 property (not a table row): _v5_state() before any tracer": "M10",
-           "v5e cases whose outcome changes": "DELTA"}
+           "v5e cases whose outcome changes": "DELTA", "hazard sweeps": "HAZ"}
 
 # Cases whose row the reference, written from the text, does not meet: each is a spec contradiction
 # recorded in SPEC_GAPS.md. The case still asserts its row as written (it is not adapted); its failure
@@ -5086,6 +5393,40 @@ def placement(cid):
 TABLES_ALL = ["v5e cases whose outcome changes", "new violation cases", "new valid cases",
               "new documented residuals", "exam-hole kill cases", "hazard sweeps",
               "mutation audit (SM1 witnesses)", "v5e cases kept (every other v5e case keeps its id and outcome)"]
+# "The exam-hole kill cases": each verifier key and the v5f case(s) that implement it (the table's third
+# column). A key is covered iff every case it names ran and passed in this run.
+KILL_MAP = {
+    "exam-mut-section-decl-clauses": ["X07b / X07c"],
+    "examhole-clone-alive-single-tracer": ["X57c"],
+    "examhole-clone-called-first-tracer": ["X55d"],
+    "examhole-code-swapped-single-tracer": ["X59c"],
+    "examhole-stop-read-before-mint": ["X34"],           # and cut_current, asserted by every case's leftover check
+    "examhole-union-over-all-sections": ["X120", "V41"],
+    "examhole-declared-section-field-never-scored": ["V42", "V43", "X121", "X78g"],
+    "examhole-dispatch-cut-by-name": ["V44"],
+    "examhole-walk-bound-2-hops": ["V11c", "X30b"],
+    "examhole-class-step-exact-type": ["V45", "X14b"],
+    "examhole-module-step-exact-type": ["V10b", "X16b"],
+    "examhole-inherited-direct-base-only": ["X14c"],
+    "examhole-cache-body-module-check": ["X25c", "X25d"],
+    "exam-hole-coverage-on-failing-bar": ["X122", "X122b"],
+    "exam-hole-score-step-order": ["X96c", "X78e"],
+    "exam-hole-diagnostic-texts": ["X72b"],
+    "exam-mut-stop-cleared-by-inner-exit": ["X65b"],
+    "exam-mut-nested-by-section-name": ["V15b"],
+    "exam-mut-restore-over-swapped-code": ["X59d"],
+    "exam-mut-close-removes-foreign-profiler": ["V58"],
+    "exam-mut-exit-removes-foreign-profiler": ["V57"],
+    "exam-mut-double-exit-state-leak": ["V52"],
+    "exam-mut-hop-close-drops-closer-hook": ["V28b"],
+    "exam-mut-foreign-profiler-first-open-only": ["V59"],
+    "exam-mut-target-set-before-stale": ["X109b"],
+    "exam-mut-profiler-lost-only-if-none": ["V60", "X137"],
+    "exam-mut-bad-trace-end-type": ["X103c"],
+    "exam-mut-problems-before-bad-count": ["X112b"],
+    "exam-mut-uncredited-last-thread-wins": ["X123"],
+}
+
 # The delta table's rows ("v5e cases whose outcome changes"; the port table below it) and where each is
 # covered, or why it is not run.
 DELTA_ROWS = {
@@ -5331,12 +5672,14 @@ def main():
         "coverage_of_design_tables": {
             t: {"rows_in_design": n, "cases_in_runner": covered_new.get(t, 0)} for t, n in TABLE_ROWS.items()},
         "delta_table_rows": DELTA_ROWS,
+        "kill_cases": {k: {"cases": v, "covered": all(res.get(c, {}).get("ok") for c in v)} for k, v in KILL_MAP.items()},
         "tables_not_yet_covered": ["exam-hole kill cases",
                                    "v5e cases whose outcome changes", "hazard sweeps (H1-H10)",
                                    "mutation audit witnesses not already in the case tables",
                                    "the rest of the new violation and valid cases",
                                    "the v5e cases kept (the v5e case tables)"],
         "instruction_sweeps_counted_trials": SWEEP_COUNTS,
+        "h4_performance_report": H4_REPORT, "h8_report": H8_REPORT,
         "n_cases_run": len(res), "n_passed": n_ok, "n_failed_known_spec_gaps": n_gap,
         "known_spec_gaps": KNOWN_GAPS, "verdict": verdict,
         "seconds": round(time.monotonic() - t0, 2),

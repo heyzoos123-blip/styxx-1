@@ -1,0 +1,122 @@
+{
+ "impl": "ref_v5f.py",
+ "python": "3.12.3",
+ "stride": 1,
+ "K": 2,
+ "scenarios": {
+  "single": {
+   "scenario": {
+    "points": 3259,
+    "run": 3259,
+    "verdicts": {
+     "CLEAN": 3259
+    },
+    "unclean": [],
+    "n_unclean": 0
+   }
+  },
+  "two_thread": {
+   "scenario": {
+    "points": 3275,
+    "run": 3275,
+    "verdicts": {
+     "CLEAN": 3275
+    },
+    "unclean": [],
+    "n_unclean": 0
+   },
+   "worker": {
+    "points": 397,
+    "run": 397,
+    "verdicts": {
+     "CLEAN": 397
+    },
+    "unclean": [],
+    "n_unclean": 0
+   }
+  },
+  "run_async": {
+   "scenario": {
+    "points": 3238,
+    "run": 3238,
+    "verdicts": {
+     "CLEAN": 3238
+    },
+    "unclean": [],
+    "n_unclean": 0
+   }
+  },
+  "generator": {
+   "scenario": {
+    "points": 3259,
+    "run": 3259,
+    "verdicts": {
+     "CLEAN": 3259
+    },
+    "unclean": [],
+    "n_unclean": 0
+   }
+  },
+  "hop": {
+   "scenario": {
+    "points": 3322,
+    "run": 3322,
+    "verdicts": {
+     "CLEAN": 3322
+    },
+    "unclean": [],
+    "n_unclean": 0
+   }
+  },
+  "background": {
+   "scenario": {
+    "points": 3348,
+    "run": 3348,
+    "verdicts": {
+     "CLEAN": 3348
+    },
+    "unclean": [],
+    "n_unclean": 0
+   },
+   "C4": {
+    "ok": true,
+    "calls": 3351,
+    "union": {
+     "fx_gfi:f": 3351
+    },
+    "problems": []
+   }
+  },
+  "callbacks": {
+   "scenario": {
+    "points": 589,
+    "run": 589,
+    "verdicts": {
+     "CLEAN": 589
+    },
+    "unclean": [],
+    "n_unclean": 0
+   }
+  },
+  "fork": {
+   "plain": {
+    "points": 132,
+    "verdicts": {
+     "CLEAN": 132
+    },
+    "unclean": [],
+    "n_unclean": 0
+   },
+   "audit": {
+    "points": 2,
+    "verdicts": {
+     "CLEAN": 2
+    },
+    "unclean": [],
+    "n_unclean": 0
+   }
+  }
+ },
+ "G_FI": "PASS",
+ "seconds": 465.2
+}

@@ -1,10 +1,12 @@
 # protocol v5f: claim-and-reconcile mint-and-anchor on sys.monitoring, with confirmed-entry credit (synthesis)
 
+**Revision 12 (2026-09-29).** Revision 11 plus the answers to the exam author's revision-11 follow-ups and the open revision-10 ones (GAP-38 to GAP-49); see "Revision 12" at the end.
+
 **Revision 11 (2026-09-29).** Revision 10 plus the answers to the exam author's revision-10 follow-ups (GAP-32 to GAP-37); see "Revision 11" at the end.
 
 **Revision 10 (2026-09-29).** Revision 9 plus the answers to the verifier's findings on revision 9 (R9-1 to R9-11) and the exam author's revision-9 follow-ups (GAP-28 to GAP-31, GAP-W001 to GAP-W344); see "Revision 10: verifier findings on revision 9" at the end. Revision 9 (same day) answered the exam author's 27 spec gaps; see "Revision 9: spec gaps from the exam author".
 
-**Status: FREEZE_READY (text), pending the exam artifacts.** Every gap raised on revision 10 (GAP-32 to GAP-37) is closed in the text. Revisions 10 and 11 change no mechanism, so `ref_v5f.py` as the exam author changed it for revision 9 needs no change. The freeze waits for the exam author: revision 11's cases in `smoke_cases.py` and the runner, the kept v5e cases written from `rev11/v5e_cases_kept.json`, and `rules_v5f.json` re-reconciled under Appendix A's three rules as revision 11 states them, with every P, D and C atom witnessed (being unlisted is not a gap).
+**Status: FREEZE_READY (text), pending the exam artifacts.** Every gap raised on revisions 10 and 11 (GAP-32 to GAP-49) is closed in the text. Revisions 10 to 12 change no mechanism (revision 12 changes one free-form message, CLONE_ALIVE (b)'s), so `ref_v5f.py` as the exam author changed it for revision 9 needs no change. The freeze waits for the exam author: revision 11's cases in `smoke_cases.py` and the runner, the kept v5e cases written from `rev12/v5e_cases_kept_rev12.json`, and `rules_v5f.json` re-reconciled under Appendix A's three rules as revision 11 states them, with every P, D and C atom witnessed (being unlisted is not a gap).
 
 **Basis.** Both judges chose the "claim-and-reconcile" design (D1), and this spec starts from it. Judge 1 restricted it to its sys.monitoring adapter on CPython 3.12/3.13. Judge 2 kept it whole and asked the panel to decide 3.11 explicitly. From D1 this spec keeps:
 
@@ -3577,3 +3579,53 @@ This section answers the exam author's follow-ups on revision 10 (`v5f_exam/SPEC
 ### Weakest points of revision 11
 1. **The kept v5e rows' v5f outcomes rest on G_V5E_DELTA's premise.** Every row not in the delta table keeps its v5e outcome. The freeze-time run of the port on `ref_v5f.py` is the check; any row that differs goes back to the spec owner.
 2. **Two halves of disclosures are reading.** They are the dict-key collision (W224) and aiodebug's "no soundness gain" remark (row 76), each with its probe named.
+
+---
+
+## Revision 12
+
+This section answers the exam author's follow-ups (`v5f_exam/SPEC_GAPS.md`, "Revision 11 follow-ups", commit d98ea9e0: GAP-38 to GAP-49). The runner covers every table and passes 419 of 423 on 3.12.3 and 3.13.12. Its remaining failures and blockers were all spec gaps.
+
+Revision 12 changes no mechanism: `ref_v5f.py`'s behaviour is the text's in every row below. It changes one free-form message and several case rows, rules and data files.
+
+**Evidence.** Everything is in `papers/first-afference/protocol_v5f_design/rev12/`. Each probe reads `v5f_exam/ref_v5f.py` (sha256 prefix `e4fbf0f53c7b56ba`) and builds single-rule mutants in memory, one fresh subprocess each. Outputs are identical on both versions except where a CPython difference is the finding.
+- `p_130279.py` (`out_130279.txt`): which loop shapes #130279 affects, per delivery and per interpreter.
+- `p_h9.py` (`out_h9.txt`): H9's mutants under X140's trial sets.
+- `p_rev12.py` (`out_rev12.txt`): X137h in revision 12's form, X154d (b), and R25's shape.
+- `p_freeze_rise.py`: 3.12.3's freeze-count rise.
+- `appendix_a/build_rev12_data.py`: builds `v5e_cases_kept_rev12.json` and `appendix_a/atom_witness_overrides_rev12.json`.
+
+| gap | what it said | resolution (sections changed) | witness: the mutant it kills |
+|---|---|---|---|
+| GAP-38 (blocking) | On 3.12.3 the gc freeze count rises with no `gc.freeze()`, so CLONE_ALIVE (b) gives a false refusal, and the two verified interpreters disagree | Confirmed and located. On 3.12.3, after `gc.unfreeze()`, the next full collection sets the count back to 375 (its boot value). A new object stays visible, so no clone is hidden. On 3.13.12 the count stays 0. Disclosed as over-blocking #24 and pinned by the version-keyed residual R25, which is G_XVER's one stated exception. CLONE_ALIVE (b)'s message becomes "the gc freeze count rose …". The remedy (a full collection after an unfreeze) is R25's third part. (Tripwires; over-blocking #24; R25; G_XVER) | R25: (2) CLONE_ALIVE on 3.12.3, PASS on 3.13.12; (1) and (3) PASS on both (`out_rev12.txt`, X38) |
+| GAP-39 (blocking) | the leftover check's freeze-count clause fails a correct case after an unfreezing case on 3.12.3 | A case that calls `gc.freeze()` ends with `gc.unfreeze()` and a full `gc.collect()`. The leftover check reads the count after a full collection in both snapshots. (Exam harness rules, case hygiene) | harness rule |
+| GAP-40 (blocking) | X154's "none of styxx's five callbacks is registered" contradicts CPython keeping a freed id's callbacks | The interference registers None for styxx's five events after taking the id, so the check sees only what the machinery writes afterwards. (X154) | unchanged: the split-gate mutants of `rev5/w5_witnesses.py` register styxx's callbacks on the taken id |
+| GAP-41 | X154d (b): what the hook does at the 2nd event | At the 1st event only; later events do nothing. That gives the row's outcome on the reference: `tool == 3`, P PASS `{f:1}` with MONITOR_LOST, Q PASS `{g:1}` with no note. (X154d) | regression row (`out_rev12.txt`, X154d_b) |
+| GAP-42 (blocking) | X137h: P, Q and S open no section, so they refuse SECTION_ABSENT, not the row's NOT_EXERCISED | P, Q and S each open their gate's section once, calling nothing, right after their enter. The row's outcomes then hold on the reference: `tool == 4`; P, Q and R NOT_EXERCISED with MONITOR_LOST; S NOT_EXERCISED with no note. (X137h) | `mut_rebind_nocount`: R and Q lose MONITOR_LOST; P keeps it (`out_rev12.txt`) |
+| GAP-43 | X154b's hook reads `_v5_state()["tool"]`, which is None at a first acquisition | The hook frees `_v5_state()["tool"]` when it is not None, and 4 when it is None. The audit event's only argument is the callback (`rev12` session probe), so it cannot name the id. (X154b) | as before |
+| GAP-44 (blocking) | X158d: the reference gives P CODE_SWAPPED | The row now expects what the text gives. Under the greenlet switch, Q's exit steals the mutex, prunes P's holdership and retires the mint, and P's X5 step 3 then records CODE_SWAPPED. This is the stated limit on greenlet switches inside a transaction: a false refusal, never an over-credit. Q's MONITOR_LOST, which is the row's witness, is unchanged. (X158d; Residuals, Greenlets) | the witness is unchanged: revision 7's registration leaves Q with no MONITOR_LOST |
+| GAP-45 (blocking) | G_SIG's poison test and G_FI's C5 lacked R9-6's `tool_ours` exemption | Every snapshot-equality check takes the same exemptions: `cut`, `tool`, and `tool_ours` when the "before" snapshot's `tool` is None. That covers the leftover check, C5, the poison test and X71c's leftovers. (G_FI C5; G_SIG poison) | rule |
+| GAP-46 (blocking) | kept rows X72 and X73 require v5e's NOT_EXERCISED sentence | `rev12/v5e_cases_kept_rev12.json` supersedes rev11's file. X72 and X73 check v5f's fixed sentence; NE_WORDING and the forbidden "never executed" are unchanged. The audit of every other kept row's text checks found no other drift: code prefixes, LAZY_RESULT, X118's target names, and PROFILER_LOST only in retired X75. (Exam cases required; data) | data |
+| GAP-47 | an override named an atom whose text revision 11 corrected | Re-keyed to its two successor atoms in `rev12/appendix_a/atom_witness_overrides_rev12.json`, which supersedes rev11's file. Rule: an override lapses with the text it ruled on, and the revision that changes the text re-keys it. (Appendix A) | data |
+| GAP-48 (blocking) | 25 D atoms named only a gate, an invariant or a model property, and revision 11's D rule admitted none of them | One D rule, reconciled with GAP-31. A D claim is witnessed by a case or residual, a named gate clause or cell that observes it, or a model file with its property. Invariant, limit and over-block names are pointers. Of the 25: 14 get a case, residual or gate cell; 7 are reading with a reason; 4 are reclassed G, because they are gate rules, not disclosures. (Appendix A; overrides file) | data |
+| GAP-49 (blocking) | H9's mutant (X3 in `with _M:`) survives X140; and does X140's cancelled `run_async` opening complete? | (1) #130279's shapes are stated from `rev12/p_130279.py` in the Exception-safety model. On 3.13.12 it affects `while` loops, and a `for` loop whose body ends in a conditional jump, inside a `try` or `with`; never a plain `for` loop. On 3.12.3 it appears only under instrumentation, where every loop tail is affected. Delivery by a direct raise and by a signal skip at the same offsets. (2) Revision 11's H9 mutant keeps X3's `for` loop, which is not a #130279 shape on either interpreter: no loop offset of `_exit` skips its with-exit. It is retired as equivalent for this hazard. (3) H9's mutant is now X3 as a `while` loop inside `with _M:`, a real #130279 shape. X140's JUMP_BACKWARD trial set kills it on both versions (the next trace hangs), and the reference is clean at every loop offset. (4) X140's scenario is run in two variants: the cancelled coroutine completes, or it stays suspended through exit. (Exception-safety model; X140; H9) | `mut_h9_while_in_lock`: a hang at offset 422 (3.12.3) and 436 (3.13.12); `mut_h9_for_in_lock`: survives 152 and 155 loop offsets, retired as equivalent (`out_h9.txt`) |
+
+### Required changes
+- **ref_v5f.py:** one free-form message. CLONE_ALIVE (b)'s text becomes "[V5:CLONE_ALIVE] the gc freeze count rose while the minted code existed: N references to it cannot be attributed". Only the code prefix is compared, so no outcome changes.
+- **smoke_cases.py and the runner:**
+  - X154: add the interference's None registrations, then run it (one subprocess per trial).
+  - X154b and X154c: take the id from `tool`, or 4 when it is None.
+  - X154d (b): run it with the 1st-event-only hook.
+  - X137h: add the three empty sections.
+  - X158d: expect P CODE_SWAPPED; Q's outcome is unchanged.
+  - Add R25 in a fresh subprocess, with its version-keyed outcome.
+  - Apply the case-hygiene and leftover-check collection rule.
+  - Apply the `tool_ours` exemption in the poison test and in the crash sweep's C5.
+  - Build H9's detection mutant in the `while` form, and retire `mut_h9_x3_in_lock` as equivalent.
+  - Run X140's variants (a) and (b).
+- **Port data:** take the kept v5e rows from `rev12/v5e_cases_kept_rev12.json`; X72 and X73 check v5f's fixed sentence.
+- **rules_v5f.json:** use `rev12/appendix_a/atom_witness_overrides_rev12.json` first in rule 1's order.
+
+### Weakest points of revision 12
+1. **R25 is a deliberate cross-version difference.** The alternative, recognising 3.12's immortal set in CLONE_ALIVE (b), would add an interpreter-internal premise the text cannot gate.
+2. **X158d's P now expects a false refusal.** It is disclosed under the greenlet limit. A mechanism that re-checks holdership at X5 step 3 would remove it; that was not adopted this late, because it changes a transaction's step and needs the model re-run.

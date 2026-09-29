@@ -4,7 +4,7 @@
 
 **Date.** 2026-09-29.
 
-**Repository.** `/home/user/styxx-1`, branch `claude/styxx-development-tgu7xz`. Nothing was committed.
+**Repository.** `/home/user/styxx-1`, branch `claude/styxx-development-tgu7xz`. The first artifacts were committed as `70a625ac`. The revision-9 update is below.
 
 ## What I produced
 
@@ -53,3 +53,47 @@ Where the text was ambiguous or incomplete I did not guess from, and did not loo
 Six gaps are marked freeze-blocking: GAP-02, 03, 05, 07, 08 and 15.
 
 Signed: the v5f exam author (Claude Code subagent), 2026-09-29.
+
+## Revision 9 update (2026-09-29)
+
+The same exam author, in the same kind of separate context, updated the four artifacts to the revision-9 text. Commits, local only and not pushed:
+- `c7de7761`: `ref_v5f.py` and `smoke_cases.py`;
+- `3002c140`: `rules_v5f.json` and the "Revision 9 follow-ups" in `SPEC_GAPS.md`;
+- `99a2cc76`: GAP-01 to GAP-27 marked resolved;
+- this file's own commit.
+
+### What I read for this update
+1. The v5f design text, `papers/first-afference/DESIGN_protocol_v5f_DRAFT_2026_09_25.md`, revision 9 (3,400 lines). I read these parts:
+   - "Revision 9: spec gaps from the exam author", in full, with "Required changes to ref_v5f.py";
+   - Appendix A's "The wider extraction" and "The classified lists are spec data", and its opening (the class table, the findings and the start of the P/D/C table);
+   - every body edit revision 9 made, read as `git diff 70a625ac HEAD` of this one file;
+   - targeted sections of the body: M0, M1, M5 X4–X7, M6's walk, M9, M10, M11, the Reason-codes UNSUPPORTED_VERSION row, the X59e, X65d, X146b, X156f, X156g, V69 and V69b rows, and the harness placement rules.
+2. Spec data in `papers/first-afference/protocol_v5f_design/rev9/appendix_a/`: `wide_claims_classified.json`, all of it, through a script, plus the first lines of `wide_claims_classified.txt`; and `rev9_new_sentences.json`, all of it, through a script.
+3. My own artifacts: `ref_v5f.py`, `smoke_cases.py`, `SPEC_GAPS.md`, `ATTESTATION.md` and `rules_v5f.json`, the revision-8 atoms among them read back as `git show 70a625ac:…/rules_v5f.json`.
+4. My own scratch files in `/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/v5f_exam_author/`, all written by me: `extract_rules.py`, `lint.py`, `adhoc_tools.py`, the heads of `cc.txt` and `cm.txt`, and the three mutant copies of revision 8 (diffed against `ref_v5f.py`). I added:
+   - `extract_rules9_base.py`, the revision-8 extraction pointed at a scratch output;
+   - `reconcile9.py`, the reconciliation;
+   - `gen_followups.py`, which generates the follow-ups section;
+   - `mutants9.py`, the single-rule weakenings.
+5. Directory listings and git metadata, with names only and no file contents:
+   - the scratchpad root (a listing of its top level, which showed the names of other agents' directories and files; I opened none of them);
+   - `papers/first-afference/v5f_exam/` and `protocol_v5f_design/rev9/appendix_a/`;
+   - `git log --stat` of the revision-9 commits, which lists the file names in `protocol_v5f_design/rev9/`;
+   - `git show --stat` of the verifier's commit `2e8cc8a0`, whose message says it classes the 164 revision-9 sentences and reports findings R9-1 to R9-6. I did not open any file it added.
+   - `git show --stat` of commit `430a3db7` ("revision 10 (in progress)"), which landed during this update. It adds `protocol_v5f_design/rev10/p_rev10.py` and two output files, and changes neither the design text nor any exam-author file. I opened none of them. This update is against the revision-9 text.
+
+### What I did not read for this update
+I did not open, grep, import or execute any of the following:
+- `rev9/build.py`, `witness.py`, `run_witness.sh`, `p_gaps.py`, `p_texts.py`, `p_order.py`, `run_smoke_ref9.sh` or any `rev9/out_*.txt`. C1–C4 were made by hand from the text. The weakenings in `mutants9.py`, among them `mut_gle_calltime`, `mut_gle_nocheck`, `mut_grl_nocheck`, `mut_order_cut_first` and `mut_order_swapped_first`, are mine, written from the Mutation-audit row's words.
+- `rev9/verify/` and `rev9/appendix_a/rev9_new_sentences_classified.json`/`.txt`, added by the verifier's commit during this update. The revision-9 text does not name the latter as spec data, and this brief allows only the named lists.
+- The revision-7 list, `protocol_v5f_design/rev7/audit_claims_classified.txt`, which is outside this brief's allowed reading. SPEC_GAPS.md's GAP-30 records the effect on rule 1.
+- Anything else under `protocol_v5f_design/`; the critiques `DESIGN_protocol_v5f_DRAFT_critique*.md`; any prototype; any other agent's scratch directory.
+
+### Runs
+Everything below was run on `/tmp/claude-0/-home-user/1230efe6-3e44-5eb6-ad91-35910fea5db9/scratchpad/rt3/venv3.12/bin/python` (3.12.3) and `…/venv3.13/bin/python` (3.13.12):
+- `smoke_cases.py`: 47 of 47 on each;
+- `mutants9.py`: all eight single-rule weakenings detected on each, three from revision 8 and five for the revision-9 rules;
+- `lint.py`: no nested code objects, and no backward jump in any step function.
+
+Signed: the v5f exam author (Claude Code subagent), 2026-09-29.
+

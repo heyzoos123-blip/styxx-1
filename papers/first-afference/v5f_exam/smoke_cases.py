@@ -98,6 +98,38 @@ FIXTURES = {
         def run59(self):
             return _orig_run(self)
     ''',
+    # revision 10 fixtures
+    "fx_badimport.py": '''
+        raise ValueError("fx_badimport: the import raises")
+    ''',
+    "fx_pepkey.py": '''
+        def __getattr__(name):
+            raise KeyError(name)
+    ''',
+    "fx_x14d.py": '''
+        class Base:
+            def fit(self): return 1
+        class Sub(Base):
+            pass
+        Base.__module__ = 5          # set after the class statement: its own dict's '__module__' is not a str
+    ''',
+    "fx_x24f.py": '''
+        import functools
+        COUNT = {"n": 0}
+        class Meta(type):
+            def __getattribute__(cls, name):
+                if name in ("__qualname__", "__name__"):
+                    COUNT["n"] += 1
+                return type.__getattribute__(cls, name)
+        class Stamp(metaclass=Meta):
+            pass
+        cached_len = functools.lru_cache(None)(len)
+        def _mk():
+            def body(n): return n
+            return body
+        stamped = functools.lru_cache(None)(_mk())
+        stamped.__wrapped__ = Stamp()
+    ''',
     "fx_pep.py": '''
         def __getattr__(name):
             if name == "thing":
@@ -109,7 +141,7 @@ FIXTURES = {
 for fname, body in FIXTURES.items():
     with open(os.path.join(FIX, fname), "w") as fh:
         fh.write(textwrap.dedent(body))
-import fx_v5f, fx_stub, fx_swap, fx_pep, fx_x59e   # noqa: E402
+import fx_v5f, fx_stub, fx_swap, fx_pep, fx_x59e, fx_x14d, fx_x24f   # noqa: E402
 
 ORIG = {}
 for mod in (fx_v5f, fx_stub, fx_swap):
@@ -120,10 +152,10 @@ ORIG[("fx_v5f", "cached.__wrapped__")] = (fx_v5f.cached.__wrapped__, fx_v5f.cach
 ORIG[("fx_v5f", "Base.fit")] = (fx_v5f.Base.fit, fx_v5f.Base.fit.__code__)
 
 # -- preregs (all committed once, in a throwaway repo) --------------------------------------------
-def gates(decl, metric_value=0.0, op=">=", sections=None):
+def gates(decl, metric_value=0.0, op=">=", sections=None, metric="m"):
     gs = {}
     for name, targets in decl.items():
-        gs[name] = {"metric": "m", "op": op, "value": metric_value, "exercises": targets}
+        gs[name] = {"metric": metric, "op": op, "value": metric_value, "exercises": targets}
         if sections and name in sections:
             gs[name]["section"] = sections[name]
     rows = [{"when": {n: True for n in gs}, "verdict": "PASS"}]
@@ -153,6 +185,13 @@ PREREGS = {
     "X122": gates({"G": ["fx_v5f:f", "fx_v5f:g"]}, metric_value=1.0),
     "F_OTHER": gates({"G": ["fx_v5f:f"], "K": ["fx_v5f:g"]}),     # a second gates block (STALE)
     "AB": gates({"A": ["fx_v5f:f"], "B": ["fx_v5f:g"]}),
+    # revision 10
+    "X10C_IMP": gates({"G": ["fx_badimport:f"]}),
+    "X10C_PEP": gates({"G": ["fx_pepkey:thing"]}),
+    "X14D": gates({"G": ["fx_x14d:Sub.fit"]}),
+    "X24F_LEN": gates({"G": ["fx_x24f:cached_len"]}),
+    "X24F_STAMP": gates({"G": ["fx_x24f:stamped"]}),
+    "X117E": gates({"G": ["fx_v5f:f"]}, metric="a.b"),
 }
 for key, spec in PREREGS.items():
     with open(os.path.join(REPO, f"PREREG_{key}.md"), "w") as fh:
@@ -382,26 +421,48 @@ def x60():
     expect_refuse(score(exp, rec), "NOT_EXERCISED")
     expect(rec["uncredited"] == {"dispatched": {}, "unattributed": {"fx_v5f:f": 1}}, f"{rec['uncredited']}")
 
-@case("X78f", "attribution", "cov.run(5, f) swallowed; variant with counting __eq__/__hash__ -> UNDECLARED_SECTION, counters 0")
-def x78f():
-    exp = EXP("F")
-    calls = {"eq": 0, "hash": 0}
-    class Sec:
+def counting_section_class():
+    """X78f's variant class (revision 10, R9-1): counts __eq__, __hash__, __repr__, __str__ and
+    __format__, and its metaclass counts every read of __qualname__ and __name__."""
+    calls = {"eq": 0, "hash": 0, "repr": 0, "str": 0, "format": 0, "meta": 0}
+    class Meta(type):
+        def __getattribute__(cls, name):
+            if name in ("__qualname__", "__name__"):
+                calls["meta"] += 1
+            return type.__getattribute__(cls, name)
+    class Sec(metaclass=Meta):
         def __eq__(self, other):
             calls["eq"] += 1
             return True
         def __hash__(self):
             calls["hash"] += 1
             return hash("G")
+        def __repr__(self):
+            calls["repr"] += 1
+            return "'G'"
+        def __str__(self):
+            calls["str"] += 1
+            return "G"
+        def __format__(self, spec):
+            calls["format"] += 1
+            return "G"
+    calls["meta"] = 0                   # the class statement itself may read its own names
+    return Sec, calls
+
+@case("X78f", "attribution", "cov.run(5, f) swallowed; variant (rev. 10) counting __eq__/__hash__/__repr__/__str__/__format__ and the metaclass's __qualname__/__name__ reads -> UNDECLARED_SECTION, counters 0")
+def x78f():
+    exp = EXP("F")
+    Sec, calls = counting_section_class()
     with P.coverage_trace(exp) as cov:
         for sec in (5, Sec()):
             try:
                 cov.run(sec, fx_v5f.f)
+                raise AssertionError("no refusal")
             except GateSpecError as e:
                 expect(code_of(e) == "UNDECLARED_SECTION", str(e))
         cov.run("G", fx_v5f.f)
     expect_refuse(score(exp, cov.record()), "UNDECLARED_SECTION")
-    expect(calls == {"eq": 0, "hash": 0}, f"section compared: {calls}")
+    expect(all(v == 0 for v in calls.values()), f"section compared or formatted: {calls}")
 
 @case("V54", "event path", "target raising inside its body, caught, 3 calls -> {t:3} (confirmed by PY_UNWIND)")
 def v54():
@@ -934,10 +995,292 @@ def x156g_ctl():
     expect(r["uncredited"]["dispatched"] == {"fx_v5f:f": 1}, f"uncredited {r['uncredited']}")
 
 
+# -- revision 10 cases ("Revision 10: verifier findings on revision 9") ------------------------------
+@case("X78h", "attribution", "rev. 10 (R9-1): cov.run(Sec(), f) on a tracer never entered, and on another after its exit -> TRACE_INACTIVE both; f never runs; counters 0")
+def x78h():
+    exp = EXP("F")
+    Sec, calls = counting_section_class()
+    ran = []
+    def f():
+        ran.append(1)
+    cov1 = P.coverage_trace(exp)                     # never entered
+    raises_code(lambda: cov1.run(Sec(), f), "TRACE_INACTIVE")
+    with P.coverage_trace(exp) as cov2:
+        cov2.run("G", fx_v5f.f)
+    raises_code(lambda: cov2.run(Sec(), f), "TRACE_INACTIVE")
+    expect(not ran, "f ran")
+    expect(all(v == 0 for v in calls.values()), f"section rendered: {calls}")
+
+def _counting_meta():
+    n = {"meta": 0}
+    class Meta(type):
+        def __getattribute__(cls, name):
+            if name in ("__qualname__", "__name__"):
+                n["meta"] += 1
+            return type.__getattribute__(cls, name)
+    return Meta, n
+
+@case("X93e", "scoring", "rev. 10 (R9-1): NO_TRACE's first and third texts name a counting-metaclass type exactly, counter 0")
+def x93e():
+    exp, rec = _genuine_trace()
+    Meta, n = _counting_meta()
+    R = Meta("R", (), {})
+    MD = Meta("MD", (dict,), {})
+    n["meta"] = 0
+    cm = exp.check_metrics(R())                      # GAP-26: a non-dict result is judged by check_metrics
+    note = cm["G:exercises"]["note"]
+    expect(note.startswith("[V5:NO_TRACE]") and "the result is a R, not a dict" in note, note)
+    out = score(exp, MD(rec))
+    expect(out[0] == "REFUSE" and out[1] == "NO_TRACE" and
+           "'coverage_trace' is a MD, not an exact dict (e.g. loaded with object_pairs_hook)" in out[2], f"{out}")
+    expect(n["meta"] == 0, f"metaclass reads: {n}")
+
+@case("X24f", "identity", "rev. 10 (R9-1, R9-9): lru_cache(len) -> NOT_A_FUNCTION 'the wrapper calls no single Python function; ... (a builtin_function_or_method)'; a Stamp __wrapped__ -> '(a Stamp)', metaclass counter 0")
+def x24f():
+    cov = P.coverage_trace(EXP("X24F_LEN"))
+    e = raises_code(cov.__enter__, "NOT_A_FUNCTION")
+    cov.__exit__(None, None, None)
+    expect("the wrapper calls no single Python function; its __wrapped__ names a different object "
+           "(a builtin_function_or_method)" in str(e), str(e))
+    fx_x24f.COUNT["n"] = 0
+    cov = P.coverage_trace(EXP("X24F_STAMP"))
+    e = raises_code(cov.__enter__, "NOT_A_FUNCTION")
+    cov.__exit__(None, None, None)
+    expect("its __wrapped__ names a different object (a Stamp)" in str(e), str(e))
+    expect(fx_x24f.COUNT["n"] == 0, f"metaclass reads: {fx_x24f.COUNT}")
+
+@case("X84", "attribution", "rev. 10 (R9-2), over-blocking #23: T opens G with L1 running; U opens G with None running; T opens G again with L1 running -> NESTED_SECTION; T's problems exactly that")
+def x84():
+    import asyncio
+    ev = asyncio.events
+    L1 = asyncio.new_event_loop()
+    expT, expU = EXP("F"), EXP("F")
+    got = []
+    try:
+        with P.coverage_trace(expT) as T, P.coverage_trace(expU) as U:
+            def inner():                             # running loop L1 again, under U's opening
+                prev = ev._get_running_loop()
+                ev._set_running_loop(L1)
+                try:
+                    T.run("G", fx_v5f.f)
+                    got.append("opened")
+                except GateSpecError as e:
+                    got.append(code_of(e))
+                finally:
+                    ev._set_running_loop(prev)
+            def mid():                               # running loop None, under T's first opening
+                prev = ev._get_running_loop()
+                ev._set_running_loop(None)
+                try:
+                    U.run("G", inner)
+                finally:
+                    ev._set_running_loop(prev)
+            ev._set_running_loop(L1)
+            try:
+                T.run("G", mid)
+            finally:
+                ev._set_running_loop(None)
+        rec = T.record()
+    finally:
+        L1.close()
+    expect(got == ["NESTED_SECTION"], f"second open of T: {got}")
+    expect(_problem_codes(rec) == ["NESTED_SECTION"], f"T problems {_problem_codes(rec)}")
+
+@case("X10c", "identity", "rev. 10 (GAP-W011, W018): import raising ValueError, PEP 562 __getattr__ raising KeyError -> UNRESOLVED, __cause__ the ValueError / the KeyError")
+def x10c():
+    for key, exc in (("X10C_IMP", ValueError), ("X10C_PEP", KeyError)):
+        cov = P.coverage_trace(EXP(key))
+        e = raises_code(cov.__enter__, "UNRESOLVED")
+        cov.__exit__(None, None, None)
+        expect(type(e.__cause__) is exc, f"{key}: __cause__ {type(e.__cause__).__name__}")
+    sys.modules.pop("fx_badimport", None)
+
+@case("X14d", "identity", "rev. 10 (GAP-W022): Sub.fit inherited from Base with Base.__module__ = 5 -> INHERITED 'declare the defining class ?:Base'")
+def x14d():
+    cov = P.coverage_trace(EXP("X14D"))
+    e = raises_code(cov.__enter__, "INHERITED")
+    cov.__exit__(None, None, None)
+    expect("declare the defining class ?:Base" in str(e), str(e))
+
+def _counting_dict_class():
+    n = {"calls": 0}
+    def counted(name):
+        base = getattr(dict, name)
+        def m(self, *a, **k):
+            n["calls"] += 1
+            return base(self, *a, **k)
+        m.__name__ = name
+        return m
+    ns = {k: counted(k) for k in ("__getitem__", "__contains__", "get", "keys", "__iter__")}
+    def __missing__(self, key):
+        n["calls"] += 1
+        return 0.25
+    def __bool__(self):
+        n["calls"] += 1
+        return True
+    ns["__missing__"] = __missing__
+    ns["__bool__"] = __bool__
+    return type("C", (dict,), ns), n
+
+@case("X117e", "scoring", "rev. 10 (R9-5): check_metrics on counting dict subclasses, path a.b present (0.5) / b absent -> present+usable / not present; counter 0")
+def x117e():
+    exp = EXP("X117E")
+    C, n = _counting_dict_class()
+    r1 = C(a=C(b=0.5))
+    r2 = C(a=C())
+    n["calls"] = 0
+    m1 = exp.check_metrics(r1)["G"]
+    m2 = exp.check_metrics(r2)["G"]
+    expect(m1["present"] is True and m1["usable"] is True, f"first {m1}")
+    expect(m2["present"] is False, f"second {m2}")
+    expect(n["calls"] == 0, f"user dict methods called: {n}")
+
+@case("X117f", "scoring", "rev. 10 (R9-5): check_metrics on {m:1.0} -> NO_TRACE note 'the result has no 'coverage_trace' key'; with smoke True -> exactly 'smoke run'")
+def x117f():
+    exp = EXP("F")
+    n1 = exp.check_metrics({"m": 1.0})["G:exercises"]["note"]
+    expect(n1.startswith("[V5:NO_TRACE]") and "the result has no 'coverage_trace' key" in n1, n1)
+    n2 = exp.check_metrics({"m": 1.0, "smoke": True})["G:exercises"]["note"]
+    expect(n2 == "smoke run", n2)
+
+@case("V73", "records", "rev. 10 (GAP-W183): worker's G calls f, waits; main clears f's local events and exits; worker returns an unstarted generator -> notes codes [OPEN_AT_EXIT, LAZY_RESULT, MONITOR_LOST], end open")
+def v73():
+    exp = EXP("F")
+    entered, go = threading.Event(), threading.Event()
+    def body():
+        fx_v5f.f()
+        entered.set()
+        go.wait(30)
+        return fx_v5f.genfn()
+    cov = P.coverage_trace(exp)
+    cov.__enter__()
+    t = threading.Thread(target=lambda: cov.run("G", body))
+    t.start()
+    try:
+        expect(entered.wait(30), "worker never entered")
+        tool = P._v5_state()["tool"]
+        sys.monitoring.set_local_events(tool, fx_v5f.f.__code__, 0)
+        cov.__exit__(None, None, None)
+    finally:
+        go.set()
+        t.join(30)
+    rec = cov.record()
+    ops = rec["sections"]["G"]
+    expect(len(ops) == 1 and ops[0]["end"] == "open", f"openings {ops}")
+    codes = [_PCODE.match(x).group(1) for x in ops[0]["notes"]]
+    expect(codes == ["OPEN_AT_EXIT", "LAZY_RESULT", "MONITOR_LOST"], f"notes {codes}")
+
+@sub("X156h")
+def _sub_x156h():
+    import asyncio
+    exp = EXP("F")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", fx_v5f.f)
+    first = _outcome_json(score(exp, cov.record()))
+    real = asyncio.events._get_running_loop
+    def grl():
+        return None
+    asyncio.events._get_running_loop = grl
+    try:
+        try:
+            with P.coverage_trace(exp) as cov2:
+                cov2.run("G", fx_v5f.f)
+            second = {"refused": None, "score": _outcome_json(score(exp, cov2.record()))}
+        except GateSpecError as e:
+            second = {"refused": code_of(e)}
+    finally:
+        asyncio.events._get_running_loop = real
+    return {"first": first, "second": second}
+
+@case("X156h", "binding", "rev. 10 (R9-3); fresh subprocess: a clean trace PASS {f:1}; then _get_running_loop replaced -> the next coverage_trace() raises UNSUPPORTED_VERSION")
+def x156h():
+    r = run_sub("X156h")
+    expect(r == {"first": ["PASS", {"G": {"fx_v5f:f": 1}}], "second": {"refused": "UNSUPPORTED_VERSION"}}, f"{r}")
+
+@sub("X156i")
+def _sub_x156i():
+    import asyncio
+    exp = EXP("F")
+    real = asyncio.events._get_running_loop
+    def grl():
+        return None
+    asyncio.events._get_running_loop = grl
+    try:
+        try:
+            P.coverage_trace(exp)
+            first = None
+        except GateSpecError as e:
+            first = code_of(e)
+    finally:
+        asyncio.events._get_running_loop = real
+    st = P._v5_state()
+    sm = sys.monitoring
+    real_se = sm.set_events
+    def se(*a):
+        return real_se(*a)
+    sm.set_events = se
+    try:
+        try:
+            with P.coverage_trace(exp) as cov:
+                cov.run("G", fx_v5f.f)
+            second = {"refused": None, "score": _outcome_json(score(exp, cov.record()))}
+        except GateSpecError as e:
+            second = {"refused": code_of(e)}
+    finally:
+        sm.set_events = real_se
+    return {"first": first, "state": {k: st[k] for k in ("tool", "tool_ours", "cut")}, "second": second}
+
+@case("X156i", "binding", "rev. 10 (R9-4); fresh subprocess: a step-6 refusal at the first coverage_trace() binds nothing (tool None, tool_ours False, cut 0); a set_events wrapper installed afterwards is refused")
+def x156i():
+    r = run_sub("X156i")
+    expect(r == {"first": "UNSUPPORTED_VERSION", "state": {"tool": None, "tool_ours": False, "cut": 0},
+                 "second": {"refused": "UNSUPPORTED_VERSION"}}, f"{r}")
+
+@sub("V72")
+def _sub_v72():
+    exp = EXP("F")
+    cov = P.coverage_trace(exp)
+    cov.__enter__()
+    cov.run("G", fx_v5f.f)
+    me = threading.get_ident()
+    arm = {"on": True, "seen": None}
+    def hook(event, args):
+        if arm["on"] and event == "sys.monitoring.register_callback" and threading.get_ident() == me:
+            arm["on"] = False
+            arm["seen"] = P._v5_state()["guard"]
+            raise RuntimeError("V72 hook")
+    sys.addaudithook(hook)
+    try:
+        cov.__exit__(None, None, None)
+        raised = None
+    except RuntimeError as e:
+        raised = str(e)
+    after = P._v5_state()["guard"]
+    exp2 = EXP("F")
+    with P.coverage_trace(exp2) as cov2:
+        cov2.run("G", fx_v5f.f)
+    return {"seen": arm["seen"], "raised": raised, "after": after,
+            "second": _outcome_json(score(exp2, cov2.record())), "final": P._v5_state()["guard"]}
+
+@case("V72", "introspection", "rev. 10 (R9-8); fresh subprocess: an audit hook in the exit transaction's registration reads guard 'held' and raises -> RuntimeError from __exit__; guard 'dead'; a second tracer PASS {f:1}; guard 'free'")
+def v72():
+    r = run_sub("V72")
+    expect(r == {"seen": "held", "raised": "V72 hook", "after": "dead",
+                 "second": ["PASS", {"G": {"fx_v5f:f": 1}}], "final": "free"}, f"{r}")
+
+SCORING_ONLY = {"X117e", "X117f"}                  # scoring-only: also run on 3.10 and 3.11
+
+
 def main():
     ver = ".".join(map(str, sys.version_info[:3]))
     results = []
+    tracing = tuple(sys.version_info[:2]) >= (3, 12)
+    only = os.environ.get("SMOKE_ONLY")
     for cid, family, row, fn in CASES:
+        if not tracing and cid not in SCORING_ONLY:
+            continue                                  # tracing cases need sys.monitoring (3.12+)
+        if only and cid not in only.split(","):
+            continue
         before = leftovers()
         try:
             fn()

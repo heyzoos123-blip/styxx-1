@@ -15,10 +15,11 @@ SM1 (computed at freeze time on ref_v5f.py; "SM1: catalog power"):
   failures, WITNESS_MISMATCH if only others are.
   Gate: 100% of admitted rows KILLED on every version they are admitted for.
 
-Usage: python weakenings_v5f.py --sm1 PY312 PY313 [--only id,id] [--out sm1_result.json]
+Usage: python weakenings_v5f.py --sm1 PY312 [PY313] [--only id,id] [--deps JSON] [--journal J.jsonl] [--jobs 3]
+                                  [--no-crash] [--out sm1_result.json]   (resumable through the journal)
        python weakenings_v5f.py --list
 """
-import json, os, runpy, subprocess, sys, tempfile, time
+import collections, json, os, runpy, subprocess, sys, tempfile, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REF_PATH = os.path.join(HERE, "ref_v5f.py")
@@ -559,7 +560,7 @@ def run_case(py, impl, case, deps):
         env["V5F_DEPS_PATH"] = deps
     try:
         r = subprocess.run([py, os.path.join(HERE, "run_protocol_v5f_exam.py"), "--impl", impl, "--mutation", case],
-                           capture_output=True, text=True, timeout=1800, env=env)
+                           capture_output=True, text=True, timeout=600, env=env)
     except subprocess.TimeoutExpired:
         return "TIMEOUT"
     lines = [x for x in r.stdout.splitlines() if x.startswith("MUTATION_RESULT ")]
@@ -593,69 +594,115 @@ def run_crash(py, impl, invariant):
     return ("PASS" if d["G_FI"] == "PASS" else "FAIL"), sorted(fails)
 
 
-def sm1(pys, only=None, deps=None):
-    res = {"rows": {}, "versions": {}}
+def _journal(path):
+    rows, refs = {}, {}
+    if path and os.path.exists(path):
+        for ln in open(path):
+            try:
+                d = json.loads(ln)
+            except ValueError:
+                continue
+            if d.get("kind") == "ref":
+                refs[(d["ver"], d["witness"])] = d["ref"]
+            elif d.get("kind") == "row":
+                rows[(d["ver"], d["id"])] = d
+    return rows, refs
+
+
+def _append(path, d, lock):
+    with lock:
+        with open(path, "a") as fh:
+            fh.write(json.dumps(d) + "\n")
+
+
+def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
+    """Resumable: every ref run pair and every row verdict is appended to the journal (JSON lines) as it is
+    decided; a rerun with the same journal skips them. Crash-sweep rows run one at a time (crash=False skips)."""
+    import threading, concurrent.futures as cf
+    journal = journal or os.path.join(tempfile.mkdtemp(prefix="v5f_sm1_"), "journal.jsonl")
+    done, refs = _journal(journal)
+    lock = threading.Lock()
     work = tempfile.mkdtemp(prefix="v5f_sm1_")
-    ref_cache = {}
+    res = {"rows": {}, "versions": {}, "journal": journal}
     for py in pys:
         ver = subprocess.run([py, "-c", "import sys;print('.'.join(map(str,sys.version_info[:3])))"],
                              capture_output=True, text=True).stdout.strip()
         dp = (deps or {}).get(ver)
-        rows = {}
-        for e in CATALOG:
-            if only and e["id"] not in only:
-                continue
-            if ver not in e["versions"]:
-                continue
+        todo = [e for e in CATALOG if (not only or e["id"] in only) and ver in e["versions"]
+                and (ver, e["id"]) not in done and (crash or not e["witness"].startswith("G_FI:"))]
+        rlocks = collections.defaultdict(threading.Lock)
+
+        def ref_of(w):
+            with rlocks[w]:
+                if (ver, w) not in refs:
+                    if w.startswith("G_FI:"):
+                        r = [run_crash(py, REF_PATH, w.split(":")[1])[0] for _ in range(2)]
+                    else:
+                        r = [run_case(py, REF_PATH, w, dp) for _ in range(2)]
+                    refs[(ver, w)] = r
+                    _append(journal, {"kind": "ref", "ver": ver, "witness": w, "ref": r}, lock)
+                return refs[(ver, w)]
+
+        def one(e):
             src = apply(e)
             if src is None:
-                rows[e["id"]] = {"class": "NOT_ADMITTED", "why": "(1) the patch does not apply exactly once"}
-                continue
-            d = os.path.join(work, ver, e["id"])
-            os.makedirs(d, exist_ok=True)
-            impl = os.path.join(d, "ref_v5f.py")
-            open(impl, "w").write(src)
-            w = e["witness"]
-            if w.startswith("G_FI:"):
-                inv = w.split(":")[1]
-                key = (ver, "G_FI")
-                if key not in ref_cache:
-                    ref_cache[key] = [run_crash(py, REF_PATH, inv)[0] for _ in range(2)]
-                base = ref_cache[key]
-                runs = [run_crash(py, impl, inv) for _ in range(2)]
-                if base != ["PASS", "PASS"]:
-                    cls = "NOT_ADMITTED"
-                elif runs[0] != runs[1]:
-                    cls = "NONREPRODUCIBLE"
-                elif runs[0][0] == "PASS":
-                    cls = "UNWITNESSED"
-                else:
-                    cls = "KILLED" if inv in runs[0][1] else "WITNESS_MISMATCH"
-                rows[e["id"]] = {"class": cls, "ref": base, "runs": runs}
+                row = {"class": "NOT_ADMITTED", "why": "(1) the patch does not apply exactly once"}
             else:
-                key = (ver, w)
-                if key not in ref_cache:
-                    ref_cache[key] = [run_case(py, REF_PATH, w, dp) for _ in range(2)]
-                base = ref_cache[key]
-                runs = [run_case(py, impl, w, dp) for _ in range(2)]
-                if base != ["PASS", "PASS"]:
-                    cls = "NOT_ADMITTED"
-                elif runs[0] != runs[1]:
-                    cls = "NONREPRODUCIBLE"
-                elif runs[0] == "PASS":
-                    cls = "UNWITNESSED"
+                d = os.path.join(work, ver, e["id"])
+                os.makedirs(d, exist_ok=True)
+                impl = os.path.join(d, "ref_v5f.py")
+                open(impl, "w").write(src)
+                w = e["witness"]
+                base = ref_of(w)
+                if w.startswith("G_FI:"):
+                    inv = w.split(":")[1]
+                    runs = [list(run_crash(py, impl, inv)) for _ in range(2)]
+                    if base != ["PASS", "PASS"]:
+                        cls = "NOT_ADMITTED"
+                    elif runs[0] != runs[1]:
+                        cls = "NONREPRODUCIBLE"
+                    elif runs[0][0] == "PASS":
+                        cls = "UNWITNESSED"
+                    else:
+                        cls = "KILLED" if inv in runs[0][1] else "WITNESS_MISMATCH"
                 else:
-                    cls = "KILLED"
-                rows[e["id"]] = {"class": cls, "ref": base, "runs": runs}
-            print(ver, e["id"], rows[e["id"]]["class"], flush=True)
+                    runs = [run_case(py, impl, w, dp) for _ in range(2)]
+                    if base != ["PASS", "PASS"]:
+                        cls = "NOT_ADMITTED"
+                    elif runs[0] != runs[1]:
+                        cls = "NONREPRODUCIBLE"
+                    elif runs[0] == "PASS":
+                        cls = "UNWITNESSED"
+                    else:
+                        cls = "KILLED"
+                row = {"class": cls, "ref": base, "runs": runs}
+            row.update({"kind": "row", "ver": ver, "id": e["id"], "witness": e["witness"]})
+            _append(journal, row, lock)
+            print(ver, e["id"], row["class"], flush=True)
+            return row
+        plain = [e for e in todo if not e["witness"].startswith("G_FI:")]
+        with cf.ThreadPoolExecutor(jobs) as ex:
+            list(ex.map(one, plain))
+        for e in todo:
+            if e["witness"].startswith("G_FI:"):
+                one(e)
+    done, _ = _journal(journal)
+    vers = sorted({v for v, _ in done})
+    for ver in vers:
+        rows = {i: {k: x for k, x in d.items() if k not in ("kind", "ver", "id")} for (v, i), d in done.items()
+                if v == ver and (not only or i in only)}
         res["rows"][ver] = rows
         adm = [k for k, r in rows.items() if r["class"] in ("KILLED", "WITNESS_MISMATCH", "NONREPRODUCIBLE")]
         killed = [k for k in adm if rows[k]["class"] == "KILLED"]
-        res["versions"][ver] = {"admitted": len(adm), "killed": len(killed),
+        want = [e["id"] for e in CATALOG if ver in e["versions"] and (not only or e["id"] in only)]
+        res["versions"][ver] = {"rows_decided": len(rows), "rows_in_catalog": len(want),
+                                "missing": sorted(set(want) - set(rows)),
+                                "admitted": len(adm), "killed": len(killed),
+                                "not_killed": sorted(set(adm) - set(killed)),
                                 "unwitnessed": sorted(k for k, r in rows.items() if r["class"] == "UNWITNESSED"),
                                 "not_admitted": sorted(k for k, r in rows.items() if r["class"] == "NOT_ADMITTED"),
-                                "gate": len(adm) == len(killed)}
-    res["gate"] = all(v["gate"] for v in res["versions"].values())
+                                "gate": len(adm) == len(killed) and len(rows) >= len(want)}
+    res["gate"] = bool(res["versions"]) and all(v["gate"] for v in res["versions"].values())
     return res
 
 
@@ -672,7 +719,9 @@ def main(argv):
         deps = json.loads(argv[argv.index("--deps") + 1]) if "--deps" in argv else None
         out = argv[argv.index("--out") + 1] if "--out" in argv else os.path.join(HERE, "sm1_result.json")
         t0 = time.monotonic()
-        res = sm1(pys, only, deps)
+        journal = argv[argv.index("--journal") + 1] if "--journal" in argv else None
+        jobs = int(argv[argv.index("--jobs") + 1]) if "--jobs" in argv else 3
+        res = sm1(pys, only, deps, journal, jobs, crash="--no-crash" not in argv)
         res["seconds"] = round(time.monotonic() - t0, 1)
         res["catalog_rows"] = len(CATALOG)
         json.dump(res, open(out, "w"), indent=1)

@@ -220,6 +220,117 @@ row("A_cut_ok_no_run_once", "`_run_once` binding in `_cut_ok()`", "deletion", "X
 row("A_no_referrer_clause", "shareable-code refusal: the gc-referrer clause", "deletion", "X35c", "CUT_UNAVAILABLE", "passes",
     [("        if '<locals>' in c.co_qualname or twins:", "        if '<locals>' in c.co_qualname:")])
 
+# minting / identity / f_globals
+row("A_mint_none", "minting (the original code installed, no mint)", "deletion", "X40", "PASS", "differs",
+    [("        self.code = self.original.replace()", "        self.code = self.original")], note="also X41-X44")
+row("A_mint_eq", "`is` vs `==` (the minted-code test by equality)", "comparisons", "X45", "CLONE_CALLED", "differs",
+    [("    m = _MINTED.get(id(code))\n    if m is None or m.code is not code: return\n    f = sys._getframe(1)\n    holders",
+      "    m = _MINTED.get(id(code))\n    if m is None or m.code != code: return\n    f = sys._getframe(1)\n    holders")],
+    note="also X46")
+row("A_fglobals", "the `f_globals` check", "deletion", "X55", "CLONE_CALLED", "credited",
+    [("    if f.f_globals is not m.globals:                # CLONE_CALLED", "    if False:                                       # CLONE_CALLED")],
+    note="also X56")
+# CLONE_ALIVE
+row("A_clone_alive", "CLONE_ALIVE", "deletion", "v5e:X57", "CLONE_ALIVE", "passes",
+    [("        txt = _clone_alive(m)\n", "        txt = None\n")], note="also v5e:X58")
+row("A_freeze_clause", "CLONE_ALIVE's freeze clause", "deletion", "X57b", "CLONE_ALIVE", "passes",
+    [("    if gc.get_freeze_count() > m.freeze0:", "    if False:")], note="also X58b")
+row("A_freeze_gt0", "freeze: \"count > 0\" instead of \"count > baseline\"", "comparisons", "V36b", "PASS", "CLONE_ALIVE",
+    [("    if gc.get_freeze_count() > m.freeze0:", "    if gc.get_freeze_count() > 0:")])
+row("A_visible_deleted", "freeze: visible accounting deleted", "deletion", "X58b", "PASS", "CLONE_ALIVE",
+    [("        if excess - visible > 0:", "        if excess > 0:")])
+# per-holder rules
+row("A_clone_called_per_holder", "per-holder CLONE_CALLED", "scope", "X55d", "CLONE_CALLED in each", "differs",
+    [("        for h in holders: h.clone_called[id(code)] = m.qualname", "        for h in holders[:1]: h.clone_called[id(code)] = m.qualname")])
+row("A_clone_alive_per_holder", "per-holder CLONE_ALIVE (only at the last holder's exit)", "scope", "X57c", "CLONE_ALIVE", "passes",
+    [("        txt = _clone_alive(m)\n", "        txt = _clone_alive(m) if not m.holders else None\n")])
+row("A_swapped_per_holder", "per-holder CODE_SWAPPED (only at the last holder's exit)", "scope", "X59c", "CODE_SWAPPED", "passes",
+    [("        if m.fn.__code__ is not m.code:\n            swapped.append(",
+      "        if m.fn.__code__ is not m.code and len(m.holders) == 1:\n            swapped.append(")])
+# CODE_SWAPPED
+row("A_swapped_at_exit", "CODE_SWAPPED at exit", "deletion", "X59", "CODE_SWAPPED", "passes",
+    [("        if m.fn.__code__ is not m.code:\n            swapped.append(", "        if False:\n            swapped.append(")])
+row("A_swapped_at_entry", "CODE_SWAPPED at entry (E4.3 and the join's check)", "deletion", "X31", "CODE_SWAPPED", "differs",
+    [("        if m is not None and fn.__code__ is not m.code:\n            raise GateSpecError(",
+      "        if False:\n            raise GateSpecError("),
+     ("        if fn.__code__ is not m.code:\n            raise GateSpecError(\n                f\"[V5:CODE_SWAPPED] declared target {m.qualname}",
+      "        if False:\n            raise GateSpecError(\n                f\"[V5:CODE_SWAPPED] declared target {m.qualname}")])
+row("A_restore_over_swap", "restore over a swap", "conditions", "X59d", "the swap kept", "the swap undone",
+    [("def _retire(m):\n    if m.fn.__code__ is m.code:\n", "def _retire(m):\n    if True:\n")])
+row("A_e41_reconcile", "entry CODE_SWAPPED against a holderless mint (reconciliation dropped)", "deletion", "X92b",
+    "CODE_SWAPPED", "differs", [("    _reconcile()                                     # E4.1", "    pass                                             # E4.1")])
+row("A_reconcile_deleted", "reconciliation deleted", "deletion", "X133", "as stated", "differs",
+    [("def _reconcile():\n    _reclaim()", "def _reconcile():\n    return\n    _reclaim()")], note="also X92b; G_FI M2")
+# the busy bound (boundary rows: 11 s refused X138, 7 s accepted V65; O7b's x0.5 and x2, and 0.5 s)
+for n, v, wit, sp, wk in (("A_busy_x2", "20.0", "X138", "MACHINERY_BUSY", "passes"),
+                          ("A_busy_x0_5", "5.0", "V65", "PASS", "MACHINERY_BUSY"),
+                          ("A_busy_0_5", "0.5", "V65", "PASS", "MACHINERY_BUSY")):
+    row(n, f"the busy bound 10 s as {v} s", "constants", wit, sp, wk, [("_BUSY_SECONDS = 10.0", f"_BUSY_SECONDS = {v}")])
+# dispatch cut and loop boundary
+row("A_dispatch_cut_attr", "dispatch cut in attribution", "deletion", "X65c", "dispatched", "differs",
+    [("        if _CUT.get(id(c)) is c:\n            cut = True\n            break\n        o = _ANCHORS.get(g)",
+      "        if False:\n            cut = True\n            break\n        o = _ANCHORS.get(g)")])
+row("A_dispatch_cut_nested", "dispatch cut in the NESTED walk", "deletion", "V19b", "PASS", "NESTED_SECTION",
+    [("        if _CUT.get(id(c)) is c:\n            break\n        p = _ANCHORS.get(g)", "        if False:\n            break\n        p = _ANCHORS.get(g)")])
+row("A_loop_boundary_attr", "loop boundary in attribution", "deletion", "X65d", "dispatched", "differs",
+    [("            if o.loop is not loop:                   # the loop boundary", "            if False:                                # the loop boundary")])
+row("A_loop_boundary_nested", "loop boundary in the NESTED walk", "deletion", "V63", "PASS", "NESTED_SECTION",
+    [("        if p is not None and p.core is core and p.loop is loop:", "        if p is not None and p.core is core:")])
+row("A_nested_across_tracers", "NESTED across tracers", "conditions", "V15b", "PASS", "NESTED_SECTION",
+    [("        if p is not None and p.core is core and p.loop is loop:", "        if p is not None and p.loop is loop:")])
+# the tool and its name
+row("A_bare_tool_name", "tool adopted by the bare name `styxx.protocol`", "constants", "X142", "PASS", "differs",
+    [("\"styxx.protocol/\" + os.urandom(6).hex()", "\"styxx.protocol\"")])
+row("A_unwind_off_ungated", "events changed on an id that lost its name (`_unwind_off` without the name gate)", "deletion",
+    "X137-free", "as stated", "differs",
+    [("                    _map(set_events, _compress(_compress((t,), _map(_is, _map(get_tool, (t,)), _NAME1)),\n                                               _map(_not, (_ANCHORS,))), _ZERO1)))",
+      "                    _map(set_events, _compress((t,), _map(_not, (_ANCHORS,))), _ZERO1)))")])
+# confirmation
+row("A_unwind_offset", "unwind-offset check deleted", "deletion", "X135", "as stated", "credited",
+    [("if p is not None and p[0] is f and offset != p[1]: _publish(code, p[2])", "if p is not None and p[0] is f: _publish(code, p[2])")])
+row("A_py_throw_credited", "PY_THROW credited (an entry event)", "scope", "X119", "NOT_EXERCISED", "credited",
+    [("_EVENTS5 = (PY_START, PY_RESUME, PY_RETURN, PY_YIELD, PY_UNWIND)", "_EVENTS5 = (PY_START, PY_RESUME, PY_RETURN, PY_YIELD, PY_UNWIND, 8192)"),
+     ("_LOCAL = PY_START | PY_RESUME | PY_RETURN | PY_YIELD ", "_LOCAL = PY_START | PY_RESUME | PY_RETURN | PY_YIELD | 8192"),
+     ("_CALLBACKS5 = (_on_entry, _on_entry, _on_exit, _on_exit, _on_unwind)", "_CALLBACKS5 = (_on_entry, _on_entry, _on_exit, _on_exit, _on_unwind, _on_entry)"),
+     ("_map(get_tool, _repeat(t, 5))", "_map(get_tool, _repeat(t, 6))")])
+row("A_publish_recheck", "credit re-check at publication deleted", "deletion", "v5e:X71", "as stated", "credited",
+    [("    for h, kind, x in out:\n        if k in h.by_code:", "    for h, kind, x in out:\n        if True:")])
+row("A_one_opening_per_tracer", "exactly-one-opening-per-tracer", "conditions", "v5e:X70", "ambiguous", "credited",
+    [("            if len(mine) == 1:", "            if mine:")])
+# claims
+row("A_enter_claim", "atomic enter claim replaced by check-then-set", "claims", "X32d", "REENTRY", "differs",
+    [("    if core.marks.setdefault('entering', me) is not me:", "    if 'entering' in core.marks or core.marks.__setitem__('entering', me):")])
+row("A_exit_claim", "exit claim replaced by an unconditional store", "claims", "V52", "PASS", "differs",
+    [("    if core.marks.setdefault('exiting', me) is not me:\n        return", "    core.marks['exiting'] = me")])
+# fork
+row("A_atfork_handler", "at-fork handler", "deletion", "V47", "PASS", "differs",
+    [("    os.register_at_fork(after_in_child=_forget_in_child)", "    pass")])
+row("A_pid_passthrough", "pid pass-through", "deletion", "V47", "PASS", "differs",
+    [("    if core.pid != os.getpid():                      # 1. pass-through in a forked child", "    if False:                                        # 1."),
+     ("    if core.pid != os.getpid():                      # X-1", "    if False:                                        # X-1")])
+# sections
+row("A_section_norm", "section normalization", "deletion", "V39", "PASS", "differs",
+    [("            section = str.__str__(section)", "            pass")])
+row("A_nonstr_refusal", "non-str refusal", "types", "X78f", "UNDECLARED_SECTION", "differs",
+    [("        if issubclass(type(section), str):\n            section = str.__str__(section)", "        if True:\n            pass")])
+row("A_open_problem_recorded", "recording open-time refusals", "deletion", "X76", "problem recorded", "not recorded",
+    [("               f\"(declared: {list(core.sections)})\")\n        core.problems.append(txt)\n        raise GateSpecError(txt)\n    loop",
+      "               f\"(declared: {list(core.sections)})\")\n        raise GateSpecError(txt)\n    loop")], note="also X78-X79, X32")
+# the refusal codes of the machinery
+row("A_monitor_busy", "MONITOR_BUSY", "deletion", "X36", "MONITOR_BUSY", "differs",
+    [("    raise GateSpecError(\n        \"[V5:MONITOR_BUSY]", "    return\n    raise GateSpecError(\n        \"[V5:MONITOR_BUSY]")])
+row("A_monitor_lost", "MONITOR_LOST", "deletion", "X137", "MONITOR_LOST", "passes",
+    [("    if lost:\n        core.lost_note", "    if False:\n        core.lost_note")])
+row("A_reentrant", "REENTRANT", "deletion", "X139", "REENTRANT", "differs",
+    [("            if r.tid == me.tid:\n                raise", "            if False:\n                raise")], note="also H1")
+row("A_machinery_busy", "MACHINERY_BUSY", "deletion", "X138", "MACHINERY_BUSY", "differs",
+    [("            elif now - t0 > _BUSY_SECONDS:\n                raise", "            elif False:\n                raise")])
+row("A_trace_active", "TRACE_ACTIVE", "deletion", "X90/X91", "TRACE_ACTIVE", "differs",
+    [("            raise GateSpecError(\n                \"[V5:TRACE_ACTIVE] the tracer is active",
+      "            if False: raise GateSpecError(\n                \"[V5:TRACE_ACTIVE] the tracer is active")], note="also X92c")
+row("A_trace_incomplete", "TRACE_INCOMPLETE", "deletion", "v5e:X92", "TRACE_INCOMPLETE", "differs",
+    [("            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):", "            if False:")], note="also X133, V52")
+
 # ---------------------------------------------------------------------------------------------------
 # SM1
 # ---------------------------------------------------------------------------------------------------

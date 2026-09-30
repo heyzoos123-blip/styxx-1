@@ -562,10 +562,11 @@ CONTROLS = {
             ("        _map(get_tool, (t,))))", "        _filter(None, _map(set_events, _compress((t,), _map(_is, _map(get_tool, (t,)), _NAME1)), _ZERO1)),\n"
                                              "        _map(get_tool, (t,))))")],
     # K14: _register in revision 7's form, without _tee (two statements)
+    # (each previous callback compared with styxx's inside the pipeline and released before its count)
     "K14": [(REG_OLD, """    return _list(_chain(
-        _map(_LOST_APPEND, _map(_is_not, _compress(_map(register_callback,
+        _map(_LOST_APPEND, _filter(None, _map(_is_not, _map(register_callback,
                      _compress(_repeat(t), _map(_is, _map(get_tool, _repeat(t, 5)), _repeat(_TOOL_NAME))),
-                     _EVENTS5, _CALLBACKS5), _map(_is_not, _CALLBACKS5, _CALLBACKS5)), _repeat(None))),
+                     _EVENTS5, _CALLBACKS5), _CALLBACKS5))),
         _map(get_tool, (t,))))""")],
 }
 

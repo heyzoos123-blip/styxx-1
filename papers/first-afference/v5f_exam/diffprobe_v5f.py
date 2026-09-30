@@ -40,7 +40,7 @@ unmutated run (fuzz_v5f.within_i6). Crash-sweep entries are not probed (SPEC_GAP
 Usage:
   python diffprobe_v5f.py --build-corpus                       (writes corpus_v5f/ and its manifest, on 3.12.3)
   python diffprobe_v5f.py --observe ENTRY --impl PATH          (one entry in this process; prints OBS {json})
-  python diffprobe_v5f.py --mask --impl PATH [--n 5] [--jobs 3] --out MASK.json
+  python diffprobe_v5f.py --mask --impl PATH [--n 5] [--jobs 3] [--journal J.jsonl] --out MASK.json
   python diffprobe_v5f.py --probe --impl MUTANT --base PATH --mask MASK.json [--jobs 3] --out RESULT.json
 """
 import collections, concurrent.futures as cf, hashlib, inspect, json, os, re, subprocess, sys, time
@@ -420,16 +420,38 @@ def manifest():
     return json.load(open(os.path.join(CORPUS, "manifest.json")))
 
 
-def mask(py, impl, n, jobs, only=None):
+def mask(py, impl, n, jobs, only=None, journal=None):
+    """Resumable: each (entry, run) observation is appended to the journal (JSON lines) as it completes; runs are
+    made in the frozen corpus order, run i of every entry before run i + 1 of any."""
+    import threading
     man = manifest()
     eq = [p for p, v in sorted(man["entries"].items()) if v["class"] == "equality"]
     if only:
         eq = [p for p in eq if p in only]
-    runs = {p: [] for p in eq}
+    runs = {p: {} for p in eq}
+    if journal and os.path.exists(journal):
+        for ln in open(journal):
+            try:
+                d = json.loads(ln)
+            except ValueError:
+                continue
+            if d.get("impl") == impl and d["entry"] in runs:
+                runs[d["entry"]][d["i"]] = d["obs"]
+    lock = threading.Lock()
+
+    def one(pi):
+        p, i = pi
+        o = run_entry(py, p, impl)
+        if journal:
+            with lock, open(journal, "a") as fh:
+                fh.write(json.dumps({"impl": impl, "entry": p, "i": i, "obs": o}, default=str) + "\n")
+        return p, i, o
     with cf.ThreadPoolExecutor(jobs) as ex:
         for i in range(n):
-            for p, o in zip(eq, ex.map(lambda p: run_entry(py, p, impl), eq)):
-                runs[p].append(o)
+            todo = [(p, i) for p in eq if i not in runs[p]]
+            for p, i2, o in ex.map(one, todo):
+                runs[p][i2] = o
+    runs = {p: [r[i] for i in sorted(r)] for p, r in runs.items()}
     masked, unstable, crashes = {}, {}, {}
     for p, rs in runs.items():
         if any("crash" in r for r in rs):
@@ -493,7 +515,7 @@ def main():
     if "--mask" in ARGV:
         only = set(_opt("--only").split(",")) if _opt("--only") else None
         t0 = time.monotonic()
-        r = mask(sys.executable, IMPL, int(_opt("--n", str(N_MASK))), jobs, only)
+        r = mask(sys.executable, IMPL, int(_opt("--n", str(N_MASK))), jobs, only, _opt("--journal"))
         r["seconds"] = round(time.monotonic() - t0, 1)
         json.dump(r, open(_opt("--out"), "w"), indent=1, sort_keys=True)
         print(json.dumps({k: r[k] for k in ("entries", "baseline")}), len(r["masked"]), "entries with a mask;",

@@ -22,8 +22,7 @@ Scenarios (frozen enumeration order: scenario, faulted thread, key, offset, k):
 A fault point is (key, offset, k), k <= K = 2, from a discovery run made twice at the start of each
 scenario's sweep (the two sets must be identical, or the sweep is void and fails).
 
-Usage: python crash_sweep_v5f.py [--impl PATH] [--scenario NAME[,NAME]] [--stride N] [--out RESULT.json]
-       [--adapter controls_v5f:v5e] (positive control #3: an adapter module supplies P, fault points, state)
+Usage: python crash_sweep_v5f.py [--impl PATH] [--scenario NAME[,NAME]] [--stride N] [--out RESULT.json] [--discover-only]
 """
 import collections, gc, json, os, sys, threading, time, types
 
@@ -44,6 +43,7 @@ IMPL = os.path.abspath(_opt("--impl", os.path.join(HERE, "ref_v5f.py")))
 ONLY = _opt("--scenario")
 STRIDE = int(_opt("--stride", "1"))
 OUT = _opt("--out")
+DISCOVER_ONLY = "--discover-only" in ARGV   # the freeze-time record of the point sets (corpus_v5f/)
 
 
 def load_runner():
@@ -521,6 +521,9 @@ def sweep(name):
             continue
         order = {k: i for i, k in enumerate(keys)}
         points = sorted(d1, key=lambda p: (order[p[0]], p[1], p[2]))
+        if DISCOVER_ONLY:
+            out[faulted] = {"points": len(points), "point_list": [list(p) for p in points]}
+            continue
         verdicts = collections.Counter()
         unclean = []
         for i, pt in enumerate(points):
@@ -660,6 +663,8 @@ def sweep_fork():
     if "error" in abase:
         return {"void": abase["error"]}
     apoints = [["write", k] for k in range(1, abase["child"].get("writes", 0) + 1)]
+    if DISCOVER_ONLY:
+        return {"plain": {"points": len(points), "point_list": points}, "audit": {"points": len(apoints), "point_list": apoints}}
     for variant, pts in (("plain", points), ("audit", apoints)):
         verdicts, unclean = collections.Counter(), []
         for i, pt in enumerate(pts):

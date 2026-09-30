@@ -223,10 +223,10 @@ row("A_no_referrer_clause", "shareable-code refusal: the gc-referrer clause", "d
 # minting / identity / f_globals
 row("A_mint_none", "minting (the original code installed, no mint)", "deletion", "X40", "PASS", "differs",
     [("        self.code = self.original.replace()", "        self.code = self.original")], note="also X41-X44")
-row("A_mint_eq", "`is` vs `==` (the minted-code test by equality)", "comparisons", "X45", "CLONE_CALLED", "differs",
+row("A_mint_eq", "`is` vs `==` (the minted-code test by equality)", "comparisons", "v5e:X45", "CLONE_CALLED", "differs",
     [("    m = _MINTED.get(id(code))\n    if m is None or m.code is not code: return\n    f = sys._getframe(1)\n    holders",
-      "    m = _MINTED.get(id(code))\n    if m is None or m.code != code: return\n    f = sys._getframe(1)\n    holders")],
-    note="also X46")
+      "    m = next((x for x in list(_MINTED.values()) if x.code == code), None)\n    if m is None or m.code != code: return\n    f = sys._getframe(1)\n    holders")],
+    note="also v5e:X46")
 row("A_fglobals", "the `f_globals` check", "deletion", "X55", "CLONE_CALLED", "credited",
     [("    if f.f_globals is not m.globals:                # CLONE_CALLED", "    if False:                                       # CLONE_CALLED")],
     note="also X56")
@@ -250,7 +250,7 @@ row("A_swapped_per_holder", "per-holder CODE_SWAPPED (only at the last holder's 
 # CODE_SWAPPED
 row("A_swapped_at_exit", "CODE_SWAPPED at exit", "deletion", "X59", "CODE_SWAPPED", "passes",
     [("        if m.fn.__code__ is not m.code:\n            swapped.append(", "        if False:\n            swapped.append(")])
-row("A_swapped_at_entry", "CODE_SWAPPED at entry (E4.3 and the join's check)", "deletion", "X31", "CODE_SWAPPED", "differs",
+row("A_swapped_at_entry", "CODE_SWAPPED at entry (E4.3 and the join's check)", "deletion", "v5e:X31", "CODE_SWAPPED", "differs",
     [("        if m is not None and fn.__code__ is not m.code:\n            raise GateSpecError(",
       "        if False:\n            raise GateSpecError("),
      ("        if fn.__code__ is not m.code:\n            raise GateSpecError(\n                f\"[V5:CODE_SWAPPED] declared target {m.qualname}",
@@ -280,7 +280,8 @@ row("A_nested_across_tracers", "NESTED across tracers", "conditions", "V15b", "P
     [("        if p is not None and p.core is core and p.loop is loop:", "        if p is not None and p.loop is loop:")])
 # the tool and its name
 row("A_bare_tool_name", "tool adopted by the bare name `styxx.protocol`", "constants", "X142", "PASS", "differs",
-    [("\"styxx.protocol/\" + os.urandom(6).hex()", "\"styxx.protocol\"")])
+    [("\"styxx.protocol/\" + os.urandom(6).hex()", "sys.intern(\"styxx.protocol\")")],
+    note="the bare name, interned so that every loaded copy holds the same name object (v5e's adoption by name)")
 row("A_unwind_off_ungated", "events changed on an id that lost its name (`_unwind_off` without the name gate)", "deletion",
     "X137-free", "as stated", "differs",
     [("                    _map(set_events, _compress(_compress((t,), _map(_is, _map(get_tool, (t,)), _NAME1)),\n                                               _map(_not, (_ANCHORS,))), _ZERO1)))",
@@ -290,9 +291,10 @@ row("A_unwind_offset", "unwind-offset check deleted", "deletion", "X135", "as st
     [("if p is not None and p[0] is f and offset != p[1]: _publish(code, p[2])", "if p is not None and p[0] is f: _publish(code, p[2])")])
 row("A_py_throw_credited", "PY_THROW credited (an entry event)", "scope", "X119", "NOT_EXERCISED", "credited",
     [("_EVENTS5 = (PY_START, PY_RESUME, PY_RETURN, PY_YIELD, PY_UNWIND)", "_EVENTS5 = (PY_START, PY_RESUME, PY_RETURN, PY_YIELD, PY_UNWIND, 8192)"),
-     ("_LOCAL = PY_START | PY_RESUME | PY_RETURN | PY_YIELD ", "_LOCAL = PY_START | PY_RESUME | PY_RETURN | PY_YIELD | 8192"),
+     ("\n             _PYU1)))\n", "\n             ((PY_UNWIND | 8192),))))\n"),
      ("_CALLBACKS5 = (_on_entry, _on_entry, _on_exit, _on_exit, _on_unwind)", "_CALLBACKS5 = (_on_entry, _on_entry, _on_exit, _on_exit, _on_unwind, _on_entry)"),
-     ("_map(get_tool, _repeat(t, 5))", "_map(get_tool, _repeat(t, 6))")])
+     ("_map(get_tool, _repeat(t, 5))", "_map(get_tool, _repeat(t, 6))")],
+    note="PY_THROW is not a legal local event (set_local_events refuses it), so the mutant sets it globally with PY_UNWIND, per section")
 row("A_publish_recheck", "credit re-check at publication deleted", "deletion", "v5e:X71", "as stated", "credited",
     [("    for h, kind, x in out:\n        if k in h.by_code:", "    for h, kind, x in out:\n        if True:")])
 row("A_one_opening_per_tracer", "exactly-one-opening-per-tracer", "conditions", "v5e:X70", "ambiguous", "credited",
@@ -314,8 +316,8 @@ row("A_section_norm", "section normalization", "deletion", "V39", "PASS", "diffe
 row("A_nonstr_refusal", "non-str refusal", "types", "X78f", "UNDECLARED_SECTION", "differs",
     [("        if issubclass(type(section), str):\n            section = str.__str__(section)", "        if True:\n            pass")])
 row("A_open_problem_recorded", "recording open-time refusals", "deletion", "X76", "problem recorded", "not recorded",
-    [("               f\"(declared: {list(core.sections)})\")\n        core.problems.append(txt)\n        raise GateSpecError(txt)\n    loop",
-      "               f\"(declared: {list(core.sections)})\")\n        raise GateSpecError(txt)\n    loop")], note="also X78-X79, X32")
+    [("            core.problems.append(txt)\n            raise GateSpecError(txt)\n        g = g.f_back",
+      "            raise GateSpecError(txt)\n        g = g.f_back")], note="the NESTED_SECTION refusal's record; also X78-X79, X32")
 # the refusal codes of the machinery
 row("A_monitor_busy", "MONITOR_BUSY", "deletion", "X36", "MONITOR_BUSY", "differs",
     [("    raise GateSpecError(\n        \"[V5:MONITOR_BUSY]", "    return\n    raise GateSpecError(\n        \"[V5:MONITOR_BUSY]")])

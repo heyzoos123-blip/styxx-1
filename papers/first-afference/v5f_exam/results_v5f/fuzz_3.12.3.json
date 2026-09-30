@@ -1,0 +1,18 @@
+{
+ "impl": "ref_v5f.py",
+ "python": "3.12.3",
+ "n": 300,
+ "equality_diffs": [],
+ "envelope_violations": [],
+ "crashes": [],
+ "seconds": 73.4,
+ "verdict": "PASS",
+ "mutant_checks_3.12.3_n100": {
+  "mut_h8_publish_at_entry": "PASS (not seen)",
+  "mut_clone_by_referrers": "FAIL (31 programs)",
+  "M2_no_reconciliation": "PASS (not seen)",
+  "mut_no_unwind_on_in_commit": "FAIL (79 programs)",
+  "mut_notes_order": "PASS (not seen)",
+  "mut_freeze_ne": "PASS (not seen)"
+ }
+}

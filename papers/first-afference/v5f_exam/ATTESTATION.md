@@ -233,5 +233,37 @@ Every changed case and every weakening was written from the rows' own words.
 `mut_h9_x3_in_lock` (the `for` form) is retired as equivalent (revision 12, GAP-49); `mut_h9_while_in_lock` hangs X140 at `_exit@422` (3.12.3) and `_exit@436` (3.13.12).
 `rules_v5f.json` (revision 12, `tools/reconcile12.py`): 2,556 atoms; 1,098 P/D/C; 1,080 with a checkable witness, 18 reading, 0 without a witness.
 
-Signed: the v5f exam author (Claude Code subagent), 2026-09-29.
+
+## Frozen-artifact phase (2026-09-30)
+
+The artifacts this phase adds, each written from the design text only: `linecov_v5f.py`, `cover_driver_v5f.py`,
+`refcensus_v5f.py`, `crash_sweep_v5f.py`, `sigflood_v5f.py`, `fuzz_v5f.py`, `weakenings_v5f.py`, `sm1_result.json`,
+`opmut_v5f.py`, `diffprobe_v5f.py`, `corpus_v5f/` with `manifest.json`, `controls_v5f.py`, `atom_v5f.py`, and their
+results under `results_v5f/`.
+
+### What I read for this phase
+1. The design text `DESIGN_protocol_v5f_DRAFT_2026_09_25.md`: "The semantic-mutation gate (G_SEM)" in full (Frozen
+   artifacts, SM1, SM2, SM3, Positive controls); "Companion gates" in full (G_FI with C1-C9, G_SIG, G_HYG with its
+   step clauses and controls, G_REF, G_COVER, G_ATOM); the "Mutation audit" table; M1 (the module-state block and the
+   reload list), M7 ("One-call steps", "The registration"), M10 (the introspection interface and the G_ATOM interface),
+   M11's spec-fixed texts and NESTED_SECTION's paragraph; the X140 row; the harness rules on settrace and LINE tools;
+   the "What the exam may read" paragraph.
+2. The v5e design text (read in full earlier), for the v5e case rows the audit table names (X45, X71).
+3. My own artifacts: `ref_v5f.py`, `run_protocol_v5f_exam.py`, `v5e_port.py`, `tools/mutants_v5f.py`,
+   `tools/runner_mutants_v5f.py`, `SPEC_GAPS.md`, and the scripts listed above.
+4. Spec data, unchanged from earlier sections, only through the runner.
+
+### What I did not read for this phase
+- the critiques, `protocol_v5f_design_panel.json`, and every prototype (`crashcons/`, `monitor/`, `narrow/`), including
+  the prototypes the text names as sources of frozen artifacts (`fault_injection_v5.py`, `t_crash_sweep.py`,
+  `rev5/t1_onecall_atomic.py`, `rev6/t1d2_discriminating.py`, `rev8/atom8.py`, `rev8/steps8.py`, `rev8/hyg8.py`);
+- v5e's implementation `styxx/protocol.py`, `protocol_v5_redteam/` (the census mutants, `semantic_mutation_census.json`,
+  the round 1-4 repros), `mutation_gate_blindspots.json`;
+- every probe script and output under `protocol_v5f_design/` (`rev*/p_*.py`, `out_*`, `build_*`), and anything else
+  there outside the spec-data directories named in earlier sections.
+
+Where a frozen artifact is defined by one of those files, the gap is recorded (GAP-51 to GAP-63) and the artifact
+is written from the text's own words.
+
+Signed: the v5f exam author (Claude Code subagent), 2026-09-30.
 

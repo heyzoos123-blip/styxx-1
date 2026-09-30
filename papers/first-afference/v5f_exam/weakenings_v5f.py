@@ -333,6 +333,73 @@ row("A_trace_active", "TRACE_ACTIVE", "deletion", "X90/X91", "TRACE_ACTIVE", "di
 row("A_trace_incomplete", "TRACE_INCOMPLETE", "deletion", "v5e:X92", "TRACE_INCOMPLETE", "differs",
     [("            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):", "            if False:")], note="also X133, V52")
 
+# scoring: sections and problems
+def _between(a, b):
+    i = REF.index(a)
+    return REF[i:REF.index(b, i + 1)]
+_STALE = _between('        if tr["gates_sha256"] != self.gates_sha256:', '        if sorted(tr["targets"]) != self.coverage_targets:')
+_TSET = _between('        if sorted(tr["targets"]) != self.coverage_targets:', '        declared = set(self.coverage_targets)')
+_SHAPE = "        _check_trace_shape(name, tr)\n"
+_COUNT = _between('        declared = set(self.coverage_targets)', '        problems = tr["problems"]')
+_PROB = _between('        problems = tr["problems"]', '        openings = tr["sections"].get(c["section"])')
+_ABS = _between('        openings = tr["sections"].get(c["section"])', '        union: dict = {}')
+row("A_union_all_sections", "union over the declared section only (over every section instead)", "scope", "X120",
+    "NOT_EXERCISED", "PASS",
+    [("        for o in openings:\n            for t, n in o[\"calls\"].items():",
+      "        for o in [p for ps in tr[\"sections\"].values() for p in ps]:\n            for t, n in o[\"calls\"].items():")],
+    note="also V41")
+row("A_section_by_gate_name", "declared section, not gate name", "comparisons", "V43", "PASS", "SECTION_ABSENT",
+    [("        openings = tr[\"sections\"].get(c[\"section\"])", "        openings = tr[\"sections\"].get(name)")],
+    note="also V42, X121, X78g")
+row("A_score_ignores_problems", "score reads problems", "deletion", "X55", "CLONE_CALLED", "differs",
+    [("        if problems:\n            first = _CODE_RE", "        if False:\n            first = _CODE_RE")], note="also X56-X59")
+# scoring: exact types before any hash or compare
+row("A_sha_type", "exact type before hash in BAD_TRACE (`gates_sha256`)", "types", "X96d", "BAD_TRACE", "differs",
+    [("    if type(tr[\"gates_sha256\"]) is not str:\n        raise", "    if False:\n        raise")])
+row("A_tracer_type", "exact type before compare in WRONG_TRACER (tracer)", "types", "X96d", "WRONG_TRACER", "differs",
+    [("        if type(tid) is not str or tid != _TRACER_ID:", "        if tid != _TRACER_ID:")])
+row("A_trace_keys", "BAD_TRACE: the trace's exact key set", "deletion", "X96c", "BAD_TRACE", "differs",
+    [("    if set(tr) != _TRACE_KEYS:\n        raise", "    if False:\n        raise")])
+# scoring: step order (each adjacent pair the table names)
+row("A_order_stale_targetset", "score step order: STALE_TRACE / TARGET_SET swapped", "order", "X109b", "STALE_TRACE", "TARGET_SET",
+    [(_STALE + _TSET, _TSET + _STALE)])
+row("A_order_count_problem", "score step order: BAD_COUNT / recorded problem swapped", "order", "X112b", "BAD_COUNT", "UNDECLARED_SECTION",
+    [(_COUNT + _PROB, _PROB + _COUNT)])
+row("A_order_shape_stale", "score step order: BAD_TRACE / STALE_TRACE swapped", "order", "X96c", "BAD_TRACE", "KeyError",
+    [(_SHAPE + _STALE, _STALE + _SHAPE)])
+row("A_order_problem_absent", "score step order: recorded problem / SECTION_ABSENT swapped", "order", "X78e", "UNDECLARED_SECTION",
+    "SECTION_ABSENT", [(_PROB + _ABS, _ABS + _PROB)])
+row("A_order_bar_coverage", "score step order: the bar before coverage (a failing bar skips the coverage check)", "order", "X122",
+    "NOT_EXERCISED", "a verdict", [("            if name in self.coverage:\n                covered[name]",
+                                   "            if name in self.coverage and op(_v, g[\"value\"]):\n                covered[name]")])
+# scoring: NO_TRACE, check_metrics, texts
+row("A_notrace_exact_dict", "NO_TRACE dict-subclass rule (an exact dict required of the result)", "types", "V53", "PASS", "NO_TRACE",
+    [("        if not issubclass(type(result), dict):\n            raise GateSpecError(\n                f\"[V5:NO_TRACE]",
+      "        if type(result) is not dict:\n            raise GateSpecError(\n                f\"[V5:NO_TRACE]")])
+row("A_notrace_split", "NO_TRACE split text (the third wording merged into the second)", "conditions", "X93d", "NO_TRACE third wording",
+    "second wording", [("        if tr is _MISSING:\n", "        if tr is _MISSING or type(tr) is not dict:\n")])
+row("A_cm_overflow", "check_metrics overflow (`_finite` without its OverflowError catch)", "deletion", "X117b",
+    "REPORTED", "OverflowError", [("    except OverflowError:\n        return False", "    except ZeroDivisionError:\n        return False")])
+row("A_cm_smoke_exact", "check_metrics smoke exact type", "types", "X117c", "__bool__ never called", "called",
+    [("        smoke = (ts is bool or ts is int or ts is float or ts is str) and bool(s)", "        smoke = bool(s)")])
+row("A_cm_smoke_note", "check_metrics smoke note (the refusal's code no longer leads)", "constants", "X117d", "[V5:NOT_EXERCISED] first",
+    "differs", [("                    note = str(e) + \" (smoke run", "                    note = \"smoke run: \" + str(e) + \" (smoke run")])
+row("A_bucket_labels", "NOT_EXERCISED bucket labels (swapped)", "constants", "X72b", "dispatched {f:2}", "differs",
+    [("f\"dispatched {disp}, unattributed {unat}", "f\"dispatched {unat}, unattributed {disp}")])
+row("A_lazy_text", "LAZY_RESULT text (the not-started suffix dropped)", "constants", "X74d", "suffix present", "absent",
+    [("(\" (its body had not started)\" if fresh else \"\")", "\"\"")], note="also X74-X74c")
+row("A_nested_text", "NESTED_SECTION text (the same-section wording)", "constants", "X76b", "the spec-fixed text", "differs",
+    [("f\"opening of the same section of the same trace -- a call there", "f\"opening of the same trace -- a call there")])
+row("A_section_decl_empty", "SECTION_DECL non-empty", "conditions", "X07b / X07c", "SECTION_DECL", "differs",
+    [("            if not isinstance(sec, str) or not sec or not sec.isascii():", "            if not isinstance(sec, str) or not sec.isascii():")])
+row("A_section_decl_ascii", "SECTION_DECL ASCII", "conditions", "X07b / X07c", "SECTION_DECL", "differs",
+    [("            if not isinstance(sec, str) or not sec or not sec.isascii():", "            if not isinstance(sec, str) or not sec:")])
+row("A_retired_note", "BAD_TRACE: a retired note code accepted (PROFILER_LOST)", "constants", "X105d", "BAD_TRACE", "differs",
+    [("_NOTE_CODES = frozenset({\"OPEN_AT_EXIT\", \"LAZY_RESULT\", \"MONITOR_LOST\"})",
+      "_NOTE_CODES = frozenset({\"OPEN_AT_EXIT\", \"LAZY_RESULT\", \"MONITOR_LOST\", \"PROFILER_LOST\"})")])
+row("A_bad_count_zero", "BAD_COUNT: counts >= 1 (0 accepted)", "comparisons", "X112b", "BAD_COUNT", "differs",
+    [("                if t not in declared or type(n) is not int or n < 1:", "                if t not in declared or type(n) is not int or n < 0:")])
+
 # ---------------------------------------------------------------------------------------------------
 # SM1
 # ---------------------------------------------------------------------------------------------------

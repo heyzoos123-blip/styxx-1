@@ -1,0 +1,258 @@
+{
+ "impl": "ref_v5f.py",
+ "build": {
+  "sys.version": "3.12.3 (main, Mar  3 2026, 12:15:18) [GCC 13.3.0]",
+  "python_build": [
+   "main",
+   "Mar  3 2026 12:15:18"
+  ],
+  "python_compiler": "GCC 13.3.0"
+ },
+ "matrix": {
+  "cases": 67,
+  "failed": {},
+  "slots": {
+   "armed": true,
+   "core": true,
+   "frame": true,
+   "_Core.flags": true
+  }
+ },
+ "K1-K3": {
+  "K1": {
+   "detected": true,
+   "by": [
+    "(b) PY_START inside: [('_pp_set_events', True)]",
+    "(b) audit events inside: ['object.__getattr__']"
+   ]
+  },
+  "K2": {
+   "detected": true,
+   "by": [
+    "(b) PY_START inside: [('G.__getattribute__', True)]"
+   ]
+  },
+  "K3": {
+   "detected": true,
+   "by": [
+    "(b) audit events inside: ['sys._getframe']"
+   ]
+  }
+ },
+ "part_A": {
+  "rows": {
+   "clear_one/INSTRUCTION": {
+    "trials": 43,
+    "violations": 0
+   },
+   "clear_one/CALL+C_RETURN": {
+    "trials": 18,
+    "violations": 0
+   },
+   "clear_one/BRANCH": {
+    "trials": 0,
+    "violations": 0
+   },
+   "clear_one/setprofile": {
+    "trials": 4,
+    "violations": 0
+   },
+   "clear_one/opcode": {
+    "trials": 52,
+    "violations": 0
+   },
+   "clear_two/INSTRUCTION": {
+    "trials": 28,
+    "violations": 5
+   },
+   "clear_two/CALL+C_RETURN": {
+    "trials": 6,
+    "violations": 1
+   },
+   "clear_two/BRANCH": {
+    "trials": 2,
+    "violations": 1
+   },
+   "clear_two/setprofile": {
+    "trials": 8,
+    "violations": 1
+   },
+   "clear_two/opcode": {
+    "trials": 33,
+    "violations": 6
+   }
+  },
+  "floors": {
+   "INSTRUCTION": 40,
+   "CALL+C_RETURN": 25,
+   "setprofile": 3,
+   "opcode": 40
+  },
+  "pass": false,
+  "BRANCH": "reported, not evidence"
+ },
+ "part_B": {
+  "c_calls": [
+   "deque.extend"
+  ],
+  "pass": true
+ },
+ "part_E": {
+  "one_call": {
+   "form": "clear_one",
+   "samples": 50148,
+   "clear": 0,
+   "seconds": 0.64
+  },
+  "control": {
+   "form": "clear_two",
+   "samples": 50140,
+   "clear": 0,
+   "seconds": 0.85
+  },
+  "pass": false
+ },
+ "part_D2": {
+  "one_call": {
+   "form": "clear_one",
+   "closes": 5000,
+   "interrupts": 12254,
+   "violations": 0,
+   "seconds": 0.89
+  },
+  "python_call_control": {
+   "form": "clear_pycall",
+   "closes": 12,
+   "interrupts": 23,
+   "violations": 1,
+   "seconds": 0.0
+  },
+  "two_statement_reported": {
+   "form": "clear_two",
+   "closes": 5000,
+   "interrupts": 8137,
+   "violations": 0,
+   "seconds": 0.28
+  },
+  "pass": true
+ },
+ "part_R": {
+  "steps": {
+   "_unwind_off": {
+    "n0": 4998,
+    "full": 31,
+    "none": 30,
+    "partial": 0,
+    "bad": 0
+   },
+   "_unwind_on": {
+    "n0": 4998,
+    "full": 31,
+    "none": 30,
+    "partial": 0,
+    "bad": 0
+   },
+   "_take": {
+    "n0": 4998,
+    "full": 31,
+    "none": 30,
+    "partial": 0,
+    "bad": 0
+   },
+   "_set_local": {
+    "n0": 4998,
+    "full": 31,
+    "none": 30,
+    "partial": 0,
+    "bad": 0
+   },
+   "K7:_unwind_off": {
+    "n0": 4998,
+    "full": 31,
+    "none": 29,
+    "partial": 1,
+    "bad": 1,
+    "detected": true
+   }
+  },
+  "pass": true
+ },
+ "hookup": {
+  "K4": {
+   "failed_cases": "all (the run did not complete)",
+   "error": [
+    "ref_v5f.GateSpecError: [V5:MONITOR_BUSY] sys.monitoring tool ids 4 and 3 are both held by other tools (or by another loaded copy of styxx.protocol): styxx cannot trace alongside them"
+   ],
+   "gated": true,
+   "detected": true
+  },
+  "K5": {
+   "failed_cases": 24,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K6": {
+   "failed_cases": 24,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K7": {
+   "failed_cases": 24,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K8": {
+   "failed_cases": 3,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K9": {
+   "failed_cases": 3,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K10": {
+   "failed_cases": 12,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K11": {
+   "failed_cases": 12,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K13": {
+   "failed_cases": 2,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K14": {
+   "failed_cases": 1,
+   "slots_ok": true,
+   "gated": true,
+   "detected": true
+  },
+  "K12": {
+   "failed_cases": 0,
+   "slots_ok": true,
+   "gated": false,
+   "detected": false
+  },
+  "K12b": {
+   "failed_cases": 0,
+   "slots_ok": true,
+   "gated": false,
+   "detected": false
+  }
+ },
+ "G_ATOM": "FAIL",
+ "seconds": 9.0
+}

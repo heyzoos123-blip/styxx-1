@@ -729,6 +729,13 @@ Readings the text does not fix, and inputs outside the exam author's read scope.
 | GAP-54 | D1's M3 ("register before append") and M5 ("exit claim not idempotent"), re-targeted, are not caught by C5 on `ref_v5f.py` | **yes** (UNWITNESSED rows need a witness or a signed EQUIVALENT_BY_SPEC argument before the freeze) |
 | GAP-55 | `corpus_v5f/` must hold the round 1-4 repros from `protocol_v5_redteam/`, outside the read scope | **yes** (the corpus is incomplete without them) |
 | GAP-56 | G_SIG names its measured quantities and the three L-DELIVERY cells, but not its other cells | **yes** (the frozen harness's cell list is the exam author's reading) |
+| GAP-57 | the corpus's crash-sweep points are (key, offset, k) triples of one implementation's code; the text does not say how instrument (d) runs them on another implementation or on a mutant | **yes** (instrument (d) does not probe them) |
+| GAP-58 | SM2's O12 "tuple rebuild -> in-place mutation": a tuple cannot be mutated in place, and the text gives no form | **yes** (the immutability family has no applied mutant, and SM2's gate needs one per family) |
+| GAP-59 | G_ATOM's parts A and E are frozen from prototype files outside the read scope; on the exam author's reading, part A's CALL+C_RETURN floor (25) is out of reach and part E's control finds nothing | **yes** (G_ATOM fails on `ref_v5f.py`) |
+| GAP-60 | G_ATOM's hookup control K4: revision 5's `_register` returns no owner element, so the patched copy's first enter refuses MONITOR_BUSY and the matrix cannot run | no (the run fails, as a hookup control must; the text's "12 of 67" cannot be reproduced) |
+| GAP-61 | SM1: 14 admitted-on-condition-2 rows are UNWITNESSED on 3.12.3 (their named witness passes under the weakening) | **yes** (each needs a witness or a signed EQUIVALENT_BY_SPEC argument before the freeze) |
+| GAP-62 | SM1's "one weakening per operator family below, inside each rule-tagged region of `ref_v5f.py`": the text does not define a rule-tagged region | **yes** (those rows are not written) |
+| GAP-63 | `traces_v5f/` holds the prebuilt traces "for the scoring-only cases"; the text does not list those cases | no (the runner's scoring-only cases read three traces, all present and regenerated identical except for fixture paths) |
 
 **GAP-50. What is a mutable site?**
 - *What the text says.* G_SEM, SM2 gate: "G_REF: 100% of O13 mutants KILLED, and the literal census finds 0 coded literals outside a mutable site." O13 is an SM2 operator, and SM2 applies its operators inside the Region (the `_v5_faultpoints()` functions, the five scoring functions, and the M1 binding statements).
@@ -750,7 +757,7 @@ Readings the text does not fix, and inputs outside the exam author's read scope.
 **GAP-53. SM1 content and positive controls outside the read scope.**
 - *What the text says.* SM1's required content includes "all 63 round-4 census mutants (`protocol_v5_redteam/round4_exam_mutation/mutants.py`)" (15 retired, 1 adopted, 47 re-targeted, by id) and "the 29 round-4 exam-hole kill shapes, each as a row". Positive control #1 runs SM1's machinery "on v5e's frozen exam with the 63 census mutants applied to v5e unchanged" and compares with `semantic_mutation_census.json`; control #2 runs SM2's generator on v5e.
 - *The problem.* The census mutants, the census result, the kill shapes' mutant definitions and v5e's implementation are outside the exam author's read scope, and controls #1 and #2 execute v5e's implementation.
-- *In the artifacts.* `weakenings_v5f.py` holds the rows the exam author could write from the text (59 at this commit; the Mutation-audit rows are being added). The 47 re-targeted census rows and the 29 kill-shape rows are not written. `controls_v5f.py` will state controls #1 and #2 as not runnable under this gap.
+- *In the artifacts.* `weakenings_v5f.py` holds the rows the exam author could write from the text (205 rows at this commit, the Mutation-audit table's included). The 47 re-targeted census rows and the 29 kill-shape rows are not written. `controls_v5f.py` reports controls #1, #2, #3 and #4(a) as NOT_RUN under this gap (#3 and #4(a) also need v5e).
 - *Fix needed.* Declare those files spec data (as revision 11 did for the v5e cases), or restate the 47 re-targeted rules and the 29 shapes in the text.
 
 **GAP-54. D1's M3 and M5 against `ref_v5f.py`.**
@@ -761,9 +768,51 @@ Readings the text does not fix, and inputs outside the exam author's read scope.
 **GAP-55. The corpus's round 1-4 repros.**
 - *What the text says.* `corpus_v5f/` holds "the round 1-4 repros, rewritten by the exam author against the public API from `protocol_v5_redteam/round1_module/` through `round4/` and `round4/closure-audit/r1/held_battery.py`".
 - *The problem.* Those directories are outside the read scope.
-- *In the artifact.* The corpus will hold the exam cases, the fuzzer's programs and the crash-sweep points, and list this part as missing.
+- *In the artifact.* The corpus holds the exam cases (425), the fuzzer's programs (300) and the crash-sweep point sets (10); `manifest.json` lists this part as missing.
 
 **GAP-56. G_SIG's cells.**
 - *What the text says.* G_SIG requires "0 user-lock leaks, 0 hangs, 0 poison, 0 wrong results, and credited <= body runs", defines "wrong result" and poison, and fixes three L-DELIVERY cells; "every other G_SIG harness flow uses only with/finally for cleanup and checks results only on iterations in which no asynchronous exception was delivered". It does not list the other flows.
 - *In the artifact.* `sigflood_v5f.py` runs three cells for the named quantities (a `with lock:` loop, H8's credit shape, a result check) beside the three L-DELIVERY cells. That cell list is a reading.
+
+**GAP-57. The corpus's crash-sweep points under instrument (d).**
+- *What the text says.* `corpus_v5f/` holds "the crash sweep's points"; the manifest classes "every crash-sweep point" as `envelope`; G_FI says of the freeze-time point sets that "the implementation's code differs", so they are committed "as a record, not as the set G_FI uses".
+- *The problem.* A point is an offset in one implementation's code object. On the real implementation, and on each SM2 mutant of it, the recorded points name other instructions or none. The text does not say whether instrument (d) re-enumerates the points on the code under probe (which is instrument (b) at stride 1), maps them, or skips them.
+- *In the artifacts.* `corpus_v5f/crash/` records `ref_v5f.py`'s point sets on 3.12.3 (10 scenario/thread sets); `diffprobe_v5f.py` lists them as `not_probed` (GAP-57).
+
+**GAP-58. O12 on a tuple.**
+- *What the text says.* "immutability | O12 tuple rebuild -> in-place mutation"; SM2's gate needs "at least one applied mutant per family".
+- *The problem.* The Region's tuple rebuilds (`m.holders = m.holders + (core,)`, `tuple([h for h in m.holders if h is not core])`) produce tuples, which have no in-place mutation. A mutant needs a representation change (a list) that the text does not give.
+- *In the artifact.* `opmut_v5f.py` generates no O12 mutant and reports the family as having none.
+
+**GAP-59. G_ATOM's parts A and E.**
+- *What the text says.* Parts A, B and E are `rev5/t1_onecall_atomic.py`'s, D2 is `rev6/t1d2_discriminating.py`'s, "frozen with G_ATOM", with floors: part A at least 40 / 25 / 3 / 40 trials under INSTRUCTION, CALL+C_RETURN, `setprofile` and opcode tracing, each two-statement control at least 1 violation; part E's two-statement control must find the event clear before 50,000 samples.
+- *The problem.* The reference pipelines and the part-E harness are defined by those files, outside the read scope. `atom_v5f.py` builds them from the text (a clearing function shaped as M7 writes `_unwind_off`, an opener shaped as `_unwind_on`, 4 threads, a profiler that waits 10 us at each C call of the close path).
+- *What happens (both versions).* The 67-case matrix passes, K1-K14 come out exactly as the text's "Result on the prototype" states (K5-K7 24, K8 3, K9 3, K10 12, K11 12, K13 2, K14 1, K12 and K12b 0), parts B, D2 and R pass (part R: n0 = 4,998, 31 full and 30 none per step, K7 one partial trial). Part A's one-call clearing function fires 18 CALL+C_RETURN events (its pipeline makes 9 calls), under the floor of 25; the other three floors are met and every control violates. Part E's one-call form reaches 50,000 samples with none clear, but its two-statement control also finds none on either version (1 in 3 trials on 3.12.3 with `sys.setswitchinterval(1e-5)`). So G_ATOM is FAIL on `ref_v5f.py` under this reading.
+- *Fix needed.* Give the part A clearing function and the part E harness in the text (or declare the two files spec data).
+
+**GAP-60. K4 and the binding enter.**
+- *What the text says.* K4 (revision 5's `_register`: one name gate, no owner read, no count) "fails all `_register` cases (12 of revision 8's)"; G_ATOM binds the machinery with "one `with coverage_trace(EXP): pass`".
+- *What happens.* With K4's patch, `_ensure_tool` never sees its name as the registration's owner, so that first enter refuses MONITOR_BUSY; the matrix cannot run, and the run fails. It fails as a hookup control must, but not in the way the text counts.
+
+**GAP-61. SM1 rows whose named witness does not see the weakening (3.12.3).**
+- *What the text says.* A row failing admission condition 3 is UNWITNESSED; before the freeze the exam author writes a witness or files it EQUIVALENT_BY_SPEC with an argument signed by a reviewer who is neither the exam author nor the implementer.
+- *The rows, with what the exam author observed (not an equivalence argument):*
+  - `A_coh_no_file_skip` (X26e), `A_cache_callee_identity` (X24c), `A_alias_by_name` (X24d): an earlier refusal in the resolution order gives the same code first (the module `__file__` rule; the bound-body check);
+  - `A_mint_eq` ("`is` vs `==`", v5e:X45): local events are set only on the minted code and the mint is found by `id(code)`, so an equal copy never reaches a callback;
+  - `A_visible_deleted` (X58b): X58b's clone is refused by CLONE_ALIVE's function-referrer clause before the freeze clause; deleting the visible accounting only adds refusals;
+  - `A_publish_recheck` (X71): X71's call starts after the credit stop, so no pending entry crosses the exit (a landing trial such as X71c's would cross it);
+  - `A_enter_claim` (X32d): no switch landed between the test and the store in 50 barrier repetitions;
+  - `A_exit_claim` (V52; also GAP-54's M5): a second exit re-runs X2-X8 with nothing held;
+  - `A_atfork_handler`, `A_pid_passthrough` (V47): the children's state is not observed from the parent;
+  - `A_unwind_on_recheck` (X143), `A_detach_anchor_first` (X148), `A_capture_outside` (X153), `A_ensure_no_reclaim` (X137e): the named sweep or case gives its stated outcome under the weakening.
+- *In the artifact.* `sm1_result.json` lists them per version. The 3.13.12 list and the crash-sweep rows are in that file.
+
+**GAP-62. "Each rule-tagged region of `ref_v5f.py`."**
+- *What the text says.* SM1's required content includes "one weakening per operator family below, inside each rule-tagged region of `ref_v5f.py`".
+- *The problem.* Neither the text nor `rules_v5f.json` defines a region tag in `ref_v5f.py`; the rule atoms cite sections, not code spans.
+- *In the artifact.* No such rows are written; `opmut_v5f.py` can generate every operator site on `ref_v5f.py`, but choosing one per family per region needs the region definition and a named witness per row.
+
+**GAP-63. The scoring-only cases' traces.**
+- *What the text says.* "`traces_v5f/`. The prebuilt `/3` traces for the scoring-only cases, generated by `ref_v5f.py` on 3.12.3 at freeze time."
+- *In the artifact.* The runner's scoring-only set (the cases run on every interpreter) reads three traces, F, X112B and X122; all three are present, and regenerating them from the current `ref_v5f.py` on 3.12.3 changes only the fixtures' temporary paths in `targets`. That set is the runner's reading of "scoring-only".
 

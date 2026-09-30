@@ -595,10 +595,11 @@ def part_a():
                     st["n"] += 1
                 if inst in ("INSTRUCTION", "CALL+C_RETURN", "BRANCH"):
                     MON.use_tool_id(1, "atom-parta") if MON.get_tool(1) is None else None
-                    evs = {"INSTRUCTION": EV.INSTRUCTION, "CALL+C_RETURN": EV.CALL | EV.C_RETURN,
+                    evs = {"INSTRUCTION": EV.INSTRUCTION, "CALL+C_RETURN": EV.CALL | EV.C_RETURN | EV.C_RAISE,
                            "BRANCH": EV.BRANCH}[inst]
                     for e in (EV.INSTRUCTION, EV.CALL, EV.C_RETURN, EV.BRANCH):
                         MON.register_callback(1, e, (lambda *a: hit()) if e & evs else None)
+                    MON.register_callback(1, EV.C_RAISE, None)          # set with C_RETURN, never counted
                     MON.set_local_events(1, code, evs)
                     fn(k0)
                     MON.set_local_events(1, code, 0)
@@ -617,6 +618,8 @@ def part_a():
                     def glob(frame, event, arg):
                         if frame.f_code is code:
                             frame.f_trace_opcodes = True
+                            frame.f_trace = local
+                            sys.settrace(glob)          # 3.12.3 applies f_trace_opcodes only on re-instrumentation
                             return local
                         return None
                     sys.settrace(glob)
@@ -661,7 +664,7 @@ def part_e(form, floor=50000, until_first=False):
 
     def prof(frame, event, arg):
         if event == "c_call" and frame.f_code is ccode:
-            time.sleep(0)
+            time.sleep(0.00001)                              # a real wait, so another thread takes the GIL
 
     def worker():
         sys.setprofile(prof)
@@ -797,8 +800,8 @@ def r_setups(fn_name, fn):
         f, z = all(full()), all(none())
         out = "full" if f else ("none" if z else "partial")
         P._ANCHORS.clear()
-        MON.set_local_events(t, code, 0)
         give_back(t)
+        MON.set_local_events(t, code, 0)
         return raised, out
     return trial
 

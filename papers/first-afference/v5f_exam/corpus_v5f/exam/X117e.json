@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X117e",
+ "row": "rev. 10 (R9-5): check_metrics on counting dict subclasses, path a.b present (0.5) / b absent -> present+usable / not present; counter 0",
+ "placement": "self-trace"
+}

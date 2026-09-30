@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X78f",
+ "row": "cov.run(5, f) swallowed; variant (rev. 10) counting __eq__/__hash__/__repr__/__str__/__format__ and the metaclass's __qualname__/__name__ reads -> UNDECLARED_SECTION, counters 0",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V50",
+ "row": "coverage.py 7.16, sysmon core and ctrace core, running across the section -> {f:1}; coverage records the minted function's lines",
+ "placement": "self-trace"
+}

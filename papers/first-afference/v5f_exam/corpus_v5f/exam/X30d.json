@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X30d",
+ "row": "a __wrapped__ link whose class defines a Python __dict__ property, no accepting link before it -> FOREIGN_DEFINITION; the property counter 0",
+ "placement": "self-trace"
+}

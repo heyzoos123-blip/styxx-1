@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H6",
+ "row": "the no-hang fault sweep (G_FI's deterministic core, single-thread scenario): the id-5 injector raises at each executed instruction of every _v5_faultpoints() code, one point per run (k <= 2) -> every point clean: C1, C2, C3, C5, C6, C7, C8",
+ "placement": "main"
+}

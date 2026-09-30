@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X117d",
+ "row": "a smoke result carrying a trace that refuses NOT_EXERCISED -> the check_metrics note starts with [V5:NOT_EXERCISED]",
+ "placement": "self-trace"
+}

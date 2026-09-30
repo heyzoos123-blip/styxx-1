@@ -1,0 +1,38 @@
+{
+ "kind": "fuzz",
+ "seed": 26,
+ "program": {
+  "seed": 26,
+  "gates": [
+   {
+    "B": {
+     "exercises": [
+      "fz:b"
+     ],
+     "section": "A"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "async_section",
+    "section": "A",
+    "ops": [
+     "swap_keep",
+     "gen_close"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "call_c",
+     "call_r"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

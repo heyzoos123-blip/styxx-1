@@ -1,0 +1,72 @@
+{
+ "kind": "fuzz",
+ "seed": 100,
+ "program": {
+  "seed": 100,
+  "gates": [
+   {
+    "B": {
+     "exercises": [
+      "fz:gen"
+     ],
+     "section": "S"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "S",
+    "ops": [
+     "call_b"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "S",
+    "ops": [
+     "gen_throw",
+     "call_r"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "S",
+    "ops": [
+     "call_r",
+     "hop"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "async_section",
+    "section": "S",
+    "ops": [
+     "gen_close",
+     "clone_same"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "call_c"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "call_r",
+     "call_c"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X07b / X07c",
+ "row": "section '' / 's\u0435ction' (Cyrillic \u0435) -> SECTION_DECL",
+ "placement": "self-trace"
+}

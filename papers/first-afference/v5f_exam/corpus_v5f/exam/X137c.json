@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137c",
+ "row": "inside G: f, then set_events(tool, 0), then t raises and is caught -> NOT_EXERCISED for t, MONITOR_LOST",
+ "placement": "main"
+}

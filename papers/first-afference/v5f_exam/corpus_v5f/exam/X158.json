@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X158",
+ "row": "fresh subprocess: P and Q on f; after P's A, an outside party replaces styxx's PY_START callback; Q's B; variants (a) P exits first, (b) Q first -> P PASS {f:1} with MONITOR_LOST; Q NOT_EXERCISED with MONITOR_LOST; styxx's callback repaired; tool_ours True",
+ "placement": "subprocess"
+}

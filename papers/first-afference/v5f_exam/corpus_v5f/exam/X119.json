@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X119",
+ "row": "generator: dropped unstarted; close() unstarted; throw() into unstarted; primed outside, closed at a yield inside -> NOT_EXERCISED",
+ "placement": "self-trace"
+}

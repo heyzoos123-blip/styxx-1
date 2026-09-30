@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X73",
+ "row": "X73 (kept; Violation cases (expected code)): v5f outcome NOT_EXERCISED; sub-assertions: as v5e, except the fixed-sentence substring: the refusal contains v5f's NOT_EXERCISED sentence (M11, Spec-fixed texts) in place of v5e's FIXED_SENTENCE; NE_WORDING 'not executed on the stack of any opening of section' and the forbidden 'never executed' are unchanged (revision 12, GAP-46)",
+ "placement": "self-trace"
+}

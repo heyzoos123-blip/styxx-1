@@ -1,0 +1,55 @@
+{
+ "kind": "fuzz",
+ "seed": 37,
+ "program": {
+  "seed": 37,
+  "gates": [
+   {
+    "C": {
+     "exercises": [
+      "fz:c"
+     ],
+     "section": "A"
+    }
+   },
+   {
+    "C": {
+     "exercises": [
+      "fz:c",
+      "fz:r"
+     ],
+     "section": "A"
+    }
+   },
+   {
+    "B": {
+     "exercises": [
+      "fz:a"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 2,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "swap_restore",
+     "swap_keep",
+     "gen_close"
+    ]
+   },
+   {
+    "tracer": 2,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "freeze"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

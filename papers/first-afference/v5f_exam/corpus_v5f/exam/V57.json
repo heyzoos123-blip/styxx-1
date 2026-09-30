@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V57",
+ "row": "the case thread installs a pure-Python profiler on itself before entering; the section runs on a worker thread -> after exit sys.getprofile() on the case thread is that profiler; {f:1}",
+ "placement": "self-trace"
+}

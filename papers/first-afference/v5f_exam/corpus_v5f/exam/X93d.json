@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X93d",
+ "row": "trace loaded with object_pairs_hook=OrderedDict -> NO_TRACE, third wording, exactly \"'coverage_trace' is a OrderedDict, not an exact dict (e.g. loaded with object_pairs_hook)\"",
+ "placement": "self-trace"
+}

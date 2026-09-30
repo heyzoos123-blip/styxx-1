@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X158e",
+ "row": "fresh subprocess: P and Q live across importlib.reload; R entered after it; P exits; S entered after that exit -> every trace PASS its one call; P, Q and R with MONITOR_LOST; S none",
+ "placement": "subprocess"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X16b",
+ "row": "a submodule whose __class__ is a ModuleType subclass, reached after the colon -> INSTANCE_PATH",
+ "placement": "self-trace"
+}

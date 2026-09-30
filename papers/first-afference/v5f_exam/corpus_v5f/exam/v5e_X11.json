@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X11",
+ "row": "X11 (kept; Violation cases (expected code)): v5f outcome UNRESOLVED",
+ "placement": "self-trace"
+}

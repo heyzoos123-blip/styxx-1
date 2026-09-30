@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X65g",
+ "row": "after __enter__, inside the running task and immediately before section A, Handle._run is rebound to W (restores, then runs the job); L._ready holds exactly the job; A calls L._run_once() -> dispatched {f:1}; no CUT_MOVED",
+ "placement": "main"
+}

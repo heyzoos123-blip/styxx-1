@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V35",
+ "row": "an eager child does await asyncio.sleep(0), then cov.run_async('B', ...) -> exact counts, PASS",
+ "placement": "self-trace"
+}

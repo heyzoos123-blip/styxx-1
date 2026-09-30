@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X154",
+ "row": "fresh subprocess per trial (revision 7, M4): four instruction sweeps (_unwind_on at the open of A, _unwind_off at its close, _set_local in the exit's _retire, _register in the exit's re-registration); the interference frees styxx's id, another tool takes it, registers None for styxx's five events (revision 12, GAP-40), a RAISE callback, global RAISE, local LINE on M_T -> every trial: global events exactly RAISE, local events on M_T exactly LINE, its RAISE callback its own, none of styxx's five callbacks on the id",
+ "placement": "subprocess"
+}

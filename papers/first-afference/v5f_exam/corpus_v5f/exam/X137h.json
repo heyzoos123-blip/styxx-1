@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137h",
+ "row": "fresh subprocess, revision 7 form with revision 12's empty sections (P, Q, S each open their section once, calling nothing): U takes id 4 (RAISE only), Q rebinds to 3, V takes id 3 inside R's A, t raises; U frees 4; S rebinds to 4 -> tool 4; P, Q, R NOT_EXERCISED with MONITOR_LOST; S NOT_EXERCISED, no MONITOR_LOST",
+ "placement": "subprocess"
+}

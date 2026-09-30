@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X131",
+ "row": "the id-5 injector raises Injected(Exception) at the first instruction of _provenance after its entry (RESUME) -> Injected from __enter__ (not a GateSpecError); nothing minted",
+ "placement": "main"
+}

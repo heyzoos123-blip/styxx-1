@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R24",
+ "row": "rev. 11 (GAP-36, W076); main thread before the self-trace: 300,000 lists, gc.freeze(); in section A a same-globals clone of M_T is made and called; gc.unfreeze(), lists deleted, gc.collect(), gc.freeze() (count not above its value at mint); clone kept through exit; gc.unfreeze() -> PASS {f:1}, no CLONE_ALIVE",
+ "placement": "main"
+}

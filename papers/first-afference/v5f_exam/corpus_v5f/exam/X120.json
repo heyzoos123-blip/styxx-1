@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X120",
+ "row": "gate A declares f, gate B declares g; cov.run('A', g) then cov.run('B', f) -> A: NOT_EXERCISED",
+ "placement": "self-trace"
+}

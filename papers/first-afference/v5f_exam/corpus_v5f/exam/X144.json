@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X144",
+ "row": "the id-3 tool raises Injected at the first return from _unwind_on in cov.run('A', f) -> Injected from run(); f not called; at once anchors 0, global_events 0; after exit A NOT_EXERCISED, end raised, no MONITOR_LOST; a later trace PASS {f:1}",
+ "placement": "main"
+}

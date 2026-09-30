@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X78e",
+ "row": "the harness swallows cov.run('G_typo', f) and never opens G's section -> UNDECLARED_SECTION (not SECTION_ABSENT)",
+ "placement": "self-trace"
+}

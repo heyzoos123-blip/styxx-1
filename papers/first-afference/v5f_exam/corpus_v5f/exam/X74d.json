@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X74d",
+ "row": "run(G, genfn): LAZY_RESULT note contains '...does not count (its body had not started)' -> NOT_EXERCISED",
+ "placement": "self-trace"
+}

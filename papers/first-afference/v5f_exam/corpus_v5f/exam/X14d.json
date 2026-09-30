@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X14d",
+ "row": "rev. 10 (GAP-W022): Sub.fit inherited from Base with Base.__module__ = 5 -> INHERITED 'declare the defining class ?:Base'",
+ "placement": "self-trace"
+}

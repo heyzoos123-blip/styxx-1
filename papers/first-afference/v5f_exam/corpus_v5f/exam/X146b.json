@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X146b",
+ "row": "the id-3 tool holds T1 at its CALL of _get_running_loop in _open until cov.__exit__() has returned -> T1 TRACE_INACTIVE; anchors 0, global_events 0; problem TRACE_INACTIVE recorded",
+ "placement": "main"
+}

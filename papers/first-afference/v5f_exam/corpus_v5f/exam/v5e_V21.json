@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V21",
+ "row": "V21 (kept; Valid cases (expected union counts)): v5f outcome {f:9}; no hooked threads left; sub-assertions: the \"no hooked threads left\" part is the leftover check (v5f installs no hook)",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X103b",
+ "row": "end as a list and as a dict -> BAD_TRACE; check_metrics REPORTED without raising",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R21",
+ "row": "fresh subprocess: after one run, another tool frees styxx's id and re-takes it with styxx's name object; a second run -> PASS {f:2}, no MONITOR_LOST",
+ "placement": "subprocess"
+}

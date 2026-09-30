@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X71c",
+ "row": "the v5f port row (main thread before the self-trace): witness W on f active; G's tracer exits inside G's on-stack opening, with 100,000 suspended run_async('G') openings; a 0.2 ms SIGALRM handler calls f once, the first time anchors are below their value at exit start and above 2; a trial lands iff W's union has f; void trials repeated up to 20 -> some trial lands; no landed trial credits G; G NOT_EXERCISED, W {f:1}",
+ "placement": "main"
+}

@@ -1,0 +1,43 @@
+{
+ "kind": "fuzz",
+ "seed": 108,
+ "program": {
+  "seed": 108,
+  "gates": [
+   {
+    "C": {
+     "exercises": [
+      "fz:c",
+      "fz:gen"
+     ],
+     "section": "C"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "C",
+    "ops": [
+     "call_r",
+     "swap_keep"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "C",
+    "ops": [
+     "call_b",
+     "hop"
+    ]
+   }
+  ],
+  "fault": {
+   "tool": 2,
+   "event": "PY_RETURN",
+   "nth": 2
+  }
+ }
+}

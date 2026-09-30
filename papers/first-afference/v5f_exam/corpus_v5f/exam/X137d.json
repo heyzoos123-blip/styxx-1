@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137d",
+ "row": "P(f, t) and Q(h): inside G call f, set_events(tool, 0), call t (raises out of its body, caught around the call), then a thread runs Q.run('B', h) -> P NOT_EXERCISED for t with MONITOR_LOST; Q PASS {h:1}, no MONITOR_LOST",
+ "placement": "main"
+}

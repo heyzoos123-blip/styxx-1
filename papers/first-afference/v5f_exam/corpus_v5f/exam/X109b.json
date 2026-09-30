@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X109b",
+ "row": "an old trace scored against a gates block that also adds a declared target -> STALE_TRACE",
+ "placement": "self-trace"
+}

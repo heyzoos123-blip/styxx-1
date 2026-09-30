@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X92",
+ "row": "X92 (kept; Violation cases (expected code)): v5f outcome TRACE_INCOMPLETE; sub-assertions: the fault is injected as in v5e, by a profile function raising at the c_call of sys.getrefcount or gc.get_referrers on a thread the case owns; v5f's exit makes both calls in X6 (_clone_alive), after X1, so the outcome is TRACE_INCOMPLETE as in v5e",
+ "placement": "self-trace"
+}

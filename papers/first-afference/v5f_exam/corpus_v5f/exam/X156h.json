@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156h",
+ "row": "rev. 10 (R9-3); fresh subprocess: a clean trace PASS {f:1}; then _get_running_loop replaced -> the next coverage_trace() raises UNSUPPORTED_VERSION",
+ "placement": "subprocess"
+}

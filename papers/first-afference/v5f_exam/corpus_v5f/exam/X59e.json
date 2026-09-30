@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X59e",
+ "row": "clone called, code swapped and left, clone alive through exit, Handle._run rebound -> problems exactly [CLONE_CALLED, CODE_SWAPPED, CLONE_ALIVE, CUT_MOVED]; score refuses CLONE_CALLED",
+ "placement": "main"
+}

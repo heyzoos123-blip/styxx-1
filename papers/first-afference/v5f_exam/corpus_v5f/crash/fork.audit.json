@@ -1,0 +1,17 @@
+{
+ "kind": "crash",
+ "scenario": "fork",
+ "faulted": "audit",
+ "python": "3.12.3",
+ "impl": "ref_v5f.py",
+ "points": [
+  [
+   "write",
+   1
+  ],
+  [
+   "write",
+   2
+  ]
+ ]
+}

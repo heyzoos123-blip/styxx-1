@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V33",
+ "row": "V33 (changed; Valid cases (expected union counts)): v5f outcome unkeyed: runs on every verified interpreter; {f:1}",
+ "placement": "self-trace"
+}

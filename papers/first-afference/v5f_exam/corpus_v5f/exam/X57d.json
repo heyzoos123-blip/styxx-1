@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X57d",
+ "row": "rev. 11 (GAP-36, W066); main thread before the self-trace: P(blk) entered; 2,000 lists, gc.freeze(); Q(blk) entered (joins P's mint); a worker blocks inside blk; Q exits; worker released, joined; P exits; gc.unfreeze() -> Q's problems exactly [CLONE_ALIVE], P's empty",
+ "placement": "main"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X146c",
+ "row": "T1 drives co = cov.run_async('A', af) (cov entered by __enter__); held at PY_START of _commit; main drops cov, gc.collect(), enters and exits a tracer on g (prunes A's dead core) -> co raises TRACE_INACTIVE; anchors 0, global_events 0",
+ "placement": "main"
+}

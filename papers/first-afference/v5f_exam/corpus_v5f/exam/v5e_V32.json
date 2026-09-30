@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V32",
+ "row": "V32 (kept; Valid cases (expected union counts)): v5f outcome recorded equals expected, 0 cross-credit, no leftovers, 3 runs; sub-assertions: the leftover check replaces \"no leftovers\"",
+ "placement": "self-trace"
+}

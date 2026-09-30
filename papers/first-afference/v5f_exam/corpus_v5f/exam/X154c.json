@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X154c",
+ "row": "fresh subprocess, before any tracer: X154b's hook with k = 5 installed before the first enter -> tool 3 after the enter; the other tool owns id 4 and its PY_UNWIND callback is styxx's; PASS {f:1}, no MONITOR_LOST",
+ "placement": "subprocess"
+}

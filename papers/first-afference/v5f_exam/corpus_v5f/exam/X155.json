@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X155",
+ "row": "fresh subprocess per trial: X137's free variant; an instruction sweep over _take on the exiting thread; the interference calls use_tool_id(4, 'other') -> every trial: __exit__ raises nothing; MONITOR_LOST; if the other tool won, it keeps id 4",
+ "placement": "subprocess"
+}

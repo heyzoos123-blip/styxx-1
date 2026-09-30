@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156d",
+ "row": "fresh subprocess: before import, collections.deque replaced by a subclass named deque whose __init__ drops maxlen -> UNSUPPORTED_VERSION",
+ "placement": "subprocess"
+}

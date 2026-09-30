@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156",
+ "row": "fresh subprocess: before the first coverage_trace(), sys.monitoring.set_events replaced by a pure-Python pass-through -> UNSUPPORTED_VERSION, and again at a second call",
+ "placement": "subprocess"
+}

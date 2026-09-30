@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V72b",
+ "row": "fresh subprocess: V72's first tracer (its __exit__ raised inside X5): record() TRACE_INCOMPLETE; a second tracer runs (prunes the first core); record() again -> TRACE_INCOMPLETE both times",
+ "placement": "subprocess"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V10",
+ "row": "V10 (kept; Valid cases (expected union counts)): v5f outcome {lazy_fn:1}",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V65",
+ "row": "X138 with the block set to 7 s from the waiter's start -> the waiter's enter succeeds after waiting at least 6 s; both traces PASS",
+ "placement": "main"
+}

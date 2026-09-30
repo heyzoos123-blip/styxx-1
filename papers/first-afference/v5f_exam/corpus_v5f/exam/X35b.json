@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X35b",
+ "row": "Handle._run = logged(orig) (logged.<locals>.inner) before __enter__ -> CUT_UNAVAILABLE naming logged.<locals>.inner; a later trace of a logged helper calling f PASS {f:1}",
+ "placement": "main"
+}

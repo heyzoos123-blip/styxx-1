@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X58b",
+ "row": "U.__code__ = T.__code__, U kept, then gc.freeze() -> CLONE_ALIVE",
+ "placement": "self-trace"
+}

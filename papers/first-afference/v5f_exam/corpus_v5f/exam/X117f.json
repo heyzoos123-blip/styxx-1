@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X117f",
+ "row": "rev. 10 (R9-5): check_metrics on {m:1.0} -> NO_TRACE note 'the result has no 'coverage_trace' key'; with smoke True -> exactly 'smoke run'",
+ "placement": "self-trace"
+}

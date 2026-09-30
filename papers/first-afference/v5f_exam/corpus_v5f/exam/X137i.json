@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137i",
+ "row": "fresh subprocess: X137g with the other tool taking id 4 by use_tool_id only; f's local events non-zero on ids 4 and 3 before P's call -> tool 3; P PASS {f:1} with MONITOR_LOST; Q PASS {f:1, g:1}, no MONITOR_LOST (no double count)",
+ "placement": "subprocess"
+}

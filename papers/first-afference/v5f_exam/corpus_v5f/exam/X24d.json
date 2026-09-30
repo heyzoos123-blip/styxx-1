@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X24d",
+ "row": "both of two cache wrappers of one body declared -> NOT_A_FUNCTION",
+ "placement": "self-trace"
+}

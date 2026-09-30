@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X103c",
+ "row": "end = S('returned') with class S(str) -> BAD_TRACE",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H1",
+ "row": "finalizers (a cycle whose __del__ calls a target, or enters and exits a tracer) at gen-0 thresholds 1-40 across open, close, record, the callbacks, enter and exit, 10 s watchdog -> no hang; no problem other than REENTRANT",
+ "placement": "main"
+}

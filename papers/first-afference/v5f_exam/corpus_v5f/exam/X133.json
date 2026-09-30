@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X133",
+ "row": "an audit hook refuses the second __code__ write mid-mint -> enter raises the hook's error; retry REENTRY; record() TRACE_INCOMPLETE; a later trace PASS; code restored",
+ "placement": "self-trace"
+}

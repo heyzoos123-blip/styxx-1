@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V18",
+ "row": "asyncio.run(cov.run_async(G, main)) -> {f:1, g:1}",
+ "placement": "self-trace"
+}

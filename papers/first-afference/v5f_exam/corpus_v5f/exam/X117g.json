@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X117g",
+ "row": "rev. 11 (GAP-36, W224): check_metrics({'m': I(3)}), I an int subclass counting __float__ and __bool__ -> usable; __float__ called exactly once, __bool__ never",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X35c",
+ "row": "a module-level W bound as Handle._run while the fixture holds FunctionType(W.__code__, g) alive -> CUT_UNAVAILABLE",
+ "placement": "main"
+}

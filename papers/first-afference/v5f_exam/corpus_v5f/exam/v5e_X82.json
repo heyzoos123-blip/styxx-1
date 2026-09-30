@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X82",
+ "row": "X82 (changed; Violation cases (expected code)): v5f outcome unkeyed: runs on every verified interpreter (3.12+ only); outcome as v5e: NOT_EXERCISED (g), {f:1} recorded",
+ "placement": "self-trace"
+}

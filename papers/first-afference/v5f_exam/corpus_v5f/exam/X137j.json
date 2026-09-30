@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137j",
+ "row": "rev. 11 (GAP-36, W141); fresh subprocess: a tracer runs and exits; its id freed; another tool takes it, registers LINE and PY_START callbacks, sets global LINE and local PY_START on a fixture's code, frees it; a second tracer runs and exits -> tool_ours True; global events 0; local events still PY_START; LINE callback the other's; PY_START callback styxx's",
+ "placement": "subprocess"
+}

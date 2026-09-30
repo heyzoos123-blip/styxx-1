@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X76",
+ "row": "same-tracer nested open, swallowed; an unrelated gate also refuses -> NESTED_SECTION",
+ "placement": "self-trace"
+}

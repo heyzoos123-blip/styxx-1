@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V73",
+ "row": "rev. 10 (GAP-W183): worker's G calls f, waits; main clears f's local events and exits; worker returns an unstarted generator -> notes codes [OPEN_AT_EXIT, LAZY_RESULT, MONITOR_LOST], end open",
+ "placement": "main"
+}

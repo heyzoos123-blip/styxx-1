@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V59",
+ "row": "a pure-Python profiler installed while another opening is open on the same thread (another task on the same loop), then a section opens -> the open succeeds; exact counts",
+ "placement": "self-trace"
+}

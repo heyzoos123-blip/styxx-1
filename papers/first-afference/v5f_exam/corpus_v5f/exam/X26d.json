@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X26d",
+ "row": "a foreign functools.wraps wrapper bound at the name, its own __code__ swapped to a test stub before the trace -> FOREIGN_DEFINITION",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X132",
+ "row": "the injector faults every line of _open and _detach in turn, on a worker thread -> each faulted trace refuses or scores within I6; after exit anchors == 0; a later trace PASS",
+ "placement": "main"
+}

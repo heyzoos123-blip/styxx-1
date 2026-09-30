@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X72b",
+ "row": "X72's trace (gather children inside run_async): the message contains exactly dispatched {'fx_v5f:f': 2}, unattributed {}; check_metrics G:exercises usable False, note [V5:NOT_EXERCISED]",
+ "placement": "self-trace"
+}

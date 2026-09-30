@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X112b",
+ "row": "genuine recorded UNDECLARED_SECTION and one calls count set to 0 -> BAD_COUNT",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X60",
+ "row": "X60 (kept; Violation cases (expected code)): v5f outcome NOT_EXERCISED; sub-assertions: uncredited buckets pinned by the v5f attribution rule: a thread started in a section reaches its bootstrap (root): unattributed",
+ "placement": "self-trace"
+}

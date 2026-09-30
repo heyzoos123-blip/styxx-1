@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X154e",
+ "row": "fresh subprocess: an audit hook raises RuntimeError at the 3rd register_callback of the first enter -> RuntimeError; id 4 named styxx's while tool is None; a second tracer adopts id 4: tool 4, PASS {f:1}, no MONITOR_LOST",
+ "placement": "subprocess"
+}

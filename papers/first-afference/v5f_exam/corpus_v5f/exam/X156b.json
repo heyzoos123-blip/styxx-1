@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156b",
+ "row": "fresh subprocess: before import, itertools.chain replaced by a Python subclass -> UNSUPPORTED_VERSION naming itertools.chain; scoring works",
+ "placement": "subprocess"
+}

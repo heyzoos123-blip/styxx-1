@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V61",
+ "row": "after coverage_trace() and before __enter__, Handle._run rebound to a top-level fixture wrapper that calls the original; a section calls f; restored after exit -> PASS {f:1}, no CUT_MOVED",
+ "placement": "main"
+}

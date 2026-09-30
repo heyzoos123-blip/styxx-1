@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X122b",
+ "row": "X122 plus a swallowed NESTED_SECTION -> NESTED_SECTION",
+ "placement": "self-trace"
+}

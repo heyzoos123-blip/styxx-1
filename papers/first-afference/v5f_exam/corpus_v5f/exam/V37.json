@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V37",
+ "row": "a pure-Python profiler that forwards events, started inside a section -> {f:1}; still installed after close and exit; it saw the later call",
+ "placement": "self-trace"
+}

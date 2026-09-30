@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X71",
+ "row": "X71 (kept; Violation cases (expected code)): v5f outcome NOT_EXERCISED; sub-assertions: as v5e; X71c (ported) is the witness of the credit stop",
+ "placement": "self-trace"
+}

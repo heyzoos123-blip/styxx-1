@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V62",
+ "row": "inside the trace, Handle._run rebound and restored with no declared call in between; then G calls f -> PASS {f:1}",
+ "placement": "main"
+}

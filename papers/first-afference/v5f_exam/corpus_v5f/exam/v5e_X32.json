@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X32",
+ "row": "X32 (kept; Violation cases (expected code)): v5f outcome REENTRY",
+ "placement": "self-trace"
+}

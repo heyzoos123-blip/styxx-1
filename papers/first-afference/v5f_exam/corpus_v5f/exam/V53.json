@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V53",
+ "row": "a defaultdict result carrying the exact-dict record -> PASS",
+ "placement": "self-trace"
+}

@@ -1,0 +1,41 @@
+{
+ "kind": "fuzz",
+ "seed": 174,
+ "program": {
+  "seed": 174,
+  "gates": [
+   {
+    "A": {
+     "exercises": [
+      "fz:a",
+      "fz:c"
+     ],
+     "section": "A"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "async_section",
+    "section": "A",
+    "ops": [
+     "swap_restore",
+     "clone_keep",
+     "call_b"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "swap_restore",
+     "clone_same",
+     "call_a"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

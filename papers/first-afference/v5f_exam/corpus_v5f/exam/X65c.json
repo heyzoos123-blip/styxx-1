@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X65c",
+ "row": "in a task of a running loop L, cov.run('A', section) calls L._run_once(), which runs a callback another task scheduled; it calls f -> A: NOT_EXERCISED, dispatched {f:1}",
+ "placement": "self-trace"
+}

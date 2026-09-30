@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X92c",
+ "row": "the id-3 tool raises at PY_START of the facade's __exit__ -> record() TRACE_ACTIVE; a second tracer PASS meanwhile; __exit__() again -> PASS {f:1}",
+ "placement": "self-trace"
+}

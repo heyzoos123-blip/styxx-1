@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X98",
+ "row": "X98 (kept; Violation cases (expected code)): v5f outcome BAD_TRACE",
+ "placement": "self-trace"
+}

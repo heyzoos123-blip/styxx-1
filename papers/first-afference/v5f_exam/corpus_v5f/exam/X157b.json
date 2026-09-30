@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X157b",
+ "row": "fresh subprocess: styxx's id freed; an audit hook raises at the 2nd register_callback of Q's enter -> Denied from Q's __enter__, Q TRACE_INCOMPLETE; tool_ours True, guard dead; P PASS {f:1} no MONITOR_LOST; R on g PASS {g:1}; then guard free, anchors 0, global_events 0",
+ "placement": "subprocess"
+}

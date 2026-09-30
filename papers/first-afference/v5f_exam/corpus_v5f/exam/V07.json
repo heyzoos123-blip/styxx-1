@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V07",
+ "row": "cached.cache_clear(), then cached(1) twice -> {cached:1}",
+ "placement": "self-trace"
+}

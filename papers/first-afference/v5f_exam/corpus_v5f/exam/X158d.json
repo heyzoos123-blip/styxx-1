@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X158d",
+ "row": "fresh subprocess, greenlet 3.5.6: X158 (a) where the replacement's __del__ switches to g2, which runs Q.__exit__ -> P CODE_SWAPPED, its opening with MONITOR_LOST (revision 12, GAP-44); Q NOT_EXERCISED with MONITOR_LOST; the finalizer ran inside P's registration",
+ "placement": "subprocess"
+}

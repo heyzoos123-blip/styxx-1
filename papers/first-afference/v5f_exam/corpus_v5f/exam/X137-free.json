@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137-free",
+ "row": "inside G: f, free_tool_id(tool), g -> PASS {f:1,g:1} + MONITOR_LOST; after exit tool_ours, global_events 0, no callback for 1000 raises; 2nd trace PASS {f:1}",
+ "placement": "subprocess"
+}

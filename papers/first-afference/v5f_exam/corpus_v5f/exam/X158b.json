@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X158b",
+ "row": "fresh subprocess: X158 (a) with the id-5 injector raising in _exit_txn right after _register returns on P's thread -> Injected from P's __exit__; P TRACE_INCOMPLETE; Q NOT_EXERCISED with MONITOR_LOST",
+ "placement": "subprocess"
+}

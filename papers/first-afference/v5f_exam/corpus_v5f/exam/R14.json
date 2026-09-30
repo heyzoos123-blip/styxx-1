@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R14",
+ "row": "a generator object of the declared generator function created before the trace, resumed inside a section -> NOT_EXERCISED",
+ "placement": "self-trace"
+}

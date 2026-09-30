@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R05b",
+ "row": "a '<stub>'-compiled stub exec'd into the declared module and bound before the trace; variant: co_filename forged to mod.__file__ -> PASS (deliberate only)",
+ "placement": "self-trace"
+}

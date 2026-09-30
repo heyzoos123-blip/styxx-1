@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V28b",
+ "row": "coroutine section B driven by send() on a worker, resumed inside A on main -> A calls {f:1} ambiguous {g:1}; B calls {g:1} ambiguous {g:1}; B returned; no notes",
+ "placement": "self-trace"
+}

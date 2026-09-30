@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V25c",
+ "row": "V25c (kept; v5e runner ADDITIONS (run_protocol_v5e.py docstring)): v5f outcome {f:1}; end raised (run_async cancelled)",
+ "placement": "self-trace"
+}

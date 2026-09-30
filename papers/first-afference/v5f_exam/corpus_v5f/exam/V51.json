@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V51",
+ "row": "a pdb/bdb settrace tracer active over the section (no debug command) -> exact counts",
+ "placement": "self-trace"
+}

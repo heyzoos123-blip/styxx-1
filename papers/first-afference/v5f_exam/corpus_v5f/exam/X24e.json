@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X24e",
+ "row": "the declared wrapper's body also wrapped by a sibling cache wrapper in the same module -> NOT_A_FUNCTION containing .__wrapped__",
+ "placement": "self-trace"
+}

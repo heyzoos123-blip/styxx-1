@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R16",
+ "row": "the id-3 tool raises at the target's PY_RETURN -> the caller sees it; the call is counted {f:1} (L-DELIVERY)",
+ "placement": "self-trace"
+}

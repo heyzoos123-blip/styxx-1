@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X10c",
+ "row": "rev. 10 (GAP-W011, W018): import raising ValueError, PEP 562 __getattr__ raising KeyError -> UNRESOLVED, __cause__ the ValueError / the KeyError",
+ "placement": "self-trace"
+}

@@ -94,6 +94,10 @@ FIXED = {
     "trace_active_active": "the tracer is active",
 }
 
+FIXED_SCOPE = {"no_trace_1": "NO_TRACE", "no_trace_2": "NO_TRACE", "no_trace_3": "NO_TRACE",
+               "trace_active_never": "TRACE_ACTIVE", "trace_active_active": "TRACE_ACTIVE",
+               "lazy": "LAZY_RESULT", "lazy_suffix": "LAZY_RESULT", "not_exercised_sentence": "NOT_EXERCISED"}
+
 
 def norm_text(msg):
     """A refusal or note text -> its spec-fixed observables only."""
@@ -101,6 +105,9 @@ def norm_text(msg):
     m = _CODE.match(msg)
     out = {"code": m.group(1) if m else None}
     for k, s in FIXED.items():
+        scope = FIXED_SCOPE.get(k)
+        if scope is not None and out["code"] != scope:
+            continue
         if s in msg:
             out[k] = True
     b = _BUCKETS.search(msg)
@@ -121,7 +128,7 @@ def norm_record(rec):
     secs = {}
     for s, ops in (rec.get("sections") or {}).items():
         secs[str(s)] = [{"calls": dict(o.get("calls", {})), "ambiguous": dict(o.get("ambiguous", {})),
-                         "end": o.get("end"), "notes": [norm_text(n)["code"] for n in o.get("notes", [])]}
+                         "end": o.get("end"), "notes": [norm_text(n) for n in o.get("notes", [])]}
                         for o in ops]
     return {"sections": secs, "uncredited": rec.get("uncredited"),
             "problems": [norm_text(p)["code"] for p in rec.get("problems", [])]}
@@ -176,7 +183,7 @@ def flatten(x, pre="", out=None):
     return out
 
 
-SPEC_FIXED_KEYS = re.compile(r"(/code$|/calls/|/ambiguous/|/end$|/notes\[|/problems\[|/raised$|/verdict$)")
+SPEC_FIXED_KEYS = re.compile(r"(/code$|/coverage/|/calls/|/ambiguous/|/end$|/notes\[\d+\](/code)?$|/problems\[|/raised$|/verdict$)")
 
 # ---------------------------------------------------------------------------------------------------
 # observing one entry, in this process

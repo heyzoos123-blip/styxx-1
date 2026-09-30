@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V67",
+ "row": "t raises 100 times outside every section -> pending == 0 before exit; leftovers clean",
+ "placement": "main"
+}

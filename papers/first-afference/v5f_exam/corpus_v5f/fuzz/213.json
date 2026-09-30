@@ -1,0 +1,88 @@
+{
+ "kind": "fuzz",
+ "seed": 213,
+ "program": {
+  "seed": 213,
+  "gates": [
+   {
+    "A": {
+     "exercises": [
+      "fz:a",
+      "fz:b"
+     ],
+     "section": "B"
+    },
+    "C": {
+     "exercises": [
+      "fz:b",
+      "fz:c"
+     ],
+     "section": "A"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "B",
+    "ops": [
+     "hop",
+     "clone_foreign",
+     "clone_same"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "B",
+    "ops": [
+     "freeze",
+     "call_b",
+     "swap_keep"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "clone_foreign",
+     "gen_throw",
+     "call_b",
+     "gen_throw"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "async_section",
+    "section": "B",
+    "ops": [
+     "swap_restore"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "swap_restore",
+     "swap_keep"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "nested"
+    ]
+   }
+  ],
+  "fault": {
+   "tool": 3,
+   "event": "PY_RETURN",
+   "nth": 1
+  }
+ }
+}

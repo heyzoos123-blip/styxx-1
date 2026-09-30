@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "M10-S0",
+ "row": "revision 9 (GAP-05); fresh subprocess: _v5_state() before the first coverage_trace() -> mints [], anchors 0, guard free, cut 0, cut_current True, tool None, tool_ours False, global_events 0",
+ "placement": "subprocess"
+}

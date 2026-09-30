@@ -1,0 +1,41 @@
+{
+ "kind": "fuzz",
+ "seed": 149,
+ "program": {
+  "seed": 149,
+  "gates": [
+   {
+    "B": {
+     "exercises": [
+      "fz:b",
+      "fz:r"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "gen_close"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "call_r"
+    ]
+   }
+  ],
+  "fault": {
+   "tool": 2,
+   "event": "PY_START",
+   "nth": 2
+  }
+ }
+}

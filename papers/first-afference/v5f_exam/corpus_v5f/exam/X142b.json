@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X142b",
+ "row": "fresh subprocess: another tool takes id 4 as N('other') (a str subclass whose __eq__ returns True and counts) -> PASS {f:1}; tool 3; the counter 0; id 4 untouched",
+ "placement": "subprocess"
+}

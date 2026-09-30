@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V48",
+ "row": "a pure-Python setprofile profiler installed before open (replaces X80) -> {f:1}; the profiler still installed; it saw the call",
+ "placement": "self-trace"
+}

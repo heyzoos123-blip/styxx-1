@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V52",
+ "row": "(1) explicit __exit__ plus a second in finally -> PASS {f:1}; (2) __exit__ after __enter__ raised UNRESOLVED -> TRACE_INCOMPLETE, clean",
+ "placement": "self-trace"
+}

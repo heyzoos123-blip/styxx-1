@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H10",
+ "row": "L-DELIVERY cells, 60 s each under a 20 us SIGALRM flood: (a) an except ValueError flow outside every section with a trace active -> 0 lost handlers; (b) the same inside a section, reported; (c) with-lock and try/finally flows inside a section -> 0 skipped cleanups, 0 leaks; no cell poisoned",
+ "placement": "main"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X13b",
+ "row": "PEP 562 __getattr__ returning a fresh function -> UNRESOLVED with remedy",
+ "placement": "self-trace"
+}

@@ -1,0 +1,46 @@
+{
+ "kind": "fuzz",
+ "seed": 114,
+ "program": {
+  "seed": 114,
+  "gates": [
+   {
+    "B": {
+     "exercises": [
+      "fz:r"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "B",
+    "ops": [
+     "clone_foreign"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "hop"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "hop",
+     "gen_throw",
+     "clone_foreign"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

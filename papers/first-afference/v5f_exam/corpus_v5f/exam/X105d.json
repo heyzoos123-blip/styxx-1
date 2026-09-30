@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X105d",
+ "row": "a /3 trace carrying a retired note (PROFILER_LOST) or problem (FOREIGN_PROFILER) -> BAD_TRACE",
+ "placement": "self-trace"
+}

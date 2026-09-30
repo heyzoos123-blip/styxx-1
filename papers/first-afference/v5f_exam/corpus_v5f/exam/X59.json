@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X59",
+ "row": "T called, then T.__code__ reassigned -> CODE_SWAPPED (swap left in place)",
+ "placement": "self-trace"
+}

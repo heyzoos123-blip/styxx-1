@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X24f",
+ "row": "rev. 10 (R9-1, R9-9): lru_cache(len) -> NOT_A_FUNCTION 'the wrapper calls no single Python function; ... (a builtin_function_or_method)'; a Stamp __wrapped__ -> '(a Stamp)', metaclass counter 0",
+ "placement": "self-trace"
+}

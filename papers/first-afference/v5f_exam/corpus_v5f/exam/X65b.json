@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X65b",
+ "row": "V15's inner tracer entered and exited inside the outer; then section A runs a loop serving another thread's run_coroutine_threadsafe and call_soon_threadsafe jobs calling f -> A: NOT_EXERCISED with dispatched {f:2}",
+ "placement": "self-trace"
+}

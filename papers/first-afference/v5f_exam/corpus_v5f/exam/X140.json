@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X140",
+ "row": "for every JUMP_BACKWARD[_NO_INTERRUPT] in every _v5_faultpoints() code, one trial per scenario variant: KeyboardInterrupt the first time that offset executes, in a scenario with 3 openings (one run_async driven through a thrown-then-handled cancellation; (a) it then completes, (b) it stays suspended through exit, GAP-49); callback-only functions under the direct-call driver -> every trial clean by G_FI's rules; UNREACHED counted clean",
+ "placement": "main"
+}

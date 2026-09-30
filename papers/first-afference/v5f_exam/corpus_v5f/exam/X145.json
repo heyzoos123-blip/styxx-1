@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X145",
+ "row": "an instruction sweep over _unwind_off on T2 closing B, the last anchor; the interference runs A on T1 until its body starts; t raises inside A's body after T2's run() returned -> every trial: A PASS {t:1}, no MONITOR_LOST",
+ "placement": "main"
+}

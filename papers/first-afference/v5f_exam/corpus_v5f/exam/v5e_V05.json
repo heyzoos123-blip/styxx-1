@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V05",
+ "row": "V05 (kept; Valid cases (expected union counts)): v5f outcome {DA.__init__:1}",
+ "placement": "self-trace"
+}

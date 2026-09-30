@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X57c",
+ "row": "nested tracers on f; the inner section calls only a same-globals clone, kept alive past the inner exit, dropped before the outer exit -> inner: CLONE_ALIVE",
+ "placement": "self-trace"
+}

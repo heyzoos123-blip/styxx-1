@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V36b",
+ "row": "a frozen list of 1,000 objects before the trace; inside: f once, then the list deleted (the count falls); a worker enters f after __enter__ and is inside it while the tracer exits -> PASS {f:1}, no CLONE_ALIVE",
+ "placement": "self-trace"
+}

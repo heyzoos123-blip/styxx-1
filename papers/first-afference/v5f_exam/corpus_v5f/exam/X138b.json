@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X138b",
+ "row": "X138 with time.monotonic -> lambda: 0.0 and time.sleep -> a counting wrapper for the waiter's wait -> MACHINERY_BUSY after >= 9.5 s; the wrapper called 0 times",
+ "placement": "main"
+}

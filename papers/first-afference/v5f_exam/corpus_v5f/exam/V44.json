@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V44",
+ "row": "cov.run('G', _run, 1) with def _run(cfg): return f() + cfg -> {f:1}",
+ "placement": "self-trace"
+}

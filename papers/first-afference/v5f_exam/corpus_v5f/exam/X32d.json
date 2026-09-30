@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X32d",
+ "row": "two barrier-synchronised threads enter one tracer, 50 repetitions -> REENTRY at score; exactly one entry each time; counts exact",
+ "placement": "self-trace"
+}

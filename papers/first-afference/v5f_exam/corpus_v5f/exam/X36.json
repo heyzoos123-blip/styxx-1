@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X36",
+ "row": "fresh subprocess: tool ids 3 and 4 taken by two other tools before any tracer is entered -> MONITOR_BUSY; nothing minted",
+ "placement": "subprocess"
+}

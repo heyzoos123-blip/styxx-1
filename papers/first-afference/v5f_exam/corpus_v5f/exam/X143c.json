@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X143c",
+ "row": "cov.run('A', f) with a fault right after _detach's _unwind_off call (here: at _detach's return) -> Injected; global_events 0; PASS {f:1}, end returned, no MONITOR_LOST",
+ "placement": "main"
+}

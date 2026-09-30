@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X147",
+ "row": "200 trials: T1 runs cov.run('A', f) while the main thread calls cov.__exit__() -> each trial (i) TRACE_INACTIVE recorded, or (ii) f's value, no problem, end returned/open, at most {f:1}; always anchors 0, global_events 0, no MONITOR_LOST",
+ "placement": "main"
+}

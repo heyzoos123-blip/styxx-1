@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X148",
+ "row": "an instruction sweep over _detach on T1 (A's close); the interference runs cov.__exit__() to completion -> every trial: A PASS {f:1}, no MONITOR_LOST",
+ "placement": "main"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R13",
+ "row": "a sibling cache wrapper of the declared wrapper's body, held in another module, is called; the declared wrapper never -> PASS",
+ "placement": "self-trace"
+}

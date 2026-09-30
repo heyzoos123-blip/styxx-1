@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V27",
+ "row": "V27 (kept; Valid cases (expected union counts)): v5f outcome {f:1}; sub-assertions: no note (v5e allowed PROFILER_LOST; v5f has none)",
+ "placement": "self-trace"
+}

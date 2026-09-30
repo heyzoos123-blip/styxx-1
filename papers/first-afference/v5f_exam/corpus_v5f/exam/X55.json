@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X55",
+ "row": "FunctionType(T.__code__, {})() -> CLONE_CALLED",
+ "placement": "self-trace"
+}

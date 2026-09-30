@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X117c",
+ "row": "smoke is an object whose __bool__ raises -> REPORTED; __bool__ never called",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X14b",
+ "row": "an inherited method of an abc.ABC subclass -> INHERITED",
+ "placement": "self-trace"
+}

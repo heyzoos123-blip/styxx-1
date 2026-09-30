@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V19b",
+ "row": "in a task of a running loop L, section A calls L._run_once(), which runs a callback that opens section B of the same tracer and calls g -> B opens (no NESTED_SECTION); B {g:1}",
+ "placement": "self-trace"
+}

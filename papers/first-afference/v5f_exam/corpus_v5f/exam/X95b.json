@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X95b",
+ "row": "a committed v5e /2 trace -> WRONG_TRACER",
+ "placement": "self-trace"
+}

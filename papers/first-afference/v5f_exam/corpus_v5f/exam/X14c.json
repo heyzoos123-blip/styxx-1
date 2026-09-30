@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X14c",
+ "row": "Leaf(Mid(Base)).fit -> INHERITED naming the defining class",
+ "placement": "self-trace"
+}

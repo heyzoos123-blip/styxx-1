@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X157c",
+ "row": "fresh subprocess: P(t) with styxx's id freed; A calls t (raises), caught; an audit hook raises Denied at the 2nd register_callback of Q's enter -> Denied; P NOT_EXERCISED for t with MONITOR_LOST",
+ "placement": "subprocess"
+}

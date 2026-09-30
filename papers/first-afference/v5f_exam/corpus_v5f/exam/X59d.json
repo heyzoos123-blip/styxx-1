@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X59d",
+ "row": "X59 plus a check after exit and before the case's own restore that f59.__code__ is u59.__code__ and f59() == -59 -> CODE_SWAPPED; swap left in place",
+ "placement": "self-trace"
+}

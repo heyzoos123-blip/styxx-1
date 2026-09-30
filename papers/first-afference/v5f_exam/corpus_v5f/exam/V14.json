@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V14",
+ "row": "generator with two yields, consumed -> {gen:3}",
+ "placement": "self-trace"
+}

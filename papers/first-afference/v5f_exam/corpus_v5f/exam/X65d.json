@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X65d",
+ "row": "a SelectorEventLoop subclass whose _run_once runs ready callbacks through map(operator.call, ...), run inside section A, serving another thread's call_soon_threadsafe job that calls f -> A: NOT_EXERCISED, dispatched {f:1}",
+ "placement": "self-trace"
+}

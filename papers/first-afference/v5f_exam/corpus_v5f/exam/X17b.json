@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X17b",
+ "row": "step through a Python __dict__ property -> INSTANCE_PATH, counter 0",
+ "placement": "self-trace"
+}

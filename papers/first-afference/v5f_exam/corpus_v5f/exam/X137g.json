@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137g",
+ "row": "fresh subprocess: P(f) entered; another tool frees and takes id 4 with its own five callbacks; Q(f, g) joins P's mint and rebinds to id 3 -> tool 3; P PASS {f:1} with MONITOR_LOST; Q PASS {f:1, g:1}, no MONITOR_LOST",
+ "placement": "subprocess"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:V22",
+ "row": "V22 (kept; Valid cases (expected union counts)): v5f outcome {f:7} (3 + 4)",
+ "placement": "self-trace"
+}

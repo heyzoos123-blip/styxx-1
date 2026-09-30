@@ -1,0 +1,108 @@
+{
+ "kind": "fuzz",
+ "seed": 182,
+ "program": {
+  "seed": 182,
+  "gates": [
+   {
+    "A": {
+     "exercises": [
+      "fz:c"
+     ],
+     "section": "S"
+    },
+    "B": {
+     "exercises": [
+      "fz:c"
+     ],
+     "section": "B"
+    }
+   },
+   {
+    "C": {
+     "exercises": [
+      "fz:a",
+      "fz:r"
+     ],
+     "section": "C"
+    },
+    "B": {
+     "exercises": [
+      "fz:a"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "clone_foreign",
+     "swap_restore"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "B",
+    "ops": [
+     "swap_restore",
+     "call_c",
+     "clone_foreign",
+     "clone_foreign"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "clone_same",
+     "freeze",
+     "call_r",
+     "hop"
+    ]
+   },
+   {
+    "tracer": 1,
+    "kind": "section",
+    "section": "C",
+    "ops": [
+     "clone_same",
+     "call_c",
+     "gen_close",
+     "clone_same"
+    ]
+   },
+   {
+    "tracer": 1,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "gen_iter",
+     "call_r",
+     "hop"
+    ]
+   },
+   {
+    "tracer": 1,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "call_c",
+     "clone_same",
+     "clone_same",
+     "call_r"
+    ]
+   }
+  ],
+  "fault": {
+   "tool": 2,
+   "event": "PY_START",
+   "nth": 1
+  }
+ }
+}

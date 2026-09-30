@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X123",
+ "row": "two live threads each open a section and dispatch g once through their own loop's call_soon -> NOT_EXERCISED; uncredited.dispatched == {g:2}; the message prints 2",
+ "placement": "self-trace"
+}

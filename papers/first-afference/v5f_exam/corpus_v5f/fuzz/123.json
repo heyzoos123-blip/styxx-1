@@ -1,0 +1,61 @@
+{
+ "kind": "fuzz",
+ "seed": 123,
+ "program": {
+  "seed": 123,
+  "gates": [
+   {
+    "A": {
+     "exercises": [
+      "fz:a",
+      "fz:c"
+     ],
+     "section": "A"
+    },
+    "B": {
+     "exercises": [
+      "fz:a",
+      "fz:c"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "swap_keep",
+     "call_r",
+     "call_c"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "call_b",
+     "call_a",
+     "gen_throw",
+     "swap_keep"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "swap_restore"
+    ]
+   }
+  ],
+  "fault": {
+   "tool": 3,
+   "event": "PY_RETURN",
+   "nth": 4
+  }
+ }
+}

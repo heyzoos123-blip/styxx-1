@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156g",
+ "row": "revision 9 (GAP-02); fresh subprocess: after import and before the first coverage_trace(), asyncio.events._get_running_loop replaced by a Python function returning None; X65d's shape -> coverage_trace() raises UNSUPPORTED_VERSION",
+ "placement": "subprocess"
+}

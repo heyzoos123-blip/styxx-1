@@ -1,0 +1,111 @@
+{
+ "kind": "fuzz",
+ "seed": 77,
+ "program": {
+  "seed": 77,
+  "gates": [
+   {
+    "A": {
+     "exercises": [
+      "fz:b"
+     ],
+     "section": "A"
+    },
+    "B": {
+     "exercises": [
+      "fz:b",
+      "fz:r"
+     ],
+     "section": "B"
+    }
+   },
+   {
+    "B": {
+     "exercises": [
+      "fz:gen"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "call_c",
+     "gen_throw",
+     "gen_throw",
+     "call_b"
+    ]
+   },
+   {
+    "tracer": 1,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "call_r",
+     "call_r",
+     "call_r",
+     "call_b"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "clone_keep",
+     "swap_keep",
+     "clone_foreign",
+     "call_b"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "call_b"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "B",
+    "ops": [
+     "gen_iter"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "nested"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "gen_close",
+     "swap_keep",
+     "call_c",
+     "freeze"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "clone_same"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

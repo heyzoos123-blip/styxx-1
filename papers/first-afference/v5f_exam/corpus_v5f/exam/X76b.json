@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X76b",
+ "row": "a nested open of the same section, and a variant on two sections -> NESTED_SECTION with the two spec-fixed texts",
+ "placement": "self-trace"
+}

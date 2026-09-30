@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V39",
+ "row": "sections given as a StrEnum, a (str, Enum) member and a numpy.str_-like subclass -> PASS; the record's keys are exact str",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H7",
+ "row": "user locks: a `with lock:` loop inside a section under a SIGALRM flood for 30 s -> 0 harness locks left held; 0 hangs",
+ "placement": "main"
+}

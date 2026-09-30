@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X96d",
+ "row": "gates_sha256: 5 -> BAD_TRACE; tracer as a str subclass whose __eq__ raises -> WRONG_TRACER",
+ "placement": "self-trace"
+}

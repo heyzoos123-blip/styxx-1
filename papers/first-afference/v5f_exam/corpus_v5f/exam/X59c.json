@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X59c",
+ "row": "nested tracers; the inner section calls f, then swaps f.__code__ and leaves it through the inner exit, restoring before the outer exit -> inner: CODE_SWAPPED",
+ "placement": "self-trace"
+}

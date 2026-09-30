@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X158c",
+ "row": "fresh subprocess: X158 with the outside party registering None over styxx's PY_START callback, both variants -> as X158",
+ "placement": "subprocess"
+}

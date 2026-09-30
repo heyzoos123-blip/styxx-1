@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137b",
+ "row": "fresh subprocess: X137's free variant with another tool taking the freed id (RAISE callback, global RAISE); G runs f again after -> PASS {f:2, g:1} with MONITOR_LOST; the other tool's events and callback untouched; a second tracer takes id 3, PASS {f:1}",
+ "placement": "subprocess"
+}

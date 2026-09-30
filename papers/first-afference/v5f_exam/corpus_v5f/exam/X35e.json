@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X35e",
+ "row": "rev. 11 (GAP-34); main thread before the self-trace, fresh wrapper: fx_r11.enable() binds Handle._run to enable.<locals>.instrumented (aiodebug's shape); coverage_trace() twice while bound -> CUT_UNAVAILABLE, CUT_UNAVAILABLE; restored; coverage_trace() again -> constructed",
+ "placement": "main"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X141b",
+ "row": "Handle._run rebound to a reimplementation inside section G, f called, restored before exit -> CUT_MOVED (the per-hit check)",
+ "placement": "main"
+}

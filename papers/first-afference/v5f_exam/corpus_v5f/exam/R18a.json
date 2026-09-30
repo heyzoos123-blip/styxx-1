@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R18a",
+ "row": "(a) X65d's loop (map(operator.call, ...)); in a task, section A calls loop._run_once(), which runs a job another task scheduled with call_soon(f) -> PASS, credited to A",
+ "placement": "main"
+}

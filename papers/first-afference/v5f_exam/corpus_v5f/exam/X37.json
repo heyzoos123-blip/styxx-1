@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X37",
+ "row": "X37 (3.10/3.11 only): coverage_trace() refuses UNSUPPORTED_VERSION; scoring works",
+ "placement": "self-trace"
+}

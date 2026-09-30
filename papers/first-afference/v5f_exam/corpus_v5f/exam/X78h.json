@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X78h",
+ "row": "rev. 10 (R9-1): cov.run(Sec(), f) on a tracer never entered, and on another after its exit -> TRACE_INACTIVE both; f never runs; counters 0",
+ "placement": "self-trace"
+}

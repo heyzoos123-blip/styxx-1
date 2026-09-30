@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156i",
+ "row": "rev. 10 (R9-4); fresh subprocess: a step-6 refusal at the first coverage_trace() binds nothing (tool None, tool_ours False, cut 0); a set_events wrapper installed afterwards is refused",
+ "placement": "subprocess"
+}

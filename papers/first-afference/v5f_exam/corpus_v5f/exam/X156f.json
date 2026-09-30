@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156f",
+ "row": "revision 9 (GAP-03); fresh subprocess: before the first coverage_trace(), sys.monitoring.get_local_events replaced by a pure-Python pass-through -> coverage_trace() raises UNSUPPORTED_VERSION; scoring works",
+ "placement": "subprocess"
+}

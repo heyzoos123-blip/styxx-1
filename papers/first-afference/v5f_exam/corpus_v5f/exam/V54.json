@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V54",
+ "row": "target raising inside its body, caught, 3 calls -> {t:3} (confirmed by PY_UNWIND)",
+ "placement": "self-trace"
+}

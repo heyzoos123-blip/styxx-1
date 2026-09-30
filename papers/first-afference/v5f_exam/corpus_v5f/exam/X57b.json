@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X57b",
+ "row": "a same-globals clone of M_T made in the trace, then gc.freeze(), kept alive through exit -> CLONE_ALIVE, with clause (b)'s revision-12 text",
+ "placement": "self-trace"
+}

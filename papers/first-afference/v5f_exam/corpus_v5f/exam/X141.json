@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X141",
+ "row": "the harness rebinds Handle._run to a wrapper during the trace and restores it after exit -> CUT_MOVED; the row does not say whether a hit follows the rebinding, so both are run: (a) section G calls f after it, (b) G ran before it and no hit follows (only exit sees the binding)",
+ "placement": "main"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X33",
+ "row": "one good + one unresolvable target -> UNRESOLVED; good __code__ untouched",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V63",
+ "row": "cov.run('A', loop.run_until_complete, main()) with X65d's loop, main opens cov.run_async('B', ...) calling g -> B opens, no NESTED_SECTION; B {g:1}; A counts nothing from the loop",
+ "placement": "self-trace"
+}

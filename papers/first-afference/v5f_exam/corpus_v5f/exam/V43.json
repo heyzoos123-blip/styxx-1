@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V43",
+ "row": "a gate whose section is 'harness', not its name -> PASS",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X25d",
+ "row": "a cache wrapper served only through PEP 562 (holder None) whose body is bound at module level -> NOT_A_FUNCTION",
+ "placement": "self-trace"
+}

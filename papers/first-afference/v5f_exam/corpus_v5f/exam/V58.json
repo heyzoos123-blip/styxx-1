@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V58",
+ "row": "on a case-owned thread: cov.run('G', body), body calls f then sys.setprofile(prof) -> after run, sys.getprofile() is prof; {f:1}; no note",
+ "placement": "self-trace"
+}

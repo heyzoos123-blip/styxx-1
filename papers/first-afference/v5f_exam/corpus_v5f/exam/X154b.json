@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X154b",
+ "row": "an audit-hook sweep of the exit's registration, trials k = 1..5, one fresh subprocess each -> __exit__ returns; PASS {f:1} with MONITOR_LOST; the other tool owns the id; its callbacks its own except the k-th event's, which is styxx's",
+ "placement": "subprocess"
+}

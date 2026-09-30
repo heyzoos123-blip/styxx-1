@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X143",
+ "row": "an instruction sweep over _commit on T1 while T2's section B closes (the last other anchor) -> every trial: A PASS {t:1}, no MONITOR_LOST",
+ "placement": "main"
+}

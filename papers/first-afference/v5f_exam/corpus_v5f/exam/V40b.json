@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V40b",
+ "row": "a step through an instance registry whose class's metaclass defines a raising, counting __eq__; target mod:registry.fit in its own __dict__; variant: fn of a section returns such an instance -> {fit:1}; the __eq__ counter 0 in both",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X96c",
+ "row": "a genuine trace with gates_sha256 popped -> BAD_TRACE (never KeyError or STALE_TRACE)",
+ "placement": "self-trace"
+}

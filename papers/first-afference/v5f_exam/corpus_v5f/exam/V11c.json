@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V11c",
+ "row": "the target sits exactly 16 hops down a foreign functools.wraps chain -> {target:1}",
+ "placement": "self-trace"
+}

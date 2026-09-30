@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V70",
+ "row": "a stranded pending entry of f on T2 (its unwind not delivered after the last anchor closed), then f(None) with no anchor -> P NOT_EXERCISED; calls {}, unattributed {}, dispatched {}; no MONITOR_LOST",
+ "placement": "main"
+}

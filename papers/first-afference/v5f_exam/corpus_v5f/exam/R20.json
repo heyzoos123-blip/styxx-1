@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R20",
+ "row": "W bound as Handle._run across one coverage_trace() and __enter__, then restored; FunctionType(W.__code__, g) runs f in section A -> NOT_EXERCISED, dispatched {f:1}",
+ "placement": "main"
+}

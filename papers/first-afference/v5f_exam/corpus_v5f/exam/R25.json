@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R25",
+ "row": "revision 12 (GAP-38; over-blocking #24; version-keyed), fresh subprocess: (1) in section G, f called, M_T kept in an untracked tuple, gc.collect(); (2) gc.unfreeze(), then the same; (3) gc.unfreeze() and a full gc.collect(), then the same -> (1) PASS {f:1}; (2) CLONE_ALIVE ('the gc freeze count rose ...') on 3.12.3, PASS {f:1} on 3.13.12; (3) PASS {f:1}",
+ "placement": "subprocess"
+}

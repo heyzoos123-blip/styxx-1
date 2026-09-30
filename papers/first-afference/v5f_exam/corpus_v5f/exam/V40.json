@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V40",
+ "row": "a registry whose __getattribute__ raises KeyError; a class whose metaclass __getattribute__ raises -> {target:1} each; no user side effects",
+ "placement": "self-trace"
+}

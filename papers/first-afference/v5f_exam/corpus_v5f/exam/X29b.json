@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X29b",
+ "row": "a re-export through a decorated PEP 562 lazy attribute -> FOREIGN_DEFINITION naming the defining module:qualname",
+ "placement": "self-trace"
+}

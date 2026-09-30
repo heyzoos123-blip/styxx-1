@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X25c",
+ "row": "Scorer.fast = lru_cache(None)(_impl), bare and as a staticmethod, _impl bound at module level -> NOT_A_FUNCTION",
+ "placement": "self-trace"
+}

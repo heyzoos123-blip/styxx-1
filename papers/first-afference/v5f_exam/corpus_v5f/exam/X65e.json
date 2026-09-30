@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X65e",
+ "row": "X65c with TimerHandle._run set to a reimplementation after __enter__ and before the section, the job scheduled with call_later(0, f); the override deleted after exit -> dispatched {f:1}; no CUT_MOVED",
+ "placement": "main"
+}

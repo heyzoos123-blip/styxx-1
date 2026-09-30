@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V45",
+ "row": "a method of an abc.ABC subclass; a method of an Enum -> {target:1} each",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V72",
+ "row": "rev. 10 (R9-8); fresh subprocess: an audit hook in the exit transaction's registration reads guard 'held' and raises -> RuntimeError from __exit__; guard 'dead'; a second tracer PASS {f:1}; guard 'free'",
+ "placement": "subprocess"
+}

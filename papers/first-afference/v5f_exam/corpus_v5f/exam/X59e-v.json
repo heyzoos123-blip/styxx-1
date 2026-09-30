@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X59e-v",
+ "row": "X59e plus a swallowed cov.run('B', f) with B undeclared, before the clone -> [UNDECLARED_SECTION, CLONE_CALLED, CODE_SWAPPED, CLONE_ALIVE, CUT_MOVED]; score refuses UNDECLARED_SECTION",
+ "placement": "main"
+}

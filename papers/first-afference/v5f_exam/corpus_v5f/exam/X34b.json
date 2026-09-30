@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X34b",
+ "row": "a fixture function built as FunctionType(Handle._run.__code__, vars(fx)) inside the case and declared -> RESERVED_TARGET",
+ "placement": "self-trace"
+}

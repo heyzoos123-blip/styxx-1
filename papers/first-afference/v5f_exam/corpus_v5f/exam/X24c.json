@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X24c",
+ "row": "X24b with power_ref also bound at module level -> NOT_A_FUNCTION naming fast, never power_ref",
+ "placement": "self-trace"
+}

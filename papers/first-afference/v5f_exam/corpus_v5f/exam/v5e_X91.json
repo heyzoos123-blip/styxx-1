@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X91",
+ "row": "X91 (changed; Violation cases (expected code)): v5f outcome TRACE_ACTIVE, text \"the tracer was never entered\"",
+ "placement": "self-trace"
+}

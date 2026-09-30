@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X26e",
+ "row": "a declared module built with types.ModuleType, no __file__, in sys.modules, whose function has a '<m>' filename -> FOREIGN_DEFINITION",
+ "placement": "self-trace"
+}

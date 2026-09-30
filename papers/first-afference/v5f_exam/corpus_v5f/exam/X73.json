@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X73",
+ "row": "cov.run(G, asyncio.run, main()) -> NOT_EXERCISED (dispatched)",
+ "placement": "self-trace"
+}

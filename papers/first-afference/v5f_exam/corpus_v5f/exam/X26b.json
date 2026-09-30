@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X26b",
+ "row": "real.__code__ = stub.__code__ before the trace; called via alias -> FOREIGN_DEFINITION",
+ "placement": "self-trace"
+}

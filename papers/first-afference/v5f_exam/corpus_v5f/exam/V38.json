@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V38",
+ "row": "@logged @Memo def fit: wraps over a class-based wrapper whose instance's own __dict__ has __wrapped__ (update_wrapper) -> {fit:1}",
+ "placement": "self-trace"
+}

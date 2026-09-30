@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X40",
+ "row": "factory sibling: declare check_low, call check_high -> NOT_EXERCISED",
+ "placement": "self-trace"
+}

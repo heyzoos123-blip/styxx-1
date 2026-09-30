@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H2",
+ "row": "ported from v5e (spec data, run_protocol_v5e._h2_trials): SIGALRM Timeout(Exception) in a tight traced loop (f, g) after a target call, 20 trials, each loop running until the handler has run -> 20/20 propagated, 20/20 PASS, 20/20 handler ran, 20/20 ok",
+ "placement": "main"
+}

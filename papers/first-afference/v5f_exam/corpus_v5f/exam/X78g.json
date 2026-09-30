@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X78g",
+ "row": "a gate whose declared section is 'harness', opened by its gate name -> UNDECLARED_SECTION",
+ "placement": "self-trace"
+}

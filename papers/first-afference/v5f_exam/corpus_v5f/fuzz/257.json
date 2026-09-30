@@ -1,0 +1,93 @@
+{
+ "kind": "fuzz",
+ "seed": 257,
+ "program": {
+  "seed": 257,
+  "gates": [
+   {
+    "A": {
+     "exercises": [
+      "fz:b",
+      "fz:r"
+     ],
+     "section": "A"
+    },
+    "C": {
+     "exercises": [
+      "fz:gen"
+     ],
+     "section": "C"
+    }
+   },
+   {
+    "B": {
+     "exercises": [
+      "fz:b",
+      "fz:r"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "C",
+    "ops": [
+     "swap_keep",
+     "call_b",
+     "call_b",
+     "call_b"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "async_section",
+    "section": "A",
+    "ops": [
+     "hop",
+     "nested",
+     "hop",
+     "swap_restore"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "hop"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "async_section",
+    "section": "A",
+    "ops": [
+     "call_a",
+     "swap_restore",
+     "swap_keep"
+    ]
+   },
+   {
+    "tracer": 1,
+    "kind": "outside",
+    "section": "B",
+    "ops": [
+     "call_r"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "C",
+    "ops": [
+     "call_r",
+     "call_a"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

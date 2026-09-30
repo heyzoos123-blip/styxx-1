@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X109",
+ "row": "trace from another gates block -> STALE_TRACE",
+ "placement": "self-trace"
+}

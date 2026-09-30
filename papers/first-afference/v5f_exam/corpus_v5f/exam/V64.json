@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V64",
+ "row": "an outer tracer entered; Handle._run rebound to V61's module-level wrapper; an inner tracer entered and exited; restored; then the outer's section calls f -> outer PASS {f:1}, no CUT_MOVED",
+ "placement": "main"
+}

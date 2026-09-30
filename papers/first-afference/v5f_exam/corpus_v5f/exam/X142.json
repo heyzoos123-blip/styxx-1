@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X142",
+ "row": "fresh subprocess: a second copy loaded under another name; A holds a tracer open, B enters and exits one on g; then A calls f and exits -> both PASS; tools 4 and 3; no MONITOR_LOST in A",
+ "placement": "subprocess"
+}

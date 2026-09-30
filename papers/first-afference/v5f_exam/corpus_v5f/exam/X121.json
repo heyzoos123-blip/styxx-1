@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X121",
+ "row": "X[f] with section 'Y', Y[g] with section 'X'; the harness opens each gate by gate name -> X: NOT_EXERCISED",
+ "placement": "self-trace"
+}

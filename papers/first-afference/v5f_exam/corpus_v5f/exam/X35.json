@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X35",
+ "row": "Handle._run replaced by a MagicMock around __enter__; nothing minted afterwards -> CUT_UNAVAILABLE",
+ "placement": "main"
+}

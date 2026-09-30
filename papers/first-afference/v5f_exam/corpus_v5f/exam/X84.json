@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X84",
+ "row": "rev. 10 (R9-2), over-blocking #23: T opens G with L1 running; U opens G with None running; T opens G again with L1 running -> NESTED_SECTION; T's problems exactly that",
+ "placement": "self-trace"
+}

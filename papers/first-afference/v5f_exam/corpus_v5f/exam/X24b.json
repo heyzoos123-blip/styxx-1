@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X24b",
+ "row": "wraps(power_ref)(lru_cache(fast)) -> NOT_A_FUNCTION naming fast",
+ "placement": "self-trace"
+}

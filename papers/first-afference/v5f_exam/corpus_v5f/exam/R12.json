@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R12",
+ "row": "a settrace callback runs T on a section's stack through sys.call_tracing -> PASS, credited; calling T directly in the callback -> NOT_EXERCISED",
+ "placement": "self-trace"
+}

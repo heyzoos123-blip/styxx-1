@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X58",
+ "row": "X58 (kept; Violation cases (expected code)): v5f outcome CLONE_ALIVE",
+ "placement": "self-trace"
+}

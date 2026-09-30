@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X32b",
+ "row": "X32b (kept; v5e runner ADDITIONS (run_protocol_v5e.py docstring)): v5f outcome REENTRY",
+ "placement": "self-trace"
+}

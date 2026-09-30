@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X26c",
+ "row": "FunctionType(stub.__code__, vars(mod)) bound at the name -> FOREIGN_DEFINITION",
+ "placement": "self-trace"
+}

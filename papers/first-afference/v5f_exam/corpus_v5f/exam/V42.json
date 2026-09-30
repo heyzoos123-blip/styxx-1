@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V42",
+ "row": "G_fast[f] and G_slow[g] share section 'run'; one cov.run('run', ...) calls both -> both PASS",
+ "placement": "self-trace"
+}

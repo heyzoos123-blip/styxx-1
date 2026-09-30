@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X65f",
+ "row": "X65c with asyncio.events.Handle rebound to a subclass with its own _run after __enter__ and before call_soon(f); restored before exit -> dispatched {f:1}",
+ "placement": "main"
+}

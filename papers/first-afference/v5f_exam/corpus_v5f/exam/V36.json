@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V36",
+ "row": "a benign gc.freeze() inside a section, with no clone -> {f:1}",
+ "placement": "self-trace"
+}

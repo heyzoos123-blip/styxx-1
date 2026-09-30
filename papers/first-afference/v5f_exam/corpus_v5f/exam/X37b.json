@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X37b",
+ "row": "fresh subprocess: after import, sys.version_info replaced by a tuple subclass with micro 99 -> UNSUPPORTED_VERSION; scoring works",
+ "placement": "subprocess"
+}

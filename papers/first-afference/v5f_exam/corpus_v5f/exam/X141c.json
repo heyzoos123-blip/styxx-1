@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X141c",
+ "row": "after __enter__, BaseEventLoop._run_once rebound to W (runs ready callbacks, no restore); A in a task of L calls L._run_once(), whose job calls f; restored after exit -> CUT_MOVED",
+ "placement": "main"
+}

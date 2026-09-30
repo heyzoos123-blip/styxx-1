@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X152",
+ "row": "cov.run('A', f); two instruction sweeps, over _detach and over _unwind_off; the interference reads _v5_state() -> no trial reads anchors == 0 with global_events != 0",
+ "placement": "main"
+}

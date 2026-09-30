@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H8",
+ "row": "body-less credit: a SIGALRM flood with one section per call, each call counting its body runs, 8 s -> credited <= body runs",
+ "placement": "main"
+}

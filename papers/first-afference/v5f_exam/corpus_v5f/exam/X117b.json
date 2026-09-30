@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X117b",
+ "row": "a 400-digit int metric -> check_metrics REPORTED ('int too large for a float'); score GateSpecError, not OverflowError",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R18b",
+ "row": "(b) the stdlib loop; after __enter__ BaseEventLoop._run_once is rebound to W, which restores the binding and runs the ready callbacks without Handle._run -> PASS, credited to A",
+ "placement": "main"
+}

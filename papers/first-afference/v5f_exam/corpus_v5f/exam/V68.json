@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V68",
+ "row": "the id-3 tool blocks the exit transaction 3 s; meanwhile a third thread runs cov2.run('B', g) on a tracer entered before -> it returns within 1 s; cov2 PASS {g:1}; the first trace completes",
+ "placement": "main"
+}

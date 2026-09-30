@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X90/X91",
+ "row": "record() inside the trace / before enter -> TRACE_ACTIVE with per-case texts",
+ "placement": "self-trace"
+}

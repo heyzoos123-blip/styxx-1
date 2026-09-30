@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V55",
+ "row": "asyncio.run(cov.run_async('G', main)), declared coroutine awaits once -> {coro:2}",
+ "placement": "self-trace"
+}

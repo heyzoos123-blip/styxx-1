@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "v5e:X101b",
+ "row": "X101b (kept; v5e runner registration): v5f outcome BAD_TRACE",
+ "placement": "self-trace"
+}

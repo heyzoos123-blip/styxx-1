@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X154d",
+ "row": "fresh subprocess. (a): P runs A(f); styxx's id freed; an audit hook frees it again at the 1st and 2nd register_callback events of Q's enter -> tool unchanged; P PASS {f:1} with MONITOR_LOST; Q PASS {g:1}, no MONITOR_LOST. (b) (revision 12): at the 1st event only, the id is freed and taken by another tool -> tool 3; P PASS {f:1} with MONITOR_LOST; Q PASS {g:1}, no note",
+ "placement": "subprocess"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X60",
+ "row": "thread started in A calls f -> NOT_EXERCISED; uncredited unattributed {f:1}",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H3",
+ "row": "kept from v5e (spec data, run_protocol_v5e._h3_trials): KeyboardInterrupt raised from a signal inside a traced section, 5 trials -> 5/5 propagate, 5/5 ok (no profile or trace function left, the machinery quiet, f restored)",
+ "placement": "main"
+}

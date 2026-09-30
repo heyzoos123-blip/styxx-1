@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V15b",
+ "row": "outer and inner preregs both name their gate and section 'G', nested on one stack; variant: a case section named like the self-trace section (G0) -> both {f:1}",
+ "placement": "self-trace"
+}

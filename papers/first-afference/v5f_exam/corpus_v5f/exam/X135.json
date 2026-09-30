@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X135",
+ "row": "the id-3 tool calls PyThreadState_SetAsyncExc at the target's PY_START -> NOT_EXERCISED; the body never ran",
+ "placement": "self-trace"
+}

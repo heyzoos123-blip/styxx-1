@@ -1,0 +1,53 @@
+{
+ "kind": "fuzz",
+ "seed": 184,
+ "program": {
+  "seed": 184,
+  "gates": [
+   {
+    "A": {
+     "exercises": [
+      "fz:c",
+      "fz:r"
+     ],
+     "section": "A"
+    }
+   },
+   {
+    "C": {
+     "exercises": [
+      "fz:b"
+     ],
+     "section": "S"
+    },
+    "B": {
+     "exercises": [
+      "fz:c"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 1,
+    "kind": "section",
+    "section": "S",
+    "ops": [
+     "freeze"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "A",
+    "ops": [
+     "call_a",
+     "gen_throw",
+     "freeze"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

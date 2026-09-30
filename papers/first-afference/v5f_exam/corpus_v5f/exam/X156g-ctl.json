@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156g-ctl",
+ "row": "X156g unpatched: the same program -> NOT_EXERCISED with dispatched {f:1}",
+ "placement": "subprocess"
+}

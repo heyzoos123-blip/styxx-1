@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V01",
+ "row": "plain f -> {f:1}",
+ "placement": "self-trace"
+}

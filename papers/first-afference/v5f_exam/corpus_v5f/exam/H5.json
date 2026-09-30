@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "H5",
+ "row": "gc cost: no gc call at resolution or close; the exit scan is refcount-gated (read from gc's audit events on a trace whose target has no extra reference)",
+ "placement": "main"
+}

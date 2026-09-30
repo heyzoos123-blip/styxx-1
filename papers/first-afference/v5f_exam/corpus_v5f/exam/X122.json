@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X122",
+ "row": "a declaring gate whose bar fails (m=0.0) and a harness that never calls one target -> NOT_EXERCISED (never FAIL)",
+ "placement": "self-trace"
+}

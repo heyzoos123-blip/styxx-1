@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V47",
+ "row": "fresh subprocess: a fork ProcessPoolExecutor inside section A whose jobs call COV.run('B', g) -> A PASS; the jobs return their values; B SECTION_ABSENT in the parent's trace; _v5_state() clean; no multi-threaded-fork DeprecationWarning",
+ "placement": "subprocess"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X143b",
+ "row": "X143's setup; the id-3 tool holds T1 at PY_START of _commit until T2's close has cleared the event, then raises Injected at PY_START of T1's _unwind_on -> Injected from run(); body never ran; A end raised; no MONITOR_LOST; anchors 0, global_events 0",
+ "placement": "main"
+}

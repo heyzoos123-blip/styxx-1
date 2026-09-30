@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X83",
+ "row": "an eager child task created inside run_async('A') calls cov.run_async('B', ...) in its first step -> NESTED_SECTION",
+ "placement": "self-trace"
+}

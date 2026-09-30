@@ -1,0 +1,104 @@
+{
+ "kind": "fuzz",
+ "seed": 21,
+ "program": {
+  "seed": 21,
+  "gates": [
+   {
+    "C": {
+     "exercises": [
+      "fz:c",
+      "fz:gen"
+     ],
+     "section": "C"
+    },
+    "B": {
+     "exercises": [
+      "fz:r"
+     ],
+     "section": "B"
+    }
+   }
+  ],
+  "stmts": [
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "hop",
+     "clone_keep",
+     "gen_close"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "swap_keep",
+     "call_a"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "outside",
+    "section": "C",
+    "ops": [
+     "call_a",
+     "gen_throw",
+     "clone_foreign",
+     "clone_same"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "C",
+    "ops": [
+     "call_c"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "A",
+    "ops": [
+     "clone_same"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "async_section",
+    "section": "B",
+    "ops": [
+     "call_c",
+     "call_c",
+     "swap_restore",
+     "call_a"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "C",
+    "ops": [
+     "call_r",
+     "swap_restore"
+    ]
+   },
+   {
+    "tracer": 0,
+    "kind": "section",
+    "section": "B",
+    "ops": [
+     "clone_foreign",
+     "nested",
+     "gen_close",
+     "call_r"
+    ]
+   }
+  ],
+  "fault": null
+ }
+}

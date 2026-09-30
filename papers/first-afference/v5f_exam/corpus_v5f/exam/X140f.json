@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X140f",
+ "row": "SIGALRM floods raising KeyboardInterrupt during cov.__exit__ with 100k suspended openings, 50 trials -> each trial PASS, or TRACE_ACTIVE then __exit__() -> PASS, or TRACE_INCOMPLETE; no hang; leftovers clean after the next enter",
+ "placement": "main"
+}

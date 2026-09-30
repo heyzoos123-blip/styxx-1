@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X32",
+ "row": "tracer entered twice, second entry swallowed -> REENTRY raised and at score",
+ "placement": "self-trace"
+}

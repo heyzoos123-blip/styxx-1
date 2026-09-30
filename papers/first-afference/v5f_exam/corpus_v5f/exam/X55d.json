@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X55d",
+ "row": "nested tracers on f; FunctionType(f.__code__, {})() while both hold the mint -> CLONE_CALLED for both",
+ "placement": "self-trace"
+}

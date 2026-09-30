@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X139",
+ "row": "the id-3 tool, at PY_START of _enter_txn, runs `with coverage_trace(exp2): pass` on the same thread -> the nested enter REENTRANT; the outer trace PASS",
+ "placement": "main"
+}

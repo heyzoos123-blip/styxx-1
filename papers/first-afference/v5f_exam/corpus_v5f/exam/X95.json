@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X95",
+ "row": "a /1 trace -> WRONG_TRACER (the delta table: same as v5e; X95b adds /2)",
+ "placement": "self-trace"
+}

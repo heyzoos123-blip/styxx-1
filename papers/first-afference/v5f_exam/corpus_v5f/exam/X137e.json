@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137e",
+ "row": "fresh subprocess: P runs A(f); Q's enter, at PY_START of _ensure_tool, frees styxx's id; Q exits, P exits -> P PASS {f:1} with MONITOR_LOST; tool_ours True",
+ "placement": "subprocess"
+}

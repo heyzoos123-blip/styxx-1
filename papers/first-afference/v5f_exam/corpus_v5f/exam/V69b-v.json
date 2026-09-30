@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V69b-v",
+ "row": "V69b's variant: the replacement returns 0 instead of calling through -> PASS {f:1}, no MONITOR_LOST, counter 0",
+ "placement": "subprocess"
+}

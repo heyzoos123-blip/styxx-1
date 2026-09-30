@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V69",
+ "row": "fresh subprocess: after the first coverage_trace(), sys.monitoring.set_events replaced by a counting pass-through; a trace calling f -> PASS {f:1}, no MONITOR_LOST, the counter 0",
+ "placement": "subprocess"
+}

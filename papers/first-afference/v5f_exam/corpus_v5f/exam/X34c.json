@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X34c",
+ "row": "declare asyncio.base_events:BaseEventLoop._run_once and f -> RESERVED_TARGET at entry",
+ "placement": "self-trace"
+}

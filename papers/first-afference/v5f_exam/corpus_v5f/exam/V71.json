@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V71",
+ "row": "fresh subprocess: an audit hook raises at the first sys._getframe (variants: object.__getattr__, builtins.id) event of one cov.run('A', f); then cov.run('A', f) again -> the first raises; f did not run; anchors 0; one opening of A, PASS {f:1}, no OPEN_AT_EXIT, no problem",
+ "placement": "subprocess"
+}

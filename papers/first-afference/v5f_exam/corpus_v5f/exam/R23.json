@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R23",
+ "row": "rev. 11 (GAP-36, W074); inside the self-trace: in section A, f is called; u.__code__ = f.__code__ (M_T), u a function of f's module; u() called; u.__code__ restored before the section closes -> PASS {f:2}, no problem",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X146d",
+ "row": "X146's hold, then the id-5 injector raises Injected in _commit once anchors is 1, and at the first instruction of _detach in the finally; then a tracer on g -> Injected from run(); anchors 1 right after; 0 (and global_events 0) after g's transaction",
+ "placement": "main"
+}

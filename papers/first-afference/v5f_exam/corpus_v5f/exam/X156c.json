@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X156c",
+ "row": "fresh subprocess: one coverage_trace() binds; itertools.chain replaced by a subclass; importlib.reload; coverage_trace() again -> UNSUPPORTED_VERSION; scoring works",
+ "placement": "subprocess"
+}

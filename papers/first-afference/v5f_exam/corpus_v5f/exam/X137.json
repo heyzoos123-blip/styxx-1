@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X137",
+ "row": "inside G: call f, clear styxx's local events on g's minted code, call g -> NOT_EXERCISED for g; the message and notes contain MONITOR_LOST",
+ "placement": "self-trace"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V10b",
+ "row": "a module whose __class__ is a ModuleType subclass serves the target only through PEP 562 -> {target:1}",
+ "placement": "self-trace"
+}

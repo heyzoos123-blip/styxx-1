@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X138",
+ "row": "the id-3 tool blocks the exit transaction 11 s from the waiter's start -> MACHINERY_BUSY in the waiter after >= 9.5 s; the first trace completes; a new tracer then PASS",
+ "placement": "main"
+}

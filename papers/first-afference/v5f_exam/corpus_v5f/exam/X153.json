@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X153",
+ "row": "an instruction sweep over _unwind_on on T1 (P's A); the interference runs Q's B on T2 until its body starts -> every trial: A PASS {f:1}, B PASS {g:1}, no MONITOR_LOST",
+ "placement": "main"
+}

@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "X92b",
+ "row": "during exit the id-5 injector raises Injected in _retire at the first instruction at which f.__code__ is again the original -> that trace TRACE_INCOMPLETE; a later trace PASS {f:1}",
+ "placement": "main"
+}

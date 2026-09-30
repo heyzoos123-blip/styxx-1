@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "R22",
+ "row": "FunctionType(f.__code__.replace(), f.__globals__) called inside section A -> NOT_EXERCISED; the copy in no bucket; no problem",
+ "placement": "self-trace"
+}

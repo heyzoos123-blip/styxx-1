@@ -1,0 +1,6 @@
+{
+ "kind": "exam",
+ "case": "V60",
+ "row": "inside G: call f, install a foreign pure-Python profiler, call g; removed after close -> {f:1, g:1}, no note; the profiler saw g",
+ "placement": "self-trace"
+}

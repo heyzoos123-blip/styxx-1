@@ -1,0 +1,67 @@
+{
+ "python": "3.12.3",
+ "impl": "ref_v5f.py",
+ "control_1_sm1_on_v5e": {
+  "status": "NOT_RUN",
+  "gap": "GAP-53",
+  "why": "needs v5e's implementation (and, for #1, the round-4 census mutants), outside the exam author's read scope"
+ },
+ "control_2_sm2_on_v5e": {
+  "status": "NOT_RUN",
+  "gap": "GAP-53",
+  "why": "needs v5e's implementation (and, for #1, the round-4 census mutants), outside the exam author's read scope"
+ },
+ "control_3_crash_sweep_on_v5e": {
+  "status": "NOT_RUN",
+  "gap": "GAP-53",
+  "why": "needs v5e's implementation (and, for #1, the round-4 census mutants), outside the exam author's read scope"
+ },
+ "control_4a_gsig_v5e_leaks": {
+  "status": "NOT_RUN",
+  "gap": "GAP-53",
+  "why": "needs v5e's implementation (and, for #1, the round-4 census mutants), outside the exam author's read scope"
+ },
+ "control_4b_h8_fails_gsig_on_3_12": {
+  "status": "FIRED",
+  "G_SIG": "FAIL",
+  "failed_cells": {
+   "credit": [
+    "credited 551332 > body runs 550279"
+   ]
+  },
+  "python": "3.12.3"
+ },
+ "control_5_blind_shapes": {
+  "status": "INCOMPLETE (GAP-51: the 8 shapes of mutation_gate_blindspots.json are not listed in the text)",
+  "planted": {
+   "split": {
+    "caught": true,
+    "by": [
+     "a code prefix split across literals"
+    ]
+   },
+   "format": {
+    "caught": true,
+    "by": [
+     "str.format",
+     "a code prefix split across literals"
+    ]
+   },
+   "percent": {
+    "caught": true,
+    "by": [
+     "%-formatted code"
+    ]
+   },
+   "fstring_code": {
+    "caught": true,
+    "by": [
+     "code from a formatted value"
+    ]
+   }
+  },
+  "all_planted_caught": true
+ },
+ "verdict": "INCOMPLETE: the runnable controls fire; #1-#3, #4(a) not run (GAP-53), #5 short of the 8 listed shapes (GAP-51)",
+ "seconds": 67.6
+}

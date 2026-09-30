@@ -2306,6 +2306,8 @@ def x35b():
 @case("X35c", "cut", "a module-level W bound as Handle._run while the fixture holds FunctionType(W.__code__, g) alive -> CUT_UNAVAILABLE")
 def x35c():
     import asyncio
+    P.coverage_trace(EXP("F"))    # the process's first coverage_trace() (MF4): the stdlib codes join the cut first,
+                                  # so the case is the same in the exam's process and in a fresh mutation-mode one
     H = asyncio.events.Handle
     run0 = H.__dict__["_run"]
     H._run = fx_x35c.w35
@@ -2959,7 +2961,7 @@ def x138b():
     out = _x138(True)
     expect(out.get("sleeps") == 0, f"the counting sleep was called {out.get('sleeps')} times")
 
-def _cut_moved_case(rebind, restore_before_exit, loop_job=False):
+def _cut_moved_case(rebind, restore_before_exit, loop_job=False, hit_after=True):
     import asyncio
     exp = EXP("A_F") if loop_job else EXP("F")
     H = asyncio.events.Handle
@@ -2974,9 +2976,12 @@ def _cut_moved_case(rebind, restore_before_exit, loop_job=False):
                         H._run = fx_cutw.ORIG_RUN
                 if restore_before_exit:
                     cov.run("G", body)
-                else:
+                elif hit_after:
                     rebind()
                     cov.run("G", fx_v5f.f)
+                else:
+                    cov.run("G", fx_v5f.f)
+                    rebind()
             rec = cov.record()
         else:
             L = asyncio.new_event_loop()
@@ -2999,10 +3004,12 @@ def _cut_moved_case(rebind, restore_before_exit, loop_job=False):
         BL._run_once = fx_cutw.ORIG_RUN_ONCE
     return exp, rec
 
-@case("X141", "cut", "the harness rebinds Handle._run to a wrapper during the trace and restores it after exit -> CUT_MOVED")
+@case("X141", "cut", "the harness rebinds Handle._run to a wrapper during the trace and restores it after exit -> CUT_MOVED; the row does not say whether a hit follows the rebinding, so both are run: (a) section G calls f after it, (b) G ran before it and no hit follows (only exit sees the binding)")
 def x141():
     import asyncio
     exp, rec = _cut_moved_case(lambda: setattr(asyncio.events.Handle, "_run", fx_cutw.w141), False)
+    expect_refuse(score(exp, rec), "CUT_MOVED")
+    exp, rec = _cut_moved_case(lambda: setattr(asyncio.events.Handle, "_run", fx_cutw.w141), False, hit_after=False)
     expect_refuse(score(exp, rec), "CUT_MOVED")
 
 @case("X141b", "cut", "Handle._run rebound to a reimplementation inside section G, f called, restored before exit -> CUT_MOVED (the per-hit check)")

@@ -138,6 +138,88 @@ row("atfork_cached_pid", "unwind scope: pass-through by `os.getpid()` (a cached 
      ("_VERIFIED = ", "_PID_AT_IMPORT = os.getpid()\n_VERIFIED = ")])
 
 
+# ---- the Mutation-audit table (each row's rule weakened, with the witness the table names) --------------
+COH = "            coherent = cf.startswith('<') or ("
+row("A_coh_FT_exempt", "coherence on F_T", "conditions", "X26b", "FOREIGN_DEFINITION", "passes",
+    [(COH, "            coherent = cur is D or cf.startswith('<') or (")])
+row("A_coh_links_exempt", "coherence on intermediate links", "conditions", "X26d", "FOREIGN_DEFINITION", "passes",
+    [(COH, "            coherent = cur.__globals__ is not md or cf.startswith('<') or (")])
+row("A_coh_no_file_skip", "the '<' skip widened to \"no __file__\"", "conditions", "X26e", "FOREIGN_DEFINITION", "passes",
+    [(COH, "            coherent = cf.startswith('<') or type(gf) is not str or (")])
+row("A_module_file_rule", "the module `__file__` rule", "deletion", "X26e", "FOREIGN_DEFINITION", "passes",
+    [("    if type(mf) is not str:\n        raise GateSpecError(", "    if False:\n        raise GateSpecError(")])
+row("A_sourceless_accepted", "sourceless accepted", "deletion", "X26f", "FOREIGN_DEFINITION", "passes",
+    [("    if mf.endswith('.pyc') or mf.endswith('.pyo'):\n        raise GateSpecError(",
+      "    if False:\n        raise GateSpecError("),
+     (COH, "            coherent = cf.startswith('<') or (type(gf) is str and gf.endswith('.pyc')) or (")])
+row("A_fd_by_module", "FOREIGN_DEFINITION by `__module__`", "comparisons", "v5e:X30", "FOREIGN_DEFINITION", "passes",
+    [("            if cur.__globals__ is md:\n                return",
+      "            if dict.get(cur.__globals__, '__name__') == dict.get(md, '__name__'):\n                return")])
+row("A_fd_no_chain", "FOREIGN_DEFINITION without the chain", "scope", "v5e:V11", "PASS {wrapped_entry:1}", "FOREIGN_DEFINITION",
+    [("            cur = dict.get(_own_dict(cur) or {}, '__wrapped__')\n        elif", "            cur = None\n        elif")],
+    note="also v5e:V06")
+row("A_fd_functions_only", "the walk only through functions", "scope", "V38", "PASS {fit:1}", "FOREIGN_DEFINITION",
+    [("        else:\n            d = _own_dict(cur)\n            if d is None:\n                break\n            cur = dict.get(d, '__wrapped__')",
+      "        else:\n            break")])
+for n, bound, wit, sp, wk in (("A_hop_bound_3", 4, "V11c", "PASS {target:1}", "FOREIGN_DEFINITION"),
+                              ("A_hop_bound_16", 16, "V11c", "PASS {target:1}", "FOREIGN_DEFINITION"),
+                              ("A_hop_bound_18", 19, "X30b", "FOREIGN_DEFINITION", "passes")):
+    row(n, f"the hop bound (16) as {n.split('_')[-1]}", "constants", wit, sp, wk,
+        [("    for _hop in range(17):", f"    for _hop in range({bound}):")])
+row("A_cache_callee_identity", "cache callee identity", "deletion", "X24c", "NOT_A_FUNCTION", "passes",
+    [("        if callee is None or callee is not stamped:", "        if callee is None:")], note="also X24c")
+row("A_bound_body_module", "bound-body check (the module)", "deletion", "v5e:X25", "NOT_A_FUNCTION", "passes",
+    [("        for k, v in md.items():\n            if v is callee:", "        for k, v in ():\n            if v is callee:")])
+row("A_bound_body_holder", "bound-body check (the holder's namespace)", "deletion", "v5e:X25b", "NOT_A_FUNCTION", "passes",
+    [("        if holder is not None and holder is not md:", "        if False:")], note="also X25d")
+row("A_sibling", "sibling check", "deletion", "X24e", "NOT_A_FUNCTION", "passes",
+    [("                if w is not D and type(w) is _CACHE_WRAPPER and _cache_callee(w) is callee:", "                if False:")])
+row("A_alias_by_name", "alias-by-object rule (by name instead)", "comparisons", "X24d", "PASS", "NOT_A_FUNCTION",
+    [("                if w is not D and type(w) is _CACHE_WRAPPER and _cache_callee(w) is callee:",
+      "                if k != qual.split('.')[-1] and type(w) is _CACHE_WRAPPER and _cache_callee(w) is callee:")])
+row("A_pep562_once", "PEP 562 twice", "deletion", "X13b", "UNRESOLVED", "passes",
+    [("                    b = ga(part)\n", "                    b = a\n")])
+row("A_module_step_exact", "exact type for the module step", "types", "V10b", "PASS {target:1}", "a refusal",
+    [("        if issubclass(type(obj), ModuleType):\n            if i > 0:", "        if type(obj) is ModuleType:\n            if i > 0:")])
+row("A_class_step_exact", "the class step", "types", "V45", "PASS", "a refusal",
+    [("        elif issubclass(type(obj), type):\n            own = _TYPE_DICT", "        elif type(obj) is type:\n            own = _TYPE_DICT")],
+    note="also X14b")
+row("A_mro_first_base", "full-MRO INHERITED", "scope", "X14c", "INHERITED", "UNRESOLVED",
+    [("                for k in _TYPE_MRO.__get__(obj)[1:]:", "                for k in _TYPE_MRO.__get__(obj)[1:2]:")])
+row("A_descriptor_getattr", "descriptor-only reads (getattr reintroduced)", "types", "V40", "PASS {target:1}, no side effects",
+    "user code runs", [("            d = _own_dict(obj)\n            if d is None or part not in d:",
+                        "            d = getattr(obj, '__dict__', None)\n            if d is None or part not in d:")],
+    note="also X17b")
+row("A_is_chain_tuple", "an `is` chain replaced by tuple membership", "comparisons", "V40b", "PASS, __eq__ counter 0",
+    "__eq__ called", [("        if type(obj) is staticmethod:                # unwrap first, at every step (D2)",
+                       "        if type(obj) in (staticmethod,):             # mutant: tuple membership")])
+row("A_reserved_target", "RESERVED_TARGET", "deletion", "X34", "RESERVED_TARGET", "passes",
+    [("    if (fn is _HANDLE_DICT[0].get('_run') or fn is _LOOP_DICT[0].get('_run_once')\n            or _CUT.get(id(fc)) is fc):",
+      "    if False:")], note="also X34b, X34c")
+row("A_cut_by_name", "cut by identity (by name instead)", "comparisons", "V44", "PASS {f:1}", "NOT_EXERCISED",
+    [("        if _CUT.get(id(c)) is c:\n            cut = True\n            break\n        o = _ANCHORS.get(g)",
+      "        if c.co_name in ('_run', '_run_once'):\n            cut = True\n            break\n        o = _ANCHORS.get(g)")])
+row("A_cut_cleared", "monotone cut cleared", "claims", "X65b", "NOT_EXERCISED (dispatched {f:2})", "differs",
+    [("    core.marks['exited'] = True                      # X8", "    _CUT.clear()                                     # mutant: the cut cleared at exit\n    core.marks['exited'] = True                      # X8")])
+row("A_cut_replaced", "monotone cut replaced at each E2", "claims", "V64", "PASS {f:1}", "CUT_MOVED",
+    [("def _cut_refresh():\n", "def _cut_refresh():\n    _CUT.clear()                                     # mutant: the cut replaced at each E2\n")])
+row("A_cut_moved_at_exit", "CUT_MOVED at exit", "deletion", "X141", "CUT_MOVED", "passes",
+    [("    if 'CUT_MOVED' in core.flags or not _cut_ok():", "    if 'CUT_MOVED' in core.flags:")])
+row("A_cut_moved_at_hit", "CUT_MOVED at a hit", "deletion", "X141b", "CUT_MOVED", "passes",
+    [("    if not _cut_ok():                               # CUT_MOVED: a moved binding seen at a hit", "    if False:")])
+row("A_e2_refresh", "E2's refresh", "deletion", "V61", "PASS {f:1}", "CUT_MOVED",
+    [("    _cut_refresh()                                   # E2\n", "    pass\n")])
+row("A_cut_unavailable", "CUT_UNAVAILABLE (a binding that is not a plain function)", "deletion", "X35", "CUT_UNAVAILABLE", "passes",
+    [("        if type(x) is not FunctionType:\n            raise GateSpecError(", "        if False:\n            raise GateSpecError(")])
+row("A_run_once_not_cut", "`_run_once` code in the cut", "scope", "X65g", "differs", "differs",
+    [("    for label, x in ((\"asyncio.events.Handle._run\", _HANDLE_DICT[0].get('_run')),\n                     (\"asyncio.base_events.BaseEventLoop._run_once\",\n                      _LOOP_DICT[0].get('_run_once'))):",
+      "    for label, x in ((\"asyncio.events.Handle._run\", _HANDLE_DICT[0].get('_run')),):")], note="also X65e, X65f")
+row("A_cut_ok_no_run_once", "`_run_once` binding in `_cut_ok()`", "deletion", "X141c", "CUT_MOVED", "passes",
+    [("    return (type(h) is FunctionType and _CUT.get(id(h.__code__)) is h.__code__\n            and type(r) is FunctionType and _CUT.get(id(r.__code__)) is r.__code__)",
+      "    return (type(h) is FunctionType and _CUT.get(id(h.__code__)) is h.__code__)")])
+row("A_no_referrer_clause", "shareable-code refusal: the gc-referrer clause", "deletion", "X35c", "CUT_UNAVAILABLE", "passes",
+    [("        if '<locals>' in c.co_qualname or twins:", "        if '<locals>' in c.co_qualname:")])
+
 # ---------------------------------------------------------------------------------------------------
 # SM1
 # ---------------------------------------------------------------------------------------------------

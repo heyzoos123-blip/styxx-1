@@ -401,6 +401,146 @@ row("A_retired_note", "BAD_TRACE: a retired note code accepted (PROFILER_LOST)",
 row("A_bad_count_zero", "BAD_COUNT: counts >= 1 (0 accepted)", "comparisons", "X112b", "BAD_COUNT", "differs",
     [("                if t not in declared or type(n) is not int or n < 1:", "                if t not in declared or type(n) is not int or n < 0:")])
 
+# ---- the revision 2-8 lines of the Mutation-audit table --------------------------------------------
+_UO_CAP = _between("        _map(_setitem, _map(_FLAGS,", "        _map(set_events,\n             _compress(_compress((t,), _map(_is, _map(get_tool, (t,)), _NAME1)),\n                       _map(_is, _map(_ANCHORS.get")
+_UO_SET = ("        _map(set_events,\n             _compress(_compress((t,), _map(_is, _map(get_tool, (t,)), _NAME1)),\n"
+           "                       _map(_is, _map(_ANCHORS.get, (o.frame,)), (o,))),\n             _PYU1)))")
+_UO_SET_NOGATE = "        _map(set_events,\n             _compress((t,), _map(_is, _map(get_tool, (t,)), _NAME1)),\n             _PYU1)))"
+_UO_CAP_AG = ("_compress(_compress(_compress((_ANCHORS,), _map(_is, _map(get_tool, (t,)), _NAME1)),\n"
+              "                                _map(_is, _map(_ANCHORS.get, (o.frame,)), (o,))),\n")
+row("A_reclaim_deleted", "unwind scope: reclaim of a freed, unowned id", "deletion", "X137-free", "as stated", "differs",
+    [("def _reclaim():\n    \"\"\"", "def _reclaim():\n    return\n    \"\"\"")])
+row("A_unwind_on_recheck", "unwind scope: the re-check after the anchor commit (`_unwind_on`'s own-anchor test on the write)", "deletion",
+    "X143", "every trial PASS", "differs", [(_UO_SET, _UO_SET_NOGATE)])
+row("A_commit_before_try", "revision 3: `_commit` inside `_run`'s try (moved back before it)", "order", "X144", "as stated", "differs",
+    [("    end = \"raised\"\n    try:\n        _commit(o)\n        result = fn(*args, **kwargs); end = \"returned\"",
+      "    end = \"raised\"\n    _commit(o)\n    try:\n        result = fn(*args, **kwargs); end = \"returned\"")])
+row("A_detach_armed", "revision 3: `o.armed` in `_detach`'s check", "deletion", "X143b", "as stated", "UNWIND_LOST",
+    [("        if o.armed and not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:",
+      "        if not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:")])
+row("A_detach_anchor", "revision 3: the anchor test in `_detach`'s check", "deletion", "X143c", "as stated", "UNWIND_LOST",
+    [("        if o.armed and not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:",
+      "        if o.armed and not (_MON[0][1](_TOOL[0]) & PY_UNWIND):")])
+row("A_reconcile_final_off", "revision 3: `_unwind_off` at the end of every reconciliation", "deletion", "X137-free", "global_events 0 after exit",
+    "differs", [("    if _TOOL[0] is not None:\n        _unwind_off(None)", "    if False:\n        _unwind_off(None)")])
+row("A_detach_releases_frame", "revision 4: `o.frame` released by every `_detach` (revision 3's)", "scope", "X146", "as stated", "differs",
+    [("        _unwind_off(fr)                             # one call: pop, then clear iff no anchor is left",
+      "        _unwind_off(fr)                             # one call: pop, then clear iff no anchor is left\n        o.frame = None")])
+row("A_step8_deleted", "revision 4: step 8's re-check deleted", "deletion", "X146", "TRACE_INACTIVE", "differs",
+    [("    if 'fin' in o.fin or 'exiting' in o.core.marks:  # step 8", "    if False:                                        # step 8")])
+row("A_step8_exiting", "revision 4: step 8's `'exiting'` test deleted", "deletion", "X146b", "as stated", "differs",
+    [("    if 'fin' in o.fin or 'exiting' in o.core.marks:  # step 8", "    if 'fin' in o.fin:                               # step 8")])
+row("A_step8_claim", "revision 4: step 8's claim test deleted", "deletion", "X146c", "as stated", "differs",
+    [("    if 'fin' in o.fin or 'exiting' in o.core.marks:  # step 8", "    if 'exiting' in o.core.marks:                    # step 8")])
+row("A_prune_from_anchors", "revision 4: pruning of cores reached from anchors deleted", "deletion", "X146d", "as stated", "differs",
+    [("    for fr, o in list(_ANCHORS.items()):             # prune cores", "    for fr, o in ():                                 # prune cores")])
+row("A_detach_anchor_first", "revision 4: `_detach`'s test with the anchor before the event", "order", "X148", "every trial PASS", "differs",
+    [("        if o.armed and not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:",
+      "        if o.armed and _ANCHORS.get(fr) is o and not (_MON[0][1](_TOOL[0]) & PY_UNWIND):")])
+row("A_named_eq", "revision 4: `_named` by `==`", "comparisons", "X142b", "PASS, __eq__ counter 0", "differs",
+    [("def _named(i): return _MON[0][0](i) is _TOOL_NAME", "def _named(i): return _MON[0][0](i) == _TOOL_NAME")])
+row("A_facade_async", "revision 5: the facade's `run_async` as an `async def` that awaits `_run_async`", "scope", "X146c", "as stated", "differs",
+    [("    def run_async(self, section, afn, /, *args, **kwargs):", "    async def run_async(self, section, afn, /, *args, **kwargs):"),
+     ("        return _run_async(self._core, section, afn, args, kwargs)", "        return await _run_async(self._core, section, afn, args, kwargs)")])
+row("A_pop_outside", "revision 5: the pop outside `_unwind_off`'s call", "order", "X152", "no trial anchors 0 with events", "differs",
+    [("    _CONSUME(_chain(_map(_ANCHORS.pop, (key,), _NONE1),\n", "    _ANCHORS.pop(key, None)\n    _CONSUME(_chain((),\n")])
+row("A_unwind_on_before_store", "revision 5: `_unwind_on` before the store", "order", "X143", "every trial PASS", "differs",
+    [("    _ANCHORS[o.frame] = o                           # the store\n", "    _unwind_on(o)\n    _ANCHORS[o.frame] = o                           # the store\n"),
+     ("    _unwind_on(o)                                   # one call, after the store\n", "")])
+row("A_unwind_on_no_own_gate", "revision 5: `_unwind_on` without the own-anchor gate", "deletion", "X146e", "as stated", "differs",
+    [(_UO_SET, _UO_SET_NOGATE), (_UO_CAP_AG, "_compress(_compress((_ANCHORS,), _map(_is, _map(get_tool, (t,)), _NAME1)),\n")])
+row("A_unwind_on_no_capture", "revision 5: `_unwind_on` without the capture", "deletion", "X137d", "MONITOR_LOST", "differs",
+    [("    _CONSUME(_chain(\n" + _UO_CAP, "    _CONSUME(_chain(\n")])
+row("A_capture_outside", "revision 5: the capture outside the call that reads and sets the event", "order", "X153", "every trial PASS",
+    "differs", [("    _CONSUME(_chain(\n" + _UO_CAP + _UO_SET,
+                 "    _CONSUME(_chain(\n" + _UO_CAP.rstrip(",\n") + "))\n    _CONSUME(_chain(\n" + _UO_SET)])
+row("A_capture_ungated", "revision 5: the capture not gated on the event being clear", "conditions", "X153", "every trial PASS", "differs",
+    [("            _compress(_compress(_compress((_ANCHORS,)", "            _compress(_compress((_ANCHORS,)"),
+     ("(o,))),\n                      _map(_not, _map(_and, _map(get_events, (t,)), _PYU1))))))), _LOST_KEY, _TRUE),",
+      "(o,))))))), _LOST_KEY, _TRUE),")])
+row("A_take_split", "revision 5: `use_tool_id` split from the unowned test", "order", "X155", "every trial as stated", "differs",
+    [("    _CONSUME(_map(use_tool_id, _compress((t,), _map(_is, _map(get_tool, (t,)), _NONE1)), _NAME1))",
+      "    if get_tool(t) is None:\n        use_tool_id(t, _TOOL_NAME)")])
+row("A_ensure_no_reclaim", "revision 5: `_ensure_tool` re-taking its own id without `_reclaim`", "deletion", "X137e", "MONITOR_LOST",
+    "differs", [("    if t is not None:\n        _reclaim()\n        if _named(t):\n            return", "    if t is not None:\n        if _named(t):\n            return")])
+row("A_mutex_time_calltime", "revision 5: the mutex's clock and sleep read through `time` at call time", "scope", "X138b", "MACHINERY_BUSY",
+    "differs", [("            now = _monotonic()", "            now = time.monotonic()"), ("            _sleep(0.0002)", "            time.sleep(0.0002)")])
+row("A_txn_shared_succ", "revision 5: `_Txn`'s `succ` shared between tokens", "immutability", "V52", "PASS", "a hang",
+    [("class _Txn:\n    __slots__", "_SUCC0 = {}\n\n\nclass _Txn:\n    __slots__"),
+     ("        self.succ = {}                       # a fresh dict per token", "        self.succ = _SUCC0                   # mutant: shared")])
+row("A_register_no_owner_read", "revision 6: `_register` without the owner read after the last exchange", "deletion", "X154c", "as stated",
+    "differs", [("        _map(get_tool, (t,))))\n\n\ndef _set_local", "        (_TOOL_NAME,)))\n\n\ndef _set_local")])
+row("A_builtin_check", "revision 6: the builtin check on `_MON` at binding", "deletion", "X156", "UNSUPPORTED_VERSION", "differs",
+    [("        if not (type(f) is BuiltinFunctionType and f.__self__ is sm and f.__name__ == nm):", "        if False:")])
+row("A_vocab_check", "revision 6: the vocabulary check at binding", "deletion", "X156b", "UNSUPPORTED_VERSION", "differs",
+    [("    g = globals()\n    opmod = sys.modules.get(\"_operator\")\n    if bad is None:", "    g = globals()\n    opmod = sys.modules.get(\"_operator\")\n    if False:")])
+row("A_verified_widened", "revision 6: `_VERIFIED` widened to every 3.12 and 3.13 patch level", "constants", "X37b", "UNSUPPORTED_VERSION",
+    "differs", [("_VERIFIED = ((3, 12, 3), (3, 13, 12))", "_VERIFIED = tuple((3, m, p) for m in (12, 13) for p in range(40))")])
+row("A_rebind_no_local", "revision 6: a rebinding without local events for the existing mints", "deletion", "X137g", "PASS", "differs",
+    [("                    for m in list(_MINTED.values()):\n                        _set_local(i, m.code, _LOCAL)",
+      "                    for m in ():\n                        _set_local(i, m.code, _LOCAL)")])
+row("A_final_off_unguarded", "revision 6: the reconciliation's last `_unwind_off(None)` without the `_TOOL[0]` guard", "deletion", "X36",
+    "MONITOR_BUSY", "TypeError", [("    if _TOOL[0] is not None:\n        _unwind_off(None)", "    if True:\n        _unwind_off(None)")])
+row("A_detach_read_named", "revision 6 (M3): `_detach`'s event read gated on the name", "conditions", "X137f", "MONITOR_LOST", "differs",
+    [("        if o.armed and not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:",
+      "        if o.armed and _named(_TOOL[0]) and not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:")])
+row("A_detach_read_named_b", "revision 7 (F14, a second witness): `_detach`'s event read gated on the name", "conditions", "X157c",
+    "MONITOR_LOST", "differs",
+    [("        if o.armed and not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:",
+      "        if o.armed and _named(_TOOL[0]) and not (_MON[0][1](_TOOL[0]) & PY_UNWIND) and _ANCHORS.get(fr) is o:")])
+_REG_COUNT = "        _map(_LOST_APPEND, _map(_is_not, _compress(a, _map(_is_not, b, _CALLBACKS5)), _repeat(None))),\n"
+row("A_repair_nocount", "revision 7: a registration's repair of a replaced callback not counted in `_LOST`", "deletion", "X158",
+    "MONITOR_LOST", "differs", [(_REG_COUNT, "        (),\n")])
+row("A_repair_count_after", "revision 7: the repair counted by X5 after the registration returns", "order", "X158b", "MONITOR_LOST",
+    "differs", [(_REG_COUNT, "        _map(bool, _map(_is_not, _compress(a, _map(_is_not, b, _CALLBACKS5)), _repeat(None))),\n"),
+                ("    r = _register(t)                                 # X5.2: registration first (revision 6 order)\n",
+                 "    r = _register(t)                                 # X5.2: registration first (revision 6 order)\n"
+                 "    _LOST.extend([x for x in r[:-1] if x is True])\n")],
+    note="the count moved out of the registration's C call into X5, right after `_register` returns")
+row("A_retake_nocount", "revision 7: E4's re-take of its own id not counted", "conditions", "X154d", "as stated", "differs",
+    [("                if _TOOL[0] is not None:             # a rebinding or a re-take",
+      "                if _TOOL[0] is not None and _TOOL[0] != i:  # mutant: a re-take not counted")])
+row("A_binding_first_only", "revision 7: the binding check only when `_MON` is first bound", "conditions", "X156c", "UNSUPPORTED_VERSION",
+    "differs", [("    if bad is not None:\n        raise GateSpecError(\n            f\"[V5:UNSUPPORTED_VERSION] {bad}",
+                 "    if bad is not None and _MON[0] is None:\n        raise GateSpecError(\n            f\"[V5:UNSUPPORTED_VERSION] {bad}")])
+row("A_deque_by_name", "revision 7: `_CONSUME`'s deque tested by type name only", "types", "X156d", "UNSUPPORTED_VERSION", "differs",
+    [("        if not (type(x) is BuiltinFunctionType and x.__name__ == \"extend\" and type(dq) is type\n"
+      "                and dq.__flags__ & (1 << 8) and dq.__module__ == \"collections\"\n"
+      "                and dq.__qualname__ == \"deque\" and x.__self__.maxlen == 0):",
+      "        if not (type(x) is BuiltinFunctionType and x.__name__ == \"extend\" and dq.__qualname__ == \"deque\"):")])
+row("A_version_at_import", "revision 7: the version read at import instead of at call time", "scope", "X37b", "UNSUPPORTED_VERSION",
+    "differs", [("_VERIFIED = ((3, 12, 3), (3, 13, 12))", "_VERIFIED = ((3, 12, 3), (3, 13, 12))\n_VI0 = tuple(sys.version_info[:3])"),
+                ("    gil = getattr(sys, '_is_gil_enabled', None)      # M0, read at call time (revision 9, GAP-04: no lambda)\n    vi = tuple(sys.version_info[:3])",
+                 "    gil = getattr(sys, '_is_gil_enabled', None)      # M0\n    vi = _VI0"),
+                ("    gil = getattr(sys, '_is_gil_enabled', None)      # E1: the M0 gate, read at call time\n    vi = tuple(sys.version_info[:3])",
+                 "    gil = getattr(sys, '_is_gil_enabled', None)      # E1\n    vi = _VI0")])
+row("A_pending_no_anchor", "revision 7 self-audit: a pending entry stored while no anchor is registered", "deletion", "V67", "pending 0",
+    "differs", [("    if not _ANCHORS: return                         # no section open anywhere: store nothing\n", "")])
+row("A_open_locked", "revision 7 self-audit: an open taking the robust mutex", "scope", "V68", "returns within 1 s", "blocks",
+    [("    o = _open(core, section, sys._getframe())\n    if o is None: return fn(*args, **kwargs)",
+      "    o = _locked(_open, core, section, sys._getframe())\n    if o is None: return fn(*args, **kwargs)")])
+row("A_mon_reread", "revision 7 self-audit: `_MON` re-read from `sys.monitoring` at each `coverage_trace()`", "scope", "V69",
+    "PASS, counter 0", "differs", [("    mon = _MON[0]\n    if mon is None:", "    mon = None\n    if mon is None:"),
+                                   ("    if _MON[0] is None:                              # M0 step 7", "    if True:                                         # M0 step 7")])
+row("A_section_compared_first", "revision 7 self-audit: a non-str section compared before its refusal", "order", "X78f", "counters 0", "differs",
+    [("    if type(section) is not str:                     # 3. section type", "    section in core.sections\n    if type(section) is not str:                     # 3. section type")])
+row("A_none_prev_nocount", "revision 8: None previous callbacks not counted", "conditions", "X158c", "MONITOR_LOST", "differs",
+    [(_REG_COUNT, "        _map(_LOST_APPEND, _map(_is_not, _filter(None, _compress(a, _map(_is_not, b, _CALLBACKS5))), _repeat(None))),\n")])
+row("A_pend_bare_id", "revision 8: a pending entry keyed by `id(frame)` without holding the frame", "scope", "V70", "PASS", "differs",
+    [("    if out: m.pend[id(f)] = (f, offset, out)", "    if out: m.pend[id(f)] = (None, offset, out)"),
+     ("    if p is not None and p[0] is f: _publish(code, p[2])", "    if p is not None: _publish(code, p[2])"),
+     ("    if p is not None and p[0] is f and offset != p[1]: _publish(code, p[2])", "    if p is not None and offset != p[1]: _publish(code, p[2])")])
+row("A_pend_get", "revision 8 self-audit: a confirmation that reads the pending entry without popping it", "scope", "X137i", "as stated",
+    "differs", [("    f = sys._getframe(1); p = m.pend.pop(id(f), None)\n    if p is not None and p[0] is f: _publish",
+                 "    f = sys._getframe(1); p = m.pend.get(id(f), None)\n    if p is not None and p[0] is f: _publish")])
+row("A_adopt_no_register", "revision 8 self-audit: an adopted id not registered again", "deletion", "X154e", "PASS", "differs",
+    [("    for i in (4, 3):\n        if not _named(i):\n            _take(i)\n        if _named(i):\n            r = _register(i)",
+      "    for i in (4, 3):\n        adopted = _named(i)\n        if not adopted:\n            _take(i)\n        if _named(i):\n            r = [_TOOL_NAME] if adopted else _register(i)")])
+row("A_open_audited_after_append", "revision 8 self-audit: an audited call in `_open` after the append", "order", "V71", "PASS", "differs",
+    [("    core.openings.append(o)\n    return o", "    core.openings.append(o)\n    id(o)\n    return o")])
+row("A_reload_incall_count", "revision 8 self-audit: the in-call count removed (reload shape)", "deletion", "X158e", "MONITOR_LOST",
+    "differs", [(_REG_COUNT, "        (),\n")])
+
 # ---------------------------------------------------------------------------------------------------
 # SM1
 # ---------------------------------------------------------------------------------------------------

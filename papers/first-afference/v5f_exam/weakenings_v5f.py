@@ -714,7 +714,11 @@ def main(argv):
         return 0
     if "--sm1" in argv:
         i = argv.index("--sm1")
-        pys = [a for a in argv[i + 1:] if not a.startswith("--")][:2]
+        pys = []
+        for a in argv[i + 1:]:
+            if a.startswith("--"):
+                break
+            pys.append(a)
         only = argv[argv.index("--only") + 1].split(",") if "--only" in argv else None
         deps = json.loads(argv[argv.index("--deps") + 1]) if "--deps" in argv else None
         out = argv[argv.index("--out") + 1] if "--out" in argv else os.path.join(HERE, "sm1_result.json")

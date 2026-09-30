@@ -389,7 +389,8 @@ row("A_bucket_labels", "NOT_EXERCISED bucket labels (swapped)", "constants", "X7
 row("A_lazy_text", "LAZY_RESULT text (the not-started suffix dropped)", "constants", "X74d", "suffix present", "absent",
     [("(\" (its body had not started)\" if fresh else \"\")", "\"\"")], note="also X74-X74c")
 row("A_nested_text", "NESTED_SECTION text (the same-section wording)", "constants", "X76b", "the spec-fixed text", "differs",
-    [("f\"opening of the same section of the same trace -- a call there", "f\"opening of the same trace -- a call there")])
+    [("f\"the stack of two openings of section {section!r}\")", "f\"the stack of two openings, section {section!r}\")")],
+    note="the spec-fixed substring (M11) changed")
 row("A_section_decl_empty", "SECTION_DECL non-empty", "conditions", "X07b / X07c", "SECTION_DECL", "differs",
     [("            if not isinstance(sec, str) or not sec or not sec.isascii():", "            if not isinstance(sec, str) or not sec.isascii():")])
 row("A_section_decl_ascii", "SECTION_DECL ASCII", "conditions", "X07b / X07c", "SECTION_DECL", "differs",

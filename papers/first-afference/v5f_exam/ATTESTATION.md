@@ -267,3 +267,72 @@ is written from the text's own words.
 
 Signed: the v5f exam author (Claude Code subagent), 2026-09-30.
 
+
+## Revision 13 update (2026-10-01)
+
+The same exam author applied revision 13: the leak fix and disk guard in every artifact (`v5f_tmp.py`), the
+reference's bounded walk in `_v5_state()` (committed by the coordinator as 514b7560 after the user's approval;
+`ref_v5f.py` sha256 prefix `1d0b06ee00195920`), the runner's reload fix and mutation-mode watchdog and its 17 new
+cases, `atom_v5f.py` (part A floor 18, part E's harness, K4 expected), the crash sweep's C3 baseline rule, `opmut_v5f.py`'s
+O12, `refcensus_v5f.py`'s O13 over the whole module and positive control #5's eight shapes, the SM1 catalog (the
+revision-13 witnesses, `A_capture_stale_read`, the 47 census and 29 kill-shape rows, the 25 GAP-62 rows and O12's),
+the corpus repros, controls #1-#4(a) on the v5e blob, and a fresh SM1 whose journal is keyed by four sha256s.
+
+### What I read for this update
+1. The design text at revision 13: the "Revision 13" section in full, the revision-13 rows of the case tables, the
+   SM1 required content (GAP-62's rule regions), SM2's Region, operators and O12's form, the positive controls,
+   G_INDEP's amended read scope, G_CLOSURE and the closure table, the frozen-artifacts list.
+2. Spec data: `protocol_v5f_design/rev13/spec_data/` (`manifest_r13.json`, `kill_shapes_r13.json`,
+   `round4_verdicts.json`, `mutation_gate_blindspots.json`, `round4_exam_mutation/mutants.py`,
+   `semantic_mutation_census.json`, `semantic_mutation_census.py`).
+3. Prior work pinned by `manifest_r13.json`, at its sha256: the files of `protocol_v5_redteam/` from round1_module
+   through round4 that the corpus rewrites (each `.py` file in `corpus_v5f/repro/SOURCES.json`), including
+   `round4/closure-audit/r1/held_battery.py`; v5e's frozen runner `run_protocol_v5e.py`, run with v5e's own flags.
+4. v5e's implementation, the blob `git show 8b805e26:styxx/protocol.py` (sha256 `c720250c…`), extracted with
+   `git archive` into a temporary directory and run as a black box: by its frozen runner (control #1) and by the
+   exam author's `sigflood_v5f.py` and `crash_sweep_v5f.py` through `controls_v5f.V5E_ADAPTER` (controls #3 and #4(a)).
+   The adapter uses the registry names the text gives for control #3 and the mint attributes (`fn`, `code`, `tracers`)
+   that round 4's repros use.
+5. My own artifacts.
+
+### What I did not read for this update
+- the revision-13 probe scripts and their outputs (`protocol_v5f_design/rev13/p_*.py`, `out_*.txt`) and the
+  five-lens audit under `rev13/audit/`;
+- every other file under `protocol_v5f_design/` outside `rev13/spec_data/` and the spec-data directories named in
+  earlier sections; every prototype, critique and panel file; any v5f implementation; `styxx/protocol.py` at any
+  commit after 8b805e26, and the working-tree file.
+
+### Third-party libraries in the deps path
+- greenlet 3.5.6 and coverage 7.16.1, installed from the wheels the text pins; each wheel's sha256 was checked
+  against the text before installing.
+- coverage 7.16.0 was in the deps directories until 2026-10-01 19:28 UTC, when it was replaced by the pinned 7.16.1.
+  Runs made with 7.16.0: the revision-12 full runner receipts (`receipts_v5f/`, 2026-09-29), the pre-revision-13 SM1
+  journal (`results_v5f/pre_rev13/`, a record only), and a G_COVER trial (not a result). Every run that feeds a gate in
+  this update was made after the switch (the table below).
+- numpy 2.5.3 from PyPI (not pinned by the text; R13-6), for v5e's ported cases R11 and X118: wheels tagged
+  cp312/cp313 manylinux_2_27/2_28 x86_64; the installed `numpy-2.5.3.dist-info/RECORD` sha256 is `193dda78…` (3.12)
+  and `9fa06065…` (3.13).
+
+### Runs (revision 13; the reference at sha256 prefix `1d0b06ee00195920`, the runner at `441a2308894823a7`)
+Every run below was made after the deps path held coverage 7.16.1. "load" is the 1-min load average at the start
+(from `tools/with_load.py` or `uptime`); runs marked *held* wait for the load gate (R13-14) and are added when made.
+
+| what | 3.12.3 | 3.13.12 | 3.10.20 | 3.11.15 | load |
+|---|---|---|---|---|---|
+| `smoke_cases.py` | 69/69 | 69/69 | 3/3 (scoring-only) | 3/3 (scoring-only) | 2.7 |
+| the 17 revision-13 witnesses against their rows (`tools/mutants_v5f.py`, `weakenings_v5f.py --only`) | all KILLED | all KILLED | — | — | < 3 |
+| `atom_v5f.py` (G_ATOM) | PASS | PASS | — | — | < 3 (rerun held) |
+| SM1 (`weakenings_v5f.py --sm1`, 308 rows, journal `results_v5f/sm1_journal.jsonl`) | 278 KILLED, 25 UNWITNESSED of the 301 case-witnessed rows; G_FI rows below | the same 278 / 25 | — | — | 2.7-3.4 until 21:30, then 10-20 |
+| SM1 G_FI rows (crash sweeps under each patch) | M1, M2, M4, M6 KILLED; M7 and the two at-fork rows: held, then decided again | M1, M2, M4, M6, M7 KILLED; at-fork rows held | — | — | see the journal's note and each entry's `load` |
+| control #1 (`controls_v5f.py --control1`, v5e blob 8b805e26 under v5e's frozen runner, 63 census mutants) | — | — | — | 27 KILLED / 36 SURVIVED = the census: FIRED | 2.5-3.3 |
+| control #4(a) (`sigflood_v5f.py --cells lock` on the v5e blob) | FIRED (1 leak) | FIRED (1 leak) | — | — | < 3 |
+| corpus repros, N = 5 (`diffprobe_v5f.py --mask --only <37 equality repro entries>`) | CLEAN, 0 masked | CLEAN, 0 masked | — | — | 3.3 |
+| witness shapes for the UNWITNESSED rows (`tools/r13_shapes/run_all.py`) | as R13-2 states | identical | — | — | 3.3 |
+| `run_protocol_v5f_exam.py` against `ref_v5f.py` (step 7 receipts) | held | held | held | held | |
+| `crash_sweep_v5f.py` (G_FI), `sigflood_v5f.py` (G_SIG), `fuzz_v5f.py` (N = 300), `atom_v5f.py` rerun | held | held | — | — | |
+| `refcensus_v5f.py --controls` (G_REF, G_HYG, control #5), `cover_driver_v5f.py` | running | running | — | — | 15-20 (not timing-sensitive) |
+| `gcover_v5f.py` (G_COVER, four passes) | held | held | — | — | |
+| corpus rebuild (`diffprobe_v5f.py --build-corpus`) and its N = 5 mask | held | held | — | — | |
+| control #3 (`controls_v5f.py --control3`) and the controls summary | held | held | — | — | |
+
+Signed: the v5f exam author (Claude Code subagent), 2026-10-01.

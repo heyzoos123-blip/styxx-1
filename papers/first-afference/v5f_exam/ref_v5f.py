@@ -1889,16 +1889,18 @@ def _v5_state():
         le = mon[6](t, m.code) if (t is not None and mon is not None) else 0   # C3 (GAP-03)
         rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))
     rows.sort()
-    r = _GUARD["hint"]
+    r = _GUARD["hint"]                               # revision 13 (GAP-64): the walk is total
+    seen = {id(r)}
     n = r.succ.get("next")
-    while n is not None:
+    while n is not None and id(n) not in seen:
+        seen.add(id(n))
         r = n
         n = r.succ.get("next")
     return {
         "mints": [{"target": a, "holders": b, "installed": c, "local_events": d, "pending": e}
                   for a, b, c, d, e in rows],
         "anchors": len(_ANCHORS),
-        "guard": "free" if r.tid is None else ("held" if _alive(r) else "dead"),
+        "guard": "cycle" if n is not None else ("free" if r.tid is None else ("held" if _alive(r) else "dead")),
         "cut": len(_CUT),
         "cut_current": _HANDLE_DICT[0] is None or _cut_ok(),        # revision 9, GAP-05
         "tool": t,

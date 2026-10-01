@@ -1,0 +1,16 @@
+{
+ "python": "/usr/bin/python3.11",
+ "v5e_blob": "8b805e26",
+ "v5e_sha256": "c720250c209bd8facd75d2e7b52e7667ec39743f6c38cab2f3d64c5d1cefa7d9",
+ "runner_sha256": "ef4b4f668bca0b8f72b500dd103d0318786f7e5fc2916b1250f9926287ea3f52",
+ "baseline": "SURVIVED",
+ "mutants": 63,
+ "killed": 27,
+ "survived": 36,
+ "killed_not_in_census": [],
+ "census_killed_not_killed": [],
+ "survived_not_in_census": [],
+ "census_survivors_not_survived": [],
+ "other": {},
+ "status": "FIRED"
+}

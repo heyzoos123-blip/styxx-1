@@ -8,16 +8,17 @@ _v5_faultpoints() (the region is defined by name, M10).
   python refcensus_v5f.py --impl PATH --controls                      also the step controls K11, K12,
                                                                       K12b, K13, K14 (each must be rejected)
 
-G_REF's census:
-  - every coded literal (a str constant, or an f-string part, containing "[V5:") in the module, with its
-    innermost enclosing statement (O13's site). A literal outside a mutable site (not inside a function or
-    method body of the region or the scoring functions, so O13's `pass` would not delete an emission) is
-    counted: the gate needs 0;
-  - coded emissions in a blind shape: a code prefix built so that no single literal carries "[V5:" (G_HYG's
-    first clause). The frozen list of the eight blind shapes is `mutation_gate_blindspots.json`, which the
-    exam author's read scope does not include (Revision 12 follow-ups); the shapes checked here are the
-    ones the text names: "[V5" split from ":", a code prefix from str.format, %-formatting or joining, and
-    a literal "V5:" without its bracket.
+G_REF's census (revision 13, GAP-50: over the whole module):
+  - every coded literal (a str constant, or an f-string part, containing "[V5:"; docstrings and bare strings
+    excluded) in the module, with its innermost enclosing statement (O13's site). The site is *mutable* iff
+    its replacement by `pass` compiles; a literal outside a mutable site has no compiling O13 mutant. The
+    census verdict is PASS iff there is none, and no blind shape. Units outside SM2's Region (the DECL and
+    SECTION_DECL raises of Experiment.__init__, the module-level _CODE_RE) are counted like the others;
+  - coded emissions in a blind shape (G_HYG's first clause; revision 13, GAP-51): a code no single literal
+    holds whole: "[V5" split from ":" (or joined by +), a code prefix from str.format, %-formatting or
+    joining, and a code from an f-string's formatted value. --controls plants each (all must be flagged),
+    and positive control #5's 8 shapes of mutation_gate_blindspots.json (spec data), which O13 must delete
+    by their literal.
   G_REF's kill test (100% of O13 mutants KILLED by the frozen exam) is `--o13-mutants DIR`, which writes one
   patched copy per site for the runner's mutation mode, and `--o13-kill DIR --journal J.jsonl [--deps DIR]`, which
   writes them and runs each in the frozen runner's mutation mode (resumable through the journal):
@@ -124,6 +125,24 @@ def _mon_index(n):
 # ---------------------------------------------------------------------------------------------------
 # G_REF: the coded-literal census
 # ---------------------------------------------------------------------------------------------------
+_O13_COMPILES = {}
+
+
+def _o13_compiles(R, a, b):
+    key = (id(R), a, b)
+    if key not in _O13_COMPILES:
+        lines = R.src.split("\n")
+        first = lines[a - 1]
+        indent = first[:len(first) - len(first.lstrip())]
+        new = lines[:a - 1] + [indent + "pass"] + [""] * (b - a) + lines[b:]
+        try:
+            compile("\n".join(new), "<o13>", "exec")
+            _O13_COMPILES[key] = True
+        except SyntaxError:
+            _O13_COMPILES[key] = False
+    return _O13_COMPILES[key]
+
+
 def census(R):
     parents = {}
     for p in ast.walk(R.tree):
@@ -140,13 +159,13 @@ def census(R):
                 while not isinstance(st, ast.stmt):
                     st = parents[st]
                 fn = region_nodes.get(id(n))
-                in_body = fn is not None and st is not R.funcs[fn] and not (
-                    isinstance(st, ast.Expr) and isinstance(st.value, ast.Constant))    # a docstring is not an emission
                 if isinstance(st, ast.Expr) and isinstance(st.value, ast.Constant) and st.value is n:
                     continue                                   # docstrings and bare strings emit nothing
                 site = {"line": n.lineno, "stmt_line": st.lineno, "stmt_end": st.end_lineno, "func": fn,
                         "code": (re.search(r"\[V5:([A-Z_]*)", s) or [None, ""])[1], "fstring": joined}
-                (sites if in_body else outside).append(site)
+                # revision 13 (GAP-50): every coded literal of the module; a *mutable site* is its innermost
+                # statement whose replacement by `pass` compiles; outside one, O13 has no compiling mutant
+                (sites if _o13_compiles(R, st.lineno, st.end_lineno) else outside).append(site)
             elif re.search(r"\[V5(?!:)|(?<!\[)V5:", s) and not (isinstance(parents.get(n), ast.Expr)):
                 blind.append({"line": n.lineno, "shape": "a code prefix split across literals", "text": s[:40]})
         if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr in ("format", "join"):
@@ -699,6 +718,73 @@ def run_blind_controls(path, workdir):
     return out
 
 
+# Positive control #5 (restated in revision 13, GAP-51): the 8 shapes of mutation_gate_blindspots.json (spec data),
+# each planted in a copy of the implementation as a refusal with a fresh code. The control passes for a shape iff
+# the census finds the planted literal in a mutable site, the planted copy emits the code, and O13's mutant at
+# that site no longer emits it. "Emits": the code is in the planted function's exception, return value, or the
+# problem list it appends to.
+BLIND8 = {
+    "raise via a helper that returns the exception": (
+        "def _plant_helper(msg):\n    return GateSpecError(msg)\n\n\n"
+        "def _plant():\n    raise _plant_helper(\"[V5:PLANTED_A] a planted refusal\")\n"),
+    "raise GateSpecError through a module attribute": (
+        "_plant_mod = sys.modules[__name__]\n\n\n"
+        "def _plant():\n    raise _plant_mod.GateSpecError(\"[V5:PLANTED_B] a planted refusal\")\n"),
+    "raise an alias of GateSpecError": (
+        "_PlantE = GateSpecError\n\n\n"
+        "def _plant():\n    raise _PlantE(\"[V5:PLANTED_C] a planted refusal\")\n"),
+    "recorded problem appended by augmented assignment": (
+        "def _plant():\n    global _PLANT_PROBLEMS\n    _PLANT_PROBLEMS += [\"[V5:PLANTED_D] a planted refusal\"]\n"),
+    "emission as the value of a return": (
+        "def _plant():\n    return \"[V5:PLANTED_E] a planted refusal\"\n"),
+    "emission assigned to a name": (
+        "def _plant():\n    msg = \"[V5:PLANTED_F] a planted refusal\"\n    raise GateSpecError(msg)\n"),
+    "emission inside a conditional expression": (
+        "def _plant(x=True):\n    raise GateSpecError(\"[V5:PLANTED_G] a planted refusal\" if x else \"no refusal\")\n"),
+    "code in a keyword argument": (
+        "class _PlantKwError(Exception):\n    def __init__(self, msg=\"\"):\n        super().__init__(msg)\n\n\n"
+        "def _plant():\n    raise _PlantKwError(msg=\"[V5:PLANTED_H] a planted refusal\")\n"),
+}
+
+
+def _plant_emits(path, code):
+    m = load(path, f"v5f_plant_{abs(hash(path))}")
+    out = []
+    try:
+        out.append(repr(m._plant()))
+    except BaseException as e:                                  # noqa: BLE001
+        out.append(f"{type(e).__name__}: {e}")
+    out.extend(map(str, m._PLANT_PROBLEMS))
+    sys.modules.pop(m.__name__, None)
+    return any(f"[V5:{code}]" in x for x in out)
+
+
+def run_blind8(path, workdir):
+    src = open(path, encoding="utf-8").read().rstrip("\n") + "\n\n\n_PLANT_PROBLEMS = []\n\n\n"
+    out = {}
+    for i, (shape, text) in enumerate(BLIND8.items()):
+        code = re.search(r"\[V5:([A-Z_]+)\]", text).group(1)
+        p = os.path.join(workdir, f"blind8_{i}_ref_v5f.py")
+        open(p, "w").write(src + text)
+        R = Region(p)
+        sites = [x for x in census(R)["sites"] if x["code"] == code]
+        outside = [x for x in census(R)["outside_mutable_site"] if x["code"] == code]
+        emits = _plant_emits(p, code)
+        after = None
+        if sites:
+            lines = R.src.split("\n")
+            st = sites[0]
+            first = lines[st["stmt_line"] - 1]
+            indent = first[:len(first) - len(first.lstrip())]
+            new = lines[:st["stmt_line"] - 1] + [indent + "pass"] + [""] * (st["stmt_end"] - st["stmt_line"]) + lines[st["stmt_end"]:]
+            q = os.path.join(workdir, f"blind8_{i}_o13_ref_v5f.py")
+            open(q, "w").write("\n".join(new))
+            after = _plant_emits(q, code)
+        out[shape] = {"in_mutable_site": bool(sites) and not outside, "emits_planted": emits,
+                      "emits_after_o13": after, "caught": bool(sites) and not outside and emits and after is False}
+    return out
+
+
 def run_controls(path, workdir):
     src = open(path, encoding="utf-8").read()
     out = {}
@@ -757,16 +843,18 @@ def main(argv):
             res["G_HYG_step_controls"] = run_controls(impl, d)
         with v5f_tmp.scratch("v5f_blindctl_") as d:
             res["G_REF_blind_controls"] = run_blind_controls(impl, d)
+        with v5f_tmp.scratch("v5f_blind8_") as d:
+            res["G_REF_blind8_controls"] = run_blind8(impl, d)
     if opt("--o13-mutants"):
         res["o13_mutants"] = o13_mutants(R, opt("--o13-mutants"))
     ctl_ok = (all(x.get("rejected") for x in res.get("G_HYG_step_controls", {}).values())
-              and all(x.get("caught") for x in res.get("G_REF_blind_controls", {}).values()))
+              and all(x.get("caught") for x in res.get("G_REF_blind_controls", {}).values())
+              and all(x.get("caught") for x in res.get("G_REF_blind8_controls", {}).values()))
     res["G_HYG_verdict"] = "PASS" if not v and ("--controls" not in argv or ctl_ok) else "FAIL"
-    # "a mutable site" is not defined by the text (Revision 12 follow-ups, GAP-50): the literals outside
-    # the SM2 region's function bodies are reported, and the census part of G_REF is left open
-    outside_fn = [x for x in c["outside_mutable_site"] if x["func"] is None]
-    res["G_REF_census_verdict"] = ("PASS" if not c["outside_mutable_site"] and not c["blind"]
-                                   else "OPEN (GAP-50)" if not c["blind"] else "FAIL")
+    # revision 13 (GAP-50): every coded literal of the module must sit in a mutable site (O13 has a compiling
+    # mutant for it), and none may be in a blind shape
+    res["G_REF_census"]["outside_region"] = sum(1 for x in c["sites"] if x["func"] is None)
+    res["G_REF_census_verdict"] = "PASS" if not c["outside_mutable_site"] and not c["blind"] else "FAIL"
     res["verdict"] = res["G_HYG_verdict"]
     if opt("--out"):
         json.dump(res, open(opt("--out"), "w"), indent=1)

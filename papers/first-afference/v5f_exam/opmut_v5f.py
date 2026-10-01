@@ -16,7 +16,12 @@ Operators, applied mechanically at every applicable site of the Region (D1's O1-
   order         O8/SWAP swap adjacent simple statements; O14 swap two sequential `if ...: raise GateSpecError`
   claims        O9 `d.setdefault(k, v) is v` -> unconditional store
   scope         O10/ITER `for x in seq` -> seq[:1] / seq[-1:]; SLICE [a:] -> [a:a+1]; O11 delete a `break`
-  immutability  O12 tuple rebuild -> in-place mutation: NOT GENERATED (SPEC_GAPS.md GAP-58)
+  immutability  O12 (revision 13, GAP-58): one mutant per O12 attribute (every assignment of it stores a tuple
+                display, tuple(...) or itself + a tuple display, one of them outside __init__), at all its
+                sites together: in __init__ a tuple display -> a list display, tuple(x) -> list(x); elsewhere
+                e.N = (a, ...) -> e.N[:] = [a, ...], e.N = tuple(x) -> e.N[:] = x, e.N = e.N + (a, ...) ->
+                e.N.extend((a, ...)). The one operator whose mutant may touch several units, and sites outside
+                the Region (the creation site in __init__).
 A mutant is the implementation's file with one Region node (a function, or one module-level statement)
 replaced by its mutated form (ast.unparse, re-indented); nothing else in the file changes.
 
@@ -320,6 +325,79 @@ def code_sig(c):
             getattr(c, "co_qualname", c.co_name), c.co_exceptiontable if hasattr(c, "co_exceptiontable") else b"")
 
 
+def _o12_value_kind(attr, v):
+    if isinstance(v, ast.Tuple):
+        return "display"
+    if isinstance(v, ast.Call) and isinstance(v.func, ast.Name) and v.func.id == "tuple" and len(v.args) == 1 \
+            and not v.keywords:
+        return "call"
+    if isinstance(v, ast.BinOp) and isinstance(v.op, ast.Add) and isinstance(v.left, ast.Attribute) \
+            and v.left.attr == attr and isinstance(v.right, ast.Tuple):
+        return "concat"
+    return None
+
+
+def o12_mutants(src, impl, base):
+    """O12 (revision 13, GAP-58): the O12 attributes of the module and one mutant for each."""
+    tree = ast.parse(src)
+    sites = {}                                         # attr -> [(stmt, in_init, kind)] or None (disqualified)
+
+    def walk(node, fname):
+        for ch in ast.iter_child_nodes(node):
+            if isinstance(ch, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                walk(ch, ch.name)
+                continue
+            if isinstance(ch, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+                tgts = ch.targets if isinstance(ch, ast.Assign) else [ch.target]
+                for t in tgts:
+                    if isinstance(t, ast.Attribute):
+                        kind = _o12_value_kind(t.attr, ch.value) if isinstance(ch, ast.Assign) and len(tgts) == 1 else None
+                        if kind is None:
+                            sites[t.attr] = None
+                        elif sites.get(t.attr, []) is not None:
+                            sites.setdefault(t.attr, []).append((ch, fname == "__init__", kind))
+            walk(ch, fname)
+    walk(tree, None)
+    lines = src.splitlines(keepends=True)
+    out = []
+    for attr in sorted(a for a, v in sites.items() if v and any(not x[1] for x in v)):
+        new_lines = list(lines)
+        for st, in_init, kind in sorted(sites[attr], key=lambda x: -x[0].lineno):
+            tgt, v = st.targets[0], st.value
+            if in_init:
+                nv = ast.List(elts=v.elts, ctx=ast.Load()) if kind == "display" else \
+                    ast.Call(func=ast.Name("list", ast.Load()), args=v.args, keywords=[]) if kind == "call" else None
+                if nv is None:                         # a concatenation in __init__: no form is given
+                    break
+                new = ast.Assign(targets=[tgt], value=nv)
+            elif kind == "display":
+                new = ast.Assign(targets=[ast.Subscript(tgt, ast.Slice(), ast.Store())],
+                                 value=ast.List(elts=v.elts, ctx=ast.Load()))
+            elif kind == "call":
+                new = ast.Assign(targets=[ast.Subscript(tgt, ast.Slice(), ast.Store())], value=v.args[0])
+            else:
+                rcv = ast.Attribute(value=tgt.value, attr=attr, ctx=ast.Load())
+                new = ast.Expr(ast.Call(func=ast.Attribute(rcv, "extend", ast.Load()), args=[v.right], keywords=[]))
+            ind = " " * st.col_offset
+            txt = ind + ast.unparse(ast.fix_missing_locations(new)) + "\n"
+            new_lines[st.lineno - 1:st.end_lineno] = [txt] + ["\n"] * (st.end_lineno - st.lineno)
+        else:
+            msrc = "".join(new_lines)
+            desc = f"O12 on .{attr}: {len(sites[attr])} sites (" + ", ".join(
+                f"line {st.lineno}" for st, _, _ in sorted(sites[attr], key=lambda x: x[0].lineno)) + ")"
+            try:
+                code = compile(msrc, impl, "exec")
+            except SyntaxError as e:
+                out.append({"id": f"O12:{attr}", "region": f"O12:{attr}", "op": "O12", "family": "immutability",
+                            "desc": desc, "status": "NOT_COMPILED", "error": str(e)})
+                continue
+            tce = code_sig(code) == base
+            out.append({"id": f"O12:{attr}", "region": f"O12:{attr}", "op": "O12", "family": "immutability",
+                        "desc": desc, "status": "TCE" if tce else "MUTANT", "src": None if tce else msrc,
+                        "sites": [st.lineno for st, _, _ in sites[attr]]})
+    return out
+
+
 def generate(impl):
     src = open(impl, encoding="utf-8").read()
     lines = src.splitlines(keepends=True)
@@ -341,6 +419,7 @@ def generate(impl):
             tce = code_sig(code) == base
             out.append({"id": f"{label}#{k}", "region": label, "op": op, "family": FAMILY[op], "desc": desc,
                         "status": "TCE" if tce else "MUTANT", "src": None if tce else msrc})
+    out.extend(o12_mutants(src, impl, base))
     return out, [l for l, _ in reg], missing
 
 

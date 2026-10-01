@@ -314,7 +314,19 @@ class Background:
 # ---------------------------------------------------------------------------------------------------
 # one run and one point
 # ---------------------------------------------------------------------------------------------------
-def run_once(name, faulted, arm):
+BASELINE_BOUND = 60.0         # revision 13 (GAP-64): the baseline and each discovery run
+
+
+class BaselineHang(Exception):
+    """A baseline or discovery run that did not complete within BASELINE_BOUND: C3, not a void run."""
+
+
+def baseline_hang_entry(what):
+    return {"points": None, "baseline_hang": what, "all_points_failed": True,
+            "unclean": [[None, [f"C3: baseline hang ({what})"]]], "n_unclean": 1}
+
+
+def run_once(name, faulted, arm, limit=None):
     fn = SCENARIOS[name][0]
     box = {"tracers": [], "threads": []}
     raised, unraisable, hooked = [], [], []
@@ -328,7 +340,7 @@ def run_once(name, faulted, arm):
             raised.append(e)
     th = threading.Thread(target=t, daemon=True, name="cs-scenario")
     th.start()
-    th.join(WATCH)
+    th.join(WATCH if limit is None else limit)
     for w in box["threads"]:
         w.join(1.0)
     sys.unraisablehook, threading.excepthook = old_u, old_e
@@ -349,10 +361,12 @@ def records(box):
 def discovery(name, faulted, keys):
     a = Arm(keys, "count")
     try:
-        box, hung, raised, _, _ = run_once(name, faulted, a)
+        box, hung, raised, _, _ = run_once(name, faulted, a, BASELINE_BOUND)
     finally:
         a.close()
-    if hung or raised is not None:
+    if hung:
+        raise BaselineHang(f"the discovery run of {name}/{faulted} did not complete within {BASELINE_BOUND:.0f} s")
+    if raised is not None:
         raise RuntimeError(f"discovery run of {name}/{faulted} failed: hung={hung} raised={raised!r}")
     return {(k, off, n) for (k, off), c in a.counts.items() for n in range(1, K + 1) if c >= n}
 
@@ -515,8 +529,13 @@ def sweep(name):
             bg.open()
         # the baseline (fault-free, once per version), then the snapshot
         noarm = lambda ident: None
-        box, hung, raised, _, _ = run_once(name, faulted, noarm)
-        if hung or raised is not None:
+        box, hung, raised, _, _ = run_once(name, faulted, noarm, BASELINE_BOUND)
+        if hung:                                     # revision 13 (GAP-64): C3, every point failed
+            out[faulted] = baseline_hang_entry(f"the baseline of {name}/{faulted} did not complete within {BASELINE_BOUND:.0f} s")
+            if bg is not None:
+                bg.close()
+            continue
+        if raised is not None:
             out[faulted] = {"void": f"baseline failed: {raised!r}"}
             if bg is not None:
                 bg.close()
@@ -527,14 +546,20 @@ def sweep(name):
             bg.close()
         gc.collect()
         S0 = dict(P._v5_state()); S0.pop("pid", None)
-        if bg is not None:
-            bg.open()
-        d1 = discovery(name, faulted, keys)
-        if bg is not None:
-            bg.close(); bg.open()
-        d2 = discovery(name, faulted, keys)
-        if bg is not None:
-            bg.close()
+        try:
+            if bg is not None:
+                bg.open()
+            d1 = discovery(name, faulted, keys)
+            if bg is not None:
+                bg.close(); bg.open()
+            d2 = discovery(name, faulted, keys)
+            if bg is not None:
+                bg.close()
+        except BaselineHang as e:
+            if bg is not None:
+                bg.close()
+            out[faulted] = baseline_hang_entry(str(e))
+            continue
         if d1 != d2:
             out[faulted] = {"void": f"the two discovery runs differ ({len(d1)} vs {len(d2)})"}
             continue
@@ -666,9 +691,14 @@ def sweep_fork():
     import subprocess
     def run(point, variant):
         v5f_tmp.disk_guard(what=f"fork point {point}")
-        r = v5f_tmp.child_run([sys.executable, os.path.abspath(__file__), "--impl", IMPL, "--fork-point",
-                               json.dumps(point) if point != "count" else "count", "--variant", variant],
-                              capture_output=True, text=True, timeout=120)
+        bound = BASELINE_BOUND if point == "count" else 120
+        try:
+            r = v5f_tmp.child_run([sys.executable, os.path.abspath(__file__), "--impl", IMPL, "--fork-point",
+                                   json.dumps(point) if point != "count" else "count", "--variant", variant],
+                                  capture_output=True, text=True, timeout=bound)
+        except subprocess.TimeoutExpired:
+            v5f_tmp.disk_guard(what=f"fork point {point}")
+            return {"hang": f"the {variant} run at {point} did not complete within {bound:.0f} s"}
         v5f_tmp.check_child(r.stderr, f"fork point {point}")
         lines = [x for x in r.stdout.splitlines() if x.startswith("FORK_RESULT ")]
         if not lines:
@@ -676,28 +706,41 @@ def sweep_fork():
         return json.loads(lines[-1].split(" ", 1)[1])
     out = {}
     base = run("count", "plain")
+    if "hang" in base:
+        return {"plain": baseline_hang_entry(base["hang"])}
     if "error" in base:
         return {"void": base["error"]}
     base2 = run("count", "plain")
+    if "hang" in base2:
+        return {"plain": baseline_hang_entry(base2["hang"])}
     counts = base["child"]["counts"]
     if counts != base2["child"]["counts"]:
         return {"void": "the two discovery runs differ"}
     points = sorted((["_forget_in_child", int(off), n] for off, c in counts.items() for n in range(1, K + 1) if c >= n),
                     key=lambda p: (p[1], p[2]))
     abase = run("count", "audit")
-    if "error" in abase:
+    if "hang" in abase:
+        out["audit"] = baseline_hang_entry(abase["hang"])
+        apoints = None
+    elif "error" in abase:
         return {"void": abase["error"]}
-    apoints = [["write", k] for k in range(1, abase["child"].get("writes", 0) + 1)]
+    else:
+        apoints = [["write", k] for k in range(1, abase["child"].get("writes", 0) + 1)]
     if DISCOVER_ONLY:
-        return {"plain": {"points": len(points), "point_list": points}, "audit": {"points": len(apoints), "point_list": apoints}}
+        return {"plain": {"points": len(points), "point_list": points},
+                "audit": ({"points": len(apoints), "point_list": apoints} if apoints is not None else out["audit"])}
     for variant, pts in (("plain", points), ("audit", apoints)):
+        if pts is None:
+            continue
         verdicts, unclean = collections.Counter(), []
         for i, pt in enumerate(pts):
             if i % STRIDE:
                 continue
             r = run(pt, variant)
             bad = []
-            if "error" in r:
+            if "hang" in r:
+                bad.append("C3: " + r["hang"][:200])
+            elif "error" in r:
                 bad.append("C9: " + r["error"][:200])
             else:
                 c = r["child"]

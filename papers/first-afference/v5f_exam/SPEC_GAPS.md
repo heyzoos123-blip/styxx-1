@@ -924,14 +924,16 @@ change. The equivalence arguments are the exam author's reading, offered for the
 **R13-3. Trial and event counts in two revision-13 rows.** X132b's row states 154 trials (spec) and 158 (with
 `M3_register_before_append`); the runner counts 204 and 208. V71b states 4 events (spec) and 5 (weakened); the runner
 counts 6 and 7. The outcomes match the rows on both versions (every spec trial `anchors == 0`; one opening, none
-`"open"`), and both rows KILL their weakening. The counts are of instructions and audit events on the case thread,
-which depend on frames the runner adds; the text's numbers are its prototype's. Fix needed: state the outcomes
-without the counts, or say whose harness the counts are.
+`"open"`), and both rows KILL their weakening. The counts are of `_open`'s instructions and of the audit events
+`_open` raises, so they depend on the implementation's code of `_open` (here `ref_v5f.py`'s), not on the rule; the
+text's numbers are its prototype's. Fix needed: state the outcomes without the counts, or say which code the counts
+are of.
 
 **R13-4. `_v5_state()`'s walk and the audit events.** Revision 13's total walk calls `id()` once per chain node, so
 `_v5_state()` raises `builtins.id` audit events. Checked against V71, V71b, V72 and G_HYG's "no user code" clause:
-no conflict found. V71 and V71b count events whose caller is `_open`, and `_v5_state()` is not called inside a
-`cov.run`; the leftover snaps run outside the armed window. Recorded, nothing changed.
+no conflict found. V71 arms its hook around one `cov.run` and V71b counts only events whose caller is `_open`;
+`_v5_state()` is never called inside a `cov.run`, and the leftover snaps run outside the armed window. V72 reads the
+guard through `_v5_state()` and gives its stated outcome. Recorded, nothing changed.
 
 **R13-5. A case that never runs in mutation mode.** Under some weakenings the self-trace itself raises before the
 self-placed cases run. The text classes a run by its witness's observable outcome and does not say what an unreached

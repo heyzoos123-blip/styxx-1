@@ -1,0 +1,37 @@
+3.12.3 ref_v5f.py sha256 2a1781e66975a8aa
+X26g   spec                           ["RAISE", "FOREIGN_DEFINITION"]
+X26g   A_coh_no_file_skip             ["PASS", {"G": {"fx_r13:wrapped_g": 1}}]
+X24g   spec                           ["RAISE", "NOT_A_FUNCTION"]
+X24g   A_cache_callee_identity        ["PASS", {"G": {"fx_r13:power2": 1}}]
+V07b   spec                           ["PASS", {"G": {"fx_r13:cached": 1}}]
+V07b   A_alias_by_name                ["RAISE", "NOT_A_FUNCTION"]
+V74    spec                           {"union": {"fx_r13:f": 1, "fx_r13:g": 2}, "score": ["PASS", {"G": {"fx_r13:f": 1, "fx_r13:g": 2}}]}
+V74    A_mint_eq                      {"union": {"fx_r13:f": 1}, "score": ["REFUSE", "NOT_EXERCISED"]}
+V36c   spec                           ["PASS", {"G": {"fx_r13:f": 1}}]
+V36c   A_visible_deleted              ["REFUSE", "CLONE_ALIVE"]
+X71d   spec                           {"P_calls": [{}], "P_score": ["REFUSE", "NOT_EXERCISED"]}
+X71d   A_publish_recheck              {"P_calls": [{"fx_r13:blk": 1}], "P_score": ["PASS", {"G": {"fx_r13:blk": 1}}]}
+X32e   spec                           {"trials": 109, "trials_with_two_enters": 0, "trials_with_one": 109, "outcomes": ["REENTRY+ok"]}
+X32e   A_enter_claim                  {"trials": 112, "trials_with_two_enters": 7, "trials_with_one": 105, "outcomes": ["REENTRY+ok", "ok+ok"]}
+V52b   spec                           {"problems": ["[V5:CLONE_CALLED]"], "score": ["REFUSE", "CLONE_CALLED"]}
+V52b   A_exit_claim                   {"problems": ["[V5:CLONE_CALLED]", "[V5:CLONE_CALLED]"], "score": ["REFUSE", "CLONE_CALLED"]}
+V52b   M5_exit_claim_not_idempotent   {"problems": ["[V5:CLONE_CALLED]", "[V5:CLONE_CALLED]"], "score": ["REFUSE", "CLONE_CALLED"]}
+V47bc  spec                           {"child": {"child_before": {"anchors": 0, "mints": 0, "global_events": 0}, "child_anchors_inside_run": 0}, "parent": ["PASS", {"G": {"fx_r13:f": 1}}]}
+V47bc  A_atfork_handler               {"child": {"child_before": {"anchors": 1, "mints": 1, "global_events": 4096}, "child_anchors_inside_run": 1}, "parent": ["PASS", {"G": {"fx_r13:f": 1}}]}
+V47bc  A_pid_passthrough              {"child": {"child_before": {"anchors": 0, "mints": 0, "global_events": 0}, "child_anchors_inside_run": 1}, "parent": ["PASS", {"G": {"fx_r13:f": 1}}]}
+X146e  spec                           {"anchors": 0, "global_events": 0}
+X146e  A_unwind_on_recheck            {"anchors": 0, "global_events": 4096}
+X148b  spec                           {"score": ["PASS", {"G": {"fx_r13:f": 1}}], "notes": []}
+X148b  A_detach_anchor_first          {"score": ["PASS", {"G": {"fx_r13:f": 1}}], "notes": ["[V5:MONITOR_LOST]"]}
+X153   spec                           {"trials": 119, "trials_noting_B": 0, "trials_noting_A": 0}
+X153   A_capture_outside              {"trials": 124, "trials_noting_B": 0, "trials_noting_A": 0}
+X153   R13_capture_stale_read         {"trials": 117, "trials_noting_B": 87, "trials_noting_A": 0}
+X153b  spec                           {"trials": 119, "trials_Q_noted": 119, "trials_Q_not_noted": []}
+X153b  A_capture_outside              {"trials": 124, "trials_Q_noted": 88, "trials_Q_not_noted": [87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122]}
+X153b  R13_capture_stale_read         {"trials": 117, "trials_Q_noted": 30, "trials_Q_not_noted": [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115]}
+X137k  spec                           {"tool_at_P": 3, "tool_after_Q_enter": 3, "P": [["PASS", {"G": {"fx_r13:f": 1}}], ["[V5:MONITOR_LOST]"]]}
+X137k  A_ensure_no_reclaim            {"tool_at_P": 3, "tool_after_Q_enter": 4, "P": [["PASS", {"G": {"fx_r13:f": 1}}], ["[V5:MONITOR_LOST]"]]}
+V71b   spec                           {"trials": 4, "openings": 1, "ends_open": 0}
+V71b   A_open_audited_after_append    {"trials": 5, "openings": 2, "ends_open": 1}
+X132b  spec                           {"trials": 154, "trials_with_anchor_left_after_exit": 0}
+X132b  M3_register_before_append      {"trials": 158, "trials_with_anchor_left_after_exit": 5}

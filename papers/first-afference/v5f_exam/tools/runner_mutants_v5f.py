@@ -16,6 +16,9 @@ Exit status 0 iff the control passes and every mutant is killed on every interpr
 import json, os, runpy, subprocess, sys, tempfile
 
 EXAM = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if EXAM not in sys.path:
+    sys.path.append(EXAM)
+import v5f_tmp      # noqa: E402  the mutant copies are removed at exit; each runner's TMPDIR when it returns
 REF = open(os.path.join(EXAM, "ref_v5f.py")).read()
 RUNNER = os.path.join(EXAM, "run_protocol_v5f_exam.py")
 SMOKE_M = runpy.run_path(os.path.join(EXAM, "tools", "mutants_v5f.py"), run_name="mutants")["M"]
@@ -189,7 +192,7 @@ def runner_ids(py):
 def run(py, impl, cases, out):
     cmd = [py, RUNNER, "--impl", impl, "--only", ",".join(cases), "--out", out]
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
+        r = v5f_tmp.child_run(cmd, capture_output=True, text=True, timeout=3600)
     except subprocess.TimeoutExpired:
         return "TIMEOUT", [], ""
     try:
@@ -213,7 +216,7 @@ def main(argv):
     table = {} if hazard_only else {n: (w, p, "tools/mutants_v5f.py") for n, (w, p) in SMOKE_M.items()}
     table.update({k: v for k, v in HAZ.items() if not k.startswith("RETIRED_")})
     names = [n for n in table if not only or n in only]
-    root = tempfile.mkdtemp(prefix="v5f_runner_mutants_")
+    root = v5f_tmp.workdir("v5f_runner_mutants_")
     bad = 0
     for py in pys:
         ids = runner_ids(py)
@@ -247,4 +250,7 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    try:
+        sys.exit(main(sys.argv[1:]))
+    finally:
+        v5f_tmp.cleanup()

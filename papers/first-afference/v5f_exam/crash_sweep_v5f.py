@@ -44,6 +44,9 @@ ONLY = _opt("--scenario")
 STRIDE = int(_opt("--stride", "1"))
 OUT = _opt("--out")
 DISCOVER_ONLY = "--discover-only" in ARGV   # the freeze-time record of the point sets (corpus_v5f/)
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  the runner's WORK is removed at exit; each fork-point child's TMPDIR on return
 
 
 def load_runner():
@@ -642,9 +645,11 @@ def fork_main(point_s, variant):
 def sweep_fork():
     import subprocess
     def run(point, variant):
-        r = subprocess.run([sys.executable, os.path.abspath(__file__), "--impl", IMPL, "--fork-point",
-                            json.dumps(point) if point != "count" else "count", "--variant", variant],
-                           capture_output=True, text=True, timeout=120)
+        v5f_tmp.disk_guard(what=f"fork point {point}")
+        r = v5f_tmp.child_run([sys.executable, os.path.abspath(__file__), "--impl", IMPL, "--fork-point",
+                               json.dumps(point) if point != "count" else "count", "--variant", variant],
+                              capture_output=True, text=True, timeout=120)
+        v5f_tmp.check_child(r.stderr, f"fork point {point}")
         lines = [x for x in r.stdout.splitlines() if x.startswith("FORK_RESULT ")]
         if not lines:
             return {"error": f"rc {r.returncode}: {r.stderr[-400:]}"}
@@ -711,6 +716,7 @@ def main():
     names = ONLY.split(",") if ONLY else list(SCENARIOS) + ["fork"]
     res = {"impl": IMPL, "python": sys.version.split()[0], "stride": STRIDE, "K": K, "scenarios": {}}
     for n in names:
+        v5f_tmp.disk_guard(what=f"scenario {n}")
         res["scenarios"][n] = sweep_fork() if n == "fork" else sweep(n)
         print(n, json.dumps(res["scenarios"][n], default=str)[:600], flush=True)
     clean = True
@@ -731,4 +737,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except v5f_tmp.DiskLow as e:                     # no result is written: a caller reads none as no verdict
+        sys.exit(v5f_tmp.stop_disk_low(e))
+    finally:
+        v5f_tmp.cleanup()

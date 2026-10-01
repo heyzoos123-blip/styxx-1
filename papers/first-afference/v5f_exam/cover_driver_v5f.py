@@ -33,6 +33,9 @@ it reached (G_COVER counts it for the named list only).
 import json, os, subprocess, sys, types
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  temp dirs removed at exit; each child's TMPDIR removed when it returns
 NAMED = ("_on_entry", "_on_exit", "_on_unwind", "_outcome", "_publish", "_forget_in_child")
 CHILD_SCENARIOS = ("forget_noop", "forget_ours", "forget_foreign")
 
@@ -257,8 +260,8 @@ def fx_driver_wrapper():
     """The driver's fresh module-level wrapper for Handle._run (harness rules: a top-level def used by no
     other case), written into its own module on first use."""
     if "w" not in _WRAPPER:
-        import importlib, tempfile
-        d = tempfile.mkdtemp(prefix="v5f_driver_")
+        import importlib
+        d = v5f_tmp.workdir("v5f_driver_")
         with open(os.path.join(d, "fx_driver_cut.py"), "w") as fh:
             fh.write("import asyncio.events\nORIG = asyncio.events.Handle._run\n"
                      "def driver_run(self):\n    return ORIG(self)\n")
@@ -302,9 +305,8 @@ def main():
             linecov_v5f.dump_at_exit(LINECOV_FILE)
         print(json.dumps(child(name)))
         return 0
-    import tempfile
     import linecov_v5f
-    lc_file = tempfile.mktemp(prefix="v5f_linecov_")
+    lc_file = os.path.join(v5f_tmp.workdir("v5f_linecov_"), "linecov.json")
     R = _load_runner()
     linecov_v5f.start(IMPL)
     out = scenarios(R)
@@ -313,8 +315,8 @@ def main():
     for name in CHILD_SCENARIOS:
         if ONLY and name != ONLY:
             continue
-        r = subprocess.run([sys.executable, os.path.abspath(__file__), "--impl", IMPL, "--child", name,
-                            "--linecov", lc_file], capture_output=True, text=True, timeout=120)
+        r = v5f_tmp.child_run([sys.executable, os.path.abspath(__file__), "--impl", IMPL, "--child", name,
+                               "--linecov", lc_file], capture_output=True, text=True, timeout=120)
         lines = [x for x in r.stdout.splitlines() if x.startswith("{")]
         kids[name] = json.loads(lines[-1]) if lines else f"rc {r.returncode}: {r.stderr[-300:]}"
     seen |= linecov_v5f.read(lc_file)
@@ -331,4 +333,7 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    finally:
+        v5f_tmp.cleanup()

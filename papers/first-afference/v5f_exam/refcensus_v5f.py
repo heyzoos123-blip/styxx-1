@@ -635,9 +635,13 @@ def main(argv):
                             "blind": c["blind"]},
            "G_HYG_violations": v}
     if "--controls" in argv:
-        import tempfile
-        res["G_HYG_step_controls"] = run_controls(impl, tempfile.mkdtemp(prefix="v5f_hygctl_"))
-        res["G_REF_blind_controls"] = run_blind_controls(impl, tempfile.mkdtemp(prefix="v5f_blindctl_"))
+        if HERE not in sys.path:
+            sys.path.append(HERE)
+        import v5f_tmp                                # the control copies are removed when each block exits
+        with v5f_tmp.scratch("v5f_hygctl_") as d:
+            res["G_HYG_step_controls"] = run_controls(impl, d)
+        with v5f_tmp.scratch("v5f_blindctl_") as d:
+            res["G_REF_blind_controls"] = run_blind_controls(impl, d)
     if opt("--o13-mutants"):
         res["o13_mutants"] = o13_mutants(R, opt("--o13-mutants"))
     ctl_ok = (all(x.get("rejected") for x in res.get("G_HYG_step_controls", {}).values())

@@ -21,6 +21,9 @@ import json, os, runpy, subprocess, sys, tempfile, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARGV = list(sys.argv)
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  temp dirs removed at exit; each child's TMPDIR removed when it returns
 
 
 def _opt(n, d=None):
@@ -36,7 +39,7 @@ def patched(patches):
         if s.count(a) != 1:
             raise SystemExit(f"a control's patch does not apply exactly once: {a[:60]!r}")
         s = s.replace(a, b)
-    d = tempfile.mkdtemp(prefix="v5f_ctl_")
+    d = v5f_tmp.workdir("v5f_ctl_")
     p = os.path.join(d, "ref_v5f.py")
     open(p, "w", encoding="utf-8").write(s)
     return p
@@ -46,8 +49,8 @@ def control4b(seconds):
     haz = runpy.run_path(os.path.join(HERE, "tools", "runner_mutants_v5f.py"), run_name="runner_mutants")["HAZ"]
     impl = patched(haz["mut_h8_publish_at_entry"][1])
     out = impl + ".sig.json"
-    r = subprocess.run([sys.executable, os.path.join(HERE, "sigflood_v5f.py"), "--impl", impl, "--seconds", str(seconds),
-                        "--out", out], capture_output=True, text=True, timeout=3600)
+    r = v5f_tmp.child_run([sys.executable, os.path.join(HERE, "sigflood_v5f.py"), "--impl", impl, "--seconds", str(seconds),
+                           "--out", out], capture_output=True, text=True, timeout=3600)
     try:
         d = json.load(open(out))
     except (OSError, ValueError):
@@ -58,9 +61,9 @@ def control4b(seconds):
 
 
 def control5():
-    out = tempfile.mktemp(suffix=".json")
-    subprocess.run([sys.executable, os.path.join(HERE, "refcensus_v5f.py"), "--impl", REF, "--controls", "--out", out],
-                   capture_output=True, text=True, timeout=1800)
+    out = os.path.join(v5f_tmp.workdir("v5f_ctl_"), "refcensus.json")
+    v5f_tmp.child_run([sys.executable, os.path.join(HERE, "refcensus_v5f.py"), "--impl", REF, "--controls", "--out", out],
+                      capture_output=True, text=True, timeout=1800)
     d = json.load(open(out))
     bc = d.get("G_REF_blind_controls", {})
     return {"status": "INCOMPLETE (GAP-51: the 8 shapes of mutation_gate_blindspots.json are not listed in the text)",
@@ -94,4 +97,7 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    finally:
+        v5f_tmp.cleanup()

@@ -19,9 +19,12 @@ Usage: python weakenings_v5f.py --sm1 PY312 [PY313] [--only id,id] [--deps JSON]
                                   [--no-crash] [--out sm1_result.json]   (resumable through the journal)
        python weakenings_v5f.py --list
 """
-import collections, json, os, runpy, subprocess, sys, tempfile, time
+import collections, json, os, runpy, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  temp dirs removed at exit and per row; children's TMPDIR; the disk guard
 REF_PATH = os.path.join(HERE, "ref_v5f.py")
 REF = open(REF_PATH, encoding="utf-8").read()
 V = ("3.12.3", "3.13.12")
@@ -558,11 +561,14 @@ def run_case(py, impl, case, deps):
     env = dict(os.environ)
     if deps:
         env["V5F_DEPS_PATH"] = deps
+    v5f_tmp.disk_guard(what=f"{case} on {impl}")
     try:
-        r = subprocess.run([py, os.path.join(HERE, "run_protocol_v5f_exam.py"), "--impl", impl, "--mutation", case],
-                           capture_output=True, text=True, timeout=600, env=env)
+        r = v5f_tmp.child_run([py, os.path.join(HERE, "run_protocol_v5f_exam.py"), "--impl", impl, "--mutation", case],
+                              capture_output=True, text=True, timeout=600, env=env)
     except subprocess.TimeoutExpired:
+        v5f_tmp.disk_guard(what=f"{case} on {impl}")
         return "TIMEOUT"
+    v5f_tmp.check_child(r.stderr, f"{case} on {impl}")    # a full disk's failure is not a verdict
     lines = [x for x in r.stdout.splitlines() if x.startswith("MUTATION_RESULT ")]
     if not lines:
         return "CRASH: " + (r.stderr.strip().splitlines() or ["?"])[-1][:160]
@@ -574,14 +580,24 @@ def run_case(py, impl, case, deps):
 
 
 def run_crash(py, impl, invariant):
-    fd, out = tempfile.mkstemp(suffix=".json")
-    os.close(fd)
-    try:
-        subprocess.run([py, os.path.join(HERE, "crash_sweep_v5f.py"), "--impl", impl, "--out", out],
-                       capture_output=True, text=True, timeout=7200)
-        d = json.load(open(out))
-    except Exception as e:                            # noqa: BLE001
-        return "CRASH", []
+    v5f_tmp.disk_guard(what=f"the crash sweep on {impl}")
+    with v5f_tmp.scratch("v5f_sm1_sweep_") as sd:
+        out = os.path.join(sd, "sweep.json")
+        try:
+            r = v5f_tmp.child_run([py, os.path.join(HERE, "crash_sweep_v5f.py"), "--impl", impl, "--out", out],
+                                  capture_output=True, text=True, timeout=7200)
+        except subprocess.TimeoutExpired:
+            v5f_tmp.disk_guard(what=f"the crash sweep on {impl}")
+            print(f"  crash sweep CRASH (timeout 7200 s) on {impl}", flush=True)
+            return "CRASH", []
+        v5f_tmp.check_child(r.stderr if r.returncode != v5f_tmp.DISK_LOW_STATUS else "ENOSPC",
+                            f"the crash sweep on {impl}")
+        try:
+            d = json.load(open(out))
+        except (OSError, ValueError):
+            print(f"  crash sweep CRASH (rc {r.returncode}: {(r.stderr.strip().splitlines() or ['?'])[-1][:160]}) "
+                  f"on {impl}", flush=True)
+            return "CRASH", []
     fails = set()
     for sc in d["scenarios"].values():
         for role, x in sc.items():
@@ -619,10 +635,10 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
     """Resumable: every ref run pair and every row verdict is appended to the journal (JSON lines) as it is
     decided; a rerun with the same journal skips them. Crash-sweep rows run one at a time (crash=False skips)."""
     import threading, concurrent.futures as cf
-    journal = journal or os.path.join(tempfile.mkdtemp(prefix="v5f_sm1_"), "journal.jsonl")
+    journal = journal or os.path.join(HERE, "results_v5f", "sm1_journal.jsonl")
     done, refs = _journal(journal)
     lock = threading.Lock()
-    work = tempfile.mkdtemp(prefix="v5f_sm1_")
+    work = v5f_tmp.workdir("v5f_sm1_")                 # one patched copy per row, removed when the row is decided
     res = {"rows": {}, "versions": {}, "journal": journal}
     for py in pys:
         ver = subprocess.run([py, "-c", "import sys;print('.'.join(map(str,sys.version_info[:3])))"],
@@ -644,11 +660,12 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                 return refs[(ver, w)]
 
         def one(e):
+            v5f_tmp.disk_guard(what=f"row {e['id']} on {ver}")
             src = apply(e)
+            d = os.path.join(work, ver, e["id"])
             if src is None:
                 row = {"class": "NOT_ADMITTED", "why": "(1) the patch does not apply exactly once"}
             else:
-                d = os.path.join(work, ver, e["id"])
                 os.makedirs(d, exist_ok=True)
                 impl = os.path.join(d, "ref_v5f.py")
                 open(impl, "w").write(src)
@@ -676,6 +693,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                     else:
                         cls = "KILLED"
                 row = {"class": cls, "ref": base, "runs": runs}
+                v5f_tmp.release(d)
             row.update({"kind": "row", "ver": ver, "id": e["id"], "witness": e["witness"]})
             _append(journal, row, lock)
             print(ver, e["id"], row["class"], flush=True)
@@ -725,7 +743,10 @@ def main(argv):
         t0 = time.monotonic()
         journal = argv[argv.index("--journal") + 1] if "--journal" in argv else None
         jobs = int(argv[argv.index("--jobs") + 1]) if "--jobs" in argv else 3
-        res = sm1(pys, only, deps, journal, jobs, crash="--no-crash" not in argv)
+        try:
+            res = sm1(pys, only, deps, journal, jobs, crash="--no-crash" not in argv)
+        except v5f_tmp.DiskLow as e:                 # nothing undecided was journaled; rerun with the journal
+            return v5f_tmp.stop_disk_low(e, journal or "the default journal")
         res["seconds"] = round(time.monotonic() - t0, 1)
         res["catalog_rows"] = len(CATALOG)
         json.dump(res, open(out, "w"), indent=1)
@@ -736,4 +757,7 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    try:
+        sys.exit(main(sys.argv[1:]))
+    finally:
+        v5f_tmp.cleanup()

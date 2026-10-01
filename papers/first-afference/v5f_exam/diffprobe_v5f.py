@@ -47,6 +47,9 @@ import collections, concurrent.futures as cf, hashlib, inspect, json, os, re, su
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARGV = list(sys.argv)
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  temp dirs removed at exit; each child's TMPDIR removed when it returns
 CORPUS = os.path.join(HERE, "corpus_v5f")
 N_MASK = 5
 
@@ -312,11 +315,14 @@ def run_entry(py, entry, impl, timeout=900):
     env = dict(os.environ)
     if DEPS:
         env["V5F_DEPS_PATH"] = DEPS
+    v5f_tmp.disk_guard(what=entry)
     try:
-        r = subprocess.run([py, os.path.abspath(__file__), "--observe", entry, "--impl", impl],
-                           capture_output=True, text=True, timeout=timeout, env=env)
+        r = v5f_tmp.child_run([py, os.path.abspath(__file__), "--observe", entry, "--impl", impl],
+                              capture_output=True, text=True, timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
+        v5f_tmp.disk_guard(what=entry)
         return {"entry": entry, "crash": "TIMEOUT"}
+    v5f_tmp.check_child(r.stderr, entry)            # a full disk's crash is not an observation
     lines = [x for x in r.stdout.splitlines() if x.startswith("OBS ")]
     if not lines:
         return {"entry": entry, "crash": (r.stderr.strip().splitlines() or ["?"])[-1][:200]}
@@ -394,8 +400,8 @@ def build_corpus(py312):
         man["entries"][p] = ({"class": "envelope", "why": "grammar path includes a fault tool"} if prog["fault"]
                              else {"class": "equality", "why": "no fault tool"})
     out = os.path.join(CORPUS, "crash", "_points_3.12.3.json")
-    subprocess.run([py312, os.path.join(HERE, "crash_sweep_v5f.py"), "--discover-only", "--out", out],
-                   capture_output=True, text=True, timeout=3600, check=True)
+    v5f_tmp.child_run([py312, os.path.join(HERE, "crash_sweep_v5f.py"), "--discover-only", "--out", out],
+                      capture_output=True, text=True, timeout=3600, check=True)
     d = json.load(open(out))
     os.remove(out)
     for sc, roles in d["scenarios"].items():
@@ -508,6 +514,7 @@ def main():
     if "--observe" in ARGV:
         print("OBS " + json.dumps(observe(_opt("--observe"), IMPL), default=str, sort_keys=True))
         sys.stdout.flush()
+        v5f_tmp.cleanup()                           # os._exit skips atexit
         os._exit(0)
     if "--build-corpus" in ARGV:
         return build_corpus(sys.executable)
@@ -531,4 +538,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except v5f_tmp.DiskLow as e:
+        sys.exit(v5f_tmp.stop_disk_low(e, _opt("--journal") or ""))
+    finally:
+        v5f_tmp.cleanup()

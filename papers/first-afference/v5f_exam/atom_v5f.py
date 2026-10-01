@@ -25,6 +25,9 @@ from types import FunctionType
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARGV = list(sys.argv)
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  temp dirs removed at exit; each hookup child's TMPDIR removed when it returns
 T_MAX = 60.0
 
 
@@ -894,14 +897,14 @@ def patched_source(name):
 
 
 def run_hookup(name):
-    d = tempfile.mkdtemp(prefix=f"atom_{name}_")
-    p = os.path.join(d, "ref_v5f.py")
-    open(p, "w", encoding="utf-8").write(patched_source(name))
     env = dict(os.environ)
     if DEPS:
         env["V5F_DEPS_PATH"] = DEPS
-    r = subprocess.run([sys.executable, os.path.abspath(__file__), "--impl", p, "--matrix"],
-                       capture_output=True, text=True, timeout=600, env=env)
+    with v5f_tmp.scratch(f"atom_{name}_") as d:
+        p = os.path.join(d, "ref_v5f.py")
+        open(p, "w", encoding="utf-8").write(patched_source(name))
+        r = v5f_tmp.child_run([sys.executable, os.path.abspath(__file__), "--impl", p, "--matrix"],
+                              capture_output=True, text=True, timeout=600, env=env)
     ln = [x for x in r.stdout.splitlines() if x.startswith("MATRIX ")]
     if not ln:
         return {"failed_cases": "all (the run did not complete)", "error": r.stderr.strip().splitlines()[-1:]}
@@ -922,6 +925,7 @@ def main():
         cases, slots = matrix()
         print("MATRIX " + json.dumps({"cases": cases, "slots": slots}, default=str))
         sys.stdout.flush()
+        v5f_tmp.cleanup()                           # os._exit skips atexit
         os._exit(0)
     t0 = time.monotonic()
     res = {"impl": IMPL, "build": build()}
@@ -942,6 +946,7 @@ def main():
     res["part_R"] = part_r()
     hk = {}
     for name in ("K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K13", "K14", "K12", "K12b"):
+        v5f_tmp.disk_guard(what=f"hookup control {name}")
         hk[name] = run_hookup(name)
         gated = name not in ("K12", "K12b")
         n = hk[name]["failed_cases"]
@@ -959,8 +964,17 @@ def main():
         json.dump(res, open(out, "w"), indent=1, default=str)
     print(json.dumps({k: res[k] for k in ("G_ATOM", "seconds")}), json.dumps(res, default=str)[:4000])
     sys.stdout.flush()
+    v5f_tmp.cleanup()                               # os._exit skips atexit
     os._exit(0 if verdict else 1)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except v5f_tmp.DiskLow as e:
+        rc = v5f_tmp.stop_disk_low(e)
+        v5f_tmp.cleanup()
+        sys.stdout.flush()
+        os._exit(rc)
+    finally:
+        v5f_tmp.cleanup()

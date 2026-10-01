@@ -17,8 +17,10 @@ import collections
 import functools
 import gc
 import importlib.util
+import atexit
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -35,6 +37,11 @@ _spec.loader.exec_module(P)
 GateSpecError = P.GateSpecError
 
 WORK = tempfile.mkdtemp(prefix="v5f_smoke_")
+# Removed at exit (this file is copied alone into mutant directories, so it does not use v5f_tmp.py); the
+# check on the pid leaves WORK alone when a forked child exits. A --sub child's directory lives under the
+# TMPDIR run_sub gives it, which run_sub removes when the child returns, however it ended.
+_WORK_PID = os.getpid()
+atexit.register(lambda: os.getpid() == _WORK_PID and shutil.rmtree(WORK, ignore_errors=True))
 FIX = os.path.join(WORK, "fixtures")
 REPO = os.path.join(WORK, "repo")
 os.makedirs(FIX)
@@ -855,8 +862,12 @@ def x59e_v():
 # Fresh-subprocess cases: the subprocess re-runs this file with "--sub <mode>" and prints one JSON
 # line; the case judges it here. The subprocess builds its own fixtures and preregs.
 def run_sub(mode):
-    r = subprocess.run([sys.executable, os.path.abspath(__file__), "--sub", mode],
-                       capture_output=True, text=True, timeout=120)
+    d = tempfile.mkdtemp(prefix="v5f_child_")
+    try:
+        r = subprocess.run([sys.executable, os.path.abspath(__file__), "--sub", mode],
+                           capture_output=True, text=True, timeout=120, env=dict(os.environ, TMPDIR=d))
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
     lines = [ln for ln in r.stdout.splitlines() if ln.startswith("{")]
     expect(r.returncode == 0 and lines, f"subprocess {mode}: rc {r.returncode}\n{r.stderr[-2000:]}")
     return json.loads(lines[-1])

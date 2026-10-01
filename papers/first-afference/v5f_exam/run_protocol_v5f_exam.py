@@ -60,6 +60,9 @@ import types
 sys.dont_write_bytecode = True
 RUNNER = os.path.abspath(__file__)
 HERE = os.path.dirname(RUNNER)
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  WORK is removed at exit; each fresh subprocess's temp dir by this process
 SPEC = os.path.join(HERE, "..", "DESIGN_protocol_v5f_DRAFT_2026_09_25.md")
 TRACES = os.path.join(HERE, "traces_v5f")
 VERIFIED = ((3, 12, 3), (3, 13, 12))
@@ -130,7 +133,7 @@ def load_trace(name):
 # =================================================================================================
 # Fixtures, preregs and cases (each case quotes its row; written from the design text)
 # =================================================================================================
-WORK = tempfile.mkdtemp(prefix="v5f_exam_")
+WORK = v5f_tmp.workdir("v5f_exam_")
 FIX = os.path.join(WORK, "fixtures")
 REPO = os.path.join(WORK, "repo")
 os.makedirs(FIX)
@@ -1336,7 +1339,7 @@ def x59e_v():
 # Fresh-subprocess cases: the subprocess re-runs this file with "--sub <mode>" and prints one JSON
 # line; the case judges it here. The subprocess builds its own fixtures and preregs.
 def run_sub(mode):
-    r = subprocess.run([sys.executable, RUNNER] + _impl_args() + ["--sub", mode],
+    r = v5f_tmp.child_run([sys.executable, RUNNER] + _impl_args() + ["--sub", mode],
                        capture_output=True, text=True, timeout=120)
     lines = [ln for ln in r.stdout.splitlines() if ln.startswith("{")]
     expect(r.returncode == 0 and lines, f"subprocess {mode}: rc {r.returncode}\n{r.stderr[-2000:]}")
@@ -3142,7 +3145,7 @@ def _sub_x156d():
     return _binding_sub(None)
 
 def run_sub_patched(mode, patch):
-    r = subprocess.run([sys.executable, RUNNER] + _impl_args() + ["--pre-import-patch", patch, "--sub", mode],
+    r = v5f_tmp.child_run([sys.executable, RUNNER] + _impl_args() + ["--pre-import-patch", patch, "--sub", mode],
                        capture_output=True, text=True, timeout=120)
     lines = [ln for ln in r.stdout.splitlines() if ln.startswith("{")]
     expect(r.returncode == 0 and lines, f"subprocess {mode}: rc {r.returncode}\n{r.stderr[-2000:]}")
@@ -6624,7 +6627,7 @@ def run_main(cid):
     return ok and not left, detail, left
 
 def run_child(cid):
-    r = subprocess.run([sys.executable, RUNNER] + _impl_args() + ["--child-case", cid],
+    r = v5f_tmp.child_run([sys.executable, RUNNER] + _impl_args() + ["--child-case", cid],
                        capture_output=True, text=True, timeout=300)
     lines = [ln for ln in r.stdout.splitlines() if ln.startswith("{")]
     if r.returncode != 0 or not lines:
@@ -6845,6 +6848,9 @@ if __name__ == "__main__":
         sys.exit(child_case(ARGS.child_case))
     if ARGS.make_traces:
         sys.exit(make_traces())
-    rc = main()
-    sys.stdout.flush()
+    try:                            # the sys.exit paths above remove WORK through atexit; os._exit skips it
+        rc = main()
+        sys.stdout.flush()
+    finally:
+        v5f_tmp.cleanup()
     os._exit(rc)

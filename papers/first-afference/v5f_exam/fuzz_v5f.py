@@ -18,6 +18,9 @@ import json, os, random, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARGV = list(sys.argv)
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  a program's work dir is removed at exit; each child's TMPDIR when it returns
 N_FROZEN = 300
 MAX_STMTS = 8
 
@@ -91,7 +94,7 @@ def generate(seed):
 # ---------------------------------------------------------------------------------------------------
 def run_program(seed, impl):
     import asyncio, gc, importlib, importlib.util, re, subprocess as sp, tempfile, textwrap, threading, types
-    work = tempfile.mkdtemp(prefix="v5f_fuzz_")
+    work = v5f_tmp.workdir("v5f_fuzz_")
     fixdir, repo = os.path.join(work, "fx"), os.path.join(work, "repo")
     os.makedirs(fixdir); os.makedirs(repo)
     open(os.path.join(fixdir, "fz.py"), "w").write(textwrap.dedent(FIXTURE))
@@ -255,8 +258,8 @@ def run_program(seed, impl):
 
 
 def run_sub(seed, impl, py=None):
-    r = subprocess.run([py or sys.executable, os.path.abspath(__file__), "--program", str(seed), "--impl", impl],
-                       capture_output=True, text=True, timeout=120)
+    r = v5f_tmp.child_run([py or sys.executable, os.path.abspath(__file__), "--program", str(seed), "--impl", impl],
+                          capture_output=True, text=True, timeout=120)
     lines = [x for x in r.stdout.splitlines() if x.startswith("FUZZ ")]
     if not lines:
         return {"crash": (r.stderr.strip().splitlines() or ["?"])[-1][:200]}
@@ -291,6 +294,7 @@ def main():
     t0 = time.monotonic()
     diffs, envelope_bad, crashes = [], [], []
     for seed in range(n):
+        v5f_tmp.disk_guard(what=f"fuzz program {seed}")
         want = run_sub(seed, ORACLE)
         got = want if IMPL == ORACLE and "--twice" not in ARGV else run_sub(seed, IMPL)
         if "crash" in got or "crash" in want:
@@ -313,4 +317,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except v5f_tmp.DiskLow as e:
+        sys.exit(v5f_tmp.stop_disk_low(e))
+    finally:
+        v5f_tmp.cleanup()

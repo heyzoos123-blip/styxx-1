@@ -229,4 +229,7 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    finally:
+        R.v5f_tmp.cleanup()                      # the runner's WORK (atexit does it too, but not after _exit)

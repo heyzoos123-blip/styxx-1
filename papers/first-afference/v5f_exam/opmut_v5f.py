@@ -40,6 +40,9 @@ import ast, copy, importlib.util, json, os, subprocess, sys, textwrap, time, typ
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARGV = list(sys.argv)
+if HERE not in sys.path:
+    sys.path.append(HERE)
+import v5f_tmp      # noqa: E402  each instrument child's TMPDIR is removed when it returns; disk guard per mutant
 
 
 def _opt(n, d=None):
@@ -356,11 +359,13 @@ def inst_a(py, path):
     outs = []
     for _ in range(2):
         try:
-            r = subprocess.run([py, os.path.join(HERE, "run_protocol_v5f_exam.py"), "--impl", path, "--mutation", "ALL"],
-                               capture_output=True, text=True, timeout=7200, env=_env())
+            r = v5f_tmp.child_run([py, os.path.join(HERE, "run_protocol_v5f_exam.py"), "--impl", path, "--mutation", "ALL"],
+                                  capture_output=True, text=True, timeout=7200, env=_env())
         except subprocess.TimeoutExpired:
+            v5f_tmp.disk_guard(what=path)
             outs.append(("TIMEOUT", []))
             continue
+        v5f_tmp.check_child(r.stderr, path)
         ln = [x for x in r.stdout.splitlines() if x.startswith("MUTATION_RESULT ")]
         if not ln:
             outs.append(("NOIMPORT" if "Error" in r.stderr else "CRASH", []))
@@ -376,8 +381,9 @@ def inst_a(py, path):
 
 def inst_b(py, path):
     fd = path + ".sweep.json"
-    subprocess.run([py, os.path.join(HERE, "crash_sweep_v5f.py"), "--impl", path, "--stride", "3", "--out", fd],
-                   capture_output=True, text=True, timeout=14400, env=_env())
+    r = v5f_tmp.child_run([py, os.path.join(HERE, "crash_sweep_v5f.py"), "--impl", path, "--stride", "3", "--out", fd],
+                          capture_output=True, text=True, timeout=14400, env=_env())
+    v5f_tmp.check_child(r.stderr if r.returncode != v5f_tmp.DISK_LOW_STATUS else "ENOSPC", path)
     try:
         d = json.load(open(fd))
     except (OSError, ValueError):
@@ -387,8 +393,9 @@ def inst_b(py, path):
 
 def inst_c(py, path):
     fd = path + ".fuzz.json"
-    subprocess.run([py, os.path.join(HERE, "fuzz_v5f.py"), "--impl", path, "--out", fd],
-                   capture_output=True, text=True, timeout=14400, env=_env())
+    r = v5f_tmp.child_run([py, os.path.join(HERE, "fuzz_v5f.py"), "--impl", path, "--out", fd],
+                          capture_output=True, text=True, timeout=14400, env=_env())
+    v5f_tmp.check_child(r.stderr if r.returncode != v5f_tmp.DISK_LOW_STATUS else "ENOSPC", path)
     try:
         d = json.load(open(fd))
     except (OSError, ValueError):
@@ -398,8 +405,9 @@ def inst_c(py, path):
 
 def inst_d(py, path, base, mask):
     fd = path + ".probe.json"
-    subprocess.run([py, os.path.join(HERE, "diffprobe_v5f.py"), "--probe", "--impl", path, "--base", base,
-                    "--mask", mask, "--out", fd], capture_output=True, text=True, timeout=28800, env=_env())
+    r = v5f_tmp.child_run([py, os.path.join(HERE, "diffprobe_v5f.py"), "--probe", "--impl", path, "--base", base,
+                           "--mask", mask, "--out", fd], capture_output=True, text=True, timeout=28800, env=_env())
+    v5f_tmp.check_child(r.stderr if r.returncode != v5f_tmp.DISK_LOW_STATUS else "ENOSPC", path)
     try:
         d = json.load(open(fd))
     except (OSError, ValueError):
@@ -474,6 +482,7 @@ def main():
                 continue
             if e["id"] in done:
                 continue
+            v5f_tmp.disk_guard(what=e["id"])
             t0 = time.monotonic()
             cls, ev = classify(sys.executable, os.path.join(os.path.abspath(d), e["file"]), base, _opt("--mask"), which)
             r = {**e, "python": sys.version.split()[0], "instruments": which, "class": cls, "evidence": ev,
@@ -487,4 +496,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except v5f_tmp.DiskLow as e:                     # the --out journal keeps every mutant decided so far
+        sys.exit(v5f_tmp.stop_disk_low(e, _opt("--out") or ""))
+    finally:
+        v5f_tmp.cleanup()

@@ -11,6 +11,9 @@ Exit status 0 iff the control passes and every mutant is detected on every inter
 import os, shutil, subprocess, sys, tempfile
 
 EXAM = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if EXAM not in sys.path:
+    sys.path.append(EXAM)
+import v5f_tmp      # noqa: E402  the mutant copies are removed at exit; each smoke run's TMPDIR when it returns
 REF = open(os.path.join(EXAM, "ref_v5f.py")).read()
 
 # name -> (witness cases, [(old, new), ...])
@@ -129,8 +132,8 @@ M = {
 
 def run(py, d, cases):
     env = dict(os.environ, SMOKE_ONLY=",".join(cases))
-    r = subprocess.run([py, os.path.join(d, "smoke_cases.py")], capture_output=True, text=True,
-                       timeout=900, env=env)
+    r = v5f_tmp.child_run([py, os.path.join(d, "smoke_cases.py")], capture_output=True, text=True,
+                          timeout=900, env=env)
     fails = [ln.split()[1] for ln in r.stdout.splitlines() if ln.startswith("FAIL")]
     passes = [ln.split()[1] for ln in r.stdout.splitlines() if ln.startswith("PASS")]
     return fails, passes, r
@@ -142,7 +145,7 @@ def main(argv):
         i = argv.index("--only"); only = argv[i + 1].split(","); del argv[i:i + 2]
     pys = argv or [sys.executable]
     names = [n for n in M if not only or n in only]
-    root = tempfile.mkdtemp(prefix="v5f_mutants_")
+    root = v5f_tmp.workdir("v5f_mutants_")
     bad = 0
     allcases = sorted({c for n in names for c in M[n][0]})
     ctl = os.path.join(root, "control"); os.makedirs(ctl)
@@ -172,4 +175,7 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    try:
+        sys.exit(main(sys.argv[1:]))
+    finally:
+        v5f_tmp.cleanup()

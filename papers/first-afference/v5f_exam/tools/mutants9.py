@@ -3,8 +3,9 @@ tools/mutants_v5f.py, which carries the same mutants and names each one's witnes
 
 import os, shutil, subprocess, sys
 EXAM = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-import tempfile
-HERE = tempfile.mkdtemp(prefix="v5f_mutants9_")
+sys.path.append(EXAM)
+import v5f_tmp      # noqa: E402  removed at exit; each smoke run's TMPDIR when it returns
+HERE = v5f_tmp.workdir("v5f_mutants9_")
 REF = open(os.path.join(EXAM, "ref_v5f.py")).read()
 M = {
  "mut_end_type_not_tested": [("            if type(end) is not str or end not in _ENDS:", "            if end not in _ENDS:")],
@@ -51,7 +52,7 @@ for name, patches in M.items():
     open(os.path.join(d, "ref_v5f.py"), "w").write(src)
     shutil.copy(os.path.join(EXAM, "smoke_cases.py"), d)
     for py in vers:
-        r = subprocess.run([py, os.path.join(d, "smoke_cases.py")], capture_output=True, text=True, timeout=900)
+        r = v5f_tmp.child_run([py, os.path.join(d, "smoke_cases.py")], capture_output=True, text=True, timeout=900)
         fails = [ln.split()[1] for ln in r.stdout.splitlines() if ln.startswith("FAIL")]
         tail = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr[-200:]
         ok = r.returncode != 0 and fails

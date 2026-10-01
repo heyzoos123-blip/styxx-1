@@ -20,7 +20,11 @@ SM1 (computed at freeze time on ref_v5f.py; "SM1: catalog power"):
   Gate: 100% of admitted rows KILLED on every version they are admitted for.
 
 Usage: python weakenings_v5f.py --sm1 PY312 [PY313] [--only id,id] [--deps JSON] [--journal J.jsonl] [--jobs 3]
-                                  [--no-crash] [--out sm1_result.json]   (resumable through the journal)
+                                  [--no-crash] [--redo id,id] [--max-load 4] [--out sm1_result.json]
+       (resumable through the journal; --redo decides the listed rows again; --max-load holds every crash
+        sweep until the 1-min and 5-min load averages are below it. Every G_FI entry records the load averages
+        before each sweep and the per-scenario detail; a sweep whose fault-free run passed the 60 s bound
+        ("C3: baseline hang") is classed VOID_LOAD, admitted and not killed, to be rerun under low load)
        python weakenings_v5f.py --list
 """
 import collections, json, os, runpy, subprocess, sys, time
@@ -636,8 +640,42 @@ def run_case(py, impl, case, deps):
     return "PASS" if x and x["ok"] and not x["leftover"] else "FAIL"
 
 
+def _loadavg():
+    try:
+        return [round(x, 2) for x in os.getloadavg()]
+    except (AttributeError, OSError):
+        return None
+
+
+def wait_load(max_load, what=""):
+    """Hold until the 1-min and 5-min load averages are both below max_load (the coordinator's rule for the
+    timing-sensitive runs made while other studies share the machine); returns the load at release."""
+    if not max_load:
+        return _loadavg()
+    waited = 0
+    while True:
+        la = _loadavg()
+        if la is None or (la[0] < max_load and la[1] < max_load):
+            if waited:
+                print(f"  load {la} below {max_load}: {what} starts after {waited} s", flush=True)
+            return la
+        if waited % 300 == 0:
+            print(f"  load {la} at or above {max_load}: {what} waits", flush=True)
+        time.sleep(30)
+        waited += 30
+
+
+MAX_LOAD = [None]      # --max-load: hold every G_FI sweep until the load averages are below it
+LAST_CRASH_DETAIL = {}
+
+
 def run_crash(py, impl, invariant):
+    """One frozen crash sweep on impl; returns (status, failed_clauses). The per-scenario detail of the last call
+    (unclean texts, void reasons, whether a C3 is a baseline hang, the load averages before and after) is left
+    in LAST_CRASH_DETAIL[impl] for the journal: a C3 that is "baseline hang" (the 60 s bound on the fault-free run)
+    can come from machine load rather than from the implementation, and such a run is not a kill."""
     v5f_tmp.disk_guard(what=f"the crash sweep on {impl}")
+    load0 = wait_load(MAX_LOAD[0], f"the crash sweep on {os.path.basename(os.path.dirname(impl)) or impl}")
     with v5f_tmp.scratch("v5f_sm1_sweep_") as sd:
         out = os.path.join(sd, "sweep.json")
         try:
@@ -655,15 +693,23 @@ def run_crash(py, impl, invariant):
             print(f"  crash sweep CRASH (rc {r.returncode}: {(r.stderr.strip().splitlines() or ['?'])[-1][:160]}) "
                   f"on {impl}", flush=True)
             return "CRASH", []
-    fails = set()
-    for sc in d["scenarios"].values():
+    fails, detail, baseline_hang = set(), {}, False
+    for scn, sc in d["scenarios"].items():
         for role, x in sc.items():
             if isinstance(x, dict):
-                for _, bad in x.get("unclean", []):
-                    for b in bad:
-                        fails.add(b.split(":", 1)[0].split(" ")[0])
+                texts = [b for _, bad in x.get("unclean", []) for b in bad]
+                for b in texts:
+                    fails.add(b.split(":", 1)[0].split(" ")[0])
                 if role == "C4" and not x.get("ok"):
                     fails.add("C4")
+                bh = [b for b in texts if b.startswith("C3: baseline hang")]
+                baseline_hang = baseline_hang or bool(bh)
+                if texts or x.get("void") or (role == "C4" and not x.get("ok")):
+                    detail[f"{scn}/{role}"] = {"n_unclean": x.get("n_unclean"), "void": x.get("void"),
+                                               "first": texts[:2], "baseline_hang": bool(bh),
+                                               "c4_ok": x.get("ok") if role == "C4" else None}
+    LAST_CRASH_DETAIL[impl] = {"detail": detail, "baseline_hang": baseline_hang, "G_FI": d.get("G_FI"),
+                               "seconds": d.get("seconds"), "load_before": load0, "load_after": _loadavg()}
     return ("PASS" if d["G_FI"] == "PASS" else "FAIL"), sorted(fails)
 
 
@@ -757,12 +803,15 @@ def _append(path, d, lock):
             fh.write(json.dumps(d) + "\n")
 
 
-def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
+def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True, redo=None):
     """Resumable: every ref run pair and every row verdict is appended to the journal (JSON lines) as it is
-    decided; a rerun with the same journal skips them. Crash-sweep rows run one at a time (crash=False skips)."""
+    decided; a rerun with the same journal skips them (the latest entry for a row wins). Crash-sweep rows run one
+    at a time (crash=False skips). redo: row ids whose journal entries are ignored, so they are decided again."""
     import threading, concurrent.futures as cf
     journal = journal or os.path.join(HERE, "results_v5f", "sm1_journal.jsonl")
     done, refs = _journal(journal)
+    for k in [k for k in done if k[1] in (redo or ())]:
+        del done[k]
     lock = threading.Lock()
     work = v5f_tmp.workdir("v5f_sm1_")                 # one patched copy per row, removed when the row is decided
     res = {"rows": {}, "versions": {}, "journal": journal}
@@ -802,11 +851,19 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                 open(impl, "w").write(src)
                 w = e["witness"]
                 base = ref_of(w)
+                extra = {}
                 if w.startswith("G_FI:"):
                     inv = w.split(":")[1]
-                    runs = [list(run_crash(py, impl, inv)) for _ in range(2)]
+                    runs, details = [], []
+                    for _ in range(2):
+                        runs.append(list(run_crash(py, impl, inv)))
+                        details.append(LAST_CRASH_DETAIL.get(impl))
+                    extra = {"detail": details, "load": [(x or {}).get("load_before") for x in details]}
+                    hung = any((x or {}).get("baseline_hang") for x in details)
                     if base != ["PASS", "PASS"]:
                         cls = "NOT_ADMITTED"
+                    elif hung:
+                        cls = "VOID_LOAD"   # a fault-free run passed the 60 s bound: not the implementation's verdict; rerun under low load
                     elif runs[0] != runs[1]:
                         cls = "NONREPRODUCIBLE"
                     elif runs[0][0] == "PASS":
@@ -814,6 +871,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                     else:
                         cls = "KILLED" if inv in runs[0][1] else "WITNESS_MISMATCH"
                 else:
+                    extra = {"load": _loadavg()}
                     runs = [run_case(py, impl, w, dp) for _ in range(2)]
                     if base != ["PASS", "PASS"]:
                         cls = "NOT_ADMITTED"
@@ -825,7 +883,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                         cls = "HANG"        # the witness never ran (the driver's timeout, or the runner failed first)
                     else:
                         cls = "KILLED"
-                row = {"class": cls, "ref": base, "runs": runs}
+                row = {"class": cls, "ref": base, "runs": runs, **extra}
                 v5f_tmp.release(d)
             row.update({"kind": "row", "ver": ver, "id": e["id"], "witness": e["witness"], "keys": keys})
             _append(journal, row, lock)
@@ -843,7 +901,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
         rows = {i: {k: x for k, x in d.items() if k not in ("kind", "ver", "id")} for (v, i), d in done.items()
                 if v == ver and (not only or i in only)}
         res["rows"][ver] = rows
-        adm = [k for k, r in rows.items() if r["class"] in ("KILLED", "WITNESS_MISMATCH", "NONREPRODUCIBLE", "HANG")]
+        adm = [k for k, r in rows.items() if r["class"] in ("KILLED", "WITNESS_MISMATCH", "NONREPRODUCIBLE", "HANG", "VOID_LOAD")]
         killed = [k for k in adm if rows[k]["class"] == "KILLED"]
         want = [e["id"] for e in CATALOG if ver in e["versions"] and (not only or e["id"] in only)]
         res["versions"][ver] = {"rows_decided": len(rows), "rows_in_catalog": len(want),
@@ -852,6 +910,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                                 "not_killed": sorted(set(adm) - set(killed)),
                                 "unwitnessed": sorted(k for k, r in rows.items() if r["class"] == "UNWITNESSED"),
                                 "hang": sorted(k for k, r in rows.items() if r["class"] == "HANG"),
+                                "void_load": sorted(k for k, r in rows.items() if r["class"] == "VOID_LOAD"),
                                 "not_admitted": sorted(k for k, r in rows.items() if r["class"] == "NOT_ADMITTED"),
                                 "gate": len(adm) == len(killed) and len(rows) >= len(want)}
     res["gate"] = bool(res["versions"]) and all(v["gate"] for v in res["versions"].values())
@@ -877,8 +936,10 @@ def main(argv):
         t0 = time.monotonic()
         journal = argv[argv.index("--journal") + 1] if "--journal" in argv else None
         jobs = int(argv[argv.index("--jobs") + 1]) if "--jobs" in argv else 3
+        redo = argv[argv.index("--redo") + 1].split(",") if "--redo" in argv else None
+        MAX_LOAD[0] = float(argv[argv.index("--max-load") + 1]) if "--max-load" in argv else None
         try:
-            res = sm1(pys, only, deps, journal, jobs, crash="--no-crash" not in argv)
+            res = sm1(pys, only, deps, journal, jobs, crash="--no-crash" not in argv, redo=redo)
         except v5f_tmp.DiskLow as e:                 # nothing undecided was journaled; rerun with the journal
             return v5f_tmp.stop_disk_low(e, journal or "the default journal")
         res["seconds"] = round(time.monotonic() - t0, 1)

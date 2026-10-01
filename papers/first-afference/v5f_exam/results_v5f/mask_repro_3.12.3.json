@@ -1,0 +1,11 @@
+{
+ "baseline": "CLEAN",
+ "crashes": {},
+ "entries": 37,
+ "impl": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
+ "masked": {},
+ "n": 5,
+ "python": "3.12.3",
+ "seconds": 49.2,
+ "unclean": {}
+}

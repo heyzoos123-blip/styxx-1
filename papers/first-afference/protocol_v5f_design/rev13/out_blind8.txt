@@ -1,0 +1,134 @@
+{
+ "python": "3.12.3",
+ "blind_shapes_v5": {
+  "raise via a helper that returns the exception": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "raise GateSpecError through a module attribute": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "raise an alias of GateSpecError": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "recorded problem appended by augmented assignment": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "emission as the value of a return": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "emission assigned to a name": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "emission inside a conditional expression": {
+   "original_emits": true,
+   "coded_literals": 2,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "code in a keyword argument": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  }
+ },
+ "computed_code_shapes": {
+  "a code prefix split across literals": {
+   "coded_literals_O13_sees": 1
+  },
+  "str.format": {
+   "coded_literals_O13_sees": 0
+  },
+  "%-formatting": {
+   "coded_literals_O13_sees": 0
+  },
+  "a code from an f-string's formatted value": {
+   "coded_literals_O13_sees": 1
+  }
+ }
+}
+{
+ "python": "3.13.12",
+ "blind_shapes_v5": {
+  "raise via a helper that returns the exception": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "raise GateSpecError through a module attribute": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "raise an alias of GateSpecError": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "recorded problem appended by augmented assignment": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "emission as the value of a return": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "emission assigned to a name": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "emission inside a conditional expression": {
+   "original_emits": true,
+   "coded_literals": 2,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  },
+  "code in a keyword argument": {
+   "original_emits": true,
+   "coded_literals": 1,
+   "every_mutant_compiles": true,
+   "mutants_still_emitting": 0
+  }
+ },
+ "computed_code_shapes": {
+  "a code prefix split across literals": {
+   "coded_literals_O13_sees": 1
+  },
+  "str.format": {
+   "coded_literals_O13_sees": 0
+  },
+  "%-formatting": {
+   "coded_literals_O13_sees": 0
+  },
+  "a code from an f-string's formatted value": {
+   "coded_literals_O13_sees": 1
+  }
+ }
+}

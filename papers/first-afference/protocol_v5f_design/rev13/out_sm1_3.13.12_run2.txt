@@ -29,9 +29,27 @@ X153   R13_capture_stale_read         {"trials": 114, "trials_noting_B": 86, "tr
 X153b  spec                           {"trials": 114, "trials_Q_noted": 114, "trials_Q_not_noted": []}
 X153b  A_capture_outside              {"trials": 119, "trials_Q_noted": 84, "trials_Q_not_noted": [83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117]}
 X153b  R13_capture_stale_read         {"trials": 114, "trials_Q_noted": 28, "trials_Q_not_noted": [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112]}
-X137k  spec                           {"tool_at_P": 3, "tool_after_Q_enter": 3, "P": [["PASS", {"G": {"fx_r13:f": 1}}], ["[V5:MONITOR_LOST]"]]}
-X137k  A_ensure_no_reclaim            {"tool_at_P": 3, "tool_after_Q_enter": 4, "P": [["PASS", {"G": {"fx_r13:f": 1}}], ["[V5:MONITOR_LOST]"]]}
+X137k  spec                           {"tool_at_P": 3, "tool_after_Q_enter": 3, "P": [["PASS", {"G": {"fx_r13:f": 1}}], ["[V5:MONITOR_LOST]"]], "Q": [["PASS", {"G": {"fx_r13:h": 1}}], []]}
+X137k  A_ensure_no_reclaim            {"tool_at_P": 3, "tool_after_Q_enter": 4, "P": [["PASS", {"G": {"fx_r13:f": 1}}], ["[V5:MONITOR_LOST]"]], "Q": [["PASS", {"G": {"fx_r13:h": 1}}], []]}
 V71b   spec                           {"trials": 4, "openings": 1, "ends_open": 0}
 V71b   A_open_audited_after_append    {"trials": 5, "openings": 2, "ends_open": 1}
 X132b  spec                           {"trials": 154, "trials_with_anchor_left_after_exit": 0}
 X132b  M3_register_before_append      {"trials": 158, "trials_with_anchor_left_after_exit": 5}
+X156c  spec                           {"codes": ["UNSUPPORTED_VERSION", "UNSUPPORTED_VERSION"], "MON_survived_reload": true}
+X156c  A_binding_first_only           {"codes": [null, null], "MON_survived_reload": true}
+X37b   spec                           {"codes": ["UNSUPPORTED_VERSION", "UNSUPPORTED_VERSION"]}
+X37b   A_verified_widened             {"codes": ["UNSUPPORTED_VERSION", "UNSUPPORTED_VERSION"]}
+X37c   spec                           {"micro": 13, "codes": ["UNSUPPORTED_VERSION", "UNSUPPORTED_VERSION"]}
+X37c   A_verified_widened             {"micro": 13, "codes": [null, null]}
+V52s   spec                           {"progress": ["P", "guard after enter", "free"]}
+{"progress": ["P", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"]}
+{"progress": ["Q", "guard after enter", "free"]}
+{"progress": ["Q", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"]}
+{"traces": [["P", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"], ["Q", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"]]}
+V52s   R13_total_walk                 {"progress": ["P", "guard after enter", "free"]}
+{"progress": ["P", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"]}
+{"progress": ["Q", "guard after enter", "free"]}
+{"progress": ["Q", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"]}
+{"traces": [["P", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"], ["Q", ["PASS", {"G": {"fx_r13:f": 1}}], "free", "free"]]}
+V52s   A_txn_shared_succ              TIMEOUT (30 s) after: (nothing)
+V52s   A_txn_shared_succ+R13_total_walk TIMEOUT (30 s) after: {"progress": ["P", "guard after enter", "cycle"]}

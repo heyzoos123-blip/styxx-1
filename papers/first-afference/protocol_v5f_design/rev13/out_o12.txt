@@ -1,0 +1,74 @@
+{
+ "version": "3.12.3",
+ "o12_attribute_names": [
+  "holders"
+ ],
+ "mutants": {
+  "spec": {
+   "sites": [],
+   "run": "{\"scores\": [{\"G\": {\"fx_o12:f\": 2}}, {\"G\": {\"fx_o12:f\": 1}}], \"mints_after\": [], \"anchors\": 0}"
+  },
+  "holders": {
+   "sites": [
+    [
+     828,
+     "self.holders = []"
+    ],
+    [
+     1274,
+     "m.holders[:] = keep"
+    ],
+    [
+     1321,
+     "m.holders.extend((core,))"
+    ],
+    [
+     1324,
+     "m.holders[:] = [core]"
+    ],
+    [
+     1439,
+     "m.holders[:] = [h for h in m.holders if h is not core]"
+    ]
+   ],
+   "run": "{\"scores\": [{\"G\": {\"fx_o12:f\": 2}}, {\"G\": {\"fx_o12:f\": 1}}], \"mints_after\": [], \"anchors\": 0}"
+  }
+ }
+}
+{
+ "version": "3.13.12",
+ "o12_attribute_names": [
+  "holders"
+ ],
+ "mutants": {
+  "spec": {
+   "sites": [],
+   "run": "{\"scores\": [{\"G\": {\"fx_o12:f\": 2}}, {\"G\": {\"fx_o12:f\": 1}}], \"mints_after\": [], \"anchors\": 0}"
+  },
+  "holders": {
+   "sites": [
+    [
+     828,
+     "self.holders = []"
+    ],
+    [
+     1274,
+     "m.holders[:] = keep"
+    ],
+    [
+     1321,
+     "m.holders.extend((core,))"
+    ],
+    [
+     1324,
+     "m.holders[:] = [core]"
+    ],
+    [
+     1439,
+     "m.holders[:] = [h for h in m.holders if h is not core]"
+    ]
+   ],
+   "run": "{\"scores\": [{\"G\": {\"fx_o12:f\": 2}}, {\"G\": {\"fx_o12:f\": 1}}], \"mints_after\": [], \"anchors\": 0}"
+  }
+ }
+}

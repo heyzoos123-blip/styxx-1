@@ -1,0 +1,245 @@
+{
+ "version": "3.12.3",
+ "region_units": 87,
+ "mutants": 3034,
+ "cells_per_unit": {
+  "claims": 3,
+  "comparisons": 40,
+  "conditions": 40,
+  "constants": 44,
+  "deletion": 55,
+  "order": 42,
+  "scope": 24,
+  "types": 13
+ },
+ "cells_per_unit_total": 261,
+ "cells_per_section": {
+  "claims": [
+   "M0/M4 enter and resolution",
+   "M2 mutex",
+   "M5 exit"
+  ],
+  "comparisons": [
+   "M0/M4 enter and resolution",
+   "M1 bindings",
+   "M10 introspection",
+   "M11 scoring",
+   "M2 mutex",
+   "M3 reconciliation",
+   "M5 exit",
+   "M6 callbacks",
+   "M7 sections and steps",
+   "M8 record",
+   "M9 fork"
+  ],
+  "conditions": [
+   "M0/M4 enter and resolution",
+   "M1 bindings",
+   "M10 introspection",
+   "M11 scoring",
+   "M2 mutex",
+   "M3 reconciliation",
+   "M5 exit",
+   "M6 callbacks",
+   "M7 sections and steps",
+   "M8 record",
+   "M9 fork"
+  ],
+  "constants": [
+   "M0/M4 enter and resolution",
+   "M1 bindings",
+   "M10 introspection",
+   "M11 scoring",
+   "M2 mutex",
+   "M3 reconciliation",
+   "M5 exit",
+   "M6 callbacks",
+   "M7 sections and steps",
+   "M8 record",
+   "M9 fork"
+  ],
+  "deletion": [
+   "M0/M4 enter and resolution",
+   "M1 bindings",
+   "M10 introspection",
+   "M11 scoring",
+   "M2 mutex",
+   "M3 reconciliation",
+   "M5 exit",
+   "M6 callbacks",
+   "M7 sections and steps",
+   "M8 record",
+   "M9 fork"
+  ],
+  "order": [
+   "M0/M4 enter and resolution",
+   "M10 introspection",
+   "M11 scoring",
+   "M2 mutex",
+   "M3 reconciliation",
+   "M5 exit",
+   "M6 callbacks",
+   "M7 sections and steps",
+   "M8 record",
+   "M9 fork"
+  ],
+  "scope": [
+   "M0/M4 enter and resolution",
+   "M10 introspection",
+   "M11 scoring",
+   "M3 reconciliation",
+   "M5 exit",
+   "M6 callbacks",
+   "M7 sections and steps",
+   "M8 record",
+   "M9 fork"
+  ],
+  "types": [
+   "M0/M4 enter and resolution",
+   "M11 scoring",
+   "M5 exit",
+   "M7 sections and steps"
+  ]
+ },
+ "cells_per_section_total": 70,
+ "unmapped_units": []
+}
+{
+ "catalog_rows_with_patch": 205,
+ "cells_filled_by_existing_rows": 45,
+ "cells_empty": {
+  "claims": [
+   "M2 mutex"
+  ],
+  "comparisons": [
+   "M1 bindings",
+   "M10 introspection",
+   "M2 mutex",
+   "M3 reconciliation",
+   "M8 record",
+   "M9 fork"
+  ],
+  "conditions": [
+   "M1 bindings",
+   "M10 introspection",
+   "M2 mutex",
+   "M8 record",
+   "M9 fork"
+  ],
+  "constants": [
+   "M2 mutex",
+   "M3 reconciliation",
+   "M6 callbacks",
+   "M8 record",
+   "M9 fork"
+  ],
+  "deletion": [
+   "M9 fork"
+  ],
+  "order": [
+   "M10 introspection",
+   "M3 reconciliation"
+  ],
+  "scope": [
+   "M10 introspection",
+   "M3 reconciliation",
+   "M8 record",
+   "M9 fork"
+  ],
+  "types": [
+   "M5 exit"
+  ]
+ },
+ "cells_empty_total": 25
+}
+{
+ "unit_sections": {
+  "<module>:83:PY_RESUME,PY_RETURN,PY_START,PY_UNWIND,PY_YIELD": "M1 bindings",
+  "<module>:85:_TRACER_ID": "M1 bindings",
+  "<module>:86:_CACHE_WRAPPER": "M1 bindings",
+  "<module>:88:_BY_FN": "M1 bindings",
+  "<module>:89:_MINTED": "M1 bindings",
+  "<module>:90:_ANCHORS": "M1 bindings",
+  "<module>:91:_CUT": "M1 bindings",
+  "<module>:92:_GUARD": "M1 bindings",
+  "<module>:93:_TOOL": "M1 bindings",
+  "<module>:94:_TOOL_NAME": "M1 bindings",
+  "<module>:95:_HANDLE_DICT": "M1 bindings",
+  "<module>:96:_LOOP_DICT": "M1 bindings",
+  "<module>:97:_LOST": "M1 bindings",
+  "<module>:98:_MON": "M1 bindings",
+  "<module>:101:_get_running_loop": "M1 bindings",
+  "<module>:103:_BUSY_SECONDS": "M1 bindings",
+  "<module>:104:_LOCAL": "M1 bindings",
+  "<module>:106:_chain,_compress,_filter,_map": "M1 bindings",
+  "<module>:107:_and,_is,_not,_setitem": "M1 bindings",
+  "<module>:108:_ARMED": "M1 bindings",
+  "<module>:108:_FLAGS": "M1 bindings",
+  "<module>:108:_VALUES": "M1 bindings",
+  "<module>:109:_CONSUME": "M1 bindings",
+  "<module>:110:_LOST_KEY,_TRUE": "M1 bindings",
+  "<module>:111:_NAME1,_NONE1,_PYU1,_ZERO1": "M1 bindings",
+  "<module>:112:_list,_repeat": "M1 bindings",
+  "<module>:113:_LOST_APPEND,_is_not": "M1 bindings",
+  "<module>:114:_tee": "M1 bindings",
+  "<module>:115:_EVENTS5": "M1 bindings",
+  "<module>:117:_VERIFIED": "M1 bindings",
+  "<module>:118:_monotonic,_sleep": "M1 bindings",
+  "Experiment.check_metrics": "M11 scoring",
+  "Experiment._check_coverage": "M11 scoring",
+  "Experiment.score": "M11 scoring",
+  "<module>:813:_GUARD": "M1 bindings",
+  "_own_dict": "M0/M4 enter and resolution",
+  "_cache_callee": "M0/M4 enter and resolution",
+  "_provenance": "M0/M4 enter and resolution",
+  "_resolve_target": "M0/M4 enter and resolution",
+  "_cut_ok": "M0/M4 enter and resolution",
+  "_cut_refresh": "M0/M4 enter and resolution",
+  "_txn": "M2 mutex",
+  "_alive": "M2 mutex",
+  "_acquire": "M2 mutex",
+  "_release": "M2 mutex",
+  "_locked": "M2 mutex",
+  "_unwind_on": "M7 sections and steps",
+  "_unwind_off": "M7 sections and steps",
+  "_take": "M7 sections and steps",
+  "_register": "M7 sections and steps",
+  "_set_local": "M7 sections and steps",
+  "_named": "M7 sections and steps",
+  "_ours": "M7 sections and steps",
+  "_reclaim": "M3 reconciliation",
+  "_retire": "M3 reconciliation",
+  "_prune": "M3 reconciliation",
+  "_reconcile": "M3 reconciliation",
+  "_ensure_tool": "M0/M4 enter and resolution",
+  "_mint": "M0/M4 enter and resolution",
+  "_enter_txn": "M0/M4 enter and resolution",
+  "_enter": "M0/M4 enter and resolution",
+  "_clone_alive": "M5 exit",
+  "_exit_txn": "M5 exit",
+  "_exit": "M5 exit",
+  "_outcome": "M6 callbacks",
+  "_publish": "M6 callbacks",
+  "_on_entry": "M6 callbacks",
+  "_on_exit": "M6 callbacks",
+  "_on_unwind": "M6 callbacks",
+  "<module>:1572:_CALLBACKS5": "M1 bindings",
+  "_lazy_text": "M7 sections and steps",
+  "_open": "M7 sections and steps",
+  "_commit": "M7 sections and steps",
+  "_detach": "M7 sections and steps",
+  "_run": "M7 sections and steps",
+  "_run_async": "M7 sections and steps",
+  "_CoverageTracer.__enter__": "M0/M4 enter and resolution",
+  "_CoverageTracer.__exit__": "M5 exit",
+  "_CoverageTracer.run": "M7 sections and steps",
+  "_CoverageTracer.run_async": "M7 sections and steps",
+  "_CoverageTracer.record": "M8 record",
+  "coverage_trace": "M0/M4 enter and resolution",
+  "_v5_state": "M10 introspection",
+  "_v5_faultpoints": "M10 introspection",
+  "_forget_in_child": "M9 fork",
+  "_finite": "M11 scoring",
+  "_check_trace_shape": "M11 scoring"
+ }
+}

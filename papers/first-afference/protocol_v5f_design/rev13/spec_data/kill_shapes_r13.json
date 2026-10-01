@@ -1,0 +1,361 @@
+{
+ "what": "the 29 round-4 exam-hole kill shapes (SM1 required content), from protocol_v5_redteam/round4/",
+ "rows": [
+  {
+   "key": "exam-mut-section-decl-clauses",
+   "title": "SECTION_DECL's ASCII clause and non-empty clause can each be deleted and the exam still passes",
+   "claim": "X06 and X07 test only a section without exercises and `section: 5`. Dropping `not sec.isascii()` (m_D01) accepts `section: 'sección'`. Dropping `not sec` (m_D02_section_empty_accepted.py, in the same directory) accepts `section: ''`. The original refuses both SECTION_DECL. This code sits in Experiment.__init__, outside the mutation gate's v5 region, and the effect is harmless, hence NOTE.",
+   "exam_case_that_would_kill_it": null,
+   "design_text_shape_abridged": "\"two frozen violation cases, both expecting SECTION_DECL: `section: \"\"`, and a confusable `section: \"sеction\"`\"",
+   "v5f_cases": "X07b, X07c",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify/exam-mut-section-decl-clauses/verify_repro.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_D01_section_non_ascii_accepted.py"
+   ]
+  },
+  {
+   "key": "examhole-clone-alive-single-tracer",
+   "title": "EXAM_HOLE: CLONE_ALIVE checked only by the tracer that releases the mint survives the exam",
+   "claim": "The mutant guards the refcount-gated scan in __exit__ with `not m.tracers`, so only the last holder of a shared mint checks for live clones. It passes the frozen exam, because X57 and X58 use one tracer. Paired harness: nested tracers on f. The inner section calls only a same-globals clone, which is kept alive past the inner exit and dropped before the outer exit. The original refuses the inner trace with CLONE_ALIVE; the mutant makes the inner gate PASS on the clone call.",
+   "exam_case_that_would_kill_it": "Nested tracers on f whose inner section calls only a same-globals clone of f's minted code, kept alive past the inner exit and dropped before the outer exit, with the inner trace expected to refuse CLONE_ALIVE.",
+   "design_text_shape_abridged": "\"Nested tracers on f whose inner section calls only a same-globals clone … kept alive past the inner exit and dropped before the outer exit, … inner trace expected to refuse CLONE_ALIVE\"",
+   "v5f_cases": "X57c",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-clone-alive-single-tracer/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-clone-alive-single-tracer/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-clone-called-first-tracer",
+   "title": "EXAM_HOLE: CLONE_CALLED recorded only for the first tracer holding the mint survives the exam",
+   "claim": "The mutant changes the hook's `for t in tracers: t._clone_called.add(...)` to `tracers[:1]`. It passes the frozen exam, because every CLONE_CALLED case uses one tracer. Paired harness: nested tracers on f; the inner section runs `types.FunctionType(f.__code__, {})(1)` and f(1). The original refuses the inner trace with CLONE_CALLED; with the mutant, the inner gate PASSES.",
+   "exam_case_that_would_kill_it": "Nested tracers on f where FunctionType(f.__code__, {})() runs while both tracers hold the mint (in either tracer's section), with the second-entered (inner) tracer expected to refuse CLONE_CALLED as well as the outer.",
+   "design_text_shape_abridged": "\"FunctionType(f.__code__, {})() runs while both tracers hold the mint … the inner tracer expected to refuse CLONE_CALLED as well as the outer\"",
+   "v5f_cases": "X55d",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-clone-called-first-tracer/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-clone-called-first-tracer/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-code-swapped-single-tracer",
+   "title": "EXAM_HOLE: exit-time CODE_SWAPPED checked only by the last holder survives the exam",
+   "claim": "The mutant changes `if m.fn.__code__ is not m.code:` to `if not m.tracers and m.fn.__code__ is not m.code:` in __exit__. It passes the frozen exam, because X59 uses a single tracer. Paired harness: nested tracers on f; the inner section calls f and then hot-swaps f.__code__, leaving the swap in place. The original refuses the inner trace with CODE_SWAPPED; with the mutant, the inner gate PASSES.",
+   "exam_case_that_would_kill_it": "Nested tracers on f whose inner section calls f and then sets f.__code__ to other code, left in place through the inner exit (restored before the outer exit), with the inner trace expected to refuse CODE_SWAPPED.",
+   "design_text_shape_abridged": "\"inner section calls f and then sets f.__code__ to other code, left in place through the inner exit … inner trace expected to refuse CODE_SWAPPED\"",
+   "v5f_cases": "X59c",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-code-swapped-single-tracer/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-code-swapped-single-tracer/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-stop-read-before-mint",
+   "title": "EXAM_HOLE: reading _STOP before minting (spec: after) survives the exam",
+   "claim": "The mutant moves `_STOP = asyncio.events.Handle._run.__code__` from after the mint loop to before resolution. It passes the frozen exam, because no case declares asyncio.events:Handle._run. Paired harness: a gate that declares Handle._run and f, with the loop run inside the section (X73 shape). In the original, the cut is the minted code, f is dispatched, and the gate is NOT_EXERCISED. In the mutant, no frame matches _STOP, the cut is lost, and the gate PASSES.",
+   "exam_case_that_would_kill_it": "A gate that declares asyncio.events:Handle._run and f, traced with cov.run('A', asyncio.run, main()) where main calls f (X73's shape), expected to refuse NOT_EXERCISED with f under uncredited.dispatched; or simply assert P._STOP is asyncio.events.Handle._run.__code__ during the trace.",
+   "design_text_shape_abridged": "\"A gate that declares asyncio.events:Handle._run and f … or simply assert P._STOP is asyncio.events.Handle._run.__code__ during the trace\"",
+   "v5f_cases": "X34 (declaring it is now RESERVED_TARGET) and `cut_current` asserted in every case",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-stop-read-before-mint/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-stop-read-before-mint/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-union-over-all-sections",
+   "title": "Exam never checks that a call credited to another gate's section cannot satisfy a gate; a scoring mutant that unions calls over ALL sections passes the full battery and gives a false PASS",
+   "claim": "Mutant of Experiment._check_coverage: the union of `calls` is built from the openings of every section in the trace (`for o in [o for ops in tr[\"sections\"].values() for o in ops]`) instead of the gate's own section's openings. SECTION_ABSENT still checks the gate's own section. The frozen exam passes this mutant in --mutation-mode on all four interpreters. It also passes the full non-mutation battery on 3.11: violations 155/155, valids 36/36 including V32, residuals 11/11, H1-H3 ok (saved stdout: a09_full_battery_stdout.txt). Why it survives: every exam case with two sections either gives the two gates disjoint targets (A:f, B:g in X60-X65, X70, V19, V30, V32, R01...) or leaves the target uncredited everywhere. So a call credited to B is never available to satisfy A. `_expect` compares the per-section unions read from the record, which the mutant does not touch, and Verdict.coverage only for the gate's own targets. Separating harness: gate A exercises f, gate B exercises g; `cov.run(\"A\", g)` then `cov.run(\"B\", f)`. The original refuses NOT_EXERCISED. The mutant scores PASS {'A': {f: 1}, 'B': {g: 1}} although f never ran in A's section: a false PASS. This is the exact class-B property ('credit to the wrong section') the design exists to prevent, and no case pins it.",
+   "exam_case_that_would_kill_it": "A two-gate violation case where gate A declares f and gate B declares g, section A runs only g and section B runs f (and g), expecting A to refuse NOT_EXERCISED; add a valid case where two gates both declare f and each section calls f once, expecting union {f:1} per gate, not {f:2}.",
+   "design_text_shape_abridged": "\"gate A declares f and gate B declares g, section A runs only g and section B runs f … expecting A to refuse NOT_EXERCISED; … two gates both declare f … union {f:1} per gate\"",
+   "v5f_cases": "X120, V41",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-union-over-all-sections/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-union-over-all-sections/witlib.py",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-union-over-all-sections/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-declared-section-field-never-scored",
+   "title": "No exam case declares a `section` that differs from the gate name; a mutant that ignores the declared section passes, falsely refusing shared-section harnesses and falsely PASSing swapped ones",
+   "claim": "Mutant of Experiment._check_coverage: `openings = tr[\"sections\"].get(c[\"section\"])` becomes `tr[\"sections\"].get(name)`, so the gate's NAME is used in place of its declared section. The frozen exam passes it in --mutation-mode on all four versions. Only X06 and X07 use the `section` key, both as parse violations. No valid, violation or residual case, and no gate of the v5e prereg itself, declares a section different from the gate name. The documented 'section' feature is therefore never exercised at score time. Harness (1): gates G_fast[f] and G_slow[g] share `section: \"run\"`, and `cov.run(\"run\", f+g)`. The original scores PASS; the mutant refuses SECTION_ABSENT, a false refusal. Harness (2): gate X[f] has `section: \"Y\"` and gate Y[g] has `section: \"X\"`, and the harness opens each gate's work under the gate NAME. The original refuses NOT_EXERCISED; the mutant scores PASS, a false PASS. A sibling mutant from the same hole also survives the mutation-mode exam: `_open`'s UNDECLARED_SECTION test against gate names (`if section not in self._exp.coverage:`) instead of declared sections. It is reproducible with mut/runmut.py m_undecl_names '        if section not in self._exp.coverage_sections:' '        if section not in self._exp.coverage:'.",
+   "exam_case_that_would_kill_it": "A valid case with two gates sharing a declared section (G_fast[f] and G_slow[g], both \"section\": \"run\"; one cov.run(\"run\", ...) calls f and g), or one gate whose section differs from its name (\"section\": \"harness\"), expecting PASS with the listed unions; add a cross-named violation case (X[f] with section \"Y\", Y[g] with section \"X\") expecting X to refuse NOT_EXERCISED.",
+   "design_text_shape_abridged": "\"two gates sharing a declared section … or one gate whose section differs from its name … cross-named violation case\"",
+   "v5f_cases": "V42, V43, X121, X78g",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-declared-section-field-never-scored/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-declared-section-field-never-scored/witlib.py",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-declared-section-field-never-scored/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-dispatch-cut-by-name",
+   "title": "The dispatch cut's identity is not pinned: a mutant that cuts at any frame named `_run` passes the exam and falsely refuses harnesses with a `_run` helper",
+   "claim": "Mutant of the hook: `if f.f_code is stop:` (identity with asyncio.events.Handle._run.__code__) becomes `if f.f_code.co_name == \"_run\":`. The frozen exam passes it in --mutation-mode on all four versions. Every case checks only that asyncio dispatch IS cut (X62-X65, X72, X73, V19). No case puts an ordinary frame with a look-alike name between an anchor and a target, although the exam's own fixture module defines `def _run(x)`. Harness: `def _run(cfg): return f() + cfg`, then `cov.run(\"G\", _run, 1)`. The original scores PASS {f:1}. The mutant refuses NOT_EXERCISED and files the call under 'dispatched'.",
+   "exam_case_that_would_kill_it": "A valid case whose section calls the target through an ordinary harness helper (or method) named `_run` between the cov.run anchor and the target, e.g. cov.run(\"G\", _run, 1) with `def _run(cfg): return f() + cfg`, expecting PASS {f:1}.",
+   "design_text_shape_abridged": "\"cov.run(\"G\", _run, 1) with `def _run(cfg): return f() + cfg`, expecting PASS {f:1}\"",
+   "v5f_cases": "V44",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-dispatch-cut-by-name/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-dispatch-cut-by-name/witlib.py",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-dispatch-cut-by-name/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-walk-bound-2-hops",
+   "title": "EXAM_HOLE: a provenance walk cut to 2 hops survives the exam (spec: at most 16)",
+   "claim": "The mutant changes `for _ in range(17)` in _defined_in to `range(3)`, so the walk checks the object plus 2 __wrapped__ hops. It passes the frozen exam (155 violation, 35 valid and 11 residual cases, retro exact): V11b pins only a 2-hop chain, and X30b pins only the 17-hop upper bound. Paired harness: a function decorated by three stacked functools.wraps decorators from another module (@retry @log_calls @timed). The original PASSES; the mutant refuses FOREIGN_DEFINITION.",
+   "exam_case_that_would_kill_it": "A valid case declaring a target that sits exactly 16 hops down a foreign functools.wraps chain (paired with X30b's 17), expecting PASS; this pins the bound exactly and kills both range(3) and the off-by-one range(16).",
+   "design_text_shape_abridged": "\"a target that sits exactly 16 hops down a foreign functools.wraps chain (paired with X30b's 17), expecting PASS\"",
+   "v5f_cases": "V11c + X30b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-walk-bound-2-hops/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-walk-bound-2-hops/witlib.py",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-walk-bound-2-hops/witness.py"
+   ]
+  },
+  {
+   "key": "examhole-class-step-exact-type",
+   "title": "EXAM_HOLE: class step only for type(obj) is type survives the exam (every ABC/Enum/metaclass method refused)",
+   "claim": "The mutant changes `elif isinstance(obj, type):` in _resolve_target to `elif type(obj) is type:`. It passes the frozen exam, because no case declares a method of a class with a non-`type` metaclass. Paired harness: methods of an abc.ABC subclass and of an Enum. The original PASSES; the mutant refuses INSTANCE_PATH at entry.",
+   "exam_case_that_would_kill_it": "A valid case that declares a method of an abc.ABC subclass (and one of an Enum) and must PASS with {target: 1}, plus a violation case that declares an inherited method of an ABC subclass and must refuse INHERITED.",
+   "design_text_shape_abridged": "\"a method of an abc.ABC subclass (and one of an Enum) … PASS …, plus … an inherited method of an ABC subclass … INHERITED\"",
+   "v5f_cases": "V45, X14b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-class-step-exact-type/mutant.patch"
+   ]
+  },
+  {
+   "key": "examhole-module-step-exact-type",
+   "title": "EXAM_HOLE: module step only for type(obj) is ModuleType survives the exam",
+   "claim": "The mutant changes `if isinstance(obj, types.ModuleType):` to `if type(obj) is types.ModuleType:`. It passes the frozen exam. Paired harness: a module that sets `sys.modules[__name__].__class__` to a ModuleType subclass (for a module property) and whose target is reached through its PEP 562 __getattr__. The original PASSES by V10's rule; the mutant falls into the instance branch and refuses INSTANCE_PATH. On 3.10 the stock importlib.util.LazyLoader recipe also separates the two.",
+   "exam_case_that_would_kill_it": "A V10 variant whose fixture module sets `sys.modules[__name__].__class__` to a types.ModuleType subclass and serves the target only through PEP 562 __getattr__, which must PASS with {target: 1}. Optionally add an X16 variant whose submodule has a ModuleType-subclass class, which must still refuse INSTANCE_PATH.",
+   "design_text_shape_abridged": "\"sets `sys.modules[__name__].__class__` to a types.ModuleType subclass and serves the target only through PEP 562 … PASS …; an X16 variant … INSTANCE_PATH\"",
+   "v5f_cases": "V10b, X16b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-module-step-exact-type/mutant.patch"
+   ]
+  },
+  {
+   "key": "examhole-inherited-direct-base-only",
+   "title": "EXAM_HOLE: INHERITED looked up only in the direct base survives the exam (wrong code for a grandparent method)",
+   "claim": "The mutant changes `obj.__mro__[1:]` to `obj.__mro__[1:2]` in the INHERITED test. It passes the frozen exam, because X14 inherits from the direct base. Paired harness: Leaf.fit, inherited from a grandparent. The original refuses INHERITED ('declare the defining class'). The mutant refuses UNRESOLVED with the false message 'no attribute ... in its own or any base's __dict__'.",
+   "exam_case_that_would_kill_it": "An X14 variant where the declared method comes from a grandparent (Leaf(Mid(Base)).fit) or from the second base of a mixin-first class (Model(LoggingMixin, Base).fit), which must refuse INHERITED rather than UNRESOLVED.",
+   "design_text_shape_abridged": "\"Leaf(Mid(Base)).fit … or Model(LoggingMixin, Base).fit … INHERITED rather than UNRESOLVED\"",
+   "v5f_cases": "X14c",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-inherited-direct-base-only/mutant.patch"
+   ]
+  },
+  {
+   "key": "examhole-cache-body-module-check",
+   "title": "EXAM_HOLE: dropping the vars(mod) clause of the cache-body rule survives the exam",
+   "claim": "The mutant deletes `any(v is body for v in vars(mod).values()) or` and keeps the holder clause. It passes the frozen exam, because X25/X25b bind the body in the same namespace that holds the wrapper. Paired harness: a class-held cache wrapper (`Scorer.fast = staticmethod(lru_cache(None)(_impl))`) whose body `_impl` is bound at module level, with the section calling only `_impl`. The original refuses NOT_A_FUNCTION at entry. The mutant PASSES, although the declared wrapper was never called.",
+   "exam_case_that_would_kill_it": "An X25c case with a class-held cache wrapper (Scorer.fast = lru_cache(None)(_impl), bare or as a staticmethod) whose body _impl is bound at module level, or a wrapper served only through PEP 562 __getattr__ (holder None) whose body is module-level, which must refuse NOT_A_FUNCTION at entry.",
+   "design_text_shape_abridged": "\"Scorer.fast = lru_cache(None)(_impl), bare or as a staticmethod … _impl bound at module level, or a wrapper served only through PEP 562 … NOT_A_FUNCTION\"",
+   "v5f_cases": "X25c, X25d",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/examhole-cache-body-module-check/mutant.patch"
+   ]
+  },
+  {
+   "key": "exam-hole-coverage-on-failing-bar",
+   "title": "EXAM_HOLE: every scored exam case has a passing bar (m=1.0), so a score() mutant that checks coverage only for gates whose bar passed survives and seals FAIL for an unexercised harness",
+   "claim": "The exam's _res() always writes m=1.0 against '>= 0.5', and X118's metric is 1.0. No case ever scores a declaring gate whose bar fails. The mutant computes fired first, then `if name in self.coverage and fired[name]: covered[name] = self._check_coverage(...)`, and it passes the frozen exam on all four versions. Paired harness: gate G exercises [f, g]; the harness calls only f and measures m=0.0. The original refuses [V5:NOT_EXERCISED]. The mutant returns the frozen table's FAIL row as a sealed verdict for a harness that never ran g, which is the P1 defect with the sign flipped. With a swallowed NESTED_SECTION, the original refuses [V5:NESTED_SECTION] and the mutant again seals FAIL, so recorded problems are hidden too.",
+   "exam_case_that_would_kill_it": "A declaring gate whose bar fails (m=0.0), or a kill gate whose table maps G false to PASS, run by a harness that never calls one declared target (and a second run with a swallowed NESTED_SECTION); score() must refuse with [V5:NOT_EXERCISED] (and [V5:NESTED_SECTION]), not return the table's FAIL or PASS row.",
+   "design_text_shape_abridged": "\"a declaring gate whose bar fails (m=0.0) … never calls one declared target (and a second run with a swallowed NESTED_SECTION)\"",
+   "v5f_cases": "X122, X122b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/scoring/r1/f5_exam_hole_failing_bar.py"
+   ]
+  },
+  {
+   "key": "exam-hole-score-step-order",
+   "title": "EXAM_HOLE: two score() step-order boundaries are unpinned (a recorded problem vs SECTION_ABSENT; STALE vs BAD_TRACE), so reorder mutants pass and one of them crashes on a malformed trace",
+   "claim": "MD moves step 7 (recorded problem) after step 8 (SECTION_ABSENT). X78c pins problems before NOT_EXERCISED only, so MD passes the frozen exam. On a natural harness that isolates each case with try/except and mistypes a section (cov.run(\"G_typo\", f) refused and swallowed), the original refuses every gate with [V5:UNDECLARED_SECTION], which names the typo. MD refuses [V5:SECTION_ABSENT] and hides the recorded cause. ME moves step 4 (STALE_TRACE) before step 3 (BAD_TRACE). Every BAD_TRACE case edits a trace of the same gates block, so ME also passes. On a trace missing \"gates_sha256\", ME crashes score() with KeyError where the original refuses [V5:BAD_TRACE]. ME contradicts \"in one pass before anything is read\".",
+   "exam_case_that_would_kill_it": "Two BAD_TRACE/order cases. First, a valid trace with 'gates_sha256' popped (like X96b but for that key) must refuse [V5:BAD_TRACE], not raise KeyError. Second, a harness that swallows cov.run('G_typo', f) and never opens G's section must refuse [V5:UNDECLARED_SECTION], not [V5:SECTION_ABSENT].",
+   "design_text_shape_abridged": "\"a valid trace with 'gates_sha256' popped must refuse BAD_TRACE, not raise KeyError … swallows cov.run('G_typo', f) … UNDECLARED_SECTION, not SECTION_ABSENT\"",
+   "v5f_cases": "X96c, X78e",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/scoring/r1/f6_exam_hole_step_order.py"
+   ]
+  },
+  {
+   "key": "exam-hole-diagnostic-texts",
+   "title": "EXAM_HOLE: the NOT_EXERCISED bucket labels and every check_metrics coverage property except 'usable False on a non-dict' are unpinned, so three lying mutants pass",
+   "claim": "MS swaps the labels in _check_coverage's message ('dispatched {unat}, unattributed {disp}'). X72 and X73's msg_lists_diagnostics only check that a changed count appears somewhere in the text, never under which label. Yet the closure row 'J2: message says never executed misleadingly | CLOSED_P | ... dispatched/unattributed counts ... (X72, X73, which check the message text)' rests on these labels, and the label is the remedy: dispatched means open run_async in the task; unattributed means open a section on that thread. MU makes check_metrics report a NOT_EXERCISED refusal as usable: True, a false all-clear from the pre-run safety tool. MN makes check_metrics drop the refusal text (note None). X117 only checks usable False for None, [], 's' and 5 (all NO_TRACE), and in mutation mode the final check_metrics is not gated. All three pass the frozen exam. On the X72 shape (gather children inside run_async), each changes its output against the original.",
+   "exam_case_that_would_kill_it": "On X72's trace (gather children inside run_async, dispatched {f:2}), assert that the NOT_EXERCISED message contains \"dispatched {'<fx>:f': 2}, unattributed {}\" with each count under its own label. Also assert that check_metrics on that result gives G:exercises usable False and a note starting with [V5:NOT_EXERCISED].",
+   "design_text_shape_abridged": "\"On X72's trace … \"dispatched {'<fx>:f': 2}, unattributed {}\" … check_metrics … usable False and a note starting with [V5:NOT_EXERCISED]\"",
+   "v5f_cases": "X72b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/scoring/r1/f10_exam_hole_diagnostic_texts.py"
+   ]
+  },
+  {
+   "key": "exam-mut-stop-cleared-by-inner-exit",
+   "title": "Clearing the dispatch cut _STOP on every exit (not only the last) survives the exam; after a nested tracer exits, jobs another thread submits into A's loop are credited to A",
+   "claim": "__exit__ clears _STOP only when _ACTIVE reaches 0. The mutant clears it on every exit. The frozen exam passes it for two reasons. Each case's own tracer sets _STOP again at __enter__. And no case runs work that depends on the cut after a NESTED tracer has exited. Harness: an outer tracer, plus an inner tracer entered and exited inside it (V15's shape). Then section A runs an event loop that serves another thread's run_coroutine_threadsafe and call_soon_threadsafe jobs (X65's shape, J1-X2). The original refuses A NOT_EXERCISED (dispatched f:2). The mutant scores A PASS {f:2}: a false PASS through the runtime hand-off that the Handle._run cut exists to close.",
+   "exam_case_that_would_kill_it": "Take V15's shape (an inner coverage_trace entered and exited inside an outer one), then run X65's shape in the outer tracer: section A's loop serves another thread's run_coroutine_threadsafe and call_soon_threadsafe jobs, or just cov.run('A', asyncio.run, coro_calling_f()). A must refuse [V5:NOT_EXERCISED] with dispatched {f:n}.",
+   "design_text_shape_abridged": "\"V15's shape … then X65's shape in the outer tracer … A must refuse NOT_EXERCISED with dispatched {f:n}\"",
+   "v5f_cases": "X65b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_E04_stop_cleared_by_inner_exit.py"
+   ]
+  },
+  {
+   "key": "exam-mut-nested-by-section-name",
+   "title": "NESTED_SECTION widened to other tracers' same-named sections survives the exam; nested tracers whose preregs share a gate name are falsely refused",
+   "claim": "The mutant changes `o.tracer is self` to `(o.tracer is self or o.section == section)`, and the exam passes it. V15 nests sections named G and H, and no exam section name collides with the outer self-trace's. Harness: a session tracer and a per-test tracer, both with a gate named 'G1', nested. The original credits both. The mutant refuses the inner NESTED_SECTION, so f never runs and both gates fail.",
+   "exam_case_that_would_kill_it": "A V15 variant in which the outer and the inner prereg both name their gate/section 'G', nested on one stack, requiring both to PASS with {f:1}; or any valid case whose own section name equals the enclosing self-trace section.",
+   "design_text_shape_abridged": "\"outer and inner prereg both name their gate/section 'G', nested on one stack, requiring both to PASS with {f:1}\"",
+   "v5f_cases": "V15b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-nested-by-section-name/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_O07_nested_refused_across_tracers_by_name.py"
+   ]
+  },
+  {
+   "key": "exam-mut-restore-over-swapped-code",
+   "title": "Restoring the original __code__ even after CODE_SWAPPED survives the exam; a hot reload made during the trace is silently reverted at exit",
+   "claim": "Exit restores m.original only when fn.__code__ is still the mint. The mutant restores it unconditionally, while still recording CODE_SWAPPED. The exam passes it because X59/X59b put the code back themselves in a `finally`, before the leftover check runs. Harness: the section calls f and then hot-reloads f.__code__ to a v2 body. After exit, the original leaves the reload in place and f() returns 'v2'. The mutant reverts f to the pre-trace body, so f() returns 'v1'. Both refuse CODE_SWAPPED. The user's program is silently altered after the trace.",
+   "exam_case_that_would_kill_it": "An X59 variant that checks, after the trace exits and before its own finally restores the code, that mod.f59.__code__ is still mod.u59.__code__ (f59() returns -59): the swap must be left in place.",
+   "design_text_shape_abridged": "\"after the trace exits and before its own finally restores the code, … mod.f59.__code__ is still mod.u59.__code__ (f59() returns -59)\"",
+   "v5f_cases": "X59d",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-restore-over-swapped-code/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_E01_restore_over_swapped_code.py"
+   ]
+  },
+  {
+   "key": "exam-mut-close-removes-foreign-profiler",
+   "title": "Last close removing ANY profiler (not only the styxx hook) survives the exam; a profiler the harness starts inside a section is uninstalled",
+   "claim": "The mutant drops `sys.getprofile() is _hook` from _close's last-close removal, and the exam passes it. X80/X81 install their profiler before the open, and no case checks a profiler that was started inside a section once the close has run. Harness: `f(); sys.setprofile(my_profiler)` inside the section. The original leaves my_profiler installed after the close. The mutant removes it.",
+   "exam_case_that_would_kill_it": "On a fresh thread the case owns: cov.run('G', body), where body calls f and then sys.setprofile(prof); after cov.run returns, require sys.getprofile() is prof (and the PROFILER_LOST note).",
+   "design_text_shape_abridged": "\"cov.run('G', body), where body calls f and then sys.setprofile(prof); … require sys.getprofile() is prof (and the PROFILER_LOST note)\"",
+   "v5f_cases": "V58 (adapted: prof kept, and no note because PROFILER_LOST is retired)",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-close-removes-foreign-profiler/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_C06_close_removes_foreign_profiler.py"
+   ]
+  },
+  {
+   "key": "exam-mut-exit-removes-foreign-profiler",
+   "title": "Last exit removing ANY profiler survives the exam; the `_ACTIVE == 0` block in __exit__ is never exercised by any case",
+   "claim": "The mutant makes __exit__'s `if _ACTIVE == 0` block call sys.setprofile(None) unconditionally, and the exam passes it. The cause is structural: brief amendment A1 runs every case inside the exam's outer self-trace, so _ACTIVE >= 1 throughout the battery. Only the final self-trace exit ever runs this block, and the hook's `not _ACTIVE` self-removal never fires inside a case. Harness: the harness installs its own profiler inside the `with`, after its sections. The original leaves it installed after the exit. The mutant removes it.",
+   "exam_case_that_would_kill_it": "A main-thread case run before the self-trace (like the signal cases), where _ACTIVE can reach 0: a pure-Python profiler is installed on the main thread before `with coverage_trace(exp)`, the section runs on a worker thread, and after the exit the case requires sys.getprofile() is that profiler.",
+   "design_text_shape_abridged": "\"a pure-Python profiler is installed on the main thread before `with coverage_trace(exp)`, the section runs on a worker thread, and after the exit … sys.getprofile() is that profiler\"",
+   "v5f_cases": "V57 (adapted: the case thread plays the main thread's part, because `sys.setprofile` is per-thread and cases run on their own threads; no `_ACTIVE==0` branch exists)",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-exit-removes-foreign-profiler/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_E07_exit_removes_foreign_profiler.py"
+   ]
+  },
+  {
+   "key": "exam-mut-double-exit-state-leak",
+   "title": "Dropping __exit__'s 'not active -> return' guard survives the exam; a double exit records a false CODE_SWAPPED and drives _ACTIVE to -1, blinding every later tracer",
+   "claim": "No exam case calls __exit__ twice. With the guard gone, a harness pattern such as an explicit `cov.__exit__()` on success followed by another in a `finally` runs the exit a second time. The code is already restored at that point, so the second pass records CODE_SWAPPED. It also decrements _ACTIVE to -1. A later, independent trace in the same process then sees _ACTIVE == 0 while it is active, its hook removes itself at every event, and it refuses NOT_EXERCISED. That is state leaked between tracers. The original treats the second exit as a no-op, and both traces PASS.",
+   "exam_case_that_would_kill_it": "A case that exits one tracer twice (an explicit cov.__exit__ on success plus one in a finally), or calls __exit__ in a finally after __enter__ raised UNRESOLVED, expecting PASS {f:1} for that trace and a clean leftover state (_ACTIVE == 0) so a later trace still passes.",
+   "design_text_shape_abridged": "\"exits one tracer twice … or calls __exit__ in a finally after __enter__ raised UNRESOLVED, expecting PASS {f:1} … a later trace still passes\"",
+   "v5f_cases": "V52",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-double-exit-state-leak/exam-mut-double-exit-state-leak_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-double-exit-state-leak/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-double-exit-state-leak/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_E05_double_exit.py"
+   ]
+  },
+  {
+   "key": "exam-mut-hop-close-drops-closer-hook",
+   "title": "THREAD_HOP close removing the CLOSING thread's hook survives the exam; that thread's own open section goes blind",
+   "claim": "The mutant drops `tid == o.tid` from _close's last-close removal, and the exam passes it. V28, the only THREAD_HOP case, closes on a fresh thread that has no hook. Harness: coroutine section B opens on a worker thread and suspends. Inside section A on the main thread, the harness resumes B to completion (a THREAD_HOP close) and then calls f. The original credits f to A. The mutant removes the main thread's hook at B's close, so A refuses NOT_EXERCISED and gets a PROFILER_LOST note.",
+   "exam_case_that_would_kill_it": "A V28 variant in which the thread that closes the hopped coroutine section has its own section open: resume section B (opened and suspended on a worker thread) to completion inside section A on the main thread, then call A's target, expecting A {f:1} with no PROFILER_LOST and B's THREAD_HOP note.",
+   "design_text_shape_abridged": "\"resume section B (opened and suspended on a worker thread) to completion inside section A on the main thread, then call A's target, expecting A {f:1} with no PROFILER_LOST and B's THREAD_HOP note\"",
+   "v5f_cases": "V28b (adapted: THREAD_HOP is retired, so no notes. B's post-hop calls are ambiguous, not counted, because both openings are on the chain)",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-hop-close-drops-closer-hook/exam-mut-hop-close-drops-closer-hook_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-hop-close-drops-closer-hook/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-hop-close-drops-closer-hook/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_C01_hop_close_drops_closer_hook.py"
+   ]
+  },
+  {
+   "key": "exam-mut-foreign-profiler-first-open-only",
+   "title": "FOREIGN_PROFILER checked only at a thread's first open survives the exam; a later open under a foreign profiler is silently blind",
+   "claim": "The mutant adds `and tid not in _THREADS` to the FOREIGN_PROFILER check. The exam passes it because X80, X80b and X81 install the profiler on a fresh thread. Harness: `asyncio.gather(run_async('A', a), run_async('B', b))` on one loop, where task a starts a profiler before B opens. The original raises FOREIGN_PROFILER at B's open and records it. The mutant opens B without its hook and raises nothing, so B refuses NOT_EXERCISED: the wrong code, and nothing recorded.",
+   "exam_case_that_would_kill_it": "A case that installs a pure-Python profiler while another opening is open on the same thread (a task on the same asyncio loop, or inside another tracer's open section) and then opens a section, expecting [V5:FOREIGN_PROFILER] raised at that open and recorded.",
+   "design_text_shape_abridged": "\"installs a pure-Python profiler while another opening is open on the same thread … then opens a section, expecting [V5:FOREIGN_PROFILER]\"",
+   "v5f_cases": "V59 (adapted: FOREIGN_PROFILER is retired; the open succeeds with exact counts)",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-foreign-profiler-first-open-only/exam-mut-foreign-profiler-first-open-only_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-foreign-profiler-first-open-only/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-foreign-profiler-first-open-only/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_O05_foreign_profiler_checked_first_open_only.py"
+   ]
+  },
+  {
+   "key": "exam-mut-target-set-before-stale",
+   "title": "Swapping score steps 4 and 5 (TARGET_SET before STALE_TRACE) survives the exam; an old trace scored against an edited prereg gets the wrong code",
+   "claim": "X109 keeps the targets equal and X110 keeps the hash equal, so no case has both defects at once. The common real shape has both: a target is added to the gates block and an old trace is re-scored. The original refuses STALE_TRACE. The mutant refuses TARGET_SET.",
+   "exam_case_that_would_kill_it": "An X109 variant whose second gates block also adds a declared target, so both gates_sha256 and the target set differ, expecting [V5:STALE_TRACE].",
+   "design_text_shape_abridged": "\"An X109 variant whose second gates block also adds a declared target … expecting [V5:STALE_TRACE]\"",
+   "v5f_cases": "X109b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-target-set-before-stale/exam-mut-target-set-before-stale_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-target-set-before-stale/mutant.patch",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-target-set-before-stale/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_S01_target_set_before_stale.py"
+   ]
+  },
+  {
+   "key": "exam-mut-profiler-lost-only-if-none",
+   "title": "PROFILER_LOST weakened to `getprofile() is None` survives the exam; a profiler started inside a section leaves NOT_EXERCISED with no note",
+   "claim": "V26 and V30 drop the hook to None, so no case replaces it with a foreign profiler. That is exactly the case the spec names. Harness: f(), then sys.setprofile(p), then g() inside the section. The original's NOT_EXERCISED lists notes ['[V5:PROFILER_LOST]...']. The mutant's lists none, so the message no longer says why g went unseen.",
+   "exam_case_that_would_kill_it": "Inside section G, call f, then install a pure-Python foreign profiler with sys.setprofile(p), then call g, and remove p after the section closes. Expect G's opening notes to contain PROFILER_LOST and the NOT_EXERCISED message for g to name it.",
+   "design_text_shape_abridged": "\"Inside section G, call f, then install a pure-Python foreign profiler …, then call g … Expect … PROFILER_LOST and the NOT_EXERCISED message for g to name it\"",
+   "v5f_cases": "V60 (adapted) + X137 (the MONITOR_LOST successor)",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-profiler-lost-only-if-none/exam-mut-profiler-lost-only-if-none_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-profiler-lost-only-if-none/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_C02_lost_note_only_if_none.py"
+   ]
+  },
+  {
+   "key": "exam-mut-bad-trace-end-type",
+   "title": "Dropping BAD_TRACE's exact-type clause for `end` survives the exam (hand-built traces only)",
+   "claim": "The mutant reduces the check to `o['end'] not in _ENDS`. None of the exam's str-subclass edits touch `end`. A trace whose end is a str subclass equal to 'returned' is refused BAD_TRACE by the original and accepted (PASS) by the mutant. Low impact, since only an in-process hand-built trace can carry such a value. It falsifies the audit row 'each BAD_TRACE and BAD_COUNT clause | X96-X115'.",
+   "exam_case_that_would_kill_it": "Take a genuine one-opening trace and replace that opening's end with a str subclass equal to 'returned' (class S(str): pass; S('returned')). Expect BAD_TRACE.",
+   "design_text_shape_abridged": "\"replace that opening's end with a str subclass equal to 'returned' … Expect BAD_TRACE\"",
+   "v5f_cases": "X103c",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-bad-trace-end-type/exam-mut-bad-trace-end-type_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-bad-trace-end-type/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_B01_end_type_clause_dropped.py"
+   ]
+  },
+  {
+   "key": "exam-mut-problems-before-bad-count",
+   "title": "Reading recorded problems before BAD_COUNT survives the exam (hand-edited traces only)",
+   "claim": "No exam case has both a problem and a bad count. The harness records CLONE_CALLED and then sets a count to 0. The original refuses BAD_COUNT; the mutant refuses CLONE_CALLED. Low impact: the wrong code appears only on an edited trace.",
+   "exam_case_that_would_kill_it": "Take a trace that carries a genuine recorded problem (for example a swallowed UNDECLARED_SECTION refusal) and set one calls count to 0. Expect BAD_COUNT, not the problem's code.",
+   "design_text_shape_abridged": "\"a trace that carries a genuine recorded problem … set one calls count to 0. Expect BAD_COUNT\"",
+   "v5f_cases": "X112b",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-problems-before-bad-count/exam-mut-problems-before-bad-count_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-problems-before-bad-count/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_S02_problems_before_bad_count.py"
+   ]
+  },
+  {
+   "key": "exam-mut-uncredited-last-thread-wins",
+   "title": "record() keeping only the last thread's uncredited count survives the exam (diagnostic only)",
+   "claim": "The mutant changes `disp[k] = disp.get(k,0)+v` to `disp[k] = v`. No exam case dispatches one target on two threads. Two sharded threads each dispatch g once: the original records dispatched g=2, the mutant records 1, and the NOT_EXERCISED message prints the wrong count. The buckets are 'never evidence', so the impact is low.",
+   "exam_case_that_would_kill_it": "Two threads, alive at once, each open a section and each dispatch g once through their own event loop's call_soon. Expect record()['uncredited']['dispatched'] == {g: 2}, and the NOT_EXERCISED message for a gate declaring g to print 2.",
+   "design_text_shape_abridged": "\"Two threads … each dispatch g once through their own event loop's call_soon. Expect … {g: 2}, and the NOT_EXERCISED message … to print 2\"",
+   "v5f_cases": "X123",
+   "files_in_protocol_v5_redteam": [
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-uncredited-last-thread-wins/exam-mut-uncredited-last-thread-wins_mutant.diff",
+    "papers/first-afference/protocol_v5_redteam/round4/verify-exam/exam-mut-uncredited-last-thread-wins/witness.py",
+    "papers/first-afference/protocol_v5_redteam/round4/exam-mutation/r1/m_K01_record_uncredited_last_thread_wins.py"
+   ]
+  }
+ ]
+}

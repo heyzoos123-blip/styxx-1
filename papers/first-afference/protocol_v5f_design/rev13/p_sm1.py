@@ -20,7 +20,26 @@ MUT = {
  'R13_capture_stale_read': [(STMT1, STMT1.replace('    _CONSUME(_chain(\n', '    was_clear = not (get_events(t) & PY_UNWIND)\n    _CONSUME(_chain(\n')),
                             (OLDCAP, NEWCAP)],
 }
-for rid in ('A_coh_no_file_skip', 'A_cache_callee_identity', 'A_alias_by_name', 'A_mint_eq', 'A_visible_deleted',
+WALK_OLD = ('''    r = _GUARD["hint"]
+    n = r.succ.get("next")
+    while n is not None:
+        r = n
+        n = r.succ.get("next")
+    return {''')
+WALK_NEW = ('''    r = _GUARD["hint"]
+    seen = {id(r)}
+    n = r.succ.get("next")
+    while n is not None and id(n) not in seen:
+        seen.add(id(n))
+        r = n
+        n = r.succ.get("next")
+    return {''')
+GUARD_OLD = '''        "guard": "free" if r.tid is None else ("held" if _alive(r) else "dead"),'''
+GUARD_NEW = '''        "guard": "cycle" if n is not None else ("free" if r.tid is None else ("held" if _alive(r) else "dead")),'''
+# revision 13 (GAP-64): _v5_state() is total; its walk stops at the first repeated token and reports "cycle"
+MUT['R13_total_walk'] = [(WALK_OLD, WALK_NEW), (GUARD_OLD, GUARD_NEW)]
+for rid in ('A_binding_first_only', 'A_verified_widened', 'A_txn_shared_succ',
+            'A_coh_no_file_skip', 'A_cache_callee_identity', 'A_alias_by_name', 'A_mint_eq', 'A_visible_deleted',
             'A_publish_recheck', 'A_enter_claim', 'A_exit_claim', 'A_atfork_handler', 'A_pid_passthrough',
             'A_unwind_on_recheck', 'A_detach_anchor_first', 'A_capture_outside', 'A_ensure_no_reclaim',
             'A_open_audited_after_append', 'M3_register_before_append', 'M5_exit_claim_not_idempotent'):
@@ -47,6 +66,7 @@ cached_alias = cached
 SETUP = r'''
 import sys, os, json, gc, threading, types, importlib.util, dis
 WORK, SRC = sys.argv[1], sys.argv[2]
+sys.path.insert(0, os.path.dirname(SRC))
 spec = importlib.util.spec_from_file_location("ref_v5f", SRC)
 P = importlib.util.module_from_spec(spec); sys.modules["ref_v5f"] = P; spec.loader.exec_module(P)
 sys.path.insert(0, os.path.join(WORK, "fx")); import fx_r13 as fx
@@ -243,10 +263,10 @@ def cb(c, off):
     if c is FP["_ensure_tool"] and arm[0]:
         arm[0] = False; M.free_tool_id(tool_p)     # styxx's id is freed after Q's reconciliation
 M.use_tool_id(2, "p_sm1-hold"); M.register_callback(2, E.PY_START, cb); M.set_local_events(2, FP["_ensure_tool"], E.PY_START)
-q = P.coverage_trace(EXP("g")); q.__enter__(); tool_q = P._v5_state()["tool"]
+q = P.coverage_trace(EXP("h")); q.__enter__(); tool_q = P._v5_state()["tool"]
 M.set_local_events(2, FP["_ensure_tool"], 0); M.register_callback(2, E.PY_START, None); M.free_tool_id(2)
-q.run("G", fx.g); q.__exit__(None, None, None); p.__exit__(None, None, None)
-out({"tool_at_P": tool_p, "tool_after_Q_enter": tool_q, "P": [score("f", p.record()), notes(p.record())]})
+q.run("G", fx.h); q.__exit__(None, None, None); p.__exit__(None, None, None)
+out({"tool_at_P": tool_p, "tool_after_Q_enter": tool_q, "P": [score("f", p.record()), notes(p.record())], "Q": [score("h", q.record()), notes(q.record())]})
 '''
 CASES['V71b'] = r'''
 cov = P.coverage_trace(EXP("f")); cov.__enter__()
@@ -303,6 +323,53 @@ st = {}
 r = sweep(FP["_unwind_on"], ident, lambda: M.set_events(st["tool"], 0), trial, kmax=400)
 out({"trials": len(r), "trials_Q_noted": sum(1 for a, b in r if a), "trials_Q_not_noted": [k + 1 for k, (a, b) in enumerate(r) if not a]})
 '''
+CASES['X156c'] = r'''
+import importlib, itertools
+P.coverage_trace(EXP("f"))                       # binds
+class Chain(itertools.chain): pass
+itertools.chain = Chain
+P2 = importlib.reload(P)
+codes = []
+for _ in range(2):
+    try: P2.coverage_trace(EXP("f")); codes.append(None)
+    except P2.GateSpecError as e: codes.append(code(e))
+out({"codes": codes, "MON_survived_reload": P2._MON[0] is not None})
+'''
+CASES['X37c'] = r'''
+real = sys.version_info
+class VI(tuple): pass
+sys.version_info = VI((real[0], real[1], real[2] + 1, "final", 0))    # the next, unverified patch level
+codes = []
+for _ in range(2):
+    try: P.coverage_trace(EXP("f")); codes.append(None)
+    except P.GateSpecError as e: codes.append(code(e))
+sys.version_info = real
+out({"micro": real[2] + 1, "codes": codes})
+'''
+CASES['X37b'] = r'''
+real = sys.version_info
+class VI(tuple): pass
+sys.version_info = VI((real[0], real[1], 99, "final", 0))
+codes = []
+for _ in range(2):
+    try: P.coverage_trace(EXP("f")); codes.append(None)
+    except P.GateSpecError as e: codes.append(code(e))
+sys.version_info = real
+out({"codes": codes})
+'''
+CASES['V52s'] = r'''
+res = []
+for name in ("P", "Q"):
+    cov = P.coverage_trace(EXP("f"))
+    cov.__enter__()
+    g_in = P._v5_state()["guard"]                  # after the enter's transaction released the mutex
+    print(json.dumps({"progress": [name, "guard after enter", g_in]})); sys.stdout.flush()
+    cov.run("G", fx.f); cov.__exit__(None, None, None)
+    res.append([name, score("f", cov.record()), g_in, P._v5_state()["guard"]])
+    print(json.dumps({"progress": res[-1]})); sys.stdout.flush()
+out({"traces": res})
+'''
+BOUND = {'V52s': 30}
 PLAN = [('X26g', ['spec', 'A_coh_no_file_skip']), ('X24g', ['spec', 'A_cache_callee_identity']),
         ('V07b', ['spec', 'A_alias_by_name']), ('V74', ['spec', 'A_mint_eq']), ('V36c', ['spec', 'A_visible_deleted']),
         ('X71d', ['spec', 'A_publish_recheck']), ('X32e', ['spec', 'A_enter_claim']),
@@ -310,7 +377,10 @@ PLAN = [('X26g', ['spec', 'A_coh_no_file_skip']), ('X24g', ['spec', 'A_cache_cal
         ('V47bc', ['spec', 'A_atfork_handler', 'A_pid_passthrough']), ('X146e', ['spec', 'A_unwind_on_recheck']),
         ('X148b', ['spec', 'A_detach_anchor_first']), ('X153', ['spec', 'A_capture_outside', 'R13_capture_stale_read']), ('X153b', ['spec', 'A_capture_outside', 'R13_capture_stale_read']),
         ('X137k', ['spec', 'A_ensure_no_reclaim']), ('V71b', ['spec', 'A_open_audited_after_append']),
-        ('X132b', ['spec', 'M3_register_before_append'])]
+        ('X132b', ['spec', 'M3_register_before_append']),
+        ('X156c', ['spec', 'A_binding_first_only']), ('X37b', ['spec', 'A_verified_widened']),
+        ('X37c', ['spec', 'A_verified_widened']),
+        ('V52s', ['spec', 'R13_total_walk', 'A_txn_shared_succ', 'A_txn_shared_succ+R13_total_walk'])]
 def prereg(path, targets):
     spec = {"gates": {"G": {"metric": "m", "op": ">=", "value": 0.0, "exercises": ["fx_r13:" + t for t in targets]}},
             "outcomes": [{"when": {"G": True}, "verdict": "PASS"}, {"when": {"G": False}, "verdict": "FAIL"}], "smoke_verdict": "INVALID__s"}
@@ -320,7 +390,7 @@ def main():
     print(sys.version.split()[0], 'ref_v5f.py sha256', hashlib.sha256(src.encode()).hexdigest()[:16], flush=True)
     work = tempfile.mkdtemp(prefix='r13_'); os.makedirs(os.path.join(work, 'fx')); repo = os.path.join(work, 'repo'); os.makedirs(repo)
     open(os.path.join(work, 'fx', 'fx_r13.py'), 'w').write(FIX)
-    for name, ts in (('f', ['f']), ('g', ['h']), ('fg', ['f', 'g']), ('blk', ['blk']), ('wrapped_g', ['wrapped_g']),
+    for name, ts in (('f', ['f']), ('g', ['g']), ('h', ['h']), ('fg', ['f', 'g']), ('blk', ['blk']), ('wrapped_g', ['wrapped_g']),
                      ('power2', ['power2']), ('cached', ['cached'])):
         prereg(os.path.join(repo, 'PREREG_%s.md' % name), ts)
     git = ['git', '-c', 'user.name=r13', '-c', 'user.email=r13@invalid', '-c', 'commit.gpgsign=false']
@@ -331,14 +401,17 @@ def main():
         if only and case not in only: continue
         for v in variants:
             s = src
-            for old, new in MUT[v]:
-                assert s.count(old) == 1, (v, old[:60], s.count(old)); s = s.replace(old, new)
-            path = os.path.join(work, 'ref_%s.py' % v); open(path, 'w').write(s)
+            for part in v.split('+'):
+                for old, new in MUT[part]:
+                    assert s.count(old) == 1, (v, old[:60], s.count(old)); s = s.replace(old, new)
+            os.makedirs(os.path.join(work, v), exist_ok=True)
+            path = os.path.join(work, v, 'ref_v5f.py'); open(path, 'w').write(s)
             prog = os.path.join(work, 'case_%s.py' % case); open(prog, 'w').write(SETUP + CASES[case])
             try:
-                r = subprocess.run([sys.executable, prog, work, path], capture_output=True, text=True, timeout=600)
+                r = subprocess.run([sys.executable, prog, work, path], capture_output=True, text=True, timeout=BOUND.get(case, 600))
                 res = r.stdout.strip() or ('ERROR ' + (r.stderr.strip().splitlines() or ['?'])[-1])
-            except subprocess.TimeoutExpired:
-                res = 'TIMEOUT (600 s)'
+            except subprocess.TimeoutExpired as e:
+                got = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or '')
+                res = 'TIMEOUT (%d s) after: %s' % (BOUND.get(case, 600), got.strip().replace(chr(10), ' | ') or '(nothing)')
             print('%-6s %-30s %s' % (case, v, res), flush=True)
 main()

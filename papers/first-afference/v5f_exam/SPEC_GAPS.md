@@ -825,3 +825,185 @@ Readings the text does not fix, and inputs outside the exam author's read scope.
 - *What happens.* `A_txn_shared_succ` (revision 5: `_Txn`'s `succ` dict shared between tokens; witness V52; the catalog's weakened outcome "a hang"). Once two tokens exist, every chain walk (`_acquire`'s and `_v5_state()`'s `while n is not None: r = n; n = r.succ.get("next")`) follows the shared dict to the same token forever. With the runner's `--mutation V52`, the self-trace's enter takes the first token; `run_in_self` then calls `snap()` -> `P._v5_state()` on the main thread, before the case thread starts, and spins there (a faulthandler dump at 75 s: `_v5_state` line 1899 <- `snap` <- `run_in_self` <- `main`). V52's body never runs, and `--mutation V01` hangs at the same line. Both SM1 runs reach the driver's 600 s timeout on 3.12.3 (`TIMEOUT`, `TIMEOUT`). The crash sweep on the same patch reports `void: baseline failed` for its scenarios (the baseline run hangs), so G_FI fails without naming C3.
 - *Readings left open.* (a) "No outcome" differs from the spec outcome and the row is KILLED (what the journal first recorded); (b) the witness never ran, so the row is admitted but not KILLED, and needs a witness that observes a hang with a bounded wait (a fresh-subprocess case with a timeout as its stated outcome, or a C3 crash-sweep row that counts a hung baseline). The exam author does not choose.
 - *In the artifact.* `weakenings_v5f.py` classes a row whose two runs both time out as HANG and counts it as admitted and not killed (reading (b), the stricter), so SM1's gate fails on it until the text decides. `sm1_result.json` lists HANG rows per version.
+
+## Revision 13 follow-ups (raised while applying revision 13; for the spec owner)
+
+Revision 13's text is applied as written; each item below is a place where the text and what the exam author
+measured or had to choose disagree, or where the text leaves a choice open. Nothing here was worked around: where
+an artifact had to choose, the choice is named and the item says so. "Both versions" means 3.12.3 and 3.13.12.
+
+**R13-1. GAP-62's cell count, and where the at-fork registration belongs.**
+- *What the text says.* "70 cells over 8 families (O12 had no generator), 45 filled by the catalog's 205 rows, and
+  25 to write", and the rule regions: M1 is "the module-level statements that bind the M1 names"; "A Region unit
+  ... that is not listed joins the section under whose heading this text specifies it".
+- *What the exam author measures* (`opmut_v5f.py` on `ref_v5f.py` sha256 `1d0b06ee…`, the revision-13 reference):
+  71 cells counting O12's (70 without it), 44 filled after the two `_v5_state()` guard rows were re-targeted to
+  revision 13's walk (42 before), 27 empty: the text's 25, O12's cell, and (deletion, M1). The one disagreement is
+  `A_atfork_handler`, whose only patch deletes the module-level `os.register_at_fork(after_in_child=_forget_in_child)`.
+  The statement binds no name, so by the M1 definition it is not M1; the text specifies it under M9, so by the
+  joining rule it is M9's. Counted that way it fills (deletion, M9), and (deletion, M1) is empty. The text's list
+  ("deletion in M9" among the 25 to write) counts it as M1, which fills (deletion, M1) and leaves (deletion, M9).
+- *In the artifact.* `weakenings_v5f.py` follows the text's list: the 25 rows plus O12's (`sm1_gap62_rows.json`),
+  including `R62_deletion_M9`; no row is written for (deletion, M1). Under the other reading (deletion, M1)'s first
+  non-TCE mutant deletes the `if _GUARD is None:` statement, and every case would witness it.
+- *Fix needed.* Say which rule region a module-level statement that binds no M1 name (the at-fork registration)
+  belongs to, and restate the counts.
+
+**R13-2. Rows SM1 finds UNWITNESSED, with what the exam author found for each.** SM1 on the revision-13 reference
+(below, R13-13) gives the same 25 UNWITNESSED rows on both versions: 8 re-targeted census rows, 2 kill-shape rows and
+15 GAP-62 rows. The text asks for a witness or an EQUIVALENT_BY_SPEC filing (signed by the fourth reviewer) for each
+before the freeze. For the rows below marked *witness shape verified*, the exam author ran the shape on `ref_v5f.py`
+and on the row's patch, one fresh process each, on both versions, with identical results
+(`tools/r13_shapes/`, `results_v5f/r13_witness_shapes.json`); none is a runner case yet, since a new case is a text
+change. The equivalence arguments are the exam author's reading, offered for the reviewer, not filed.
+- `C13_E03_clone_alive_counts_fn` (named V36c). *Witness shape verified:* nested tracers on f; the inner section keeps
+  a non-function reference to f's minted code (`keep.append(f.__code__)`) past the inner exit. Spec: the inner trace
+  PASSes (the reference is not a function); weakened: CLONE_ALIVE (the declared function itself is counted while the
+  outer still holds the mint).
+- `C13_E06_restore_ignores_other_tracers` (X142). *Witness shape verified:* nested tracers on g; the inner exits
+  first, then the outer's section calls g. Spec: outer PASS; weakened: outer NOT_EXERCISED (the inner's exit retired
+  the shared mint).
+- `C13_H15_walk_from_frame` (V01). Not equivalent: the instruction asked for a candidate EQUIVALENT_BY_SPEC filing,
+  and the exam author's argument for one fails. The walk from `f` instead of `f.f_back` differs when `f` is itself an
+  anchor frame, which happens when styxx's own `_run_async` is declared (V34 already declares `styxx.protocol:_run`):
+  on a PY_RESUME after the commit, `f` is its own opening's anchor. *Witness shape verified:* declare
+  `styxx.protocol:_run_async` and f; `asyncio.run(cov.run_async('G', body))` with two awaits. Spec: NOT_EXERCISED,
+  `dispatched {'styxx.protocol:_run_async': 2}`; weakened: PASS with `_run_async: 2` credited.
+- `C13_H18_globals_equality` (X55). *Witness shape verified:* in the section, call
+  `FunctionType(f.__code__, dict(f.__globals__))()` (a clone over an equal copy of the module's globals). Spec:
+  CLONE_CALLED; weakened: PASS (`==` finds the copy equal).
+- `C13_P04_no_cycle_detection` (V11c). *Witness shape verified:* a two-function `__wrapped__` cycle `a <-> b` of
+  distinct functions defined in another module, `a` bound in the declared module. Spec: FOREIGN_DEFINITION naming
+  `fxo:b` (the innermost function before the cycle closes); weakened: naming `fxo:a` (the walk runs to the 17-hop bound).
+  The named function is a spec-fixed observable (M11), but the text never says which function "innermost" is on a
+  cycle; a witness needs that sentence.
+- `C13_S04_union_last_wins`, `C13_S05_union_max` (V55). *Witness shape verified:* section G opened twice, each opening
+  calling f once. Spec: coverage `{f: 2}`; both weakenings: `{f: 1}`. The verdict's coverage counts must then be a
+  stated outcome of the case.
+- `C13_S08_msg_counts_all_targets` (X72b). *Witness shape verified:* G declares f and g; the section calls g, and a
+  loop inside it dispatches f and g. Spec message: `dispatched {'fxm:f': 1}`; weakened: `{'fxm:f': 1, 'fxm:g': 1}`.
+- `KS_exam-mut-double-exit-state-leak` (V52). The row reuses `A_exit_claim`'s patch, which revision 13's V52b KILLS on
+  both versions; the kill-shape extract names V52, which does not see it. Proposed: name V52b.
+- `KS_exam-mut-profiler-lost-only-if-none` (V60). *Witness shape verified:* during the trace, free styxx's tool id
+  and take it under another name (`free_tool_id(t); use_tool_id(t, "intruder")`), then exit. Spec: MONITOR_LOST note;
+  weakened: no note (`r[-1]` is a name, not None).
+- `R62_comparisons_M1`, `_M2`, `_M3`, `_M9`, `_M10` (`is` <-> `==` against None). *Candidate EQUIVALENT_BY_SPEC:* each
+  operand is None or a value whose `==` against None is False: `_GUARD` (a dict), `tok` (a `_Txn`, which defines no
+  `__eq__`), `t` (an int tool id), `_MON[0]` (a tuple). No other value reaches those sites.
+- `R62_types_M5` (`type(r) is FunctionType` -> `isinstance`). *Candidate EQUIVALENT_BY_SPEC:* `FunctionType` cannot
+  be subclassed (CPython raises TypeError), so the two tests agree on every object.
+- `R62_deletion_M9` (`_forget_in_child`'s first statement deleted). *Candidate EQUIVALENT_BY_SPEC:* while `_MON[0]`
+  is None no `coverage_trace()` has been constructed, so no transaction has run: the guard's hint is the initial free
+  token, and `_ANCHORS`, `_MINTED` and `_BY_FN` are empty and `_TOOL[0]` is None. The rest of the function then only
+  replaces a free token by a fresh free token. Shape checked: a fork inside a trace with two mints gives identical
+  child observables (`results_v5f/r13_witness_shapes.json`).
+- `R62_conditions_M10` (`_v5_state`'s local-events read negated). *Witness shape verified:* `_v5_state()` read inside
+  a trace: the spec's mints show `local_events` 15; weakened: 0.
+- `R62_scope_M10` (`_v5_state`'s mint loop cut to the first). *Witness shape verified:* two declared targets,
+  `_v5_state()` inside the trace: two mint rows; weakened: one.
+- `R62_scope_M9` (`_forget_in_child` step 4 cut to the first mint). *Witness shape verified:* fork inside a trace
+  with two mints; in the child, `sys.monitoring.get_local_events(tool, <second minted code>)`: spec 0; weakened 15.
+- `R62_order_M10` (`_v5_state` reads `_MON` before `_TOOL`). Not equivalent: the two reads straddle a first bind. As
+  instructed, the proposed witness is an instruction sweep over `_v5_state` with the first enter as interference
+  (trial k: a fresh process, `_v5_state()` on one thread, the first `coverage_trace()` enter on another at the k-th
+  instruction; spec: the returned `tool` and `tool_ours` are consistent with each other).
+- `R62_claims_M2` (`_acquire`'s claim -> unconditional store). Not equivalent under contention: two acquirers that
+  both find the tail dead both store `next`, and the first is unlinked. Proposed witness: an instruction sweep over
+  `_acquire` with a second thread's enter as interference at each instruction (H1's shape at `_acquire`).
+- `R62_order_M3` (`_retire` clears `pend` before the local events). Differs only if an event of the minted code lands
+  between the two statements (a frame of the minted code resumed on another thread). What it leaves is a pending
+  entry on a retired mint, which no listed observable reads. Needs a decision: a witness through a new observable, or
+  EQUIVALENT_BY_SPEC under the closed list.
+- `R62_scope_M3` (`_prune` detaches only the first opening). Proposed witness: a trace whose exit never runs while
+  two of its openings are open (two threads), reconciled by another trace's transaction; spec: `anchors == 0` after;
+  weakened: 1. X146c's shape has one opening.
+- `R62_immutability_M3` (O12, `holders` mutated in place). Differs only when a callback's `holders` snapshot is taken
+  before a rebuild on another thread and read after it. Proposed witness: an instruction sweep over `_exit_txn`'s
+  rebuild with a running callback on the same mint as interference.
+
+**R13-3. Trial and event counts in two revision-13 rows.** X132b's row states 154 trials (spec) and 158 (with
+`M3_register_before_append`); the runner counts 204 and 208. V71b states 4 events (spec) and 5 (weakened); the runner
+counts 6 and 7. The outcomes match the rows on both versions (every spec trial `anchors == 0`; one opening, none
+`"open"`), and both rows KILL their weakening. The counts are of instructions and audit events on the case thread,
+which depend on frames the runner adds; the text's numbers are its prototype's. Fix needed: state the outcomes
+without the counts, or say whose harness the counts are.
+
+**R13-4. `_v5_state()`'s walk and the audit events.** Revision 13's total walk calls `id()` once per chain node, so
+`_v5_state()` raises `builtins.id` audit events. Checked against V71, V71b, V72 and G_HYG's "no user code" clause:
+no conflict found. V71 and V71b count events whose caller is `_open`, and `_v5_state()` is not called inside a
+`cov.run`; the leftover snaps run outside the armed window. Recorded, nothing changed.
+
+**R13-5. A case that never runs in mutation mode.** Under some weakenings the self-trace itself raises before the
+self-placed cases run. The text classes a run by its witness's observable outcome and does not say what an unreached
+witness is. `run_protocol_v5f_exam.py` records such a case as `NOT_REACHED: the self-trace raised ...`, and
+`weakenings_v5f.py` classes two NOT_REACHED runs (or two watchdog timeouts) as HANG, admitted and not KILLED, the
+GAP-64 reading (b). Under this SM1 run no row ended HANG.
+
+**R13-6. The deps path is not pinned for numpy.** v5e's ported cases R11 and X118 import numpy. The text pins the
+greenlet 3.5.6 and coverage 7.16.1 wheels by sha256, and says nothing about numpy. The runs used numpy 2.5.3 from
+PyPI (recorded in ATTESTATION.md and in the runner's `--deps-path` help). Fix needed: pin numpy's wheel, or drop the
+dependency from those cases.
+
+**R13-7. Positive control #2 has no Region on v5e.** SM2's generator runs over SM2's Region, which the text defines
+by v5f names (the `_v5_faultpoints()` functions of M10, M11's scoring functions, the M1 statements). v5e has almost
+none of them, and the text gives no v5e Region. `controls_v5f.py` reports #2 NOT_RUN with this reason. Fix needed:
+name v5e's Region for #2 (control #3's fault-point list is one candidate).
+
+**R13-8. Positive control #3's adapter.** The text fixes the adapter's fault points and its `_v5_state()` view for C5
+and C7, with `cut`, `cut_current`, `tool`, `tool_ours`, `global_events` read as their S0 values. The adapter
+(`controls_v5f.V5E_ADAPTER`) had to choose what the text leaves open:
+- `guard`, which the text's list omits: read as `"free"`;
+- each mint row's `local_events` and `pending`, which v5e lacks: read as 0; the row's `target` is
+  `fn.__module__:fn.__qualname__`;
+- the registries the text names but v5f's `_v5_state()` has no key for (`_BY_FN`, `_THREADS`, `_ACTIVE`): added as
+  extra keys `by_fn`, `threads` and `active`, which C5 and C7 do not read;
+- the sweep's callbacks scenario faults v5f's callback-only functions, which v5e lacks, so it is not run; the other
+  scenarios run.
+Fix needed: state these four choices, or say they are free.
+
+**R13-9. Positive control #4(a): criterion and source.** The text: "G_SIG must show v5e leaking on 3.12 and 3.13
+(D3 sig_sweep: 2521 and 2265 leaks)". `sigflood_v5f.py`'s lock cell on the v5e blob fires, with 1 leak per version in
+a 10 s cell. The text does not say whether the control passes on any leak or needs a magnitude near 2521 and 2265.
+Those numbers come from D3's `sig_sweep`, a v5f design artifact outside the read scope, whose harness the exam
+author has not seen. Fix needed: state the pass criterion (fires, or a magnitude) and whose harness the numbers come
+from.
+
+**R13-10. Which directories the corpus covers.** "the round 1-4 repros ... from `protocol_v5_redteam/round1_module/`
+through `round4/`". Read as a range of the tree's directories in order, that is round1_module, round2_exam,
+round2_module, round3_exam, round3_module and round4. It leaves out round1_exam, which sorts before round1_module,
+and round4_exam_mutation (the census), which sorts after round4. The corpus follows that reading.
+`corpus_v5f/repro/SOURCES.json` maps all 406 pinned files in the range: 164 rewritten, 40 fixtures, and 202 not
+applicable with a reason (outputs, patches, v5e exam tooling, and parts that exercise `cov.section`, which v5f
+removed). Fix needed: confirm the range, or list the directories.
+
+**R13-11. The corpus repros' v5f outcomes and their class.**
+- (a) The text states no v5f expected outcome for the rewritten repros, and the instruction counts that as a gap.
+  The differential probe needs none for an equality entry, since it compares against the unmutated implementation.
+  An envelope entry, though, is probed only through a stated outcome. 31 of the 68 repro entries are envelope, and
+  only one of them, the re-targeted closure battery, has stated outcomes (G_CLOSURE's rows). The other 30 are not
+  probed (`probe()` lists them as `repro_envelope_without_stated_outcome`).
+- (b) The manifest rule's clause "a thread race" is defined for exam cases by the list the text gives. For repros
+  the exam author reads any started thread, pool, executor or timer, and any cross-thread loop call, as one, along
+  with signals, the injector, finalizers, gc thresholds, switch intervals and wall-clock waits
+  (`diffprobe_v5f.REPRO_ENVELOPE_TOKENS`). This choice is fail-closed and still the author's. N = 5 validation
+  follows.
+- (c) Where a repro interrupted v5e at a named line of its private source (round 4's `v_inject.py`, `v_det.py`, the
+  `_own_dict` try line, `a04`/`a08`'s `__enter__`/`__exit__` lines), the rewrite raises through the id-5 injector at
+  instruction n (1, 3, 5, 10, 25, 30, 100) of the v5f fault-point code objects named in each file. The text does not
+  map v5e's lines to v5f points; the n values are the exam author's.
+- (d) G_CLOSURE: the battery's rows carry v5e's expectations. Two have no stated v5f expectation. "R1-B4 v:
+  pure-Python profiler present at open" expected v5e's FOREIGN_PROFILER, which v5f retires; the exam author reads the
+  R1-B4 closure row and "profile-module-refuses-on-312" as PASS with the profiler left installed. "R1-D3 int key in
+  targets" targets a key v5f's record does not have, so it is re-targeted to an int key in an opening's calls (BAD_TRACE).
+  With those two readings the battery holds 41/41 on `ref_v5f.py` on both versions.
+- (e) A count that depends on how deep the implementation's own frames sit (round 3's `hook_failed`: target calls
+  before a RecursionError) is reduced to "at least one". Two conforming implementations can differ there.
+Fix needed: for (a), state the repros' outcomes, or say that envelope repros are not probed; for (b) and (c), confirm
+or replace the readings; for (d), state the two rows' v5f outcomes.
+
+**R13-12. The census rows not re-targeted.** None: all 47 census rows and all 29 kill-shape rows are written
+(`sm1_census_killshape_rows.json`). The 10 among them that SM1 finds UNWITNESSED are in R13-2.
+
+**R13-13. SM1 on the revision-13 reference.** See `sm1_result.json` (journal `results_v5f/sm1_journal.jsonl`, each
+entry keyed by the sha256 of `ref_v5f.py`, the runner, the patch and the witness's source). Summary on completion
+below.

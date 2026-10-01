@@ -360,6 +360,10 @@ class ReproAPI:
         except BaseException as e:                     # noqa: BLE001
             return norm_exc(e)
 
+    def text(self, msg):
+        """A refusal or note text reduced to the normalizer's spec-fixed observables."""
+        return norm_text(msg)
+
     def metrics(self, exp, result):
         try:
             return norm_metrics(exp.check_metrics(result))
@@ -414,6 +418,37 @@ class ReproAPI:
         out["record"] = norm_record(rec)
         out["score"] = self.score(exp, rec, m)
         return out
+
+    def inject(self, keys, n, exc=KeyboardInterrupt):
+        """Arm the id-5 injector as the harness rules define it (INSTRUCTION events on the _v5_faultpoints() code
+        objects named by keys, filtered to this thread; restart_events() first) to raise exc at the n-th
+        instruction those codes execute. Returns disarm(), which frees the id and returns {"n", "fired"}."""
+        import threading
+        mon = sys.monitoring
+        fp = self.P._v5_faultpoints()
+        codes = {id(fp[k]): fp[k] for k in keys if k in fp}
+        ident = threading.get_ident()
+        box = {"n": 0, "fired": False}
+
+        def cb(code, offset):
+            if id(code) in codes and threading.get_ident() == ident and not box["fired"]:
+                box["n"] += 1
+                if box["n"] == n:
+                    box["fired"] = True
+                    raise exc("injected")
+        mon.use_tool_id(5, "repro-injector")
+        mon.restart_events()
+        mon.register_callback(5, mon.events.INSTRUCTION, cb)
+        for c in codes.values():
+            mon.set_local_events(5, c, mon.events.INSTRUCTION)
+
+        def disarm():
+            for c in codes.values():
+                mon.set_local_events(5, c, 0)
+            mon.register_callback(5, mon.events.INSTRUCTION, None)
+            mon.free_tool_id(5)
+            return dict(box)
+        return disarm
 
     def state(self):
         st = dict(self.P._v5_state())

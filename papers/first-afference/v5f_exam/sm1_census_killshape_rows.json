@@ -1,0 +1,1273 @@
+{
+ "census": [
+  {
+   "id": "C13_B01_end_type_dropped",
+   "census_id": "B01_end_type_dropped",
+   "spec": [
+    "reuse",
+    "mut_end_type_not_tested"
+   ],
+   "family": null,
+   "witness": "X103c",
+   "note": "",
+   "candidates": [
+    "X103c"
+   ]
+  },
+  {
+   "id": "C13_C03_no_detached_guard",
+   "census_id": "C03_no_detached_guard",
+   "spec": [
+    "patch",
+    [
+     [
+      "    o.fin.setdefault(\"fin\", fin)                    # one claim: first finaliser wins",
+      "    o.fin[\"fin\"] = fin                              # census C03: last finaliser wins"
+     ]
+    ]
+   ],
+   "family": "claims",
+   "witness": "X146",
+   "note": "",
+   "candidates": [
+    "X146",
+    "X146e",
+    "X146b",
+    "X71d",
+    "X146c"
+   ]
+  },
+  {
+   "id": "C13_D01_section_no_ascii",
+   "census_id": "D01_section_no_ascii",
+   "spec": [
+    "reuse",
+    "A_section_decl_ascii"
+   ],
+   "family": null,
+   "witness": "X07b / X07c",
+   "note": "",
+   "candidates": [
+    "X07b / X07c"
+   ]
+  },
+  {
+   "id": "C13_D02_section_empty_ok",
+   "census_id": "D02_section_empty_ok",
+   "spec": [
+    "reuse",
+    "A_section_decl_empty"
+   ],
+   "family": null,
+   "witness": "X07b / X07c",
+   "note": "",
+   "candidates": [
+    "X07b / X07c"
+   ]
+  },
+  {
+   "id": "C13_E01_restore_even_if_swapped",
+   "census_id": "E01_restore_even_if_swapped",
+   "spec": [
+    "reuse",
+    "A_restore_over_swap"
+   ],
+   "family": null,
+   "witness": "X59d",
+   "note": "",
+   "candidates": [
+    "X59d"
+   ]
+  },
+  {
+   "id": "C13_E02_refcount_expect_const3",
+   "census_id": "E02_refcount_expect_const3",
+   "spec": [
+    "patch",
+    [
+     [
+      "    excess = sys.getrefcount(m.code) - 2 - (m.fn.__code__ is m.code)",
+      "    excess = sys.getrefcount(m.code) - 3"
+     ]
+    ]
+   ],
+   "family": "constants",
+   "witness": "X59e",
+   "note": "",
+   "candidates": [
+    "X59e",
+    "X59e-v",
+    "X57",
+    "X57b",
+    "X58b"
+   ]
+  },
+  {
+   "id": "C13_E03_clone_alive_counts_fn",
+   "census_id": "E03_clone_alive_counts_fn",
+   "spec": [
+    "patch",
+    [
+     [
+      "    fns = [r for r in refs if type(r) is FunctionType and r is not m.fn]",
+      "    fns = [r for r in refs if type(r) is FunctionType]"
+     ]
+    ]
+   ],
+   "family": "conditions",
+   "witness": "V36c",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "V36c",
+    "X58b",
+    "V36b",
+    "R25"
+   ]
+  },
+  {
+   "id": "C13_E05_no_state_guard",
+   "census_id": "E05_no_state_guard",
+   "spec": [
+    "reuse",
+    "A_exit_claim"
+   ],
+   "family": null,
+   "witness": "V52b",
+   "note": "",
+   "candidates": [
+    "V52b"
+   ]
+  },
+  {
+   "id": "C13_E06_restore_ignores_other_tracers",
+   "census_id": "E06_restore_ignores_other_tracers",
+   "spec": [
+    "patch",
+    [
+     [
+      "        m.holders = tuple([h for h in m.holders if h is not core])\n        if not m.holders:\n            _retire(m)",
+      "        m.holders = tuple([h for h in m.holders if h is not core])\n        _retire(m)"
+     ]
+    ]
+   ],
+   "family": "conditions",
+   "witness": "X142",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "X142",
+    "V54",
+    "V55",
+    "X137c",
+    "V14"
+   ]
+  },
+  {
+   "id": "C13_E09_clone_scan_only_last_tracer",
+   "census_id": "E09_clone_scan_only_last_tracer",
+   "spec": [
+    "reuse",
+    "A_clone_alive_per_holder"
+   ],
+   "family": null,
+   "witness": "X57c",
+   "note": "",
+   "candidates": [
+    "X57c"
+   ]
+  },
+  {
+   "id": "C13_E11_swapped_only_last_tracer",
+   "census_id": "E11_swapped_only_last_tracer",
+   "spec": [
+    "reuse",
+    "A_swapped_per_holder"
+   ],
+   "family": null,
+   "witness": "X59c",
+   "note": "",
+   "candidates": [
+    "X59c"
+   ]
+  },
+  {
+   "id": "C13_E14_no_open_at_exit_note",
+   "census_id": "E14_no_open_at_exit_note",
+   "spec": [
+    "patch",
+    [
+     [
+      "    for o in list(core.openings):                    # X3\n        _detach(o, (\"open\", (f\"[V5:OPEN_AT_EXIT] section {o.section!r} was still open when the \"\n                             f\"trace exited; only calls confirmed before the exit count\",)))\n    probs = []                                       # X4",
+      "    for o in list(core.openings):                    # X3\n        _detach(o, (\"open\", ()))\n    probs = []                                       # X4"
+     ]
+    ]
+   ],
+   "family": "deletion",
+   "witness": "X146",
+   "note": "",
+   "candidates": [
+    "X146",
+    "X146e",
+    "X71d"
+   ]
+  },
+  {
+   "id": "C13_E18_by_code_emptied_after_detach",
+   "census_id": "E18_by_code_emptied_after_detach",
+   "spec": [
+    "reuse",
+    "mut_m10_credit_stop_after_detach"
+   ],
+   "family": null,
+   "witness": "X71c",
+   "note": "",
+   "candidates": [
+    "X71c"
+   ]
+  },
+  {
+   "id": "C13_H04_no_globals_check",
+   "census_id": "H04_no_globals_check",
+   "spec": [
+    "reuse",
+    "A_fglobals"
+   ],
+   "family": null,
+   "witness": "X55",
+   "note": "",
+   "candidates": [
+    "X55"
+   ]
+  },
+  {
+   "id": "C13_H05_cut_no_break",
+   "census_id": "H05_cut_no_break",
+   "spec": [
+    "patch",
+    [
+     [
+      "        if _CUT.get(id(c)) is c:\n            cut = True\n            break\n        o = _ANCHORS.get(g)",
+      "        if _CUT.get(id(c)) is c:\n            cut = True\n        o = _ANCHORS.get(g)"
+     ]
+    ]
+   ],
+   "family": "scope",
+   "witness": "X65c",
+   "note": "",
+   "candidates": [
+    "X65c",
+    "X34",
+    "X65b",
+    "X65g",
+    "V19b"
+   ]
+  },
+  {
+   "id": "C13_H06_credit_innermost",
+   "census_id": "H06_credit_innermost",
+   "spec": [
+    "patch",
+    [
+     [
+      "            if len(mine) == 1:\n                out.append((h, 'c', mine[0]))",
+      "            if len(mine) >= 1:\n                out.append((h, 'c', mine[0]))"
+     ]
+    ]
+   ],
+   "family": "comparisons",
+   "witness": "V28b",
+   "note": "",
+   "candidates": [
+    "V28b"
+   ]
+  },
+  {
+   "id": "C13_H07_credit_outermost",
+   "census_id": "H07_credit_outermost",
+   "spec": [
+    "patch",
+    [
+     [
+      "            if len(mine) == 1:\n                out.append((h, 'c', mine[0]))",
+      "            if len(mine) >= 1:\n                out.append((h, 'c', mine[-1]))"
+     ]
+    ]
+   ],
+   "family": "comparisons",
+   "witness": "V28b",
+   "note": "",
+   "candidates": [
+    "V28b"
+   ]
+  },
+  {
+   "id": "C13_H08_bucket_swap",
+   "census_id": "H08_bucket_swap",
+   "spec": [
+    "patch",
+    [
+     [
+      "                d = u[0] if kind == 'd' else u[1]",
+      "                d = u[1] if kind == 'd' else u[0]"
+     ]
+    ]
+   ],
+   "family": "order",
+   "witness": "X123",
+   "note": "",
+   "candidates": [
+    "X123",
+    "X34",
+    "X65c"
+   ]
+  },
+  {
+   "id": "C13_H09_mine_all_tracers",
+   "census_id": "H09_mine_all_tracers",
+   "spec": [
+    "patch",
+    [
+     [
+      "            mine = [o for o in found if o.core is h]",
+      "            mine = found"
+     ]
+    ]
+   ],
+   "family": "scope",
+   "witness": "V15b",
+   "note": "",
+   "candidates": [
+    "V15b",
+    "X142",
+    "V42",
+    "X137c"
+   ]
+  },
+  {
+   "id": "C13_H10_uncredited_all_unattributed",
+   "census_id": "H10_uncredited_all_unattributed",
+   "spec": [
+    "patch",
+    [
+     [
+      "                d = u[0] if kind == 'd' else u[1]",
+      "                d = u[1]"
+     ]
+    ]
+   ],
+   "family": "conditions",
+   "witness": "X123",
+   "note": "",
+   "candidates": [
+    "X123",
+    "X34",
+    "X65c"
+   ]
+  },
+  {
+   "id": "C13_H12_stop_by_name",
+   "census_id": "H12_stop_by_name",
+   "spec": [
+    "reuse",
+    "A_cut_by_name"
+   ],
+   "family": null,
+   "witness": "V44",
+   "note": "",
+   "candidates": [
+    "V44"
+   ]
+  },
+  {
+   "id": "C13_H15_walk_from_frame",
+   "census_id": "H15_walk_from_frame",
+   "spec": [
+    "patch",
+    [
+     [
+      "    found = []\n    cut = False\n    g = f.f_back",
+      "    found = []\n    cut = False\n    g = f"
+     ]
+    ]
+   ],
+   "family": "scope",
+   "witness": "V01",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "V01",
+    "V28b",
+    "X65c"
+   ]
+  },
+  {
+   "id": "C13_H18_globals_equality",
+   "census_id": "H18_globals_equality",
+   "spec": [
+    "patch",
+    [
+     [
+      "    if f.f_globals is not m.globals:                # CLONE_CALLED: credits nothing",
+      "    if f.f_globals != m.globals:                    # CLONE_CALLED: credits nothing"
+     ]
+    ]
+   ],
+   "family": "comparisons",
+   "witness": "X55",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "X55",
+    "X55d",
+    "V52b",
+    "X59e"
+   ]
+  },
+  {
+   "id": "C13_K01_record_disp_last_wins",
+   "census_id": "K01_record_disp_last_wins",
+   "spec": [
+    "patch",
+    [
+     [
+      "                    disp[nm] = disp.get(nm, 0) + n",
+      "                    disp[nm] = n"
+     ]
+    ]
+   ],
+   "family": "deletion",
+   "witness": "X123",
+   "note": "",
+   "candidates": [
+    "X123"
+   ]
+  },
+  {
+   "id": "C13_K03_record_no_ambiguous",
+   "census_id": "K03_record_no_ambiguous",
+   "spec": [
+    "patch",
+    [
+     [
+      "\"ambiguous\": dict(sorted(amb.items())),",
+      "\"ambiguous\": {},"
+     ]
+    ]
+   ],
+   "family": "deletion",
+   "witness": "V28b",
+   "note": "",
+   "candidates": [
+    "V28b"
+   ]
+  },
+  {
+   "id": "C13_O01_nested_same_section_only",
+   "census_id": "O01_nested_same_section_only",
+   "spec": [
+    "patch",
+    [
+     [
+      "        if p is not None and p.core is core and p.loop is loop:\n            if p.section == section:",
+      "        if p is not None and p.core is core and p.loop is loop and p.section == section:\n            if p.section == section:"
+     ]
+    ]
+   ],
+   "family": "conditions",
+   "witness": "X76b",
+   "note": "",
+   "candidates": [
+    "X76",
+    "X76b",
+    "V15b"
+   ]
+  },
+  {
+   "id": "C13_O02_nested_no_cut",
+   "census_id": "O02_nested_no_cut",
+   "spec": [
+    "reuse",
+    "A_dispatch_cut_nested"
+   ],
+   "family": null,
+   "witness": "V19b",
+   "note": "",
+   "candidates": [
+    "V19b"
+   ]
+  },
+  {
+   "id": "C13_O07_nested_any_tracer_same_section",
+   "census_id": "O07_nested_any_tracer_same_section",
+   "spec": [
+    "reuse",
+    "A_nested_across_tracers"
+   ],
+   "family": null,
+   "witness": "V15b",
+   "note": "",
+   "candidates": [
+    "V15b"
+   ]
+  },
+  {
+   "id": "C13_P01_hops_3",
+   "census_id": "P01_hops_3",
+   "spec": [
+    "reuse",
+    "A_hop_bound_3"
+   ],
+   "family": null,
+   "witness": "V11c",
+   "note": "",
+   "candidates": [
+    "V11c"
+   ]
+  },
+  {
+   "id": "C13_P02_hops_16",
+   "census_id": "P02_hops_16",
+   "spec": [
+    "reuse",
+    "A_hop_bound_16"
+   ],
+   "family": null,
+   "witness": "V11c",
+   "note": "",
+   "candidates": [
+    "V11c"
+   ]
+  },
+  {
+   "id": "C13_P04_no_cycle_detection",
+   "census_id": "P04_no_cycle_detection",
+   "spec": [
+    "patch",
+    [
+     [
+      "        if cur is None or id(cur) in seen:",
+      "        if cur is None:"
+     ]
+    ]
+   ],
+   "family": "conditions",
+   "witness": "V11c",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "V11c",
+    "X30b",
+    "X29b"
+   ]
+  },
+  {
+   "id": "C13_R01_inherited_direct_bases",
+   "census_id": "R01_inherited_direct_bases",
+   "spec": [
+    "reuse",
+    "A_mro_first_base"
+   ],
+   "family": null,
+   "witness": "X14c",
+   "note": "",
+   "candidates": [
+    "X14c"
+   ]
+  },
+  {
+   "id": "C13_R02_class_exact_type",
+   "census_id": "R02_class_exact_type",
+   "spec": [
+    "reuse",
+    "A_class_step_exact"
+   ],
+   "family": null,
+   "witness": "V45",
+   "note": "",
+   "candidates": [
+    "V45"
+   ]
+  },
+  {
+   "id": "C13_R03_module_exact_type",
+   "census_id": "R03_module_exact_type",
+   "spec": [
+    "reuse",
+    "A_module_step_exact"
+   ],
+   "family": null,
+   "witness": "V10b",
+   "note": "",
+   "candidates": [
+    "V10b"
+   ]
+  },
+  {
+   "id": "C13_S01_targetset_before_stale",
+   "census_id": "S01_targetset_before_stale",
+   "spec": [
+    "reuse",
+    "A_order_stale_targetset"
+   ],
+   "family": null,
+   "witness": "X109b",
+   "note": "",
+   "candidates": [
+    "X109b"
+   ]
+  },
+  {
+   "id": "C13_S02_problems_before_badcount",
+   "census_id": "S02_problems_before_badcount",
+   "spec": [
+    "reuse",
+    "A_order_count_problem"
+   ],
+   "family": null,
+   "witness": "X112b",
+   "note": "",
+   "candidates": [
+    "X112b"
+   ]
+  },
+  {
+   "id": "C13_S03_absent_before_problems",
+   "census_id": "S03_absent_before_problems",
+   "spec": [
+    "reuse",
+    "A_order_problem_absent"
+   ],
+   "family": null,
+   "witness": "X78e",
+   "note": "",
+   "candidates": [
+    "X78e"
+   ]
+  },
+  {
+   "id": "C13_S04_union_last_wins",
+   "census_id": "S04_union_last_wins",
+   "spec": [
+    "patch",
+    [
+     [
+      "                union[t] = union.get(t, 0) + n",
+      "                union[t] = n"
+     ]
+    ]
+   ],
+   "family": "deletion",
+   "witness": "V55",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "V55",
+    "V54",
+    "V14",
+    "X122"
+   ]
+  },
+  {
+   "id": "C13_S05_union_max",
+   "census_id": "S05_union_max",
+   "spec": [
+    "patch",
+    [
+     [
+      "                union[t] = union.get(t, 0) + n",
+      "                union[t] = max(union.get(t, 0), n)"
+     ]
+    ]
+   ],
+   "family": "comparisons",
+   "witness": "V55",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "V55",
+    "V54",
+    "V14",
+    "X122"
+   ]
+  },
+  {
+   "id": "C13_S07_section_by_gate_name",
+   "census_id": "S07_section_by_gate_name",
+   "spec": [
+    "reuse",
+    "A_section_by_gate_name"
+   ],
+   "family": null,
+   "witness": "V42",
+   "note": "",
+   "candidates": [
+    "V42"
+   ]
+  },
+  {
+   "id": "C13_S08_msg_counts_all_targets",
+   "census_id": "S08_msg_counts_all_targets",
+   "spec": [
+    "patch",
+    [
+     [
+      "                    for t in missing if t in tr[\"uncredited\"][\"dispatched\"]}",
+      "                    for t in c[\"exercises\"] if t in tr[\"uncredited\"][\"dispatched\"]}"
+     ]
+    ]
+   ],
+   "family": "scope",
+   "witness": "X72b",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "X72b",
+    "X123"
+   ]
+  },
+  {
+   "id": "C13_S10_stale_before_shape",
+   "census_id": "S10_stale_before_shape",
+   "spec": [
+    "reuse",
+    "A_order_shape_stale"
+   ],
+   "family": null,
+   "witness": "X96c",
+   "note": "",
+   "candidates": [
+    "X96c"
+   ]
+  },
+  {
+   "id": "C13_S14_union_counts_ambiguous",
+   "census_id": "S14_union_counts_ambiguous",
+   "spec": [
+    "patch",
+    [
+     [
+      "            for t, n in o[\"calls\"].items():\n                union[t] = union.get(t, 0) + n",
+      "            for t, n in list(o[\"calls\"].items()) + list(o[\"ambiguous\"].items()):\n                union[t] = union.get(t, 0) + n"
+     ]
+    ]
+   ],
+   "family": "scope",
+   "witness": "V28b",
+   "note": "",
+   "candidates": [
+    "V28b"
+   ]
+  },
+  {
+   "id": "C13_S15_union_over_all_sections",
+   "census_id": "S15_union_over_all_sections",
+   "spec": [
+    "reuse",
+    "A_union_all_sections"
+   ],
+   "family": null,
+   "witness": "X120",
+   "note": "",
+   "candidates": [
+    "X120"
+   ]
+  },
+  {
+   "id": "C13_SC1_coverage_only_when_gate_fires",
+   "census_id": "SC1_coverage_only_when_gate_fires",
+   "spec": [
+    "reuse",
+    "A_order_bar_coverage"
+   ],
+   "family": null,
+   "witness": "X122",
+   "note": "",
+   "candidates": [
+    "X122"
+   ]
+  },
+  {
+   "id": "C13_SC2_check_metrics_coverage_skipped_if_smoke",
+   "census_id": "SC2_check_metrics_coverage_skipped_if_smoke",
+   "spec": [
+    "patch",
+    [
+     [
+      "        for name in self.coverage:\n            key = f\"{name}:exercises\"",
+      "        for name in (self.coverage if not smoke else ()):\n            key = f\"{name}:exercises\""
+     ]
+    ]
+   ],
+   "family": "conditions",
+   "witness": "X117d",
+   "note": "",
+   "candidates": [
+    "X117c",
+    "X117d",
+    "X117f",
+    "X117b",
+    "X117e",
+    "X117g"
+   ]
+  },
+  {
+   "id": "C13_T01_clone_called_first_tracer_only",
+   "census_id": "T01_clone_called_first_tracer_only",
+   "spec": [
+    "reuse",
+    "A_clone_called_per_holder"
+   ],
+   "family": null,
+   "witness": "X55d",
+   "note": "",
+   "candidates": [
+    "X55d"
+   ]
+  }
+ ],
+ "kill": [
+  {
+   "id": "KS_exam-mut-section-decl-clauses",
+   "key": "exam-mut-section-decl-clauses",
+   "spec": [
+    "reuse",
+    "A_section_decl_ascii"
+   ],
+   "family": null,
+   "witness": "X07b / X07c",
+   "note": "",
+   "candidates": [
+    "X07b / X07c"
+   ]
+  },
+  {
+   "id": "KS_examhole-clone-alive-single-tracer",
+   "key": "examhole-clone-alive-single-tracer",
+   "spec": [
+    "reuse",
+    "A_clone_alive_per_holder"
+   ],
+   "family": null,
+   "witness": "X57c",
+   "note": "",
+   "candidates": [
+    "X57c"
+   ]
+  },
+  {
+   "id": "KS_examhole-clone-called-first-tracer",
+   "key": "examhole-clone-called-first-tracer",
+   "spec": [
+    "reuse",
+    "A_clone_called_per_holder"
+   ],
+   "family": null,
+   "witness": "X55d",
+   "note": "",
+   "candidates": [
+    "X55d"
+   ]
+  },
+  {
+   "id": "KS_examhole-code-swapped-single-tracer",
+   "key": "examhole-code-swapped-single-tracer",
+   "spec": [
+    "reuse",
+    "A_swapped_per_holder"
+   ],
+   "family": null,
+   "witness": "X59c",
+   "note": "",
+   "candidates": [
+    "X59c"
+   ]
+  },
+  {
+   "id": "KS_examhole-stop-read-before-mint",
+   "key": "examhole-stop-read-before-mint",
+   "spec": [
+    "reuse",
+    "A_reserved_target"
+   ],
+   "family": null,
+   "witness": "X34",
+   "note": "",
+   "candidates": [
+    "X34"
+   ]
+  },
+  {
+   "id": "KS_examhole-union-over-all-sections",
+   "key": "examhole-union-over-all-sections",
+   "spec": [
+    "reuse",
+    "A_union_all_sections"
+   ],
+   "family": null,
+   "witness": "X120",
+   "note": "",
+   "candidates": [
+    "X120",
+    "V41"
+   ]
+  },
+  {
+   "id": "KS_examhole-declared-section-field-never-scored",
+   "key": "examhole-declared-section-field-never-scored",
+   "spec": [
+    "reuse",
+    "A_section_by_gate_name"
+   ],
+   "family": null,
+   "witness": "V42",
+   "note": "",
+   "candidates": [
+    "V42",
+    "V43",
+    "X121",
+    "X78g"
+   ]
+  },
+  {
+   "id": "KS_examhole-dispatch-cut-by-name",
+   "key": "examhole-dispatch-cut-by-name",
+   "spec": [
+    "reuse",
+    "A_cut_by_name"
+   ],
+   "family": null,
+   "witness": "V44",
+   "note": "",
+   "candidates": [
+    "V44"
+   ]
+  },
+  {
+   "id": "KS_examhole-walk-bound-2-hops",
+   "key": "examhole-walk-bound-2-hops",
+   "spec": [
+    "reuse",
+    "A_hop_bound_3"
+   ],
+   "family": null,
+   "witness": "V11c",
+   "note": "",
+   "candidates": [
+    "V11c",
+    "X30b"
+   ]
+  },
+  {
+   "id": "KS_examhole-class-step-exact-type",
+   "key": "examhole-class-step-exact-type",
+   "spec": [
+    "reuse",
+    "A_class_step_exact"
+   ],
+   "family": null,
+   "witness": "V45",
+   "note": "",
+   "candidates": [
+    "V45",
+    "X14b"
+   ]
+  },
+  {
+   "id": "KS_examhole-module-step-exact-type",
+   "key": "examhole-module-step-exact-type",
+   "spec": [
+    "reuse",
+    "A_module_step_exact"
+   ],
+   "family": null,
+   "witness": "V10b",
+   "note": "",
+   "candidates": [
+    "V10b",
+    "X16b"
+   ]
+  },
+  {
+   "id": "KS_examhole-inherited-direct-base-only",
+   "key": "examhole-inherited-direct-base-only",
+   "spec": [
+    "reuse",
+    "A_mro_first_base"
+   ],
+   "family": null,
+   "witness": "X14c",
+   "note": "",
+   "candidates": [
+    "X14c"
+   ]
+  },
+  {
+   "id": "KS_examhole-cache-body-module-check",
+   "key": "examhole-cache-body-module-check",
+   "spec": [
+    "reuse",
+    "A_bound_body_module"
+   ],
+   "family": null,
+   "witness": "X25c",
+   "note": "",
+   "candidates": [
+    "X25c",
+    "X25d"
+   ]
+  },
+  {
+   "id": "KS_exam-hole-coverage-on-failing-bar",
+   "key": "exam-hole-coverage-on-failing-bar",
+   "spec": [
+    "reuse",
+    "A_order_bar_coverage"
+   ],
+   "family": null,
+   "witness": "X122",
+   "note": "",
+   "candidates": [
+    "X122",
+    "X122b"
+   ]
+  },
+  {
+   "id": "KS_exam-hole-score-step-order",
+   "key": "exam-hole-score-step-order",
+   "spec": [
+    "reuse",
+    "A_order_shape_stale"
+   ],
+   "family": null,
+   "witness": "X96c",
+   "note": "",
+   "candidates": [
+    "X96c",
+    "X78e"
+   ]
+  },
+  {
+   "id": "KS_exam-hole-diagnostic-texts",
+   "key": "exam-hole-diagnostic-texts",
+   "spec": [
+    "reuse",
+    "A_bucket_labels"
+   ],
+   "family": null,
+   "witness": "X72b",
+   "note": "",
+   "candidates": [
+    "X72b"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-stop-cleared-by-inner-exit",
+   "key": "exam-mut-stop-cleared-by-inner-exit",
+   "spec": [
+    "reuse",
+    "A_cut_cleared"
+   ],
+   "family": null,
+   "witness": "X65b",
+   "note": "",
+   "candidates": [
+    "X65b"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-nested-by-section-name",
+   "key": "exam-mut-nested-by-section-name",
+   "spec": [
+    "reuse",
+    "A_nested_across_tracers"
+   ],
+   "family": null,
+   "witness": "V15b",
+   "note": "",
+   "candidates": [
+    "V15b"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-restore-over-swapped-code",
+   "key": "exam-mut-restore-over-swapped-code",
+   "spec": [
+    "reuse",
+    "A_restore_over_swap"
+   ],
+   "family": null,
+   "witness": "X59d",
+   "note": "",
+   "candidates": [
+    "X59d"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-close-removes-foreign-profiler",
+   "key": "exam-mut-close-removes-foreign-profiler",
+   "spec": [
+    "patch",
+    [
+     [
+      "        _unwind_off(fr)                             # one call: pop, then clear iff no anchor is left",
+      "        _unwind_off(fr)                             # one call: pop, then clear iff no anchor is left\n        sys.setprofile(None)                        # kill shape: the close removes a profiler"
+     ]
+    ]
+   ],
+   "family": "scope",
+   "witness": "V58",
+   "note": "",
+   "candidates": [
+    "V58"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-exit-removes-foreign-profiler",
+   "key": "exam-mut-exit-removes-foreign-profiler",
+   "spec": [
+    "patch",
+    [
+     [
+      "    probs = []                                       # X4",
+      "    sys.setprofile(None)                             # kill shape: the exit removes a profiler\n    probs = []                                       # X4"
+     ]
+    ]
+   ],
+   "family": "scope",
+   "witness": "V57",
+   "note": "",
+   "candidates": [
+    "V57"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-double-exit-state-leak",
+   "key": "exam-mut-double-exit-state-leak",
+   "spec": [
+    "reuse",
+    "A_exit_claim"
+   ],
+   "family": null,
+   "witness": "V52",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "V52"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-hop-close-drops-closer-hook",
+   "key": "exam-mut-hop-close-drops-closer-hook",
+   "spec": [
+    "patch",
+    [
+     [
+      "            if len(mine) == 1:\n                out.append((h, 'c', mine[0]))",
+      "            if len(mine) >= 1:\n                out.append((h, 'c', mine[0]))"
+     ]
+    ]
+   ],
+   "family": "comparisons",
+   "witness": "V28b",
+   "note": "",
+   "candidates": [
+    "V28b"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-foreign-profiler-first-open-only",
+   "key": "exam-mut-foreign-profiler-first-open-only",
+   "spec": [
+    "patch",
+    [
+     [
+      "    o = _Opening(core, section, fr, threading.get_ident(), loop)   # 6. append",
+      "    if sys.getprofile() is not None and core.openings:            # kill shape: a foreign profiler refused\n        raise GateSpecError(\"[V5:FOREIGN_PROFILER] a profiler is installed\")\n    o = _Opening(core, section, fr, threading.get_ident(), loop)   # 6. append"
+     ]
+    ]
+   ],
+   "family": "conditions",
+   "witness": "V59",
+   "note": "",
+   "candidates": [
+    "V59"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-target-set-before-stale",
+   "key": "exam-mut-target-set-before-stale",
+   "spec": [
+    "reuse",
+    "A_order_stale_targetset"
+   ],
+   "family": null,
+   "witness": "X109b",
+   "note": "",
+   "candidates": [
+    "X109b"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-profiler-lost-only-if-none",
+   "key": "exam-mut-profiler-lost-only-if-none",
+   "spec": [
+    "patch",
+    [
+     [
+      "    lost = r[-1] is not _TOOL_NAME",
+      "    lost = r[-1] is None"
+     ]
+    ]
+   ],
+   "family": "comparisons",
+   "witness": "V60",
+   "note": "no candidate failed on 3.12.3; named for its rule",
+   "candidates": [
+    "V60",
+    "X137-free",
+    "X137b",
+    "X137e",
+    "X137g"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-bad-trace-end-type",
+   "key": "exam-mut-bad-trace-end-type",
+   "spec": [
+    "reuse",
+    "mut_end_type_not_tested"
+   ],
+   "family": null,
+   "witness": "X103c",
+   "note": "",
+   "candidates": [
+    "X103c"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-problems-before-bad-count",
+   "key": "exam-mut-problems-before-bad-count",
+   "spec": [
+    "reuse",
+    "A_order_count_problem"
+   ],
+   "family": null,
+   "witness": "X112b",
+   "note": "",
+   "candidates": [
+    "X112b"
+   ]
+  },
+  {
+   "id": "KS_exam-mut-uncredited-last-thread-wins",
+   "key": "exam-mut-uncredited-last-thread-wins",
+   "spec": [
+    "patch",
+    [
+     [
+      "                    disp[nm] = disp.get(nm, 0) + n",
+      "                    disp[nm] = n"
+     ]
+    ]
+   ],
+   "family": "deletion",
+   "witness": "X123",
+   "note": "",
+   "candidates": [
+    "X123"
+   ]
+  }
+ ]
+}

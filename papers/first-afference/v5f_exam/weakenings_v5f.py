@@ -574,6 +574,21 @@ row("A_capture_stale_read", "revision 13: revision 5's MF2 form of the capture r
      ("                      _map(_not, _map(_and, _map(get_events, (t,)), _PYU1))))))), _LOST_KEY, _TRUE),",
       "                      (was_clear,)))))), _LOST_KEY, _TRUE),")],
     note="revision 13: X153b kills it too")
+# GAP-53: the 47 re-targeted census rows and the 29 kill-shape rows. Each either reuses an existing row's patch
+# (the same rule weakened in ref_v5f.py) or has its own patch; the named witness of a kill-shape row is its v5f
+# case (the first the spec data lists). Frozen in sm1_census_killshape_rows.json.
+_CK = os.path.join(HERE, "sm1_census_killshape_rows.json")
+if os.path.exists(_CK):
+    _byid = {e["id"]: e for e in CATALOG}
+    _ck = json.load(open(_CK, encoding="utf-8"))
+    for _r in _ck["census"] + _ck["kill"]:
+        _kind, _x = _r["spec"]
+        _src = _byid[_x] if _kind == "reuse" else None
+        _fam = _src["family"] if _src else _r["family"]
+        _pat = [tuple(p) for p in (_src["patches"] if _src else _x)]
+        _what = (f"round-4 census mutant {_r['census_id']}" if "census_id" in _r else f"round-4 kill shape {_r['key']}")
+        row(_r["id"], f"revision 13 (GAP-53): {_what}" + (f", re-targeted as row {_x}'s patch" if _src else ""),
+            _fam, _r["witness"], "as stated", "differs", _pat, note=_r.get("note", ""))
 # GAP-62: one row per empty (family, rule region) cell, the generator's first non-TCE mutant there (and O12's
 # cell); the patches and the named witnesses are frozen in sm1_gap62_rows.json.
 _G62 = os.path.join(HERE, "sm1_gap62_rows.json")
@@ -616,6 +631,8 @@ def run_case(py, impl, case, deps):
     x = d["results"].get(case)
     if x and x.get("timeout"):
         return "TIMEOUT_WITNESS"                     # the witness's own bound expired after it started: a kill
+    if x and str(x.get("detail", "")).startswith("NOT_REACHED"):
+        return "NOT_REACHED"                         # the runner failed before the witness ran: no outcome of it
     return "PASS" if x and x["ok"] and not x["leftover"] else "FAIL"
 
 
@@ -733,8 +750,8 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                         cls = "NONREPRODUCIBLE"
                     elif runs[0] == "PASS":
                         cls = "UNWITNESSED"
-                    elif runs[0] == "TIMEOUT":
-                        cls = "HANG"        # the driver's timeout saw it, not the witness: admitted, not killed
+                    elif runs[0] in ("TIMEOUT", "NOT_REACHED"):
+                        cls = "HANG"        # the witness never ran (the driver's timeout, or the runner failed first)
                     else:
                         cls = "KILLED"
                 row = {"class": cls, "ref": base, "runs": runs}

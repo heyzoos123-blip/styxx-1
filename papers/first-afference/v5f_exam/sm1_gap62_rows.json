@@ -1,0 +1,460 @@
+[
+ {
+  "id": "R62_claims_M2",
+  "family": "claims",
+  "rule_region": "M2",
+  "mutant": "_acquire#53",
+  "op": "O9",
+  "desc": "setdefault claim -> unconditional store at line 1155",
+  "unit": "_acquire",
+  "witness": "H1",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _acquire(me):\n    t0 = None\n    while True:\n        r = _GUARD[\"hint\"]\n        n = r.succ.get(\"next\")\n        while n is not None:\n            r = n\n            n = r.succ.get(\"next\")\n        if _alive(r):\n            if r.tid == me.tid:\n                raise GateSpecError(\n                    \"[V5:REENTRANT] a coverage_trace enter or exit was re-entered on the same \"\n                    \"thread from inside another enter or exit (a finalizer, audit hook or signal \"\n                    \"handler)\")\n            now = _monotonic()\n            if t0 is None:\n                t0 = now\n            elif now - t0 > _BUSY_SECONDS:\n                raise GateSpecError(\n                    \"[V5:MACHINERY_BUSY] another thread has held styxx's machinery (the robust \"\n                    \"mutex) for more than 10 s\")\n            _sleep(0.0002)\n        elif r.succ.setdefault(\"next\", me) is me:\n            _GUARD[\"hint\"] = me\n            return\n",
+    "def _acquire(me):\n    t0 = None\n    while True:\n        r = _GUARD['hint']\n        n = r.succ.get('next')\n        while n is not None:\n            r = n\n            n = r.succ.get('next')\n        if _alive(r):\n            if r.tid == me.tid:\n                raise GateSpecError('[V5:REENTRANT] a coverage_trace enter or exit was re-entered on the same thread from inside another enter or exit (a finalizer, audit hook or signal handler)')\n            now = _monotonic()\n            if t0 is None:\n                t0 = now\n            elif now - t0 > _BUSY_SECONDS:\n                raise GateSpecError(\"[V5:MACHINERY_BUSY] another thread has held styxx's machinery (the robust mutex) for more than 10 s\")\n            _sleep(0.0002)\n        elif r.succ.__setitem__('next', me) is None:\n            _GUARD['hint'] = me\n            return\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_comparisons_M1",
+  "family": "comparisons",
+  "rule_region": "M1",
+  "mutant": "<module>:813:_GUARD#4",
+  "op": "O4",
+  "desc": "Is -> Eq at line 813",
+  "unit": "<module>:813:_GUARD",
+  "witness": "X158e",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "if _GUARD is None:                           # M1 (revision 9, GAP-06): the statement right after class _Txn; a reload keeps the dict\n    _GUARD = {\"hint\": _Txn(None, 0, None)}\n",
+    "if _GUARD == None:\n    _GUARD = {'hint': _Txn(None, 0, None)}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_comparisons_M2",
+  "family": "comparisons",
+  "rule_region": "M2",
+  "mutant": "_alive#10",
+  "op": "O4",
+  "desc": "Is -> Eq at line 1123",
+  "unit": "_alive",
+  "witness": "V72",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _alive(tok):\n    if tok is None or tok.tid is None:\n        return False\n    f = sys._current_frames().get(tok.tid)\n    while f is not None:\n        if id(f) == tok.fid and f.f_code is tok.code and f.f_locals.get('me') is tok:\n            return True\n        f = f.f_back\n    return False\n",
+    "def _alive(tok):\n    if tok == None or tok.tid is None:\n        return False\n    f = sys._current_frames().get(tok.tid)\n    while f is not None:\n        if id(f) == tok.fid and f.f_code is tok.code and (f.f_locals.get('me') is tok):\n            return True\n        f = f.f_back\n    return False\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_comparisons_M3",
+  "family": "comparisons",
+  "rule_region": "M3",
+  "mutant": "_reclaim#14",
+  "op": "O4",
+  "desc": "Is -> Eq at line 1232",
+  "unit": "_reclaim",
+  "witness": "X137-free",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _reclaim():\n    \"\"\"Step 0: an id styxx holds in _TOOL[0] that was freed and is unowned is re-taken and counted.\"\"\"\n    t = _TOOL[0]\n    if t is None or _MON[0][0](t) is not None:\n        return\n    _take(t)\n    if not _named(t):\n        return\n    r = _register(t)\n    if r[-1] is _TOOL_NAME:\n        _LOST.append(True)\n",
+    "def _reclaim():\n    \"\"\"Step 0: an id styxx holds in _TOOL[0] that was freed and is unowned is re-taken and counted.\"\"\"\n    t = _TOOL[0]\n    if t == None or _MON[0][0](t) is not None:\n        return\n    _take(t)\n    if not _named(t):\n        return\n    r = _register(t)\n    if r[-1] is _TOOL_NAME:\n        _LOST.append(True)\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_comparisons_M8",
+  "family": "comparisons",
+  "rule_region": "M8",
+  "mutant": "_CoverageTracer.record#17",
+  "op": "O4",
+  "desc": "NotEq -> IsNot at line 1711",
+  "unit": "_CoverageTracer.record",
+  "witness": "V01",
+  "note": "",
+  "patches": [
+   [
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if core.pid != os.getpid():\n            raise GateSpecError(\n                \"[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent \"\n                \"process\")\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\n                    \"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so \"\n                    \"its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError(\"[V5:TRACE_ACTIVE] the tracer was never entered\")\n            raise GateSpecError(\n                \"[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, \"\n                \"or its __exit__ never started, and then one call of __exit__() completes it\")\n        names = core.names\n        sections = {}\n        for o in list(core.openings):\n            end, notes = o.fin.get(\"fin\", (\"open\", ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 0) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({\n                \"calls\": dict(sorted(calls.items())), \"ambiguous\": dict(sorted(amb.items())),\n                \"end\": end, \"notes\": notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {\"tracer\": _TRACER_ID, \"gates_sha256\": core.exp.gates_sha256,\n                \"targets\": dict(sorted(core.prov.items())),\n                \"sections\": dict(sorted(sections.items())),\n                \"uncredited\": {\"dispatched\": dict(sorted(disp.items())),\n                               \"unattributed\": dict(sorted(unat.items()))},\n                \"problems\": list(core.problems)}\n",
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if core.pid is not os.getpid():\n            raise GateSpecError('[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent process')\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError('[V5:TRACE_ACTIVE] the tracer was never entered')\n            raise GateSpecError('[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, or its __exit__ never started, and then one call of __exit__() completes it')\n        names = core.names\n        sections = {}\n        for o in list(core.openings):\n            end, notes = o.fin.get('fin', ('open', ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 0) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({'calls': dict(sorted(calls.items())), 'ambiguous': dict(sorted(amb.items())), 'end': end, 'notes': notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {'tracer': _TRACER_ID, 'gates_sha256': core.exp.gates_sha256, 'targets': dict(sorted(core.prov.items())), 'sections': dict(sorted(sections.items())), 'uncredited': {'dispatched': dict(sorted(disp.items())), 'unattributed': dict(sorted(unat.items()))}, 'problems': list(core.problems)}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_comparisons_M9",
+  "family": "comparisons",
+  "rule_region": "M9",
+  "mutant": "_forget_in_child#19",
+  "op": "O4",
+  "desc": "Is -> Eq at line 1946",
+  "unit": "_forget_in_child",
+  "witness": "V47",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _forget_in_child():\n    if _MON[0] is None:                              # a no-op until a tracer has been constructed\n        return\n    _GUARD[\"hint\"] = _Txn(None, 0, None)             # 1.\n    _ANCHORS.clear()                                 # 2.\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)                             # 3.\n    ms = list(_MINTED.values())\n    for m in ms:                                     # 4.\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()                                   # 5.\n    _MINTED.clear()\n    for m in ms:                                     # 6. last: the only step that runs user code\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n",
+    "def _forget_in_child():\n    if _MON[0] == None:\n        return\n    _GUARD['hint'] = _Txn(None, 0, None)\n    _ANCHORS.clear()\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)\n    ms = list(_MINTED.values())\n    for m in ms:\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()\n    _MINTED.clear()\n    for m in ms:\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_comparisons_M10",
+  "family": "comparisons",
+  "rule_region": "M10",
+  "mutant": "_v5_state#29",
+  "op": "O4",
+  "desc": "IsNot -> NotEq at line 1889",
+  "unit": "_v5_state",
+  "witness": "M10-S0",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _v5_state():\n    t = _TOOL[0]\n    mon = _MON[0]\n    rows = []\n    for m in list(_MINTED.values()):\n        le = mon[6](t, m.code) if (t is not None and mon is not None) else 0   # C3 (GAP-03)\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD[\"hint\"]                               # revision 13 (GAP-64): the walk is total\n    seen = {id(r)}\n    n = r.succ.get(\"next\")\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get(\"next\")\n    return {\n        \"mints\": [{\"target\": a, \"holders\": b, \"installed\": c, \"local_events\": d, \"pending\": e}\n                  for a, b, c, d, e in rows],\n        \"anchors\": len(_ANCHORS),\n        \"guard\": \"cycle\" if n is not None else (\"free\" if r.tid is None else (\"held\" if _alive(r) else \"dead\")),\n        \"cut\": len(_CUT),\n        \"cut_current\": _HANDLE_DICT[0] is None or _cut_ok(),        # revision 9, GAP-05\n        \"tool\": t,\n        \"tool_ours\": mon is not None and _ours(),\n        \"global_events\": mon[1](t) if (t is not None and mon is not None) else 0,\n        \"pid\": os.getpid(),\n    }\n",
+    "def _v5_state():\n    t = _TOOL[0]\n    mon = _MON[0]\n    rows = []\n    for m in list(_MINTED.values()):\n        le = mon[6](t, m.code) if t != None and mon is not None else 0\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD['hint']\n    seen = {id(r)}\n    n = r.succ.get('next')\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get('next')\n    return {'mints': [{'target': a, 'holders': b, 'installed': c, 'local_events': d, 'pending': e} for a, b, c, d, e in rows], 'anchors': len(_ANCHORS), 'guard': 'cycle' if n is not None else 'free' if r.tid is None else 'held' if _alive(r) else 'dead', 'cut': len(_CUT), 'cut_current': _HANDLE_DICT[0] is None or _cut_ok(), 'tool': t, 'tool_ours': mon is not None and _ours(), 'global_events': mon[1](t) if t is not None and mon is not None else 0, 'pid': os.getpid()}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_conditions_M1",
+  "family": "conditions",
+  "rule_region": "M1",
+  "mutant": "<module>:94:_TOOL_NAME#0",
+  "op": "O3",
+  "desc": "drop operand 0 of the Or at line 94",
+  "unit": "<module>:94:_TOOL_NAME",
+  "witness": "X158e",
+  "note": "",
+  "patches": [
+   [
+    "_TOOL_NAME = globals().get(\"_TOOL_NAME\") or \"styxx.protocol/\" + os.urandom(6).hex()\n",
+    "_TOOL_NAME = 'styxx.protocol/' + os.urandom(6).hex()\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_conditions_M2",
+  "family": "conditions",
+  "rule_region": "M2",
+  "mutant": "_alive#5",
+  "op": "O2",
+  "desc": "negate the test at line 1123",
+  "unit": "_alive",
+  "witness": "V72",
+  "note": "",
+  "patches": [
+   [
+    "def _alive(tok):\n    if tok is None or tok.tid is None:\n        return False\n    f = sys._current_frames().get(tok.tid)\n    while f is not None:\n        if id(f) == tok.fid and f.f_code is tok.code and f.f_locals.get('me') is tok:\n            return True\n        f = f.f_back\n    return False\n",
+    "def _alive(tok):\n    if not (tok is None or tok.tid is None):\n        return False\n    f = sys._current_frames().get(tok.tid)\n    while f is not None:\n        if id(f) == tok.fid and f.f_code is tok.code and (f.f_locals.get('me') is tok):\n            return True\n        f = f.f_back\n    return False\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_conditions_M8",
+  "family": "conditions",
+  "rule_region": "M8",
+  "mutant": "_CoverageTracer.record#14",
+  "op": "O2",
+  "desc": "negate the test at line 1711",
+  "unit": "_CoverageTracer.record",
+  "witness": "V01",
+  "note": "",
+  "patches": [
+   [
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if core.pid != os.getpid():\n            raise GateSpecError(\n                \"[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent \"\n                \"process\")\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\n                    \"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so \"\n                    \"its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError(\"[V5:TRACE_ACTIVE] the tracer was never entered\")\n            raise GateSpecError(\n                \"[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, \"\n                \"or its __exit__ never started, and then one call of __exit__() completes it\")\n        names = core.names\n        sections = {}\n        for o in list(core.openings):\n            end, notes = o.fin.get(\"fin\", (\"open\", ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 0) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({\n                \"calls\": dict(sorted(calls.items())), \"ambiguous\": dict(sorted(amb.items())),\n                \"end\": end, \"notes\": notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {\"tracer\": _TRACER_ID, \"gates_sha256\": core.exp.gates_sha256,\n                \"targets\": dict(sorted(core.prov.items())),\n                \"sections\": dict(sorted(sections.items())),\n                \"uncredited\": {\"dispatched\": dict(sorted(disp.items())),\n                               \"unattributed\": dict(sorted(unat.items()))},\n                \"problems\": list(core.problems)}\n",
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if not core.pid != os.getpid():\n            raise GateSpecError('[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent process')\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError('[V5:TRACE_ACTIVE] the tracer was never entered')\n            raise GateSpecError('[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, or its __exit__ never started, and then one call of __exit__() completes it')\n        names = core.names\n        sections = {}\n        for o in list(core.openings):\n            end, notes = o.fin.get('fin', ('open', ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 0) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({'calls': dict(sorted(calls.items())), 'ambiguous': dict(sorted(amb.items())), 'end': end, 'notes': notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {'tracer': _TRACER_ID, 'gates_sha256': core.exp.gates_sha256, 'targets': dict(sorted(core.prov.items())), 'sections': dict(sorted(sections.items())), 'uncredited': {'dispatched': dict(sorted(disp.items())), 'unattributed': dict(sorted(unat.items()))}, 'problems': list(core.problems)}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_conditions_M9",
+  "family": "conditions",
+  "rule_region": "M9",
+  "mutant": "_forget_in_child#16",
+  "op": "O2",
+  "desc": "negate the test at line 1946",
+  "unit": "_forget_in_child",
+  "witness": "V47b",
+  "note": "",
+  "patches": [
+   [
+    "def _forget_in_child():\n    if _MON[0] is None:                              # a no-op until a tracer has been constructed\n        return\n    _GUARD[\"hint\"] = _Txn(None, 0, None)             # 1.\n    _ANCHORS.clear()                                 # 2.\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)                             # 3.\n    ms = list(_MINTED.values())\n    for m in ms:                                     # 4.\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()                                   # 5.\n    _MINTED.clear()\n    for m in ms:                                     # 6. last: the only step that runs user code\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n",
+    "def _forget_in_child():\n    if not _MON[0] is None:\n        return\n    _GUARD['hint'] = _Txn(None, 0, None)\n    _ANCHORS.clear()\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)\n    ms = list(_MINTED.values())\n    for m in ms:\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()\n    _MINTED.clear()\n    for m in ms:\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_conditions_M10",
+  "family": "conditions",
+  "rule_region": "M10",
+  "mutant": "_v5_state#24",
+  "op": "O2",
+  "desc": "negate the test at line 1889",
+  "unit": "_v5_state",
+  "witness": "M10-S0",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _v5_state():\n    t = _TOOL[0]\n    mon = _MON[0]\n    rows = []\n    for m in list(_MINTED.values()):\n        le = mon[6](t, m.code) if (t is not None and mon is not None) else 0   # C3 (GAP-03)\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD[\"hint\"]                               # revision 13 (GAP-64): the walk is total\n    seen = {id(r)}\n    n = r.succ.get(\"next\")\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get(\"next\")\n    return {\n        \"mints\": [{\"target\": a, \"holders\": b, \"installed\": c, \"local_events\": d, \"pending\": e}\n                  for a, b, c, d, e in rows],\n        \"anchors\": len(_ANCHORS),\n        \"guard\": \"cycle\" if n is not None else (\"free\" if r.tid is None else (\"held\" if _alive(r) else \"dead\")),\n        \"cut\": len(_CUT),\n        \"cut_current\": _HANDLE_DICT[0] is None or _cut_ok(),        # revision 9, GAP-05\n        \"tool\": t,\n        \"tool_ours\": mon is not None and _ours(),\n        \"global_events\": mon[1](t) if (t is not None and mon is not None) else 0,\n        \"pid\": os.getpid(),\n    }\n",
+    "def _v5_state():\n    t = _TOOL[0]\n    mon = _MON[0]\n    rows = []\n    for m in list(_MINTED.values()):\n        le = mon[6](t, m.code) if not (t is not None and mon is not None) else 0\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD['hint']\n    seen = {id(r)}\n    n = r.succ.get('next')\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get('next')\n    return {'mints': [{'target': a, 'holders': b, 'installed': c, 'local_events': d, 'pending': e} for a, b, c, d, e in rows], 'anchors': len(_ANCHORS), 'guard': 'cycle' if n is not None else 'free' if r.tid is None else 'held' if _alive(r) else 'dead', 'cut': len(_CUT), 'cut_current': _HANDLE_DICT[0] is None or _cut_ok(), 'tool': t, 'tool_ours': mon is not None and _ours(), 'global_events': mon[1](t) if t is not None and mon is not None else 0, 'pid': os.getpid()}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_constants_M2",
+  "family": "constants",
+  "rule_region": "M2",
+  "mutant": "_txn#3",
+  "op": "O7",
+  "desc": "int 1 -> 2 at line 1118",
+  "unit": "_txn",
+  "witness": "V72",
+  "note": "",
+  "patches": [
+   [
+    "def _txn():\n    f = sys._getframe(1)\n    return _Txn(threading.get_ident(), id(f), f.f_code)\n",
+    "def _txn():\n    f = sys._getframe(2)\n    return _Txn(threading.get_ident(), id(f), f.f_code)\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_constants_M3",
+  "family": "constants",
+  "rule_region": "M3",
+  "mutant": "_reclaim#6",
+  "op": "O7",
+  "desc": "int 0 -> 1 at line 1231",
+  "unit": "_reclaim",
+  "witness": "X137-free",
+  "note": "",
+  "patches": [
+   [
+    "def _reclaim():\n    \"\"\"Step 0: an id styxx holds in _TOOL[0] that was freed and is unowned is re-taken and counted.\"\"\"\n    t = _TOOL[0]\n    if t is None or _MON[0][0](t) is not None:\n        return\n    _take(t)\n    if not _named(t):\n        return\n    r = _register(t)\n    if r[-1] is _TOOL_NAME:\n        _LOST.append(True)\n",
+    "def _reclaim():\n    \"\"\"Step 0: an id styxx holds in _TOOL[0] that was freed and is unowned is re-taken and counted.\"\"\"\n    t = _TOOL[1]\n    if t is None or _MON[0][0](t) is not None:\n        return\n    _take(t)\n    if not _named(t):\n        return\n    r = _register(t)\n    if r[-1] is _TOOL_NAME:\n        _LOST.append(True)\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_constants_M6",
+  "family": "constants",
+  "rule_region": "M6",
+  "mutant": "_outcome#61",
+  "op": "O7",
+  "desc": "int 1 -> 2 at line 1515",
+  "unit": "_outcome",
+  "witness": "V01",
+  "note": "",
+  "patches": [
+   [
+    "def _outcome(f, code, holders, tid):\n    loop = _get_running_loop()\n    found = []\n    cut = False\n    g = f.f_back\n    while g is not None:\n        c = g.f_code\n        if _CUT.get(id(c)) is c:\n            cut = True\n            break\n        o = _ANCHORS.get(g)\n        if o is not None:\n            if o.loop is not loop:                   # the loop boundary ends the walk as a cut does\n                cut = True\n                break\n            found.append(o)\n        g = g.f_back\n    out = []\n    k = id(code)\n    for h in holders:\n        if k in h.by_code:\n            mine = [o for o in found if o.core is h]\n            if len(mine) == 1:\n                out.append((h, 'c', mine[0]))\n            elif mine:\n                out.append((h, 'a', tuple(mine)))\n            elif cut:\n                out.append((h, 'd', tid))\n            else:\n                out.append((h, 'u', tid))\n    return out\n",
+    "def _outcome(f, code, holders, tid):\n    loop = _get_running_loop()\n    found = []\n    cut = False\n    g = f.f_back\n    while g is not None:\n        c = g.f_code\n        if _CUT.get(id(c)) is c:\n            cut = True\n            break\n        o = _ANCHORS.get(g)\n        if o is not None:\n            if o.loop is not loop:\n                cut = True\n                break\n            found.append(o)\n        g = g.f_back\n    out = []\n    k = id(code)\n    for h in holders:\n        if k in h.by_code:\n            mine = [o for o in found if o.core is h]\n            if len(mine) == 2:\n                out.append((h, 'c', mine[0]))\n            elif mine:\n                out.append((h, 'a', tuple(mine)))\n            elif cut:\n                out.append((h, 'd', tid))\n            else:\n                out.append((h, 'u', tid))\n    return out\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_constants_M8",
+  "family": "constants",
+  "rule_region": "M8",
+  "mutant": "_CoverageTracer.record#75",
+  "op": "O7",
+  "desc": "int 0 -> 1 at line 1738",
+  "unit": "_CoverageTracer.record",
+  "witness": "V01",
+  "note": "",
+  "patches": [
+   [
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if core.pid != os.getpid():\n            raise GateSpecError(\n                \"[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent \"\n                \"process\")\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\n                    \"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so \"\n                    \"its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError(\"[V5:TRACE_ACTIVE] the tracer was never entered\")\n            raise GateSpecError(\n                \"[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, \"\n                \"or its __exit__ never started, and then one call of __exit__() completes it\")\n        names = core.names\n        sections = {}\n        for o in list(core.openings):\n            end, notes = o.fin.get(\"fin\", (\"open\", ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 0) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({\n                \"calls\": dict(sorted(calls.items())), \"ambiguous\": dict(sorted(amb.items())),\n                \"end\": end, \"notes\": notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {\"tracer\": _TRACER_ID, \"gates_sha256\": core.exp.gates_sha256,\n                \"targets\": dict(sorted(core.prov.items())),\n                \"sections\": dict(sorted(sections.items())),\n                \"uncredited\": {\"dispatched\": dict(sorted(disp.items())),\n                               \"unattributed\": dict(sorted(unat.items()))},\n                \"problems\": list(core.problems)}\n",
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if core.pid != os.getpid():\n            raise GateSpecError('[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent process')\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError('[V5:TRACE_ACTIVE] the tracer was never entered')\n            raise GateSpecError('[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, or its __exit__ never started, and then one call of __exit__() completes it')\n        names = core.names\n        sections = {}\n        for o in list(core.openings):\n            end, notes = o.fin.get('fin', ('open', ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 1) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({'calls': dict(sorted(calls.items())), 'ambiguous': dict(sorted(amb.items())), 'end': end, 'notes': notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {'tracer': _TRACER_ID, 'gates_sha256': core.exp.gates_sha256, 'targets': dict(sorted(core.prov.items())), 'sections': dict(sorted(sections.items())), 'uncredited': {'dispatched': dict(sorted(disp.items())), 'unattributed': dict(sorted(unat.items()))}, 'problems': list(core.problems)}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_constants_M9",
+  "family": "constants",
+  "rule_region": "M9",
+  "mutant": "_forget_in_child#20",
+  "op": "O7",
+  "desc": "int 0 -> 1 at line 1946",
+  "unit": "_forget_in_child",
+  "witness": "V47b",
+  "note": "",
+  "patches": [
+   [
+    "def _forget_in_child():\n    if _MON[0] is None:                              # a no-op until a tracer has been constructed\n        return\n    _GUARD[\"hint\"] = _Txn(None, 0, None)             # 1.\n    _ANCHORS.clear()                                 # 2.\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)                             # 3.\n    ms = list(_MINTED.values())\n    for m in ms:                                     # 4.\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()                                   # 5.\n    _MINTED.clear()\n    for m in ms:                                     # 6. last: the only step that runs user code\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n",
+    "def _forget_in_child():\n    if _MON[1] is None:\n        return\n    _GUARD['hint'] = _Txn(None, 0, None)\n    _ANCHORS.clear()\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)\n    ms = list(_MINTED.values())\n    for m in ms:\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()\n    _MINTED.clear()\n    for m in ms:\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_deletion_M9",
+  "family": "deletion",
+  "rule_region": "M9",
+  "mutant": "_forget_in_child#0",
+  "op": "O1",
+  "desc": "delete line 1946 (If)",
+  "unit": "_forget_in_child",
+  "witness": "V47",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _forget_in_child():\n    if _MON[0] is None:                              # a no-op until a tracer has been constructed\n        return\n    _GUARD[\"hint\"] = _Txn(None, 0, None)             # 1.\n    _ANCHORS.clear()                                 # 2.\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)                             # 3.\n    ms = list(_MINTED.values())\n    for m in ms:                                     # 4.\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()                                   # 5.\n    _MINTED.clear()\n    for m in ms:                                     # 6. last: the only step that runs user code\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n",
+    "def _forget_in_child():\n    pass\n    _GUARD['hint'] = _Txn(None, 0, None)\n    _ANCHORS.clear()\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)\n    ms = list(_MINTED.values())\n    for m in ms:\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()\n    _MINTED.clear()\n    for m in ms:\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_order_M3",
+  "family": "order",
+  "rule_region": "M3",
+  "mutant": "_retire#2",
+  "op": "O8",
+  "desc": "swap lines 1245 and 1246",
+  "unit": "_retire",
+  "witness": "X92b",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _retire(m):\n    if m.fn.__code__ is m.code:\n        m.fn.__code__ = m.original\n    _set_local(_TOOL[0], m.code, 0)\n    m.pend.clear()\n    if _BY_FN.get(m.fn) is m:\n        _BY_FN.pop(m.fn, None)\n    if _MINTED.get(id(m.code)) is m:\n        _MINTED.pop(id(m.code), None)\n",
+    "def _retire(m):\n    if m.fn.__code__ is m.code:\n        m.fn.__code__ = m.original\n    m.pend.clear()\n    _set_local(_TOOL[0], m.code, 0)\n    if _BY_FN.get(m.fn) is m:\n        _BY_FN.pop(m.fn, None)\n    if _MINTED.get(id(m.code)) is m:\n        _MINTED.pop(id(m.code), None)\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_order_M10",
+  "family": "order",
+  "rule_region": "M10",
+  "mutant": "_v5_state#1",
+  "op": "O8",
+  "desc": "swap lines 1885 and 1886",
+  "unit": "_v5_state",
+  "witness": "M10-S0",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _v5_state():\n    t = _TOOL[0]\n    mon = _MON[0]\n    rows = []\n    for m in list(_MINTED.values()):\n        le = mon[6](t, m.code) if (t is not None and mon is not None) else 0   # C3 (GAP-03)\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD[\"hint\"]                               # revision 13 (GAP-64): the walk is total\n    seen = {id(r)}\n    n = r.succ.get(\"next\")\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get(\"next\")\n    return {\n        \"mints\": [{\"target\": a, \"holders\": b, \"installed\": c, \"local_events\": d, \"pending\": e}\n                  for a, b, c, d, e in rows],\n        \"anchors\": len(_ANCHORS),\n        \"guard\": \"cycle\" if n is not None else (\"free\" if r.tid is None else (\"held\" if _alive(r) else \"dead\")),\n        \"cut\": len(_CUT),\n        \"cut_current\": _HANDLE_DICT[0] is None or _cut_ok(),        # revision 9, GAP-05\n        \"tool\": t,\n        \"tool_ours\": mon is not None and _ours(),\n        \"global_events\": mon[1](t) if (t is not None and mon is not None) else 0,\n        \"pid\": os.getpid(),\n    }\n",
+    "def _v5_state():\n    mon = _MON[0]\n    t = _TOOL[0]\n    rows = []\n    for m in list(_MINTED.values()):\n        le = mon[6](t, m.code) if t is not None and mon is not None else 0\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD['hint']\n    seen = {id(r)}\n    n = r.succ.get('next')\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get('next')\n    return {'mints': [{'target': a, 'holders': b, 'installed': c, 'local_events': d, 'pending': e} for a, b, c, d, e in rows], 'anchors': len(_ANCHORS), 'guard': 'cycle' if n is not None else 'free' if r.tid is None else 'held' if _alive(r) else 'dead', 'cut': len(_CUT), 'cut_current': _HANDLE_DICT[0] is None or _cut_ok(), 'tool': t, 'tool_ours': mon is not None and _ours(), 'global_events': mon[1](t) if t is not None and mon is not None else 0, 'pid': os.getpid()}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_scope_M3",
+  "family": "scope",
+  "rule_region": "M3",
+  "mutant": "_prune#2",
+  "op": "O10",
+  "desc": "for-iter [:1] at line 1254",
+  "unit": "_prune",
+  "witness": "X146c",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _prune(h):\n    for o in list(h.openings):\n        _detach(o, (\"open\", (\"[V5:OPEN_AT_EXIT] pruned: the trace's own exit did not run\",)))\n",
+    "def _prune(h):\n    for o in list(list(h.openings))[:1]:\n        _detach(o, ('open', (\"[V5:OPEN_AT_EXIT] pruned: the trace's own exit did not run\",)))\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_scope_M8",
+  "family": "scope",
+  "rule_region": "M8",
+  "mutant": "_CoverageTracer.record#57",
+  "op": "O10",
+  "desc": "for-iter [:1] at line 1728",
+  "unit": "_CoverageTracer.record",
+  "witness": "V28b",
+  "note": "",
+  "patches": [
+   [
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if core.pid != os.getpid():\n            raise GateSpecError(\n                \"[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent \"\n                \"process\")\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\n                    \"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so \"\n                    \"its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError(\"[V5:TRACE_ACTIVE] the tracer was never entered\")\n            raise GateSpecError(\n                \"[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, \"\n                \"or its __exit__ never started, and then one call of __exit__() completes it\")\n        names = core.names\n        sections = {}\n        for o in list(core.openings):\n            end, notes = o.fin.get(\"fin\", (\"open\", ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 0) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({\n                \"calls\": dict(sorted(calls.items())), \"ambiguous\": dict(sorted(amb.items())),\n                \"end\": end, \"notes\": notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {\"tracer\": _TRACER_ID, \"gates_sha256\": core.exp.gates_sha256,\n                \"targets\": dict(sorted(core.prov.items())),\n                \"sections\": dict(sorted(sections.items())),\n                \"uncredited\": {\"dispatched\": dict(sorted(disp.items())),\n                               \"unattributed\": dict(sorted(unat.items()))},\n                \"problems\": list(core.problems)}\n",
+    "    def record(self):\n        \"\"\"The trace to store under ``coverage_trace``, taken after the trace exits (M8).\"\"\"\n        core = self._core\n        if core.pid != os.getpid():\n            raise GateSpecError('[V5:TRACE_INCOMPLETE] inherited across fork: the record belongs to the parent process')\n        mk = core.marks\n        if 'exited' not in mk:\n            if 'exiting' in mk or ('entering' in mk and 'active' not in mk):\n                raise GateSpecError(\"[V5:TRACE_INCOMPLETE] the trace's enter or exit began and did not complete, so its checks and its restorations did not all run\")\n            if 'entering' not in mk:\n                raise GateSpecError('[V5:TRACE_ACTIVE] the tracer was never entered')\n            raise GateSpecError('[V5:TRACE_ACTIVE] the tracer is active: record() was called inside its with-block, or its __exit__ never started, and then one call of __exit__() completes it')\n        names = core.names\n        sections = {}\n        for o in list(list(core.openings))[:1]:\n            end, notes = o.fin.get('fin', ('open', ()))\n            notes = list(notes)\n            if o.lazy is not None:\n                notes.append(o.lazy)\n            if core.lost_note is not None:\n                notes.append(core.lost_note)\n            calls = {}\n            for k, n in list(o.calls.items()):\n                for nm in names.get(k, ()):\n                    calls[nm] = calls.get(nm, 0) + n\n            amb = {}\n            for k, n in list(o.ambiguous.items()):\n                for nm in names.get(k, ()):\n                    amb[nm] = amb.get(nm, 0) + n\n            sections.setdefault(o.section, []).append({'calls': dict(sorted(calls.items())), 'ambiguous': dict(sorted(amb.items())), 'end': end, 'notes': notes})\n        disp = {}\n        unat = {}\n        for a, b in list(core.uncredited.values()):\n            for k, n in list(a.items()):\n                for nm in names.get(k, ()):\n                    disp[nm] = disp.get(nm, 0) + n\n            for k, n in list(b.items()):\n                for nm in names.get(k, ()):\n                    unat[nm] = unat.get(nm, 0) + n\n        return {'tracer': _TRACER_ID, 'gates_sha256': core.exp.gates_sha256, 'targets': dict(sorted(core.prov.items())), 'sections': dict(sorted(sections.items())), 'uncredited': {'dispatched': dict(sorted(disp.items())), 'unattributed': dict(sorted(unat.items()))}, 'problems': list(core.problems)}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_scope_M9",
+  "family": "scope",
+  "rule_region": "M9",
+  "mutant": "_forget_in_child#41",
+  "op": "O10",
+  "desc": "for-iter [:1] at line 1955",
+  "unit": "_forget_in_child",
+  "witness": "V47",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _forget_in_child():\n    if _MON[0] is None:                              # a no-op until a tracer has been constructed\n        return\n    _GUARD[\"hint\"] = _Txn(None, 0, None)             # 1.\n    _ANCHORS.clear()                                 # 2.\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)                             # 3.\n    ms = list(_MINTED.values())\n    for m in ms:                                     # 4.\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()                                   # 5.\n    _MINTED.clear()\n    for m in ms:                                     # 6. last: the only step that runs user code\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n",
+    "def _forget_in_child():\n    if _MON[0] is None:\n        return\n    _GUARD['hint'] = _Txn(None, 0, None)\n    _ANCHORS.clear()\n    t = _TOOL[0]\n    ours = t is not None and _named(t)\n    if ours:\n        _MON[0][2](t, 0)\n    ms = list(_MINTED.values())\n    for m in list(ms)[:1]:\n        if ours:\n            _MON[0][3](t, m.code, 0)\n        m.pend.clear()\n    _BY_FN.clear()\n    _MINTED.clear()\n    for m in ms:\n        if m.fn.__code__ is m.code:\n            m.fn.__code__ = m.original\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_scope_M10",
+  "family": "scope",
+  "rule_region": "M10",
+  "mutant": "_v5_state#22",
+  "op": "O10",
+  "desc": "for-iter [:1] at line 1888",
+  "unit": "_v5_state",
+  "witness": "V73",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _v5_state():\n    t = _TOOL[0]\n    mon = _MON[0]\n    rows = []\n    for m in list(_MINTED.values()):\n        le = mon[6](t, m.code) if (t is not None and mon is not None) else 0   # C3 (GAP-03)\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD[\"hint\"]                               # revision 13 (GAP-64): the walk is total\n    seen = {id(r)}\n    n = r.succ.get(\"next\")\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get(\"next\")\n    return {\n        \"mints\": [{\"target\": a, \"holders\": b, \"installed\": c, \"local_events\": d, \"pending\": e}\n                  for a, b, c, d, e in rows],\n        \"anchors\": len(_ANCHORS),\n        \"guard\": \"cycle\" if n is not None else (\"free\" if r.tid is None else (\"held\" if _alive(r) else \"dead\")),\n        \"cut\": len(_CUT),\n        \"cut_current\": _HANDLE_DICT[0] is None or _cut_ok(),        # revision 9, GAP-05\n        \"tool\": t,\n        \"tool_ours\": mon is not None and _ours(),\n        \"global_events\": mon[1](t) if (t is not None and mon is not None) else 0,\n        \"pid\": os.getpid(),\n    }\n",
+    "def _v5_state():\n    t = _TOOL[0]\n    mon = _MON[0]\n    rows = []\n    for m in list(list(_MINTED.values()))[:1]:\n        le = mon[6](t, m.code) if t is not None and mon is not None else 0\n        rows.append((m.qualname, len(m.holders), m.fn.__code__ is m.code, le, len(m.pend)))\n    rows.sort()\n    r = _GUARD['hint']\n    seen = {id(r)}\n    n = r.succ.get('next')\n    while n is not None and id(n) not in seen:\n        seen.add(id(n))\n        r = n\n        n = r.succ.get('next')\n    return {'mints': [{'target': a, 'holders': b, 'installed': c, 'local_events': d, 'pending': e} for a, b, c, d, e in rows], 'anchors': len(_ANCHORS), 'guard': 'cycle' if n is not None else 'free' if r.tid is None else 'held' if _alive(r) else 'dead', 'cut': len(_CUT), 'cut_current': _HANDLE_DICT[0] is None or _cut_ok(), 'tool': t, 'tool_ours': mon is not None and _ours(), 'global_events': mon[1](t) if t is not None and mon is not None else 0, 'pid': os.getpid()}\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_types_M5",
+  "family": "types",
+  "rule_region": "M5",
+  "mutant": "_clone_alive#25",
+  "op": "O5",
+  "desc": "exact type -> isinstance at line 1398",
+  "unit": "_clone_alive",
+  "witness": "X58b",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "def _clone_alive(m):\n    excess = sys.getrefcount(m.code) - 2 - (m.fn.__code__ is m.code)\n    if excess <= 0:\n        return None\n    code = m.code\n    here = sys._getframe()\n    refs = gc.get_referrers(code)\n    fns = [r for r in refs if type(r) is FunctionType and r is not m.fn]\n    if fns:\n        return (f\"[V5:CLONE_ALIVE] {len(fns)} live function(s) other than {m.qualname} hold its \"\n                f\"minted code -- a clone built during the trace would be credited as it\")\n    if gc.get_freeze_count() > m.freeze0:\n        visible = 0\n        for r in refs:\n            if r is m or r is m.fn or r is here or r is refs:\n                continue\n            for x in gc.get_referents(r):\n                if x is code:\n                    visible += 1\n        if excess - visible > 0:\n            return (f\"[V5:CLONE_ALIVE] the gc freeze count rose while the minted code existed: \"\n                    f\"{excess - visible} references to it cannot be attributed\")\n    return None\n",
+    "def _clone_alive(m):\n    excess = sys.getrefcount(m.code) - 2 - (m.fn.__code__ is m.code)\n    if excess <= 0:\n        return None\n    code = m.code\n    here = sys._getframe()\n    refs = gc.get_referrers(code)\n    fns = [r for r in refs if isinstance(r, FunctionType) and r is not m.fn]\n    if fns:\n        return f'[V5:CLONE_ALIVE] {len(fns)} live function(s) other than {m.qualname} hold its minted code -- a clone built during the trace would be credited as it'\n    if gc.get_freeze_count() > m.freeze0:\n        visible = 0\n        for r in refs:\n            if r is m or r is m.fn or r is here or (r is refs):\n                continue\n            for x in gc.get_referents(r):\n                if x is code:\n                    visible += 1\n        if excess - visible > 0:\n            return f'[V5:CLONE_ALIVE] the gc freeze count rose while the minted code existed: {excess - visible} references to it cannot be attributed'\n    return None\n"
+   ]
+  ]
+ },
+ {
+  "id": "R62_immutability_M3",
+  "family": "immutability",
+  "rule_region": "M3",
+  "mutant": "O12:holders",
+  "op": "O12",
+  "desc": "O12 on .holders: 5 sites (line 828, line 1274, line 1321, line 1324, line 1439)",
+  "unit": "O12:holders",
+  "witness": "X142",
+  "note": "no candidate case failed on 3.12.3 (mutation mode); named for its rule",
+  "patches": [
+   [
+    "        self.holders = ()                    # a tuple, rebuilt only under the mutex\n",
+    "        self.holders = []\n"
+   ],
+   [
+    "        m.holders = tuple(keep)\n",
+    "        m.holders[:] = keep\n"
+   ],
+   [
+    "        m.holders = m.holders + (core,)\n",
+    "        m.holders.extend((core,))\n"
+   ],
+   [
+    "    m.holders = (core,)                              # 2. holder\n",
+    "    m.holders[:] = [core]\n"
+   ],
+   [
+    "        m.holders = tuple([h for h in m.holders if h is not core])\n",
+    "        m.holders[:] = [h for h in m.holders if h is not core]\n"
+   ]
+  ]
+ }
+]

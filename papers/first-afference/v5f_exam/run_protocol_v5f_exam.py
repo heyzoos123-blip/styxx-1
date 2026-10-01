@@ -7288,12 +7288,25 @@ def main():
             subprocess.run(_git + ["add", "."], cwd=REPO, check=True)
             subprocess.run(_git + ["commit", "-q", "-m", "self-trace prereg"], cwd=REPO, check=True)
             sexp = P.Experiment(path)
-            with P.coverage_trace(sexp) as selfcov:
+            try:
+                with P.coverage_trace(sexp) as selfcov:
+                    for cid in selfc:
+                        t = time.monotonic()
+                        record(cid, *run_in_self(cid, selfcov, "G0"), time.monotonic() - t)
+                srec = selfcov.record()
+            except Exception as e:                    # noqa: BLE001
+                # the self-trace itself failed (an implementation under mutation can break it): the cases
+                # it never reached are reported as such, and V34 fails; nothing else is decided here
+                why = f"{type(e).__name__}: {e}"[:300]
                 for cid in selfc:
-                    t = time.monotonic()
-                    record(cid, *run_in_self(cid, selfcov, "G0"), time.monotonic() - t)
-            srec = selfcov.record()
-            sout = score(sexp, srec)
+                    if cid not in res:
+                        record(cid, False, f"NOT_REACHED: the self-trace raised {why}", [], 0.0)
+                srec = None
+            if srec is None:
+                sout = ("REFUSE", "SELF_TRACE_FAILED", why)
+                srec = {"sections": {}, "uncredited": {}, "problems": [why]}
+            else:
+                sout = score(sexp, srec)
             selfinfo_debug = {"message": sout[2] if len(sout) > 2 else None, "sections": srec["sections"],
                               "uncredited": srec["uncredited"]}
             cov0 = sout[1].get("G0", {}) if sout[0] == "PASS" else {}

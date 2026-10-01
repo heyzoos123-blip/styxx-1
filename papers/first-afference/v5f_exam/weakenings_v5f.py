@@ -12,7 +12,11 @@ SM1 (computed at freeze time on ref_v5f.py; "SM1: catalog power"):
   agree, else NONREPRODUCIBLE (not killed). An admitted row is KILLED iff its named witness fails on ref+W
   (here, in isolation, condition 3 and the kill test are the same run). A row failing (3) is UNWITNESSED.
   Crash-sweep rows: the witness is crash_sweep_v5f.py on ref+W; KILLED iff the named invariant is among its
-  failures, WITNESS_MISMATCH if only others are.
+  failures, WITNESS_MISMATCH if only others are. A row whose two runs both hit the driver's timeout (600 s) is
+  HANG: admitted (no outcome is not the spec outcome) but not KILLED, since the timeout, not the witness, saw
+  it (A_txn_shared_succ: the runner hangs in its own snapshot before the case body runs; SPEC_GAPS GAP-64).
+  The G_FI reference runs are made once per version and shared by every G_FI row (their verdict does not
+  depend on the invariant named).
   Gate: 100% of admitted rows KILLED on every version they are admitted for.
 
 Usage: python weakenings_v5f.py --sm1 PY312 [PY313] [--only id,id] [--deps JSON] [--journal J.jsonl] [--jobs 3]
@@ -651,7 +655,10 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
         def ref_of(w):
             with rlocks[w]:
                 if (ver, w) not in refs:
-                    if w.startswith("G_FI:"):
+                    shared = [k for k in refs if k[0] == ver and k[1].startswith("G_FI:")] if w.startswith("G_FI:") else []
+                    if shared:          # the reference sweep's verdict does not depend on the invariant named
+                        r = refs[shared[0]]
+                    elif w.startswith("G_FI:"):
                         r = [run_crash(py, REF_PATH, w.split(":")[1])[0] for _ in range(2)]
                     else:
                         r = [run_case(py, REF_PATH, w, dp) for _ in range(2)]
@@ -690,6 +697,8 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                         cls = "NONREPRODUCIBLE"
                     elif runs[0] == "PASS":
                         cls = "UNWITNESSED"
+                    elif runs[0] == "TIMEOUT":
+                        cls = "HANG"        # the driver's timeout saw it, not the witness: admitted, not killed
                     else:
                         cls = "KILLED"
                 row = {"class": cls, "ref": base, "runs": runs}
@@ -710,7 +719,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
         rows = {i: {k: x for k, x in d.items() if k not in ("kind", "ver", "id")} for (v, i), d in done.items()
                 if v == ver and (not only or i in only)}
         res["rows"][ver] = rows
-        adm = [k for k, r in rows.items() if r["class"] in ("KILLED", "WITNESS_MISMATCH", "NONREPRODUCIBLE")]
+        adm = [k for k, r in rows.items() if r["class"] in ("KILLED", "WITNESS_MISMATCH", "NONREPRODUCIBLE", "HANG")]
         killed = [k for k in adm if rows[k]["class"] == "KILLED"]
         want = [e["id"] for e in CATALOG if ver in e["versions"] and (not only or e["id"] in only)]
         res["versions"][ver] = {"rows_decided": len(rows), "rows_in_catalog": len(want),
@@ -718,6 +727,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                                 "admitted": len(adm), "killed": len(killed),
                                 "not_killed": sorted(set(adm) - set(killed)),
                                 "unwitnessed": sorted(k for k, r in rows.items() if r["class"] == "UNWITNESSED"),
+                                "hang": sorted(k for k, r in rows.items() if r["class"] == "HANG"),
                                 "not_admitted": sorted(k for k, r in rows.items() if r["class"] == "NOT_ADMITTED"),
                                 "gate": len(adm) == len(killed) and len(rows) >= len(want)}
     res["gate"] = bool(res["versions"]) and all(v["gate"] for v in res["versions"].values())

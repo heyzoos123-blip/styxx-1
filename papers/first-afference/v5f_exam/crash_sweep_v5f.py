@@ -244,11 +244,16 @@ SCENARIOS = {
 # the background tracer (C4)
 # ---------------------------------------------------------------------------------------------------
 class Background:
+    """The background tracer's thread. An operation it does not acknowledge within WATCH leaves it `stuck` (the
+    operation's name): the thread hung inside the machinery, which the sweep reports as C3 and C4, and every
+    later operation is skipped (the thread cannot take one)."""
     def __init__(self):
         self.exp = EXP("CS_BG")
         self.q = []
         self.cmd = threading.Event()
         self.ack = threading.Event()
+        self.release = threading.Event()
+        self.stuck = None
         self.calls = 0
         self.th = threading.Thread(target=self._loop, daemon=True, name="cs-background")
         self.th.start()
@@ -278,21 +283,29 @@ class Background:
                 return
 
     def _do(self, op):
+        if self.stuck:
+            return
         self.ack.clear()
         self.q.append(op)
         self.cmd.set()
-        self.ack.wait(WATCH)
+        if not self.ack.wait(WATCH):
+            self.stuck = op
 
     def open(self):
         self._do("open")
 
     def close(self):
+        if self.stuck:
+            return
         self.ack.clear()
         self.release.set()
-        self.ack.wait(WATCH)                         # parked at the barrier outside its sections
+        if not self.ack.wait(WATCH):                 # parked at the barrier outside its sections
+            self.stuck = "close"
 
     def finish(self):
         self._do("exit")
+        if self.stuck:
+            return None
         self.th.join(WATCH)
         rec = self.cov.record()
         return rec
@@ -378,6 +391,7 @@ def i6(rec, base):
 def check_point(name, faulted, point, base, S0, bg):
     exc = Injected(f"{name}/{faulted}/{point}")
     a = Arm(FAULT_KEYS[name], "raise", point, exc)
+    bg_was = bg.stuck if bg is not None else None
     if bg is not None:
         bg.open()
     try:
@@ -459,6 +473,8 @@ def check_point(name, faulted, point, base, S0, bg):
                     bad.append(f"C8 (step 5): record() refused {R.code_of(ex)}")
     if bg is not None:
         bg.close()
+        if bg.stuck and not bg_was:
+            bad.append(f"C3: the background tracer hung ({bg.stuck})")
     # step 6: C5
     box.clear(); del recs, raised, exc, unraisable, hooked
     gc.collect()
@@ -541,8 +557,12 @@ def sweep(name):
                     break
         out[faulted] = {"points": len(points), "run": sum(verdicts.values()), "verdicts": dict(verdicts),
                         "unclean": [[list(p), b] for p, b in unclean[:10]], "n_unclean": len(unclean)}
-    if bg is not None:
+    if bg is not None and bg.stuck is None:
         rec = bg.finish()
+    if bg is not None and bg.stuck is not None:
+        out["C4"] = {"ok": False, "stuck": bg.stuck, "calls": bg.calls}
+        out["background"] = {"unclean": [[None, [f"C3: the background tracer hung ({bg.stuck})"]]], "n_unclean": 1}
+    elif bg is not None:
         u = R.union_of(rec, "BG")
         c4 = (u == {"fx_gfi:f": bg.calls} and not rec["problems"]
               and not any(n for ops in rec["sections"].values() for o in ops for n in o["notes"]))

@@ -19,7 +19,13 @@ G_REF's census:
     ones the text names: "[V5" split from ":", a code prefix from str.format, %-formatting or joining, and
     a literal "V5:" without its bracket.
   G_REF's kill test (100% of O13 mutants KILLED by the frozen exam) is `--o13-mutants DIR`, which writes one
-  patched copy per site for the runner's mutation mode.
+  patched copy per site for the runner's mutation mode, and `--o13-kill DIR --journal J.jsonl [--deps DIR]`, which
+  writes them and runs each in the frozen runner's mutation mode (resumable through the journal):
+    1. the cases whose row or body names the deleted literal's code, in one `--mutation ALL --only ...` run;
+       if none names it, or none fails, every case (`--mutation ALL`);
+    2. a second run of the failing cases (or of every case, if the first was a crash or a timeout);
+    KILLED iff both runs detect it (a failing case, a runner crash, or the driver's timeout, each recorded as
+    such), NONREPRODUCIBLE if only the first does, SURVIVED if none does.
 """
 import ast, dis, hashlib, importlib.util, json, os, re, sys, types
 
@@ -180,6 +186,103 @@ def o13_mutants(R, outdir):
             fh.write("\n".join(new))
         made.append({"name": name, "stmt_line": s["stmt_line"], "code": s["code"], "func": s["func"]})
     return made
+
+
+def _case_text(runner):
+    """{case id: its row and the source of its body and of the --sub body of the same id} from the runner's
+    text (the v5e-ported cases are not in it: a code they alone witness falls back to every case)."""
+    src = open(runner, encoding="utf-8").read()
+    tree = ast.parse(src)
+    cases, subs = {}, {}
+    for n in tree.body:
+        if not isinstance(n, ast.FunctionDef):
+            continue
+        for d in n.decorator_list:
+            if isinstance(d, ast.Call) and isinstance(d.func, ast.Name) and d.args and isinstance(d.args[0], ast.Constant):
+                key = d.args[0].value
+                text = ast.get_source_segment(src, n) + " " + " ".join(
+                    a.value for a in d.args if isinstance(a, ast.Constant) and isinstance(a.value, str))
+                if d.func.id == "case":
+                    cases[key] = cases.get(key, "") + " " + text
+                elif d.func.id == "sub":
+                    subs[key.split(":")[0]] = subs.get(key.split(":")[0], "") + " " + text
+    return {c: t + " " + subs.get(c, "") for c, t in cases.items()}
+
+
+def _mutation_run(py, runner, impl, cases, deps, timeout):
+    import subprocess
+    import v5f_tmp
+    env = dict(os.environ)
+    if deps:
+        env["V5F_DEPS_PATH"] = deps
+    cmd = [py, runner, "--impl", impl, "--mutation", "ALL"] + (["--only", ",".join(cases)] if cases else [])
+    v5f_tmp.disk_guard(what=impl)
+    try:
+        r = v5f_tmp.child_run(cmd, env=env, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        v5f_tmp.disk_guard(what=impl)
+        return {"status": "TIMEOUT", "failed": [], "cases": len(cases) if cases else "ALL"}
+    v5f_tmp.check_child(r.stderr, impl)
+    ln = [x for x in r.stdout.splitlines() if x.startswith("MUTATION_RESULT ")]
+    if not ln:
+        return {"status": "CRASH", "failed": [], "cases": len(cases) if cases else "ALL",
+                "why": (r.stderr.strip().splitlines() or ["?"])[-1][:200]}
+    d = json.loads(ln[-1].split(" ", 1)[1])
+    failed = sorted(c for c, x in d["results"].items() if not (x["ok"] and not x["leftover"]))
+    return {"status": "FAIL" if failed else "PASS", "failed": failed, "cases": len(d["results"]),
+            "detail": {c: d["results"][c]["detail"][:160] for c in failed[:3]}}
+
+
+def o13_kill(impl, outdir, journal, deps=None):
+    import v5f_tmp
+    py = sys.executable
+    runner = os.path.join(HERE, "run_protocol_v5f_exam.py")
+    made = o13_mutants(Region(impl), outdir)
+    text = _case_text(runner)
+    done = set()
+    if os.path.exists(journal):
+        for ln in open(journal):
+            try:
+                d = json.loads(ln)
+            except ValueError:
+                continue
+            if d.get("python") == sys.version.split()[0]:
+                done.add(d["name"])
+    for m in made:
+        if m["name"] in done:
+            continue
+        path = os.path.join(outdir, m["name"], "ref_v5f.py")
+        target = sorted(c for c, t in text.items() if m["code"] and m["code"] in t)
+        runs = []
+        r1 = _mutation_run(py, runner, path, target, deps, 1800) if target else None
+        if r1 is None or r1["status"] == "PASS":
+            if r1 is not None:
+                runs.append(r1)
+            r1 = _mutation_run(py, runner, path, None, deps, 3600)
+        runs.append(r1)
+        det1 = r1["status"] != "PASS"
+        if det1:
+            again = r1["failed"][:40] if r1["status"] == "FAIL" else None
+            r2 = _mutation_run(py, runner, path, again, deps, 3600 if again is None else 1800)
+            runs.append(r2)
+            cls = "KILLED" if r2["status"] != "PASS" else "NONREPRODUCIBLE"
+        else:
+            cls = "SURVIVED"
+        row = {"name": m["name"], "stmt_line": m["stmt_line"], "code": m["code"], "func": m["func"],
+               "python": sys.version.split()[0], "targeted": len(target), "class": cls, "runs": runs}
+        with open(journal, "a") as fh:
+            fh.write(json.dumps(row) + "\n")
+        print(m["name"], m["code"], cls, [(x["status"], x["cases"], x["failed"][:3]) for x in runs], flush=True)
+    rows = [json.loads(ln) for ln in open(journal) if ln.strip()]
+    rows = [r for r in rows if r["python"] == sys.version.split()[0]]
+    names = {m["name"] for m in made}
+    rows = [r for r in rows if r["name"] in names]
+    out = {"python": sys.version.split()[0], "impl": impl, "mutants": len(made), "decided": len(rows),
+           "killed": sum(r["class"] == "KILLED" for r in rows),
+           "not_killed": sorted(r["name"] for r in rows if r["class"] != "KILLED"),
+           "by_status": {r["name"]: r["runs"][-1]["status"] for r in rows if r["runs"][-1]["status"] != "FAIL"}}
+    out["G_REF_kill"] = "PASS" if out["decided"] == out["mutants"] and out["killed"] == out["mutants"] else "FAIL"
+    return out
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -626,6 +729,18 @@ def main(argv):
     def opt(n, d=None):
         return argv[argv.index(n) + 1] if n in argv else d
     impl = os.path.abspath(opt("--impl", os.path.join(HERE, "ref_v5f.py")))
+    if opt("--o13-kill"):
+        if HERE not in sys.path:
+            sys.path.append(HERE)
+        import v5f_tmp
+        try:
+            res = o13_kill(impl, opt("--o13-kill"), opt("--journal"), opt("--deps", os.environ.get("V5F_DEPS_PATH")))
+        except v5f_tmp.DiskLow as e:
+            return v5f_tmp.stop_disk_low(e, opt("--journal"))
+        if opt("--out"):
+            json.dump(res, open(opt("--out"), "w"), indent=1)
+        print(json.dumps(res, indent=1)[:2000])
+        return 0 if res["G_REF_kill"] == "PASS" else 1
     R = Region(impl)
     c = census(R)
     v = hyg(R)

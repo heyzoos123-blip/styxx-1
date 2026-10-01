@@ -1009,3 +1009,14 @@ or replace the readings; for (d), state the two rows' v5f outcomes.
 **R13-13. SM1 on the revision-13 reference.** See `sm1_result.json` (journal `results_v5f/sm1_journal.jsonl`, each
 entry keyed by the sha256 of `ref_v5f.py`, the runner, the patch and the witness's source). Summary on completion
 below.
+
+**R13-14. Runs under machine load (an exam-author note, not a text gap).** Other studies shared the machine from
+about 21:30 UTC on 2026-10-01 (load average 10-15 on 4 cores). G_FI's 60 s bound on the fault-free baseline and
+discovery runs ("C3: baseline hang") can then fire from load, not from the implementation, and would read as a kill.
+So: every G_FI journal entry made from then on carries the load averages before each sweep and the sweep's
+per-scenario detail; a sweep whose baseline passed the bound is classed VOID_LOAD (admitted, not killed) and decided
+again under low load (`--redo`, `--max-load 4`); the G_FI rows decided before the recording was added whose fails
+include a C3 (M1, M2, M7, and the at-fork rows if so) are decided again the same way, and the earlier verdicts stay
+in the journal as history. Every other timing-sensitive run (the full runner, G_SIG, G_ATOM, control #3, G_COVER)
+is held until the 1-min and 5-min load averages are below 4 and carries a `load_average` record in its receipt
+(`tools/with_load.py`). The text's bounds are unchanged.

@@ -330,7 +330,7 @@ Every run below was made after the deps path held coverage 7.16.1. "load" is the
 | witness shapes for the UNWITNESSED rows (`tools/r13_shapes/run_all.py`) | as R13-2 states | identical | — | — | 3.3 |
 | `run_protocol_v5f_exam.py` against `ref_v5f.py` (step 7 receipts) | held | held | held | held | |
 | `crash_sweep_v5f.py` (G_FI), `sigflood_v5f.py` (G_SIG), `fuzz_v5f.py` (N = 300), `atom_v5f.py` rerun | held | held | — | — | |
-| `refcensus_v5f.py --controls` (G_REF, G_HYG, control #5), `cover_driver_v5f.py` | running | running | — | — | 15-20 (not timing-sensitive) |
+| `refcensus_v5f.py --controls` (G_REF PASS, G_HYG PASS; control #5: 8 of 8 deleted by O13, 4 of 4 planted shapes flagged), `cover_driver_v5f.py` (every named line reached) | PASS, PASS | PASS, PASS | — | — | 16-17 (not timing-sensitive) |
 | `gcover_v5f.py` (G_COVER, four passes) | held | held | — | — | |
 | corpus rebuild (`diffprobe_v5f.py --build-corpus`) and its N = 5 mask | held | held | — | — | |
 | control #3 (`controls_v5f.py --control3`) and the controls summary | held | held | — | — | |

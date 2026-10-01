@@ -1,0 +1,345 @@
+[
+ {
+  "line": 358,
+  "why": "re-run for the HANG class (both runs TIMEOUT)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "TIMEOUT",
+    "TIMEOUT"
+   ],
+   "kind": "row",
+   "ver": "3.12.3",
+   "id": "A_txn_shared_succ",
+   "witness": "V52"
+  }
+ },
+ {
+  "line": 413,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_freeze0_at_join",
+   "witness": "X57d"
+  }
+ },
+ {
+  "line": 414,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_cm_bool",
+   "witness": "X117g"
+  }
+ },
+ {
+  "line": 415,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_freeze_ne",
+   "witness": "R24"
+  }
+ },
+ {
+  "line": 419,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_prune_marks_exited",
+   "witness": "V72b"
+  }
+ },
+ {
+  "line": 420,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_freeze_premise_deleted",
+   "witness": "R25"
+  }
+ },
+ {
+  "line": 421,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_unwind_off_pyu_only",
+   "witness": "X137j"
+  }
+ },
+ {
+  "line": 424,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_clone_by_referrers",
+   "witness": "R23"
+  }
+ },
+ {
+  "line": 425,
+  "why": "a 3.13.12 verdict recorded within 13 lines of the first full-disk failure (line 426)",
+  "entry": {
+   "class": "KILLED",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    "FAIL",
+    "FAIL"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_rebind_nocount",
+   "witness": "X137h"
+  }
+ },
+ {
+  "line": 426,
+  "why": "a full-disk failure",
+  "entry": {
+   "kind": "ref",
+   "ver": "3.13.12",
+   "witness": "H2",
+   "ref": [
+    "PASS",
+    "CRASH: subprocess.CalledProcessError: Command '['git', '-c', 'user.name=smoke', '-c', 'user.email=smoke@invalid', '-c', 'commit.gpgsign=false', 'add', '.']' returned n"
+   ]
+  }
+ },
+ {
+  "line": 427,
+  "why": "a full-disk failure",
+  "entry": {
+   "class": "NOT_ADMITTED",
+   "ref": [
+    "PASS",
+    "CRASH: subprocess.CalledProcessError: Command '['git', '-c', 'user.name=smoke', '-c', 'user.email=smoke@invalid', '-c', 'commit.gpgsign=false', 'add', '.']' returned n"
+   ],
+   "runs": [
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']",
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_h2_cb_except",
+   "witness": "H2"
+  }
+ },
+ {
+  "line": 428,
+  "why": "a full-disk failure",
+  "entry": {
+   "kind": "ref",
+   "ver": "3.13.12",
+   "witness": "H1",
+   "ref": [
+    "PASS",
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']"
+   ]
+  }
+ },
+ {
+  "line": 429,
+  "why": "a full-disk failure",
+  "entry": {
+   "class": "NOT_ADMITTED",
+   "ref": [
+    "PASS",
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']"
+   ],
+   "runs": [
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']",
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_h1_mutex_lock",
+   "witness": "H1"
+  }
+ },
+ {
+  "line": 430,
+  "why": "a full-disk failure",
+  "entry": {
+   "kind": "ref",
+   "ver": "3.13.12",
+   "witness": "H8",
+   "ref": [
+    "PASS",
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']"
+   ]
+  }
+ },
+ {
+  "line": 431,
+  "why": "a full-disk failure",
+  "entry": {
+   "class": "NOT_ADMITTED",
+   "ref": [
+    "PASS",
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']"
+   ],
+   "runs": [
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']",
+    "CRASH: FileNotFoundError: [Errno 2] No usable temporary directory found in ['/tmp', '/var/tmp', '/usr/tmp', '/home/user/styxx-1/papers/first-afference/v5f_exam']"
+   ],
+   "kind": "row",
+   "ver": "3.13.12",
+   "id": "mut_h8_publish_at_entry",
+   "witness": "H8"
+  }
+ },
+ {
+  "line": 432,
+  "why": "a crash-sweep row or ref run while the disk filled (CRASH runs)",
+  "entry": {
+   "class": "WITNESS_MISMATCH",
+   "ref": [
+    "PASS",
+    "PASS"
+   ],
+   "runs": [
+    [
+     "CRASH",
+     []
+    ],
+    [
+     "CRASH",
+     []
+    ]
+   ],
+   "kind": "row",
+   "ver": "3.12.3",
+   "id": "M1_plain_rlock",
+   "witness": "G_FI:C3"
+  }
+ },
+ {
+  "line": 433,
+  "why": "a crash-sweep row or ref run while the disk filled (CRASH runs)",
+  "entry": {
+   "kind": "ref",
+   "ver": "3.12.3",
+   "witness": "G_FI:C7",
+   "ref": [
+    "CRASH",
+    "CRASH"
+   ]
+  }
+ },
+ {
+  "line": 434,
+  "why": "a crash-sweep row or ref run while the disk filled (CRASH runs)",
+  "entry": {
+   "class": "NOT_ADMITTED",
+   "ref": [
+    "CRASH",
+    "CRASH"
+   ],
+   "runs": [
+    [
+     "CRASH",
+     []
+    ],
+    [
+     "CRASH",
+     []
+    ]
+   ],
+   "kind": "row",
+   "ver": "3.12.3",
+   "id": "M2_no_reconciliation",
+   "witness": "G_FI:C7"
+  }
+ },
+ {
+  "line": null,
+  "why": "the 3.12.3 G_FI reference pair was made by crash_sweep_v5f.py before c8dc6b09 (the background-hang fix); re-made with the fixed sweep so reference and rows run the same code",
+  "entry": {
+   "kind": "ref",
+   "ver": "3.12.3",
+   "witness": "G_FI:C3",
+   "ref": [
+    "PASS",
+    "PASS"
+   ]
+  }
+ }
+]

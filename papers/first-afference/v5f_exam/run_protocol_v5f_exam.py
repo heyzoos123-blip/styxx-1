@@ -2911,6 +2911,10 @@ def _x138(frozen_clock):
     sleeps = [0]
     def waiter():
         blocking.wait(30)
+        # built before the clock and sleep are replaced: Experiment() runs `git log` with a timeout, and
+        # subprocess's wait polls with time.sleep when the child has closed its pipes but not yet exited
+        # (seen once in 6 runs on 3.13.12 under load); the wrapper counts the waiter's wait only (X138b)
+        cov2 = P.coverage_trace(EXP("F"))
         saved = (time.monotonic, time.sleep)
         if frozen_clock:
             real_sleep = time.sleep
@@ -2920,7 +2924,6 @@ def _x138(frozen_clock):
             time.monotonic = lambda: 0.0
             time.sleep = counting_sleep
         try:
-            cov2 = P.coverage_trace(EXP("F"))
             waiter_started.set()
             t0 = pc()
             try:

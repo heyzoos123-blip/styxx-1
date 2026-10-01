@@ -119,6 +119,24 @@ else:
 IMPL_MOD = P.__name__
 GateSpecError = P.GateSpecError
 
+def reload_impl():
+    """importlib.reload of the implementation under test (revision 13). With --impl PATH the module is loaded
+    by file under its file name, and a plain reload looks the name up on sys.path, where v5f_exam/ref_v5f.py
+    comes first: under an SM1 patch it would re-execute the unpatched reference. So the file's directory is
+    put first on sys.path for the reload, and afterwards the module's __spec__.origin must be that file."""
+    d = None if ARGS.impl_module else os.path.dirname(IMPL_PATH)
+    if d is not None:
+        sys.path.insert(0, d)
+    try:
+        m = importlib.reload(P)
+    finally:
+        if d is not None:
+            sys.path.remove(d)
+    origin = getattr(getattr(m, "__spec__", None), "origin", None)
+    if not origin or os.path.realpath(origin) != os.path.realpath(IMPL_PATH):
+        raise AssertionError(f"the reload re-executed {origin}, not the file under test {IMPL_PATH}")
+    return m
+
 def _impl_args():
     a = (["--impl-module", ARGS.impl_module] if ARGS.impl_module else ["--impl", IMPL_PATH])
     if ARGS.greenlet_path:
@@ -579,6 +597,46 @@ FIXTURES = {
                 return fresh
             raise AttributeError(name)
     ''',
+    # revision 13 (GAP-54, GAP-61, GAP-64): the SM1 witnesses' fixtures, written from their rows
+    "fx_x26g.py": '''
+        # X26g: wrapped_g compiled from source with another file name, into a namespace with this module's
+        # __name__ and no __file__; its __wrapped__ is g, a function of this module; this module binds it
+        def g(x=0): return x + 2
+        _ns = {"__name__": __name__}
+        exec(compile("def wrapped_g(x=0):\\n    return x + 2\\n", "/nonexistent/fx_other.py", "exec"), _ns)
+        wrapped_g = _ns["wrapped_g"]
+        wrapped_g.__wrapped__ = g
+        del _ns
+    ''',
+    "fx_x24g.py": '''
+        # X24g: a cache wrapper whose __wrapped__ stamp is a module function other than its callee, and
+        # whose callee, a lambda, no module name binds
+        import functools
+        def _stamp(x): return x * 2
+        power2 = functools.wraps(_stamp)(functools.lru_cache(None)(lambda x: x * 2))
+    ''',
+    "fx_v07b.py": '''
+        # V07b: one cache wrapper bound under two module names; its callee, a lambda, no module name binds
+        import functools
+        cached = functools.lru_cache(None)(lambda x: x * 3)
+        cached_alias = cached
+    ''',
+    "fx_v74.py": '''
+        # V74: f's and g's code objects are equal and distinct
+        from types import FunctionType
+        def f(x=0): return x + 1
+        g = FunctionType(f.__code__.replace(), globals(), 'g', (0,))
+    ''',
+    "fx_x71d.py": '''
+        # X71d: blk(inside, go) sets inside and waits on go
+        def blk(inside, go):
+            inside.set()
+            go.wait(30)
+            return 71
+    ''',
+    "fx_x137k.py": '''
+        def h(x=0): return x + 137
+    ''',
 }
 for fname, body in FIXTURES.items():
     os.makedirs(os.path.dirname(os.path.join(FIX, fname)), exist_ok=True)
@@ -593,6 +651,7 @@ import fx_r05b, fx_r13a, fx_r13b, fx_r18, fx_r20                   # noqa: E402
 import fx_probe, fx_gfi                                             # noqa: E402
 import fx_b1, fx_x26c, fx_x26d, fx_x30d, fx_x30dlib, fx_x35b, fx_x35c, fx_cutw   # noqa: E402
 import fx_r11   # noqa: E402
+import fx_x26g, fx_x24g, fx_v07b, fx_v74, fx_x71d, fx_x137k   # noqa: E402  revision 13
 
 # The kept v5e cases (revision 11, GAP-37): the frozen v5e runner's registrations, fixtures and helpers,
 # generated into v5e_port.py by tools/gen_v5e_port.py and bound to the implementation under test.
@@ -605,7 +664,8 @@ v5e_port._load_fixtures(Path(WORK) / "v5e_fixtures")
 ORIG = {}
 # every fixture module imported at start (harness rules: every fixture function's __code__ restored; C5)
 for mod in (fx_v5f, fx_stub, fx_swap, fx_pep, fx_x59e, fx_x14d, fx_x24f, fx_r05b, fx_r13a, fx_r13b, fx_r18, fx_r20,
-            fx_probe, fx_gfi, fx_b1, fx_x26c, fx_x26d, fx_x30d, fx_x30dlib, fx_x35b, fx_x35c, fx_cutw, fx_r11):
+            fx_probe, fx_gfi, fx_b1, fx_x26c, fx_x26d, fx_x30d, fx_x30dlib, fx_x35b, fx_x35c, fx_cutw, fx_r11,
+            fx_x26g, fx_x24g, fx_v07b, fx_v74, fx_x71d, fx_x137k):
     for k, v in vars(mod).items():
         if type(v) is types.FunctionType:
             ORIG[(mod.__name__, k)] = (v, v.__code__)
@@ -718,6 +778,14 @@ PREREGS = {
     "R13": gates({"G": ["fx_r13a:cached"]}),
     "BLK": gates({"G": ["fx_r11:blk"]}),
     "W_F": gates({"W": ["fx_v5f:f"]}),
+    # revision 13
+    "X26G": gates({"G": ["fx_x26g:wrapped_g"]}),
+    "X24G": gates({"G": ["fx_x24g:power2"]}),
+    "V07B": gates({"G": ["fx_v07b:cached"]}),
+    "V74": gates({"G": ["fx_v74:f", "fx_v74:g"]}),
+    "X71D": gates({"G": ["fx_x71d:blk"]}),
+    "G_G": gates({"G": ["fx_v5f:g"]}),
+    "X137K_H": gates({"G": ["fx_x137k:h"]}),
 }
 for key, spec in PREREGS.items():
     with open(os.path.join(REPO, f"PREREG_{key}.md"), "w") as fh:
@@ -3104,13 +3172,17 @@ def _binding_sub(patch, then_reload=False):
         class VI(tuple):
             pass
         sys.version_info = VI((sys.version_info[0], sys.version_info[1], 99, "final", 0))
+    elif patch == "version_next":                    # X37c (revision 13): the next micro
+        class VI(tuple):
+            pass
+        sys.version_info = VI((sys.version_info[0], sys.version_info[1], sys.version_info[2] + 1, "final", 0))
     elif patch == "reload_chain":
         P.coverage_trace(EXP("F"))
         import itertools
         class Chain(itertools.chain):
             pass
         itertools.chain = Chain
-        importlib.reload(P)
+        reload_impl()
     codes = []
     for _ in range(2):
         try:
@@ -4430,7 +4502,7 @@ def _sub_x158e():
     P_ = P.coverage_trace(exps["A_F"]); P_.__enter__()
     Q_ = P.coverage_trace(exps["B_F"]); Q_.__enter__()
     P_.run("A", fx_v5f.f); Q_.run("B", fx_v5f.f)
-    importlib.reload(P)
+    reload_impl()
     R_ = P.coverage_trace(P.Experiment(os.path.join(REPO, "PREREG_C_F.md"))); R_.__enter__()
     R_.run("C", fx_v5f.f)
     P_.__exit__(None, None, None)
@@ -6419,6 +6491,422 @@ V5E_COVERAGE = {"rows": len(V5E_ROWS), "retired_not_run": sorted(r["id"] for r i
 
 
 # =================================================================================================
+# Revision 13 (GAP-54, GAP-61, GAP-64): the SM1 witnesses, each written from its row
+# =================================================================================================
+@case("X26g", "identity", "revision 13 (GAP-61); main thread before the self-trace: the declared target wrapped_g is compiled from source with the filename /nonexistent/fx_other.py into a namespace with the fixture module's __name__ and no __file__; its __wrapped__ is a function of the fixture module, which binds it -> FOREIGN_DEFINITION at enter")
+def x26g():
+    enter_refuses("X26G", "FOREIGN_DEFINITION")
+
+@case("X24g", "identity", "revision 13 (GAP-61); main thread before the self-trace: power2 = wraps(_stamp)(lru_cache(None)(lambda x: x * 2)), the stamp a module function other than its callee, the callee a lambda no module name binds -> NOT_A_FUNCTION at enter")
+def x24g():
+    enter_refuses("X24G", "NOT_A_FUNCTION")
+
+@case("X71d", "attribution", "revision 13 (GAP-61); main thread before the self-trace: P and Q both declare blk(inside, go); a worker runs P.run('G', blk, inside, go); once inside is set P.__exit__() (its credit stop falls while blk's entry is pending), then go is set, the worker joined, Q exits -> P's G opening has no call; P refuses NOT_EXERCISED")
+def x71d():
+    expP, expQ = EXP("X71D"), EXP("X71D")
+    P_, Q_ = P.coverage_trace(expP), P.coverage_trace(expQ)
+    P_.__enter__()
+    Q_.__enter__()
+    inside, go = threading.Event(), threading.Event()
+    box = {}
+    def work():
+        try:
+            box["r"] = P_.run("G", fx_x71d.blk, inside, go)
+        except GateSpecError as e:
+            box["r"] = code_of(e)
+    w = threading.Thread(target=work)
+    w.start()
+    try:
+        expect(inside.wait(30), "blk never started")
+        P_.__exit__(None, None, None)
+    finally:
+        go.set()
+        w.join(WATCHDOG_S)
+        Q_.__exit__(None, None, None)
+    rp = P_.record()
+    calls = [o["calls"] for o in rp["sections"].get("G", [])]
+    expect(calls and all(not c for c in calls), f"P's G openings' calls {calls}")
+    expect_refuse(score(expP, rp), "NOT_EXERCISED")
+
+def _x32e_trial(k, arm):
+    exp = EXP("F")
+    cov = P.coverage_trace(exp)
+    out = []
+    def attempt():
+        try:
+            cov.__enter__()
+            out.append("returned")
+        except GateSpecError as e:
+            out.append(code_of(e))
+    go = threading.Event()
+    def t1():
+        go.wait(30)
+        attempt()
+    T1 = threading.Thread(target=t1)
+    T1.start()
+    arm(T1.ident, attempt)                            # the interference: the same enter, to completion, on T2
+    go.set()
+    T1.join(WATCHDOG_S)
+    if len(out) == 1:                                 # the trial's k is past T1's instructions: no interference
+        cov.__exit__(None, None, None)
+        return True, "no interference"
+    cov.__exit__(None, None, None)
+    ok = sorted(out) == ["REENTRY", "returned"]
+    return ok, f"{out}"
+
+@case("X32e", "lifecycle", "revision 13 (GAP-61); main thread before the self-trace: an instruction sweep over _enter on T1 (cov.__enter__() on a fresh tracer); the interference runs cov.__enter__() on the same tracer, to completion, on T2 -> every trial: exactly one of the two enters returns and the other raises REENTRY")
+def x32e():
+    n, fails = instruction_sweep("_enter", _x32e_trial)
+    expect(n > 0 and not fails, f"{n} trials; failing {fails[:3]}")
+
+@case("X148b", "races", "revision 13 (GAP-61; a hold form of X148); main thread before the self-trace: T1 runs cov.run('G', f), held by the id-3 tool's CALL event in _detach at its call of get_events; the case thread runs cov.__exit__(); the id-3 tool's PY_START of _exit_txn on the case thread releases T1 and waits until T1's run() has returned -> PASS {f:1}, no note")
+def x148b():
+    exp = EXP("F")
+    cov = P.coverage_trace(exp)
+    cov.__enter__()
+    fp = P._v5_faultpoints()
+    dcode, xcode = fp["_detach"], fp["_exit_txn"]
+    ge = P._MON[0][1]                                 # the bound get_events _detach calls
+    held, release, t1_done = threading.Event(), threading.Event(), threading.Event()
+    main = threading.get_ident()
+    box = {}
+    go = threading.Event()
+    def t1():
+        go.wait(30)
+        try:
+            box["r"] = cov.run("G", fx_v5f.f)
+        finally:
+            t1_done.set()
+    T1 = threading.Thread(target=t1)
+    T1.start()
+    released = []
+    def on_call(code, off, callable_, arg0):
+        if code is dcode and threading.get_ident() == T1.ident and callable_ is ge and not held.is_set():
+            held.set()
+            release.wait(60)
+    def on_start(code, off):
+        if code is xcode and threading.get_ident() == main and held.is_set() and not released:
+            released.append(1)
+            release.set()
+            t1_done.wait(10)
+    tool = FaultTool()
+    try:
+        tool.on(dcode, MON.events.CALL, on_call)
+        tool.on(xcode, MON.events.PY_START, on_start)
+        go.set()
+        expect(held.wait(30), "T1 never reached _detach's get_events call")
+        cov.__exit__(None, None, None)
+    finally:
+        release.set()
+        T1.join(WATCHDOG_S)
+        tool.close()
+    expect(released and t1_done.is_set(), f"the hold was not released inside _exit_txn ({released})")
+    rec = cov.record()
+    expect_pass(score(exp, rec), {"G": {"fx_v5f:f": 1}})
+    expect(not notes_of(rec, "G"), f"notes {notes_of(rec, 'G')}")
+
+def _x153b_trial(k, arm):
+    expP, expQ = EXP("F"), EXP("G_G")
+    P_, Q_ = P.coverage_trace(expP), P.coverage_trace(expQ)
+    Q_.__enter__()
+    P_.__enter__()
+    hold, b_started = threading.Event(), threading.Event()
+    def bodyB():
+        fx_v5f.g()
+        b_started.set()
+        hold.wait(30)
+    T2 = threading.Thread(target=lambda: Q_.run("G", bodyB))
+    T2.start()
+    b_started.wait(30)
+    fired = []
+    def interference():                               # a foreign clear on styxx's id, as in X137d
+        MON.set_events(P._v5_state()["tool"], 0)
+        fired.append(1)
+    try:
+        arm(threading.get_ident(), interference)
+        P_.run("G", fx_v5f.f)
+    finally:
+        hold.set()
+        T2.join(WATCHDOG_S)
+        P_.__exit__(None, None, None)
+        Q_.__exit__(None, None, None)
+    if not fired:
+        return True, "no interference"
+    rq = Q_.record()
+    return lost(rq, "G"), f"Q notes {notes_of(rq, 'G')}"
+
+@case("X153b", "sweep", "revision 13 (GAP-61); main thread before the self-trace: Q (g) and P (f) entered; T2 runs Q.run('G', bodyB), which calls g and waits; the case thread runs P.run('G', f) under an instruction sweep over _unwind_on whose interference is a foreign clear, set_events(tool, 0) on styxx's id -> every trial: Q's record notes MONITOR_LOST")
+def x153b():
+    n, fails = instruction_sweep("_unwind_on", _x153b_trial)
+    expect(n > 0 and not fails, f"{n} trials; failing {fails[:3]}")
+
+@case("X132b", "fault", "revision 13 (GAP-54, D1's M3); main thread before the self-trace: an instruction sweep over _open on the case thread: trial k enters a fresh tracer on f, runs cov.run('G', f) with the id-5 injector raising KeyboardInterrupt at the k-th instruction of _open, catches it, exits the tracer, and reads _v5_state()['anchors'] at once -> every trial: anchors == 0")
+def x132b():
+    me = threading.get_ident()
+    bad, k = [], 1
+    while k <= 3000:
+        box = {"n": 0}
+        def on_instr(code, offset, _k=k, _box=box):
+            _box["n"] += 1
+            if _box["n"] == _k:
+                raise KeyboardInterrupt()
+        exp = EXP("F")
+        cov = P.coverage_trace(exp)
+        cov.__enter__()
+        inj = Injector(["_open"], me, on_instr)
+        try:
+            try:
+                cov.run("G", fx_v5f.f)
+            except KeyboardInterrupt:
+                pass
+        finally:
+            inj.close()
+        cov.__exit__(None, None, None)
+        anchors = P._v5_state()["anchors"]
+        if box["n"] < k:
+            SWEEP_COUNTS.setdefault("_open (X132b)", []).append(k - 1)
+            break
+        if anchors != 0:
+            bad.append((k, anchors))
+        k += 1
+    gc.collect()
+    with P.coverage_trace(EXP("A_Gdecl")):            # a later transaction reconciles any stray anchor
+        pass
+    expect(k > 1 and not bad, f"{k - 1} trials; anchors left in {bad[:5]}")
+
+@case("V07b", "valid", "revision 13 (GAP-61); main thread before the self-trace: one cache wrapper bound under two module names, cached and cached_alias, its callee a lambda no module name binds; the gate declares cached -> PASS {cached: 1}")
+def v07b():
+    exp = EXP("V07B")
+    with P.coverage_trace(exp) as cov:
+        def body():
+            fx_v07b.cached.cache_clear()
+            fx_v07b.cached(1)
+            fx_v07b.cached(1)
+        cov.run("G", body)
+    expect_pass(score(exp, cov.record()), {"G": {"fx_v07b:cached": 1}})
+
+@case("V74", "valid", "revision 13 (GAP-61); main thread before the self-trace: g = FunctionType(f.__code__.replace(), globals(), 'g', (0,)), so f's and g's code objects are equal and distinct; the gate declares both; the section calls f once and g twice -> PASS {f: 1, g: 2}")
+def v74():
+    exp = EXP("V74")
+    with P.coverage_trace(exp) as cov:
+        cov.run("G", lambda: (fx_v74.f(), fx_v74.g(), fx_v74.g()))
+    expect_pass(score(exp, cov.record()), {"G": {"fx_v74:f": 1, "fx_v74:g": 2}})
+
+@case("V36c", "valid", "revision 13 (GAP-61); main thread before the self-trace: inside the section f is called, then gc.freeze(), then a list holding f.__code__ (the minted code) is made and kept past the exit; after the case gc.unfreeze() and gc.collect() -> PASS {f: 1}")
+def v36c():
+    exp = EXP("F")
+    keep = []
+    try:
+        with P.coverage_trace(exp) as cov:
+            def body():
+                fx_v5f.f()
+                gc.freeze()
+                keep.append([fx_v5f.f.__code__])
+            cov.run("G", body)
+        rec = cov.record()
+    finally:
+        gc.unfreeze()
+        keep.clear()
+        gc.collect()
+    expect_pass(score(exp, rec), {"G": {"fx_v5f:f": 1}})
+
+@case("V52b", "lifecycle", "revision 13 (GAP-61; D1's M5 for GAP-54); main thread before the self-trace: a tracer on f runs cov.run('G', f); a clone FunctionType(f.__code__, {})(0) is called (CLONE_CALLED); then cov.__exit__() is called twice -> record()['problems'] holds exactly one CLONE_CALLED text; score refuses CLONE_CALLED")
+def v52b():
+    exp = EXP("F")
+    cov = P.coverage_trace(exp)
+    cov.__enter__()
+    try:
+        cov.run("G", fx_v5f.f)
+        types.FunctionType(fx_v5f.f.__code__, {})(0)
+    finally:
+        cov.__exit__(None, None, None)
+        cov.__exit__(None, None, None)
+    rec = cov.record()
+    cc = [p for p in rec["problems"] if p.startswith("[V5:CLONE_CALLED]")]
+    expect(len(cc) == 1, f"{len(cc)} CLONE_CALLED texts: {rec['problems']}")
+    expect_refuse(score(exp, rec), "CLONE_CALLED")
+
+# -- revision 13, fresh-subprocess witnesses -------------------------------------------------------
+def _x137k_sub():
+    other4 = FaultTool(4, "other")                    # another tool holds id 4
+    expP, expQ = EXP("F"), EXP("X137K_H")
+    P_ = P.coverage_trace(expP)
+    P_.__enter__()
+    P_.run("G", fx_v5f.f)
+    other4.close()                                    # the other tool frees id 4
+    ens = P._v5_faultpoints()["_ensure_tool"]
+    freed = []
+    def on_start(code, off):
+        if code is ens and not freed:
+            t = P._v5_state()["tool"]
+            freed.append(t)
+            MON.free_tool_id(t)
+    two = FaultTool(2, "exam-id2-tool")
+    Q_ = P.coverage_trace(expQ)
+    try:
+        two.on(ens, MON.events.PY_START, on_start)
+        Q_.__enter__()
+    finally:
+        two.close()
+    tool_after = P._v5_state()["tool"]
+    Q_.run("G", fx_x137k.h)
+    Q_.__exit__(None, None, None)
+    P_.__exit__(None, None, None)
+    rp, rq = P_.record(), Q_.record()
+    return {"freed": freed, "tool": tool_after, "P": any_score(expP, rp), "P_lost": lost(rp, "G"),
+            "Q": any_score(expQ, rq), "Q_notes": notes_of(rq, "G")}
+
+@sub("X137k")
+def _sub_x137k():
+    return _x137k_sub()
+
+@case("X137k", "monitoring", "revision 13 (GAP-61); fresh subprocess: another tool holds id 4, so P (f) takes id 3 and runs P.run('G', f); the other tool frees id 4; Q (h) is entered and the id-2 tool's PY_START on _ensure_tool frees styxx's id 3 once, inside Q's enter; Q runs h and exits, then P exits -> tool 3 after Q's enter; P PASS {f:1} with MONITOR_LOST; Q PASS {h:1}, no note")
+def x137k():
+    r = run_sub("X137k")
+    expect(r == {"freed": [3], "tool": 3, "P": ["PASS", {"G": {"fx_v5f:f": 1}}], "P_lost": True,
+                 "Q": ["PASS", {"G": {"fx_x137k:h": 1}}], "Q_notes": []}, f"{r}")
+
+@sub("X37c")
+def _sub_x37c():
+    return _binding_sub("version_next")
+
+@case("X37c", "binding", "revision 13 (GAP-61); fresh subprocess: after import and before the first coverage_trace(), sys.version_info replaced by a tuple subclass with the running major and minor and the next micro; coverage_trace() called twice -> UNSUPPORTED_VERSION both times")
+def x37c():
+    r = run_sub("X37c")
+    expect(r["codes"] == ["UNSUPPORTED_VERSION", "UNSUPPORTED_VERSION"], f"{r}")
+
+def _fork_child_state(extra):
+    """V47b's and V47c's subprocess: a tracer on f; inside its section f is called, then os.fork(). The child
+    reads _v5_state() at once (V47c: also runs cov.run('G', lambda: _v5_state()['anchors'])), writes it to a
+    pipe and ends with os._exit(0); the parent waits for it and exits the tracer."""
+    exp = EXP("F")
+    out = {}
+    with P.coverage_trace(exp) as cov:
+        def body():
+            fx_v5f.f()
+            r, w = os.pipe()
+            pid = os.fork()
+            if pid == 0:
+                try:
+                    os.close(r)
+                    st = P._v5_state()
+                    d = {"anchors": st["anchors"], "mints": [[m["target"], m["holders"]] for m in st["mints"]],
+                         "global_events": st["global_events"]}
+                    if extra:
+                        try:
+                            d["run_anchors"] = cov.run("G", lambda: P._v5_state()["anchors"])
+                        except BaseException as e:            # noqa: BLE001
+                            d["run_anchors"] = f"raised {type(e).__name__}"
+                    os.write(w, json.dumps(d).encode())
+                finally:
+                    os._exit(0)
+            os.close(w)
+            data = b""
+            while True:
+                chunk = os.read(r, 65536)
+                if not chunk:
+                    break
+                data += chunk
+            os.close(r)
+            os.waitpid(pid, 0)
+            out["child"] = json.loads(data.decode() or "{}")
+        cov.run("G", body)
+    out["parent"] = any_score(exp, cov.record())
+    return out
+
+@sub("V47b")
+def _sub_v47b():
+    return _fork_child_state(False)
+
+@sub("V47c")
+def _sub_v47c():
+    return _fork_child_state(True)
+
+@case("V47b", "valid", "revision 13 (GAP-61); fresh subprocess that starts no thread before it forks: a tracer on f runs cov.run('G', body); body calls f, then os.fork(); the child reads _v5_state() at once -> the child's anchors 0, mints [], global_events 0; the parent PASS {f:1}")
+def v47b():
+    r = run_sub("V47b")
+    expect(r == {"child": {"anchors": 0, "mints": [], "global_events": 0}, "parent": ["PASS", {"G": {"fx_v5f:f": 1}}]}, f"{r}")
+
+@case("V47c", "valid", "revision 13 (GAP-61); V47b's program, with the child also running cov.run('G', lambda: _v5_state()['anchors']) and reporting its value -> 0 (an inherited tracer's run() passes through and registers nothing)")
+def v47c():
+    r = run_sub("V47c")
+    expect(r.get("child", {}).get("run_anchors") == 0 and r.get("parent") == ["PASS", {"G": {"fx_v5f:f": 1}}], f"{r}")
+
+@sub("V71b")
+def _sub_v71b():
+    exp = EXP("F")
+    open_code = P._v5_faultpoints()["_open"]
+    me = threading.get_ident()
+    st = {"armed": False, "k": 0, "n": 0, "in": False}
+    def hook(ev_, args):
+        if (not st["armed"] or st["in"] or threading.get_ident() != me
+                or ev_ not in ("sys._getframe", "builtins.id", "object.__getattr__")):
+            return
+        st["in"] = True
+        try:
+            caller = sys._getframe(1).f_code
+        finally:
+            st["in"] = False
+        if caller is open_code:
+            st["n"] += 1
+            if st["n"] == st["k"]:
+                raise RuntimeError("V71b hook")
+    sys.addaudithook(hook)
+    trials = []
+    with P.coverage_trace(exp) as cov:
+        for k in range(1, 200):
+            st.update(k=k, n=0, armed=True)
+            try:
+                cov.run("G", fx_v5f.f)
+                fired = False
+            except RuntimeError:
+                fired = True
+            st["armed"] = False
+            trials.append(fired)
+            if not fired:
+                break
+    rec = cov.record()
+    ops = rec["sections"].get("G", [])
+    return {"events_in_open": len(trials) - 1, "openings": len(ops), "ends": [o["end"] for o in ops],
+            "open_at_exit": sum(1 for o in ops for n in o["notes"] if n.startswith("[V5:OPEN_AT_EXIT]")),
+            "score": any_score(exp, rec)}
+
+@case("V71b", "valid", "revision 13 (GAP-61); fresh subprocess: an audit hook counts the sys._getframe, builtins.id and object.__getattr__ events whose caller's code is _open and raises at the k-th; for k = 1, 2, ... it is armed around one cov.run('G', f) until a run in which it does not fire; then the tracer exits -> exactly one opening of G, PASS {f:1}, no OPEN_AT_EXIT")
+def v71b():
+    r = run_sub("V71b")
+    expect(r["openings"] == 1 and r["open_at_exit"] == 0 and r["score"] == ["PASS", {"G": {"fx_v5f:f": 1}}]
+           and r["events_in_open"] >= 1, f"{r}")
+
+@sub("V52s")
+def _sub_v52s():
+    for name in ("P", "Q"):
+        exp = EXP("F")
+        cov = P.coverage_trace(exp)
+        cov.__enter__()
+        print(json.dumps({"tracer": name, "after": "enter", "guard": P._v5_state()["guard"]}), flush=True)
+        cov.run("G", fx_v5f.f)
+        cov.__exit__(None, None, None)
+        print(json.dumps({"tracer": name, "after": "exit", "guard": P._v5_state()["guard"],
+                          "score": any_score(exp, cov.record())}), flush=True)
+    return {"done": True}
+
+@case("V52s", "lifecycle", "revision 13 (GAP-64); fresh subprocess bounded at 30 s: two traces in turn, P then Q, each on f: enter, read _v5_state()['guard'] and print it, run('G', f), exit, score, print -> both PASS {f:1}; guard 'free' after each enter and each exit; the child ends within the bound")
+def v52s():
+    t0 = time.monotonic()
+    try:
+        r = v5f_tmp.child_run([sys.executable, RUNNER] + _impl_args() + ["--sub", "V52s"],
+                              capture_output=True, text=True, timeout=30)
+        outtext, timed_out = r.stdout, False
+    except subprocess.TimeoutExpired as e:
+        outtext = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
+        timed_out = True
+    lines = [json.loads(ln) for ln in outtext.splitlines() if ln.startswith("{")]
+    expect(not timed_out, f"TIMEOUT: the child did not end within 30 s; it printed {lines}")
+    want = [{"tracer": n, "after": a, "guard": "free", **({"score": ["PASS", {"G": {"fx_v5f:f": 1}}]} if a == "exit" else {})}
+            for n in ("P", "Q") for a in ("enter", "exit")] + [{"done": True}]
+    expect(lines == want, f"{lines} ({time.monotonic() - t0:.1f} s)")
+
+# =================================================================================================
 # The exam's case metadata: each case's table in the design and its placement (harness rules)
 # =================================================================================================
 X37_ROW = "X37 (3.10/3.11 only): coverage_trace() refuses UNSUPPORTED_VERSION; scoring works"
@@ -6445,6 +6933,10 @@ for _cid in ("X72b", "X65b", "X30b", "X140", "X140f"):
     TABLE[_cid] = "new violation cases"
 for _cid in ("X35e", "X57d", "X117g"):                 # revision 11
     TABLE[_cid] = "new violation cases"
+for _cid in ("X26g", "X24g", "X71d", "X32e", "X148b", "X153b", "X137k", "X132b", "X37c"):   # revision 13
+    TABLE[_cid] = "new violation cases"
+for _cid in ("V07b", "V74", "V36c", "V52b", "V47b", "V47c", "V71b", "V52s"):                # revision 13
+    TABLE[_cid] = "new valid cases"
 for _cid in ("H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H10"):
     TABLE[_cid] = "hazard sweeps"
 for _cid in ("R05b", "R12", "R13", "R14", "R16", "R18a", "R18b", "R20", "R21", "R22", "X157", "X157b", "R23", "R24", "X137j", "R25"):
@@ -6468,10 +6960,12 @@ for _cid in V5E_COVERAGE["ported_cases"]:
 # Placements, from the harness rules' lists (only the cases this runner covers are listed).
 MAIN = {"X71c", "X35e", "X57d", "R24", "X140f", "X140", "H6", "H10", "H1", "H2", "H3", "H4", "H5", "H7", "H8", "V61", "V62", "V64", "V65", "V68", "V70", "X92b", "X131", "X132", "X143", "X143b", "X144", "X145", "X146", "X146b", "X146c", "X146d", "X146e",
         "X147", "X148", "X152", "X153", "X137d", "X35", "X35b", "X35c", "X65e", "X65f", "X65g", "X141", "X141b", "X141c", "X138", "X138b", "X139",
-        "X137c", "X143c", "X59e", "X59e-v", "V67", "V73", "R18a", "R18b", "R20"}
+        "X137c", "X143c", "X59e", "X59e-v", "V67", "V73", "R18a", "R18b", "R20",
+        "X32e", "X148b", "X153b", "X132b", "X26g", "X24g", "X71d", "V07b", "V74", "V36c", "V52b"}   # revision 13
 CHILD = {"X137-free"}                                  # the whole case in a fresh subprocess
 SPAWNS = {"X154", "R25", "X137j", "V47", "V69", "V71", "V72b", "X137b", "X137e", "X137g", "X137i", "X137h", "X154b", "X154c", "X154d", "X154e", "X155", "X157c",
-          "X158", "X158c", "X158b", "X158e", "X137f", "X158d", "X36", "X142", "X142b", "X156", "X156b", "X37b", "X156c", "X156d", "R21", "X157", "X157b", "M10-S0", "V69b", "V69b-v", "X156f", "X156g", "X156g-ctl", "X156h", "X156i", "V72"}  # the case body spawns it
+          "X158", "X158c", "X158b", "X158e", "X137f", "X158d", "X36", "X142", "X142b", "X156", "X156b", "X37b", "X156c", "X156d", "R21", "X157", "X157b", "M10-S0", "V69b", "V69b-v", "X156f", "X156g", "X156g-ctl", "X156h", "X156i", "V72",
+          "X137k", "V47b", "V47c", "V71b", "X37c", "V52s"}  # the case body spawns it (revision 13: the last six)
 SCORING = {"X117g", "V53", "X96c", "X103b", "X105d", "X109b", "X117d", "X95", "X93d", "X93e", "X96d", "X103c", "X112b", "X117b", "X117c", "X117e", "X117f", "X95b",
            "X122", "X109", "X37"}                      # read prebuilt traces; run on every interpreter
 SELF_TARGETS = [f"{IMPL_MOD}:{q}" for q in ("Experiment._check_coverage", "_resolve_target", "_open",
@@ -6546,8 +7040,8 @@ DELTA_ROWS = {
     "port: self-trace code list": "applied (V34's frozen names)", "port: H1 and H2 mutants": "NOT YET: hazard sweeps",
     "port: H5 (gc cost)": "NOT YET",
 }
-TABLE_ROWS = {"new violation cases": 140, "new valid cases": 46, "new documented residuals": 16,   # revision 11 counts
-              "exam-hole kill cases": 30, "v5e cases whose outcome changes": 20, "v5e cases kept (revision 11 spec data)": sum(1 for r in V5E_ROWS if r["status"] != "retired")}
+TABLE_ROWS = {"new violation cases": 150, "new valid cases": 54, "new documented residuals": 16,   # revision 13 counts
+              "exam-hole kill cases": 29, "v5e cases whose outcome changes": 20, "v5e cases kept (revision 11 spec data)": sum(1 for r in V5E_ROWS if r["status"] != "retired")}
 
 # =================================================================================================
 # Leftover snapshot (Exam harness rules, "Leftover checks after every case"; revision 10, R9-6)
@@ -6623,15 +7117,55 @@ def _call(fn):
     except Exception as e:                                    # noqa: BLE001
         return False, f"{type(e).__name__}: {e}"[:1500]
 
+# Revision 13 (GAP-64): in mutation mode an expired bound is the case's outcome (TIMEOUT), reported at once,
+# and the process ends there (os._exit), without the self-trace's exit, which a hung machine would also block.
+MAIN_BOUND_S = 450.0                                  # the per-case bound of a case run on the main thread
+_MUT_SO_FAR = {}
+
+def _mutation_abort(cid, why):
+    mr = {c: {"ok": r["ok"], "detail": str(r.get("detail", ""))[:300], "leftover": r.get("leftover")}
+          for c, r in list(_MUT_SO_FAR.items())}
+    mr[cid] = {"ok": False, "detail": f"TIMEOUT: {why}", "leftover": [], "timeout": True}
+    try:
+        sys.stdout.write("MUTATION_RESULT " + json.dumps({"case": ARGS.mutation, "results": mr, "not_run": {}},
+                                                         default=str) + "\n")
+        sys.stdout.flush()
+    finally:
+        v5f_tmp.cleanup()
+        os._exit(0)
+
+class _MainBound:
+    """The mutation-mode bound on a case that runs on the main thread (its body, or the parent of its fresh
+    subprocess): a named daemon timer, so no case's thread listing picks it up."""
+    def __init__(self, cid):
+        self.t = None
+        if ARGS.mutation:
+            self.t = threading.Timer(MAIN_BOUND_S, _mutation_abort,
+                                     (cid, f"the case did not return within {MAIN_BOUND_S:.0f} s (the runner's per-case bound)"))
+            self.t.name = "v5f-mutation-bound"
+            self.t.daemon = True
+            self.t.start()
+    def cancel(self):
+        if self.t is not None:
+            self.t.cancel()
+            self.t.join()
+
 def run_main(cid):
     b = snap()
-    ok, detail = _call(BY_ID[cid][2])
+    bound = _MainBound(cid)
+    try:
+        ok, detail = _call(BY_ID[cid][2])
+    finally:
+        bound.cancel()
     left = leftover_diff(b, snap())
     return ok and not left, detail, left
 
 def run_child(cid):
-    r = v5f_tmp.child_run([sys.executable, RUNNER] + _impl_args() + ["--child-case", cid],
-                       capture_output=True, text=True, timeout=300)
+    try:
+        r = v5f_tmp.child_run([sys.executable, RUNNER] + _impl_args() + ["--child-case", cid],
+                              capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        return False, "TIMEOUT: the case's fresh subprocess did not end within 300 s (the parent's bound)", []
     lines = [ln for ln in r.stdout.splitlines() if ln.startswith("{")]
     if r.returncode != 0 or not lines:
         return False, f"child rc {r.returncode}: {r.stderr[-1500:]}", []
@@ -6650,6 +7184,8 @@ def run_in_self(cid, selfcov, section):
     t.start()
     t.join(WATCHDOG_S)
     if t.is_alive():
+        if ARGS.mutation:
+            _mutation_abort(cid, f"watchdog: the case thread is still running after {WATCHDOG_S} s")
         return False, f"watchdog: the case thread is still running after {WATCHDOG_S} s", ["watchdog"]
     ok, detail = box.get("r", (False, "no result"))
     left = leftover_diff(b, snap())
@@ -6709,6 +7245,7 @@ def main():
         res[cid] = {"table": TABLE.get(cid, "?"), "placement": placement(cid), "row": BY_ID[cid][1],
                     "ok": bool(ok), "detail": detail, "leftover": [list(map(str, x)) for x in left],
                     "seconds": round(secs, 3)}
+        _MUT_SO_FAR[cid] = res[cid]
         if note:
             res[cid]["note"] = note
     selfinfo = None
@@ -6732,7 +7269,11 @@ def main():
             if cid in CHILD:
                 record(cid, *run_child(cid), time.monotonic() - t)
             else:
-                ok, detail = _call(BY_ID[cid][2])
+                bound = _MainBound(cid)
+                try:
+                    ok, detail = _call(BY_ID[cid][2])
+                finally:
+                    bound.cancel()
                 record(cid, ok, detail, [], time.monotonic() - t, note="the case body runs its own fresh subprocess")
         selfc = [c for c in ids if placement(c) == "self-trace"]
         if selfc:

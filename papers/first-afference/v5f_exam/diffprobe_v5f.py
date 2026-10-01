@@ -41,7 +41,8 @@ predicate the exam states for it); by an envelope fuzzer program iff its output 
 unmutated run (fuzz_v5f.within_i6). Crash-sweep entries are not probed (SPEC_GAPS.md GAP-57).
 
 Usage:
-  python diffprobe_v5f.py --build-corpus                       (writes corpus_v5f/ and its manifest, on 3.12.3)
+  python diffprobe_v5f.py --build-corpus [--repros-only]        (writes corpus_v5f/ and its manifest, on 3.12.3;
+                                                                --repros-only re-reads only corpus_v5f/repro/)
   python diffprobe_v5f.py --observe ENTRY --impl PATH          (one entry in this process; prints OBS {json})
   python diffprobe_v5f.py --mask --impl PATH [--n 5] [--jobs 3] [--journal J.jsonl] --out MASK.json
   python diffprobe_v5f.py --probe --impl MUTANT --base PATH --mask MASK.json [--jobs 3] --out RESULT.json
@@ -75,6 +76,16 @@ ENVELOPE_RE = re.compile(r"^H(10|[1-9])$")                     # the H sweeps
 # finalizer (gc) threshold
 FAULT_TOKENS = ("use_tool_id(3", "Injector(", "instruction_sweep(", "_signal", "import signal",
                 "SetAsyncExc", "set_threshold")
+
+# the rule for the rewritten repros (corpus_v5f/repro/, revision 13), by the program's source and the source of
+# the repro helper modules it imports (r*_fx.py): a fault tool (the id-5 injector through api.inject), a signal,
+# SetAsyncExc, a finalizer or a gc threshold, a thread race (any thread, thread or process pool, timer, executor,
+# or cross-thread loop call), a switch interval or a wall-clock wait. The text's clause names "a thread race"; this
+# rule reads any started thread as one (a race-free threaded program is still classed envelope: fail-closed).
+REPRO_ENVELOPE_TOKENS = ("api.inject(", "signal.", "threading.", "_thread.", "ThreadPool", "ProcessPool", "multiprocessing",
+                         "mp.get_context", "to_thread", "run_in_executor", "_threadsafe(", "Timer(", "set_threshold",
+                         "__del__", "setswitchinterval", "SetAsyncExc", "time.sleep", "time.monotonic", "time.time",
+                         "perf_counter")
 
 # ---------------------------------------------------------------------------------------------------
 # the normalizer
@@ -360,6 +371,10 @@ class ReproAPI:
         except BaseException as e:                     # noqa: BLE001
             return norm_exc(e)
 
+    def norm(self, rec):
+        """A record (a dict from record()) reduced to the normalizer's spec-fixed observables."""
+        return norm_record(rec)
+
     def text(self, msg):
         """A refusal or note text reduced to the normalizer's spec-fixed observables."""
         return norm_text(msg)
@@ -547,6 +562,61 @@ def classify_exam(R, cid, fn):
     return "equality", "no clause applies"
 
 
+def _repro_text(path):
+    """The repro's source plus, for each repro helper module it imports names from (from r*_fx import A, B), the
+    source of exactly those names' assignments in the helper."""
+    import ast
+    src = open(path, encoding="utf-8").read()
+    for node in ast.parse(src).body:
+        if isinstance(node, ast.ImportFrom) and node.module and re.fullmatch(r"r\w*_fx", node.module):
+            hp = os.path.join(os.path.dirname(path), node.module + ".py")
+            if not os.path.exists(hp):
+                continue
+            hsrc = open(hp, encoding="utf-8").read()
+            names = {a.name for a in node.names}
+            for h in ast.parse(hsrc).body:
+                if isinstance(h, ast.Assign) and any(isinstance(t, ast.Name) and t.id in names for t in h.targets):
+                    src += "\n" + ast.get_source_segment(hsrc, h)
+    return src
+
+
+def classify_repro(path):
+    src = _repro_text(path)
+    for t in REPRO_ENVELOPE_TOKENS:
+        if t in src:
+            return "envelope", f"source token {t!r}"
+    return "equality", "no clause applies"
+
+
+def repro_entries():
+    """(entry, path) for every corpus_v5f/repro/*.py that defines main(api); the others are helpers."""
+    d = os.path.join(CORPUS, "repro")
+    out, helpers = [], []
+    for fn in sorted(os.listdir(d)):
+        if not fn.endswith(".py"):
+            continue
+        path = os.path.join(d, fn)
+        (out if re.search(r"^def main\(api\)", open(path, encoding="utf-8").read(), re.M) else helpers).append(("repro/" + fn, path))
+    return out, helpers
+
+
+def add_repros(man):
+    entries, helpers = repro_entries()
+    for p in [k for k in man["entries"] if k.startswith("repro/")]:
+        del man["entries"][p]
+    for p, path in entries:
+        cls, why = classify_repro(path)
+        man["entries"][p] = {"class": cls, "why": why, "sha256": _sha(path)}
+    man["repro_helpers"] = {p: _sha(path) for p, path in helpers}
+    srcs = os.path.join(CORPUS, "repro", "SOURCES.json")
+    man["repro_sources"] = {"file": "repro/SOURCES.json", "sha256": _sha(srcs)}
+    m = json.load(open(srcs))
+    man["repro_not_applicable"] = {k: v["not_applicable"] for k, v in m["sources"].items() if "not_applicable" in v}
+    man["repro_parts_not_applicable"] = {k: v["part_not_applicable"] for k, v in m["sources"].items() if "part_not_applicable" in v}
+    man.pop("not_in_corpus", None)
+    return man
+
+
 def _sha(path):
     return hashlib.sha256(open(path, "rb").read()).hexdigest()
 
@@ -560,7 +630,7 @@ def build_corpus(py312):
     os.makedirs(os.path.join(CORPUS, "crash"), exist_ok=True)
     man = {"rule": "diffprobe_v5f.py classify_exam / fuzz fault / crash point (the manifest rule of the text)",
            "runner_sha256": _sha(os.path.join(HERE, "run_protocol_v5f_exam.py")),
-           "not_in_corpus": {"round 1-4 red-team repros": "GAP-55"}, "entries": {}}
+           "entries": {}}
     for cid, fam, row, fn in R.CASES:
         safe = re.sub(r"[^A-Za-z0-9_.-]", "_", cid)
         p = f"exam/{safe}.json"
@@ -589,6 +659,7 @@ def build_corpus(py312):
             man["entries"][p] = {"class": "envelope", "why": "a crash-sweep point set"}
     for p in man["entries"]:
         man["entries"][p]["sha256"] = _sha(os.path.join(CORPUS, p))
+    add_repros(man)
     json.dump(man, open(os.path.join(CORPUS, "manifest.json"), "w"), indent=1, sort_keys=True)
     n = collections.Counter(v["class"] for v in man["entries"].values())
     print(f"corpus: {len(man['entries'])} entries, {dict(n)}")
@@ -651,6 +722,20 @@ def mask(py, impl, n, jobs, only=None, journal=None):
             "baseline": "CLEAN" if not unstable and not crashes else "UNCLEAN"}
 
 
+def repro_stated(p, obs):
+    """An envelope repro is probed only through an outcome stated for it: a repro module that defines closure(obs)
+    (the re-targeted held battery: G_CLOSURE's rows) flags a mutant on which a row breaks. The others have no stated
+    outcome (SPEC_GAPS.md, Revision 13 follow-ups) and are not probed."""
+    import runpy
+    g = runpy.run_path(os.path.join(CORPUS, p), run_name="repro_stated")
+    if "closure" not in g:
+        return None
+    if "crash" in obs:
+        return f"crash: {obs['crash']}"
+    rows, held = g["closure"](obs.get("repro"))
+    return None if held == len(rows) else "G_CLOSURE row broke: " + ", ".join(k for k, v in rows.items() if v != "held")[:300]
+
+
 def probe(py, mut, base, mk, jobs):
     man = manifest()
     masked = mk.get("masked", {})
@@ -671,6 +756,8 @@ def probe(py, mut, base, mk, jobs):
             return p, (sorted(diff)[:10] or None)
         if p.startswith("exam/"):
             return p, None if a.get("exam_ok") else "the case's stated outcome fails"
+        if p.startswith("repro/"):
+            return p, repro_stated(p, a)
         b = run_entry(py, p, base)
         import runpy
         fz = runpy.run_path(os.path.join(HERE, "fuzz_v5f.py"), run_name="fuzz")
@@ -682,7 +769,9 @@ def probe(py, mut, base, mk, jobs):
             if r:
                 flagged[p] = r
     return {"mutant": mut, "base": base, "python": sys.version.split()[0], "flagged": flagged,
-            "detected": bool(flagged), "not_probed": [p for p, _ in entries if p.startswith("crash/")]}
+            "detected": bool(flagged), "not_probed": [p for p, _ in entries if p.startswith("crash/")],
+            "repro_envelope_without_stated_outcome": [p for p, v in entries if p.startswith("repro/") and v["class"] == "envelope"
+                                                      and "def closure(" not in open(os.path.join(CORPUS, p)).read()]}
 
 
 def main():
@@ -692,6 +781,12 @@ def main():
         v5f_tmp.cleanup()                           # os._exit skips atexit
         os._exit(0)
     if "--build-corpus" in ARGV:
+        if "--repros-only" in ARGV:
+            man = add_repros(manifest())
+            json.dump(man, open(os.path.join(CORPUS, "manifest.json"), "w"), indent=1, sort_keys=True)
+            n = collections.Counter(v["class"] for k, v in man["entries"].items() if k.startswith("repro/"))
+            print(f"repro entries: {sum(n.values())}, {dict(n)}; helpers {len(man['repro_helpers'])}")
+            return 0
         return build_corpus(sys.executable)
     jobs = int(_opt("--jobs", "3"))
     if "--mask" in ARGV:

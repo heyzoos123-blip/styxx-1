@@ -1,13 +1,11 @@
 """round2_module/a7_malformed.py, rewritten against v5f's record shape: a good record, then malformed traces (the
 repro's v4 keys mapped to v5f's: sections, each opening's calls/ambiguous/end/notes, uncredited, problems) and
 malformed results, each fed to score() and check_metrics()."""
-import copy, os, sys
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from r2m_fx import SIMPLE
+import copy
 
 
 def main(api):
-    fs = api.fixture("rp_fx_simple", SIMPLE)
+    fs = api.fixture("rp_fx_simple", "def f(): return 1\n")
     e = api.exp({"G": ["rp_fx_simple:f"]})
     cov = api.coverage_trace(e)
     with cov:

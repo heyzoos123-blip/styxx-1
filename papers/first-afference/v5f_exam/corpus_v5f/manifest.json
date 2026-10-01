@@ -3674,10 +3674,598 @@
    "class": "equality",
    "sha256": "ccab080cc266c53c2a98c595da944e05fe32501d35435b2a14458b0995da7e42",
    "why": "no fault tool"
+  },
+  "repro/r1m_t01_shared_code.py": {
+   "class": "equality",
+   "sha256": "6003b840e8951cdcbdc6047d3a057e6fcc8bef1ac4757d11caec9ffd1be34cf6",
+   "why": "no clause applies"
+  },
+  "repro/r1m_t02_code_equality.py": {
+   "class": "equality",
+   "sha256": "3f44f96d5124e16959d2c75363f637ce4d65e4d61064dafe0acabe8133e2db18",
+   "why": "no clause applies"
+  },
+  "repro/r1m_t03_generated.py": {
+   "class": "equality",
+   "sha256": "7b2ef0f43f9773948f97d2b6fb3c746e8c602cc31dfe3f9eab63812f8e5348c6",
+   "why": "no clause applies"
+  },
+  "repro/r1m_t04_thread_leak_section.py": {
+   "class": "envelope",
+   "sha256": "ef5e3cd47999b5eebaab3fda2017e9ee48b5450b1885e2ca69b63a3f286a53a7",
+   "why": "source token 'threading.'"
+  },
+  "repro/r1m_t05_false_refusals.py": {
+   "class": "envelope",
+   "sha256": "53dcef7c8a51fadc3900f154aa2b5183a6a05e5ae4a65527cc31c6d9f6113191",
+   "why": "source token 'threading.'"
+  },
+  "repro/r1m_t06_under_cprofile.py": {
+   "class": "equality",
+   "sha256": "bfc05c3322072a59df49b7f3d5c6990b9929fd7d3545c7651f9f8595f38c5a3e",
+   "why": "no clause applies"
+  },
+  "repro/r1m_t07_state_leaks.py": {
+   "class": "envelope",
+   "sha256": "a578df2f0d7a9f163582c530a7ed9019f3c5f619ec47744238f5c0de333bc853",
+   "why": "source token 'threading.'"
+  },
+  "repro/r1m_t08_crashes.py": {
+   "class": "equality",
+   "sha256": "95af3b6602a60c290e4567abc8858befb4e225300cb6bf6dba55de6648354cc8",
+   "why": "no clause applies"
+  },
+  "repro/r1m_t09_t11_backcompat.py": {
+   "class": "equality",
+   "sha256": "a5e476443ff582969c286eeba2d1f31f117a27fe14339cf42cd97c6b0a814025",
+   "why": "no clause applies"
+  },
+  "repro/r1m_t10_misc.py": {
+   "class": "equality",
+   "sha256": "0daea3c340398577614fbe16998a7fd317e4a3f1ca073ed5f52833a5cf55f6b2",
+   "why": "no clause applies"
+  },
+  "repro/r1m_t12_nonbreaks.py": {
+   "class": "equality",
+   "sha256": "64b3cf6e5cc4ea9ea510a9fc80f77da0bfd5a2f4b4381e44950d5301fcddd491",
+   "why": "no clause applies"
+  },
+  "repro/r2e_repro.py": {
+   "class": "envelope",
+   "sha256": "867bc08666f92f4a5c232ffbe2902b20f662c2f5836f44a272c1fc542feaf8ac",
+   "why": "source token 'threading.'"
+  },
+  "repro/r2m_a01_shared_after_entry.py": {
+   "class": "equality",
+   "sha256": "c72518c68bde61e8388dc2ed2c3b2a3d461c6d32c97fc46324d08941e576a2c6",
+   "why": "no clause applies"
+  },
+  "repro/r2m_a02_resolution.py": {
+   "class": "equality",
+   "sha256": "8e5bc457a1ea5823e3e62338797045f13594abc5e709ac5e275f25701c7ad7d4",
+   "why": "no clause applies"
+  },
+  "repro/r2m_a03_threads.py": {
+   "class": "envelope",
+   "sha256": "4af4da4eea3c8743faaa874bd6cbfc40d5c6532c333f642f8754b534ef193bca",
+   "why": "source token 'threading.'"
+  },
+  "repro/r2m_a04_concurrent_pool.py": {
+   "class": "envelope",
+   "sha256": "0fc86dfc24e0c3ebe92dd0ac30da9da24542f0528a5d9f09a7e0fd5194ce063e",
+   "why": "source token 'threading.'"
+  },
+  "repro/r2m_a05_leaks.py": {
+   "class": "envelope",
+   "sha256": "efced4861dd6edc893e5974118bcbbcaef380495db371d00247908e15d14b80d",
+   "why": "source token 'threading.'"
+  },
+  "repro/r2m_a06_misc.py": {
+   "class": "envelope",
+   "sha256": "42dd06fe4265b1f96904676b638db834a0519c4e37303d5e3510cad8a526bf72",
+   "why": "source token 'threading.'"
+  },
+  "repro/r2m_a07_malformed.py": {
+   "class": "equality",
+   "sha256": "6c0a326cf39365c6068fe2baa385412fab6d3c8ce8788a34e12591dd0e303167",
+   "why": "no clause applies"
+  },
+  "repro/r2m_a08_perf.py": {
+   "class": "equality",
+   "sha256": "df7f80fc6657c9ef68c537ac11c98a173a4f0941d8c34ea7696da6b92efb59ac",
+   "why": "no clause applies"
+  },
+  "repro/r2m_a09_threadpool_race.py": {
+   "class": "envelope",
+   "sha256": "0f8eb8f8f7ec8ac26507f7b7e369bc8cede18566ebf242b950d138857bbc499b",
+   "why": "source token 'ThreadPool'"
+  },
+  "repro/r2m_a10_cyclic_garbage.py": {
+   "class": "equality",
+   "sha256": "f74d4822cbf33c9edbbb6848ea9300fbf8bce522fe6273ae7b7ee39cbedda3dd",
+   "why": "no clause applies"
+  },
+  "repro/r2m_a11_grandchild.py": {
+   "class": "envelope",
+   "sha256": "700c6a4e57390cbc5778ea1d218e1de6927451d1a0f497e572ad8eae901b3d7f",
+   "why": "source token 'threading.'"
+  },
+  "repro/r2m_v1_b4_cprofile.py": {
+   "class": "equality",
+   "sha256": "0601d2e5a507e8bcced7142281577cd3d7fe65226bb4bb9318fb564c85e5b511",
+   "why": "no clause applies"
+  },
+  "repro/r2m_v1_round1.py": {
+   "class": "envelope",
+   "sha256": "8f3ca4a34b5d7ad2b8cd98f897707e5fd4abb1b39586e6a2d65f8a3c79c24f85",
+   "why": "source token 'threading.'"
+  },
+  "repro/r3e_probes.py": {
+   "class": "envelope",
+   "sha256": "deeb35e60a45fce20af52ca51bea17a976956af17ac6ed5862ed832c7ff8c6f1",
+   "why": "source token 'threading.'"
+  },
+  "repro/r3m_t01_wraps_family.py": {
+   "class": "equality",
+   "sha256": "70a1be089c82ff80b7690234845d4cbb9d9ff391960019385b6c0a3b7cfeb21b",
+   "why": "no clause applies"
+  },
+  "repro/r3m_t02_close_checks.py": {
+   "class": "envelope",
+   "sha256": "166179c964c50e091a87fdd30ed92ae0ed3d6c257a3fa0168e970f26b35f1c61",
+   "why": "source token 'threading.'"
+  },
+  "repro/r3m_t03_signal_timeout.py": {
+   "class": "envelope",
+   "sha256": "3fb36c7128f2391dab4a3ae2bad64a27a07eb68f21fcdd793794342f45951cfe",
+   "why": "source token 'signal.'"
+  },
+  "repro/r3m_t04_finalizer.py": {
+   "class": "envelope",
+   "sha256": "bc9f79f0c761442924328d2f2fd2feae1f4cfc75f824f7967f904f1722e32c05",
+   "why": "source token 'set_threshold'"
+  },
+  "repro/r3m_t05_t11_cost.py": {
+   "class": "equality",
+   "sha256": "7fbc5687ebeab87de34d5d2e64782da5d7054e291f194cb80d1963642438a390",
+   "why": "no clause applies"
+  },
+  "repro/r3m_t06_frame_identity.py": {
+   "class": "equality",
+   "sha256": "9427c060dcd9b137cf9ccb06db3092e13a11c4aa160b113110833689febd0901",
+   "why": "no clause applies"
+  },
+  "repro/r3m_t07_resolution.py": {
+   "class": "equality",
+   "sha256": "bab78c0ecab89f75c03a8352fa0d704ea05442bba5e62a3647776f4b85d66aa3",
+   "why": "no clause applies"
+  },
+  "repro/r3m_t08_factory_products.py": {
+   "class": "equality",
+   "sha256": "3e5913e6c75285eb174b0aedf53675dc60f3bb92811d9f0f97316050cdac084b",
+   "why": "no clause applies"
+  },
+  "repro/r3m_t09_library_threads.py": {
+   "class": "envelope",
+   "sha256": "2b264dd2ec0c006efaf84468d9e44a3c8ff3042b43ac3fc6fb91c9d0884f3c76",
+   "why": "source token 'threading.'"
+  },
+  "repro/r3m_t10_keyboardinterrupt.py": {
+   "class": "envelope",
+   "sha256": "782910e0f6396379fbf1d3271d9c8d8b04e6da1d55f8a35220e60ff5597f189a",
+   "why": "source token 'signal.'"
+  },
+  "repro/r3m_t12_asyncio_worker.py": {
+   "class": "equality",
+   "sha256": "959a04e81c087fb45ecf9510bc2688224e6d7b35972b66c91ab9bef9279e9dff",
+   "why": "no clause applies"
+  },
+  "repro/r4_attr_a01_strsub_section.py": {
+   "class": "equality",
+   "sha256": "a18ac8379b04a9707e53560e29c2bd14c074661e717536b0d40d8352c11e074a",
+   "why": "no clause applies"
+  },
+  "repro/r4_attr_a02_eager_nested.py": {
+   "class": "equality",
+   "sha256": "c3e51ee8fc26beda297611303ba4c60c072c84c8eeb76c5c412db5ee258788d5",
+   "why": "no clause applies"
+  },
+  "repro/r4_attr_a03_fork_pool_nested.py": {
+   "class": "envelope",
+   "sha256": "f044e25638beafc5ffbc6829c0c241f332c23a9363fa6063a71dfb0cb83ff22c",
+   "why": "source token 'ProcessPool'"
+  },
+  "repro/r4_attr_a04_signal_in_close.py": {
+   "class": "envelope",
+   "sha256": "b096b4d2ef15e0c695ae5be17026bb2fc25a076bcc751b9da2e58da7c24def8d",
+   "why": "source token 'signal.'"
+  },
+  "repro/r4_attr_a05_a09_a10_examholes.py": {
+   "class": "equality",
+   "sha256": "a5f54fce1d239bf3d0f708c7ce283a7dc68dde59b7cc1a234153a21a657779ba",
+   "why": "no clause applies"
+  },
+  "repro/r4_attr_a06_recursion.py": {
+   "class": "envelope",
+   "sha256": "2fcfa6c18776a2bba4cbd1d340e2a9eb0654a4c5ebc7c4037492236613795078",
+   "why": "source token 'threading.'"
+  },
+  "repro/r4_attr_a07_call_tracing.py": {
+   "class": "equality",
+   "sha256": "c85414abcd2e1d4e9526aef2bd018ef2aa472acde1641385562b0206d2d13705",
+   "why": "no clause applies"
+  },
+  "repro/r4_attr_a08_unhashable_end.py": {
+   "class": "equality",
+   "sha256": "b566d731da8836543c9dc607d5a27b5a9ba4b09e66766b15056f6e1bf8bc23b9",
+   "why": "no clause applies"
+  },
+  "repro/r4_closure_f06_f10_resolution.py": {
+   "class": "equality",
+   "sha256": "ccdd07d832250be285d2038d4833b677296a0fcb6874c0c11f549b3e6ca1efa1",
+   "why": "no clause applies"
+  },
+  "repro/r4_closure_held_battery.py": {
+   "class": "envelope",
+   "sha256": "51e62f1872f901c8e0d8413d047db9ff6fcfe567e73c825dd29fc056db1cd5f7",
+   "why": "source token 'signal.'"
+  },
+  "repro/r4_em_harnesses.py": {
+   "class": "envelope",
+   "sha256": "b46c539cc0ecc193faf8c6b345ac0f3ceed13af670d423e0aa970218f55edae7",
+   "why": "source token 'threading.'"
+  },
+  "repro/r4_id_a01_code_swap_stub.py": {
+   "class": "equality",
+   "sha256": "5214e53c4bf62a3b4948b781ba5c1b5d93912b94b7b708f0433d8b1cafbb6c76",
+   "why": "no clause applies"
+  },
+  "repro/r4_id_a02_a03_cache_wrappers.py": {
+   "class": "equality",
+   "sha256": "f54464f96d445ce3b19f388b5a502c7d28708626abdc86eed961571a6fcc7643",
+   "why": "no clause applies"
+  },
+  "repro/r4_id_a04_a08_interrupted_enter_exit.py": {
+   "class": "envelope",
+   "sha256": "cefb7d09579bb7507e4fdf8e565e2830093248a88aed94f75551696e8fe9a7eb",
+   "why": "source token 'api.inject('"
+  },
+  "repro/r4_id_a05_stale_cut.py": {
+   "class": "equality",
+   "sha256": "329ca2af8eff6bb322b52770f20eeea014175983197c589eeb765b45b4745fa3",
+   "why": "no clause applies"
+  },
+  "repro/r4_id_a06_a07_a09.py": {
+   "class": "equality",
+   "sha256": "0dabeefcd1d1a6921c7493869a9e768cc47ae96055488857aa8e26a34e51ba31",
+   "why": "no clause applies"
+  },
+  "repro/r4_id_eh1_eh9_harnesses.py": {
+   "class": "equality",
+   "sha256": "5f39f12e9fb1b97ac54d38100b393ce9c815ced1d3766360df1226ab6e2bac8f",
+   "why": "no clause applies"
+  },
+  "repro/r4_lc_f02_chaining_profiler.py": {
+   "class": "equality",
+   "sha256": "2befdfd34470460dfa1b713f20b7783018929b5d1afd3570d5cd3e4356bab292",
+   "why": "no clause applies"
+  },
+  "repro/r4_lc_f04_f07_f12_signal_sweeps.py": {
+   "class": "envelope",
+   "sha256": "d9c651830fce6d421138eb5d58f21f7c2567a9394e14725afe625aa7c2cc719b",
+   "why": "source token 'signal.'"
+  },
+  "repro/r4_lc_f08_reentry_race.py": {
+   "class": "envelope",
+   "sha256": "04fd3411c2b9e201165c89002678850e6184e94440bdef314ffd5ac79044bb04",
+   "why": "source token 'threading.'"
+  },
+  "repro/r4_py313_signal_backedge.py": {
+   "class": "envelope",
+   "sha256": "e007778d0db5e87c05d5cc3f2022a2ec0a255c5847998e23dc3591f6da3cbb35",
+   "why": "source token 'signal.'"
+  },
+  "repro/r4_sc_scoring.py": {
+   "class": "equality",
+   "sha256": "90a9ed08e81153ee5b26c42777eb29c4f848c4f0ca47b3668ebb09889f669e36",
+   "why": "no clause applies"
+  },
+  "repro/r4_vf_attribution.py": {
+   "class": "equality",
+   "sha256": "b930a6ff78224e3fc089416c8580813df1eea1b41c29fb1de374d584cf89828c",
+   "why": "no clause applies"
+  },
+  "repro/r4_vf_identity.py": {
+   "class": "envelope",
+   "sha256": "6652b92149a222df5448604bf2bb8afe9f514e70e43cdf9879d3ee166583ded4",
+   "why": "source token 'signal.'"
+  },
+  "repro/r4_vf_lifecycle.py": {
+   "class": "envelope",
+   "sha256": "34290ece6b78b6a629a3e650af846360e7c3447a41bafa43ce5089beef68fb53",
+   "why": "source token 'api.inject('"
+  },
+  "repro/r4_vf_misc.py": {
+   "class": "envelope",
+   "sha256": "8a27c384c09c02673d996a04f66fa890b7daf539090c45651e29f03c8ca2c661",
+   "why": "source token 'threading.'"
+  },
+  "repro/r4_vf_scoring.py": {
+   "class": "equality",
+   "sha256": "99da05a2e98c3052ed8d6dd49ba77574b2d1df0f814496a7dd37b5552a1c59d5",
+   "why": "no clause applies"
+  },
+  "repro/r4_vx_witnesses.py": {
+   "class": "envelope",
+   "sha256": "63bf0ac8ebc35ff257842954669f45360a2aa47d897e8bc6cc64bf5ee393d595",
+   "why": "source token 'threading.'"
+  },
+  "repro/r4_xver_f01_unstarted_generator.py": {
+   "class": "equality",
+   "sha256": "eff60d0dbd50153cf0dcc14d3aa605b7bd043a1928d4f86f18e1658b360dd55c",
+   "why": "no clause applies"
+  },
+  "repro/r4_xver_f05_profile_module.py": {
+   "class": "equality",
+   "sha256": "c5ef8c74727cc0ade7f412e7d9556180a288b9a02d9c527dda325241c7d6fb1f",
+   "why": "no clause applies"
+  },
+  "repro/r4_xver_f09_closure_writes.py": {
+   "class": "envelope",
+   "sha256": "98a82e18cc77df1488bb3308e275ade7b824fcdccb9ea5165288be7f0fb30c7a",
+   "why": "source token 'threading.'"
   }
  },
- "not_in_corpus": {
-  "round 1-4 red-team repros": "GAP-55"
+ "repro_helpers": {
+  "repro/r1m_fx.py": "a80c83cf8f6cea0b2d362e6211738dc4292fb63b7a43e16b028972756f0face3",
+  "repro/r2m_fx.py": "216addb510ddd83b206901f158ad818f1c4cbefc273f91fba95629f3d132de7e",
+  "repro/r3m_fx.py": "de6855bfec9ee825195ae7f657f28cc4304d65c9c31844093804f6b813fab830"
+ },
+ "repro_not_applicable": {
+  "round1_module/rtlib.py": "the repros' shared helper (prereg commit, score printing); ReproAPI (diffprobe_v5f.py) is its rewrite",
+  "round2_exam/mut.py": "exam tooling for v5 (mutants of the v5 implementation run against v5's exam); not a program against v5f's API",
+  "round2_exam/mutants.py": "exam tooling for v5 (mutants of the v5 implementation run against v5's exam); not a program against v5f's API",
+  "round2_exam/out/O_BAD_COUNT.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_BAD_COUNT_no_bool.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_BAD_COUNT_no_undeclared_key.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_DECL_dup.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_DECL_format.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_DECL_list.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_DECL_nonempty.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_DECL_string.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_NESTED_SECTION.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_NOTHING_DECLARED.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_NOT_EXERCISED.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_NO_CODE.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_NO_TRACE_skip.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_SECTION_ABSENT_passes.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_SECTION_ABSENT_removed.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_SECTION_DECL_half.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_SECTION_DECL_type.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_STALE_TRACE.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_TARGET_SET.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_TARGET_SET_subset_ok.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_UNDECLARED_SECTION.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/O_WRONG_TRACER.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R01_identity_to_equality.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R01b_drop_is_check_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R02a_no_gc_referrers_check.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R02b_no_two_targets_one_code_check.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R03_inherited_follows_mro.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R03b_inherited_as_attributeerror.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R04a_contextvar_to_process_slot.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R04b_contextvar_to_threadlocal.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R05_no_thread_start_mapping.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R05b_thread_start_uses_cv_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R06_count_after_close.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R07_no_thread_outlives.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R08_no_profiler_replaced.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R09_no_foreign_profiler.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R09b_foreign_refused_but_destroyed.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R09c_foreign_check_sys_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R10_no_reentry.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R10b_reentry_only_active.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R11_no_exit_order.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R11b_reinstall_exited_hooks.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R12_unresolved_narrow_except.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R13a_no_bad_trace_top.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R13b_bad_trace_top_targets_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R13c_no_bad_trace_section.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R13d_check_metrics_raises.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R14_regex_match_not_fullmatch.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/R14b_regex_not_ascii.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/S_count_ignores_active.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/S_no_chaining.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/S_no_restore_on_exit.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/out/S_no_threading_setprofile.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_exam/results.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_module/multi_version_output.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_module/output_py311.txt": "an output or a data file of a red-team run (not a program)",
+  "round2_module/rtlib.py": "the repros' shared helper; ReproAPI (diffprobe_v5f.py) is its rewrite",
+  "round2_module/run_all.sh": "a shell driver of red-team tooling, not a program against v5f's API",
+  "round3_exam/mut.py": "exam tooling for v5 (mutants of the v5 implementation run against v5's exam); not a program against v5f's API",
+  "round3_exam/mut_b.py": "exam tooling for v5 (mutants of the v5 implementation run against v5's exam); not a program against v5f's API",
+  "round3_exam/mutants_r3.py": "exam tooling for v5 (mutants of the v5 implementation run against v5's exam); not a program against v5f's API",
+  "round3_exam/mutants_r3b.py": "exam tooling for v5 (mutants of the v5 implementation run against v5's exam); not a program against v5f's API",
+  "round3_exam/out/N01_drop_globals_check.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N02_drop_freevar_check.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N02b_freevar_eq_not_is.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N02c_impostors_counted.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N03_drop_close_recount.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N04_drop_close_gc.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N04b_drop_entry_gc.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N04c_drop_both_gc.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N05_wraps_check_not_at_entry.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N06_wraps_check_not_at_close.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N06b_wraps_check_nowhere.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N07_drop_ambiguous.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N07b_ambiguous_ignores_via.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N08_drop_hook_self_removal.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N09_thr_clear_only_on_success.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N09b_thr_never_cleared_on_error_or_order.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N10_instance_path_getattr.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N11a_section_context_valueerror_escapes.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N11b_section_context_swallowed.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N12a_hook_failed_no_catch.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N12b_hook_failed_catch_no_flag.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N12c_hook_failed_no_refusal.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N13_check_metrics_non_dict_raises.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N13b_non_dict_empty_report.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N14_thread_start_early_return.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N15_close_refusals_not_recorded.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N16_exited_before_ownership_read.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/N18_hook_failed_mislabelled_as_profiler_replaced.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_BAD_COUNT.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_BAD_COUNT_no_bool.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_BAD_COUNT_no_undeclared_key.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_DECL_dup.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_DECL_format.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_DECL_list.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_DECL_nonempty.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_DECL_string.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_NESTED_SECTION.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_NOTHING_DECLARED.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_NOT_EXERCISED.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_NO_CODE.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_NO_CODE_b_function_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_NO_TRACE_skip.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_SECTION_ABSENT_passes.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_SECTION_ABSENT_removed.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_SECTION_DECL_half.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_SECTION_DECL_type.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_STALE_TRACE.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_TARGET_SET.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_TARGET_SET_subset_ok.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_UNDECLARED_SECTION.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/O_WRONG_TRACER.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R01_identity_to_equality.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R01b_drop_is_check_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R02a_no_gc_referrers_check.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R02b_no_two_targets_one_code_check.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R03_inherited_follows_mro.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R03b_inherited_as_attributeerror.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R04a_contextvar_to_process_slot.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R04b_contextvar_to_threadlocal.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R05_no_thread_start_mapping.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R05b_thread_start_uses_cv_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R06_count_after_close.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R07_no_thread_outlives.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R08_no_profiler_replaced.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R09_no_foreign_profiler.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R09b_foreign_refused_but_destroyed.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R09c_foreign_check_sys_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R10_no_reentry.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R10b_reentry_only_active.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R11_no_exit_order.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R11b_reinstall_exited_hooks.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R12_unresolved_narrow_except.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R13a_no_bad_trace_top.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R13b_bad_trace_top_targets_only.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R13c_no_bad_trace_section.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R13d_check_metrics_raises.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R14_regex_match_not_fullmatch.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/R14b_regex_not_ascii.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/S_count_ignores_active.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/S_no_chaining.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/S_no_restore_on_exit.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/out/S_no_threading_setprofile.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_exam/probe_mut.py": "exam tooling for v5 (mutants of the v5 implementation run against v5's exam); not a program against v5f's API",
+  "round3_exam/results.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/out_py3.10.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/out_py3.12.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/out_py3.13.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/out_py311.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/round2_recheck/multi_version_output.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/round2_recheck/out3.10.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/round2_recheck/out3.12.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/round2_recheck/out3.13.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/round2_recheck/out311.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/round2_recheck/output_py311.txt": "an output or a data file of a red-team run (not a program)",
+  "round3_module/rtlib.py": "the repros' shared helper; ReproAPI (diffprobe_v5f.py) is its rewrite",
+  "round3_module/run_all.sh": "a shell driver of red-team tooling, not a program against v5f's API",
+  "round4/blockers_against_nversion.json": "an output or a data file of a red-team run (not a program)",
+  "round4/blockers_against_nversion.py": "tooling: runs the round-4 repros against v5e's two implementations and tallies; not a program against v5f's API",
+  "round4/candidates_and_dedup.json": "an output or a data file of a red-team run (not a program)",
+  "round4/capture_recapture.json": "an output or a data file of a red-team run (not a program)",
+  "round4/capture_recapture.py": "a statistical estimate over round 4's findings; not a program against an API",
+  "round4/py313_signal_backedge.json": "an output or a data file of a red-team run (not a program)",
+  "round4/verdicts.json": "an output or a data file of a red-team run (not a program)",
+  "round4/verify-exam/b3wit/b3lib.py": "the witnesses' shared helper (loading an implementation root, prereg commit, outcome); ReproAPI is its rewrite",
+  "round4/verify-exam/b6drive.py": "tooling: runs one witness under v5e and under a v5e mutant and compares; not a program against v5f's API",
+  "round4/verify-exam/exam-mut-bad-trace-end-type/exam-mut-bad-trace-end-type_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-close-removes-foreign-profiler/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-double-exit-state-leak/exam-mut-double-exit-state-leak_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-double-exit-state-leak/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-exit-removes-foreign-profiler/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-foreign-profiler-first-open-only/exam-mut-foreign-profiler-first-open-only_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-foreign-profiler-first-open-only/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-hop-close-drops-closer-hook/exam-mut-hop-close-drops-closer-hook_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-hop-close-drops-closer-hook/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-nested-by-section-name/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-problems-before-bad-count/exam-mut-problems-before-bad-count_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-profiler-lost-only-if-none/exam-mut-profiler-lost-only-if-none_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-restore-over-swapped-code/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-target-set-before-stale/exam-mut-target-set-before-stale_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-target-set-before-stale/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/exam-mut-uncredited-last-thread-wins/exam-mut-uncredited-last-thread-wins_mutant.diff": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-cache-body-module-check/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-class-step-exact-type/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-clone-alive-single-tracer/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-clone-called-first-tracer/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-code-swapped-single-tracer/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-declared-section-field-never-scored/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-declared-section-field-never-scored/witlib.py": "the witnesses' shared helper (loading an implementation root, prereg commit, outcome); ReproAPI is its rewrite",
+  "round4/verify-exam/examhole-dispatch-cut-by-name/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-dispatch-cut-by-name/witlib.py": "the witnesses' shared helper (loading an implementation root, prereg commit, outcome); ReproAPI is its rewrite",
+  "round4/verify-exam/examhole-inherited-direct-base-only/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-module-step-exact-type/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-stop-read-before-mint/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-union-over-all-sections/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-union-over-all-sections/witlib.py": "the witnesses' shared helper (loading an implementation root, prereg commit, outcome); ReproAPI is its rewrite",
+  "round4/verify-exam/examhole-walk-bound-2-hops/mutant.patch": "a v5e mutant (a patch to v5e's implementation), exam tooling for v5e",
+  "round4/verify-exam/examhole-walk-bound-2-hops/witlib.py": "the witnesses' shared helper (loading an implementation root, prereg commit, outcome); ReproAPI is its rewrite"
+ },
+ "repro_parts_not_applicable": {
+  "round1_module/t09_v4_checkmetrics.py": "its v4 half execs v4's implementation from git 98a5c368, an API v5f does not have",
+  "round1_module/t11_backcompat.py": "its v4 half execs v4's implementation from git 98a5c368, an API v5f does not have",
+  "round2_module/a6_misc.py": "part c (a section context manager entered in one asyncio task and exited in another) exercises cov.section, which v5f removed: its sections are calls (cov.run)",
+  "round3_exam/probe/probes.py": "probe 2 (close_refusals via a section context manager closed in a copied context) exercises cov.section, which v5f removed",
+  "round3_module/t07_resolution_and_context.py": "part C1 (SECTION_CONTEXT: a section context manager closed in a copied context) exercises cov.section, which v5f removed",
+  "round4/attribution/r1/a05_examhole_cut_by_name.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/attribution/r1/a09_examhole_union_all_sections.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/attribution/r1/a10_examhole_section_field.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_B01_end_type_clause_dropped.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_C01_hop_close_drops_closer_hook.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_C02_lost_note_only_if_none.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_C06_close_removes_foreign_profiler.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_D01_section_non_ascii_accepted.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_E01_restore_over_swapped_code.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_E04_stop_cleared_by_inner_exit.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_E05_double_exit.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_E07_exit_removes_foreign_profiler.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_K01_record_uncredited_last_thread_wins.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_O05_foreign_profiler_checked_first_open_only.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_O07_nested_refused_across_tracers_by_name.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_S01_target_set_before_stale.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/exam-mutation/r1/m_S02_problems_before_bad_count.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh1_walk_bound_2_hops.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh2_clone_alive_only_last_tracer.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh3_clone_called_first_tracer_only.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh4_code_swapped_only_last_tracer.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh5_stop_read_before_mint.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh6_class_step_exact_type.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh7_module_step_exact_type.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh8_inherited_direct_base_only.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/identity/r1/eh9_no_module_body_check.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/py313_signal_backedge.py": "its first check (four loop shapes in try/finally interrupted by SIGALRM) exercises only the interpreter, not the API; X140 pins v5f's back-edges",
+  "round4/scoring/r1/f10_exam_hole_diagnostic_texts.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/scoring/r1/f5_exam_hole_failing_bar.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/scoring/r1/f6_exam_hole_step_order.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten",
+  "round4/verify/exam-mut-section-decl-clauses/verify_repro.py": "exam tooling for v5e: it builds a v5e mutant and runs v5e's frozen exam (run_protocol_v5e.py) on it; not a program against v5f's API. Its paired harness, where it has one, is rewritten"
+ },
+ "repro_sources": {
+  "file": "repro/SOURCES.json",
+  "sha256": "16594770f9e2bc73f68dcea86a5aa904969e561ec606a574ec7b0e20befa2023"
  },
  "rule": "diffprobe_v5f.py classify_exam / fuzz fault / crash point (the manifest rule of the text)",
  "runner_sha256": "63869780f3e5599b0d3d825cc2a6d20a6d9826ba8c6b455b508ef62104e8a075"

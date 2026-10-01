@@ -1,60 +1,12 @@
 {
- "impl": "ref_v5f.py",
- "impl_sha256": "2a1781e66975a8aa82fd77f67bbfef6f8826a9f6651c098a2836229f983ed34f",
+ "impl": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
+ "impl_sha256": "1d0b06ee00195920d4b80ef3e534a0cd350baecbf42f959f2d74f6236911dc62",
  "python": "3.13.12",
  "G_REF_census": {
-  "coded_literals": 94,
-  "outside_mutable_site": [
-   {
-    "line": 778,
-    "stmt_line": 778,
-    "stmt_end": 778,
-    "func": null,
-    "code": "",
-    "fstring": false
-   },
-   {
-    "line": 362,
-    "stmt_line": 361,
-    "stmt_end": 363,
-    "func": null,
-    "code": "SECTION_DECL",
-    "fstring": true
-   },
-   {
-    "line": 367,
-    "stmt_line": 366,
-    "stmt_end": 368,
-    "func": null,
-    "code": "DECL",
-    "fstring": true
-   },
-   {
-    "line": 372,
-    "stmt_line": 371,
-    "stmt_end": 373,
-    "func": null,
-    "code": "DECL",
-    "fstring": true
-   },
-   {
-    "line": 376,
-    "stmt_line": 375,
-    "stmt_end": 376,
-    "func": null,
-    "code": "DECL",
-    "fstring": true
-   },
-   {
-    "line": 380,
-    "stmt_line": 379,
-    "stmt_end": 380,
-    "func": null,
-    "code": "SECTION_DECL",
-    "fstring": true
-   }
-  ],
-  "blind": []
+  "coded_literals": 100,
+  "outside_mutable_site": [],
+  "blind": [],
+  "outside_region": 6
  },
  "G_HYG_violations": [],
  "G_HYG_step_controls": {
@@ -127,7 +79,79 @@
    ]
   }
  },
+ "G_REF_blind8_controls": {
+  "raise via a helper that returns the exception": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  },
+  "raise GateSpecError through a module attribute": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  },
+  "raise an alias of GateSpecError": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  },
+  "recorded problem appended by augmented assignment": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  },
+  "emission as the value of a return": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  },
+  "emission assigned to a name": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  },
+  "emission inside a conditional expression": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  },
+  "code in a keyword argument": {
+   "in_mutable_site": true,
+   "emits_planted": true,
+   "emits_after_o13": false,
+   "caught": true
+  }
+ },
  "G_HYG_verdict": "PASS",
- "G_REF_census_verdict": "OPEN (GAP-50)",
- "verdict": "PASS"
+ "G_REF_census_verdict": "PASS",
+ "verdict": "PASS",
+ "load_average": {
+  "before": [
+   16.0,
+   15.58,
+   12.33
+  ],
+  "after": [
+   16.98,
+   15.97,
+   12.73
+  ],
+  "samples_1min": {
+   "min": 15.86,
+   "median": 16.435000000000002,
+   "max": 17.01,
+   "n": 2
+  },
+  "max_load_held": null,
+  "waited_s": 0,
+  "started": "2026-10-01T21:49:35Z",
+  "seconds": 77.3
+ }
 }

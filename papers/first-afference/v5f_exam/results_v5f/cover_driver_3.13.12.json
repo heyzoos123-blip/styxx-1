@@ -1,5 +1,5 @@
 {
- "impl": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
+ "impl": "ref_v5f.py",
  "python": "3.13.12",
  "scenarios": {
   "non_minted": {
@@ -228,5 +228,22 @@
   "_forget_in_child": 18
  },
  "missing": {},
- "verdict": "PASS"
+ "verdict": "PASS",
+ "load_average": {
+  "before": [
+   16.98,
+   15.97,
+   12.73
+  ],
+  "after": [
+   16.74,
+   15.94,
+   12.73
+  ],
+  "samples_1min": null,
+  "max_load_held": null,
+  "waited_s": 0,
+  "started": "2026-10-01T21:50:53Z",
+  "seconds": 3.8
+ }
 }

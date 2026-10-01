@@ -83,8 +83,9 @@ _ap.add_argument("--child-case", default=None)
 _ap.add_argument("--sub", default=None)
 _ap.add_argument("--pre-import-patch", default=None, help="chain|deque: replaced before the implementation is imported (X156b, X156d)")
 _ap.add_argument("--deps-path", "--greenlet-path", dest="greenlet_path", default=os.environ.get("V5F_DEPS_PATH"),
-                 help="a directory holding the exam's pinned third-party libraries for this interpreter: "
-                      "greenlet 3.5.6 (X137f, X158d) and coverage 7.16 (V50)")
+                 help="a directory holding the exam's third-party libraries for this interpreter: greenlet 3.5.6 "
+                      "(X137f, X158d) and coverage 7.16.1 (V50), from the wheels the text pins by sha256, and numpy "
+                      "(v5e:R11, v5e:X118; not pinned by the text: 2.5.3 from PyPI in the revision-13 runs)")
 ARGS = _ap.parse_args()
 
 def _sha(path):

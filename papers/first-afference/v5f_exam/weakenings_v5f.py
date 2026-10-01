@@ -667,8 +667,74 @@ def run_crash(py, impl, invariant):
     return ("PASS" if d["G_FI"] == "PASS" else "FAIL"), sorted(fails)
 
 
+# Journal keys (the coordinator's condition for revision 13): every entry carries the sha256 of ref_v5f.py, of
+# the runner, of the row's patch and of the witness case's source, as they were when its runs were made; a rerun
+# reuses an entry only if all four still match the files on disk, and re-decides every other.
+import ast as _ast, hashlib as _hashlib
+RUNNER_PATH = os.path.join(HERE, "run_protocol_v5f_exam.py")
+SWEEP_PATH = os.path.join(HERE, "crash_sweep_v5f.py")
+PORT_PATH = os.path.join(HERE, "v5e_port.py")
+_SOURCES = {}
+
+
+def _h(text):
+    return _hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _case_sources(runner_text):
+    """{case id: the text of its @case function and row, its @sub bodies, and every module-level function or
+    class of the runner it reaches by name, transitively}; cached by the runner's text."""
+    k = _h(runner_text)
+    if k in _SOURCES:
+        return _SOURCES[k]
+    tree = _ast.parse(runner_text)
+    defs = {n.name: n for n in tree.body if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef, _ast.ClassDef))}
+    cases, subs = {}, collections.defaultdict(list)
+    for n in tree.body:
+        if isinstance(n, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            for d in n.decorator_list:
+                if isinstance(d, _ast.Call) and isinstance(d.func, _ast.Name) and d.args and isinstance(d.args[0], _ast.Constant):
+                    if d.func.id == "case":
+                        cases[d.args[0].value] = (n, " | ".join(str(a.value) for a in d.args if isinstance(a, _ast.Constant)))
+                    elif d.func.id == "sub":
+                        subs[str(d.args[0].value).split(":")[0]].append(n)
+
+    lines = runner_text.splitlines(keepends=True)
+    seg = {nm: "".join(lines[n.lineno - 1:n.end_lineno]) for nm, n in defs.items()}
+    direct = {nm: {y.id for y in _ast.walk(n) if isinstance(y, _ast.Name) and y.id in defs} for nm, n in defs.items()}
+
+    def reach(roots):
+        seen, stack = set(roots), list(roots)
+        while stack:
+            for y in direct[stack.pop()]:
+                if y not in seen:
+                    seen.add(y)
+                    stack.append(y)
+        return seen
+    out = {}
+    for cid, (fn, row) in cases.items():
+        names = sorted(reach([fn.name] + [n.name for n in subs.get(cid, [])]))
+        out[cid] = row + "\n" + "\n".join(seg[nm] for nm in names)
+    _SOURCES[k] = out
+    return out
+
+
+def _keys(witness, patches):
+    runner = open(RUNNER_PATH, encoding="utf-8").read()
+    if witness.startswith("G_FI:"):
+        wsrc = open(SWEEP_PATH, encoding="utf-8").read()
+    elif witness.startswith("v5e:"):
+        wsrc = witness + "\n" + open(PORT_PATH, encoding="utf-8").read()
+    else:
+        wsrc = _case_sources(runner).get(witness, "<no such case>")
+    return {"ref_sha256": _h(open(REF_PATH, encoding="utf-8").read()), "runner_sha256": _h(runner),
+            "patch_sha256": _h(json.dumps(patches)) if patches is not None else None, "witness_sha256": _h(wsrc)}
+
+
 def _journal(path):
+    """The journal's entries whose four keys match the files on disk now (the others are re-decided)."""
     rows, refs = {}, {}
+    cat = {e["id"]: e for e in CATALOG}
     if path and os.path.exists(path):
         for ln in open(path):
             try:
@@ -676,9 +742,12 @@ def _journal(path):
             except ValueError:
                 continue
             if d.get("kind") == "ref":
-                refs[(d["ver"], d["witness"])] = d["ref"]
+                if d.get("keys") == _keys(d["witness"], None):
+                    refs[(d["ver"], d["witness"])] = d["ref"]
             elif d.get("kind") == "row":
-                rows[(d["ver"], d["id"])] = d
+                e = cat.get(d["id"])
+                if e is not None and d.get("witness") == e["witness"] and d.get("keys") == _keys(e["witness"], e["patches"]):
+                    rows[(d["ver"], d["id"])] = d
     return rows, refs
 
 
@@ -709,6 +778,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
             with rlocks[w]:
                 if (ver, w) not in refs:
                     shared = [k for k in refs if k[0] == ver and k[1].startswith("G_FI:")] if w.startswith("G_FI:") else []
+                    keys = _keys(w, None)
                     if shared:          # the reference sweep's verdict does not depend on the invariant named
                         r = refs[shared[0]]
                     elif w.startswith("G_FI:"):
@@ -716,11 +786,12 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                     else:
                         r = [run_case(py, REF_PATH, w, dp) for _ in range(2)]
                     refs[(ver, w)] = r
-                    _append(journal, {"kind": "ref", "ver": ver, "witness": w, "ref": r}, lock)
+                    _append(journal, {"kind": "ref", "ver": ver, "witness": w, "ref": r, "keys": keys}, lock)
                 return refs[(ver, w)]
 
         def one(e):
             v5f_tmp.disk_guard(what=f"row {e['id']} on {ver}")
+            keys = _keys(e["witness"], e["patches"])
             src = apply(e)
             d = os.path.join(work, ver, e["id"])
             if src is None:
@@ -756,7 +827,7 @@ def sm1(pys, only=None, deps=None, journal=None, jobs=3, crash=True):
                         cls = "KILLED"
                 row = {"class": cls, "ref": base, "runs": runs}
                 v5f_tmp.release(d)
-            row.update({"kind": "row", "ver": ver, "id": e["id"], "witness": e["witness"]})
+            row.update({"kind": "row", "ver": ver, "id": e["id"], "witness": e["witness"], "keys": keys})
             _append(journal, row, lock)
             print(ver, e["id"], row["class"], flush=True)
             return row

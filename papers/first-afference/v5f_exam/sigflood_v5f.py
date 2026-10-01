@@ -170,8 +170,12 @@ CELL_FNS = {"lock": cell_lock, "credit": cell_credit, "result": cell_result,
             "ldel_a": cell_ldel("a"), "ldel_b": cell_ldel("b"), "ldel_c": cell_ldel("c")}
 
 
+HAS_STATE = hasattr(P, "_v5_state")                  # v5e (positive control #4) has no _v5_state()
+
+
 def run_cell(name):
-    before = dict(P._v5_state()); before.pop("pid", None)
+    before = dict(P._v5_state()) if HAS_STATE else {}
+    before.pop("pid", None)
     box = {"leaks": 0, "work": 0, "checked": 0, "wrong": 0, "inflight": False, "handled": 0, "lost": 0,
            "entered": 0, "cleaned": 0}
     err = []
@@ -190,7 +194,10 @@ def run_cell(name):
     faulthandler.cancel_dump_traceback_later()
     hung = time.monotonic() - t_ > SECONDS + 60
     ARMED[0] = False
-    poisoned, diff = R._poisoned(before)
+    if HAS_STATE:
+        poisoned, diff = R._poisoned(before)
+    else:                                            # control #4 on v5e: no _v5_state(), so no poison test (gap)
+        poisoned, diff = False, "not applicable: the implementation has no _v5_state()"
     box.update(hung=hung, error=err, poisoned=poisoned, diff=diff)
     fails = []
     if hung:

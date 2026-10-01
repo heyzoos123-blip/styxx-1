@@ -16,6 +16,8 @@ Controls: K1-K3 (instrument, in this run); K4-K14 (hookup: G_ATOM on ref_v5f.py 
 a fresh process, must FAIL; K12 and K12b reported, not gated); parts A, B, E, D2 (reference pipelines built like
 the steps, with count floors and T_MAX = 60 s) and R (the recursion sweep on the implementation's steps, with
 K7's _unwind_off as its control). No void run: every outcome is PASS or FAIL.
+Revision 13 (GAP-59, GAP-60): parts A, B, E and D2 as the text now states them in full (part A's CALL+C_RETURN
+floor 18; part E's harness with its yields); K4's expected result is the failed binding enter (MONITOR_BUSY).
 
 Usage: python atom_v5f.py [--impl PATH] [--deps DIR] [--out RESULT.json]
        python atom_v5f.py --impl PATH --matrix          (the matrix only; used for the hookup controls)
@@ -633,7 +635,7 @@ def part_a():
             n, _ = run(-1)
             v = sum(run(i)[1] for i in range(n))
             res[f"{form}/{inst}"] = {"trials": n, "violations": v}
-    floors = {"INSTRUCTION": 40, "CALL+C_RETURN": 25, "setprofile": 3, "opcode": 40}
+    floors = {"INSTRUCTION": 40, "CALL+C_RETURN": 18, "setprofile": 3, "opcode": 40}   # revision 13: 18 (GAP-59)
     ok = all(res[f"clear_one/{i}"]["violations"] == 0 and res[f"clear_one/{i}"]["trials"] >= f
              and res[f"clear_two/{i}"]["violations"] >= 1 for i, f in floors.items())
     A.clear()
@@ -659,42 +661,68 @@ def part_b():
 
 
 def part_e(form, floor=50000, until_first=False):
-    """4 threads; a pure-Python profiler yields the GIL at every C call in the close path."""
+    """Part E as revision 13 states the harness (GAP-59): four workers, each with its own pure-Python profile
+    function that calls time.sleep(0) at every c_call whose frame's code is the close function's; each repeats
+    k = object(); open_one(k, k); three times {a sample: "is the event clear?"; time.sleep(0)}; close(k);
+    time.sleep(0). Counts go to the shared totals under a harness lock every 64 samples and when the worker
+    stops. sys.setswitchinterval(1e-6) for the run, restored after it; the main thread polls every 5 ms."""
     close = REF[form]
     ccode = close.__code__
+    opener = REF["open_one"]
     st = {"samples": 0, "clear": 0, "stop": False}
     lock = threading.Lock()
 
     def prof(frame, event, arg):
         if event == "c_call" and frame.f_code is ccode:
-            time.sleep(0.00001)                              # a real wait, so another thread takes the GIL
+            time.sleep(0)
 
     def worker():
         sys.setprofile(prof)
-        while not st["stop"]:
-            k = object()
-            REF["open_one"](k, k)
-            for _ in range(4):
-                c = not _ge()
-                with lock:
-                    st["samples"] += 1
-                    st["clear"] += c
-            close(k)
-        sys.setprofile(None)
+        n = c = 0
+        try:
+            while not st["stop"]:
+                k = object()
+                opener(k, k)
+                for _ in range(3):
+                    c += not _ge()
+                    n += 1
+                    if n == 64:
+                        with lock:
+                            st["samples"] += n
+                            st["clear"] += c
+                        n = c = 0
+                    time.sleep(0)
+                close(k)
+                time.sleep(0)
+        finally:
+            sys.setprofile(None)
+            with lock:
+                st["samples"] += n
+                st["clear"] += c
     A.clear()
     MON.set_events(RTOOL, 0)
-    ths = [threading.Thread(target=worker) for _ in range(4)]
-    t0 = time.monotonic()
-    for t in ths:
-        t.start()
-    while True:
-        time.sleep(0.01)
-        if st["samples"] >= floor or (until_first and st["clear"]) or time.monotonic() - t0 > T_MAX:
-            break
-    st["stop"] = True
-    for t in ths:
-        t.join()
-    return {"form": form, "samples": st["samples"], "clear": st["clear"], "seconds": round(time.monotonic() - t0, 2)}
+    old_si = sys.getswitchinterval()
+    sys.setswitchinterval(1e-6)
+    try:
+        ths = [threading.Thread(target=worker) for _ in range(4)]
+        t0 = time.monotonic()
+        for t in ths:
+            t.start()
+        while True:
+            time.sleep(0.005)
+            with lock:
+                done = st["samples"] >= floor or (until_first and st["clear"])
+            if done or time.monotonic() - t0 > T_MAX:
+                break
+        st["stop"] = True
+        for t in ths:
+            t.join()
+    finally:
+        sys.setswitchinterval(old_si)
+        A.clear()
+        MON.set_events(RTOOL, 0)
+    secs = round(time.monotonic() - t0, 2)
+    return {"form": form, "samples": st["samples"], "clear": st["clear"], "seconds": secs, "t_max_hit": secs > T_MAX}
 
 
 def part_d2(form, floor=5000, until_first=False):
@@ -938,7 +966,8 @@ def main():
     res["part_B"] = part_b()
     e1, e2 = part_e("clear_one"), part_e("clear_two", until_first=True)
     res["part_E"] = {"one_call": e1, "control": e2,
-                     "pass": e1["samples"] >= 50000 and e1["clear"] == 0 and e2["clear"] >= 1 and e2["samples"] < 50000}
+                     "pass": (e1["samples"] >= 50000 and e1["clear"] == 0 and not e1["t_max_hit"]
+                              and e2["clear"] >= 1 and e2["samples"] < 50000 and not e2["t_max_hit"])}
     d1, d2, d3 = part_d2("clear_one"), part_d2("clear_pycall", until_first=True), part_d2("clear_two")
     res["part_D2"] = {"one_call": d1, "python_call_control": d2, "two_statement_reported": d3,
                       "pass": d1["closes"] >= 5000 and d1["interrupts"] >= 5000 and d1["violations"] == 0
@@ -952,6 +981,9 @@ def main():
         n = hk[name]["failed_cases"]
         hk[name]["gated"] = gated
         hk[name]["detected"] = (n if isinstance(n, int) else 1) > 0
+        if name == "K4":                            # revision 13 (GAP-60): the expected result is the failed binding enter
+            hk[name]["expected"] = "the binding enter refuses MONITOR_BUSY; the matrix never runs"
+            hk[name]["as_expected"] = (not isinstance(n, int)) and "MONITOR_BUSY" in " ".join(hk[name].get("error", []))
     res["hookup"] = hk
     verdict = (not failed and all(slots.values()) and all(v["detected"] for v in res["K1-K3"].values())
                and res["part_A"]["pass"] and res["part_B"]["pass"] and res["part_E"]["pass"]

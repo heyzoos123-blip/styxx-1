@@ -1,5 +1,5 @@
 {
- "impl": "ref_v5f.py",
+ "impl": "/home/user/styxx-1/papers/first-afference/v5f_exam/ref_v5f.py",
  "build": {
   "sys.version": "3.13.12 (main, Feb  4 2026, 09:25:39) [GCC 13.3.0]",
   "python_build": [
@@ -84,11 +84,11 @@
   },
   "floors": {
    "INSTRUCTION": 40,
-   "CALL+C_RETURN": 25,
+   "CALL+C_RETURN": 18,
    "setprofile": 3,
    "opcode": 40
   },
-  "pass": false,
+  "pass": true,
   "BRANCH": "reported, not evidence"
  },
  "part_B": {
@@ -100,39 +100,41 @@
  "part_E": {
   "one_call": {
    "form": "clear_one",
-   "samples": 50024,
+   "samples": 50238,
    "clear": 0,
-   "seconds": 0.57
+   "seconds": 1.84,
+   "t_max_hit": false
   },
   "control": {
    "form": "clear_two",
-   "samples": 50196,
-   "clear": 0,
-   "seconds": 0.86
+   "samples": 888,
+   "clear": 1,
+   "seconds": 0.04,
+   "t_max_hit": false
   },
-  "pass": false
+  "pass": true
  },
  "part_D2": {
   "one_call": {
    "form": "clear_one",
    "closes": 5000,
-   "interrupts": 13964,
+   "interrupts": 11896,
    "violations": 0,
-   "seconds": 0.93
+   "seconds": 0.74
   },
   "python_call_control": {
    "form": "clear_pycall",
-   "closes": 40,
-   "interrupts": 61,
+   "closes": 88,
+   "interrupts": 166,
    "violations": 1,
    "seconds": 0.0
   },
   "two_statement_reported": {
    "form": "clear_two",
    "closes": 5000,
-   "interrupts": 7475,
+   "interrupts": 7528,
    "violations": 0,
-   "seconds": 0.19
+   "seconds": 0.17
   },
   "pass": true
  },
@@ -184,75 +186,170 @@
     "ref_v5f.GateSpecError: [V5:MONITOR_BUSY] sys.monitoring tool ids 4 and 3 are both held by other tools (or by another loaded copy of styxx.protocol): styxx cannot trace alongside them"
    ],
    "gated": true,
-   "detected": true
+   "detected": true,
+   "expected": "the binding enter refuses MONITOR_BUSY; the matrix never runs",
+   "as_expected": true
   },
   "K5": {
    "failed_cases": 24,
+   "examples": {
+    "_unwind_off/named/registered/left/S": [
+     "(a) interval opened 0, closed 0",
+     "(c) PY_START outside: [('_unwind_off_helper', False)]",
+     "(c) CALL of _unwind_off_helper"
+    ],
+    "_unwind_off/named/registered/left/clear": [
+     "(a) interval opened 0, closed 0",
+     "(c) PY_START outside: [('_unwind_off_helper', False)]",
+     "(c) CALL of _unwind_off_helper"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K6": {
    "failed_cases": 24,
+   "examples": {
+    "_unwind_off/named/registered/left/S": [
+     "(a) interval opened 0, closed 0",
+     "(c) c_calls from the step's frame: ['deque.extend']",
+     "(c) CALL of deque"
+    ],
+    "_unwind_off/named/registered/left/clear": [
+     "(a) interval opened 0, closed 0",
+     "(c) c_calls from the step's frame: ['deque.extend']",
+     "(c) CALL of deque"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K7": {
    "failed_cases": 24,
+   "examples": {
+    "_unwind_off/named/registered/left/S": [
+     "(c) c_calls from the step's frame: ['dict.pop']",
+     "(c) CALL of dict.pop",
+     "(d) state at the consumer's CALL differs from the state before the step"
+    ],
+    "_unwind_off/named/registered/left/clear": [
+     "(c) c_calls from the step's frame: ['dict.pop']",
+     "(c) CALL of dict.pop",
+     "(d) state at the consumer's CALL differs from the state before the step"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K8": {
    "failed_cases": 3,
+   "examples": {
+    "_unwind_on/named/unreg/clear/none": [
+     "(d) effect: got {'anchors': [], 'owner': 'styxx.protocol/2c621db5e172', 'events': 4096, 'local': None, 'flags': [{}], 'lost': 5}, expected {'anchors': [], 'owner': 'styxx.protocol/2c621db5e172', 'events': 0, 'local': None, 'flags': [{}], 'lost': 5}"
+    ],
+    "_unwind_on/named/unreg/clear/armed": [
+     "(d) effect: got {'anchors': [(139703390083536, 139703369598896)], 'owner': 'styxx.protocol/2c621db5e172', 'events': 4096, 'local': None, 'flags': [{}, {}], 'lost': 5}, expected {'anchors': [(139703390083536, 139703369598896)], 'owner': 'styxx.protocol/2c621db5e172', 'events': 0, 'local': None, 'flags': [{}, {}], 'lost': 5}"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K9": {
    "failed_cases": 3,
+   "examples": {
+    "_take/unowned": [
+     "(c) c_calls from the step's frame: ['get_tool']",
+     "(c) CALL of get_tool"
+    ],
+    "_take/other": [
+     "(c) c_calls from the step's frame: ['get_tool']",
+     "(c) CALL of get_tool"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K10": {
    "failed_cases": 12,
+   "examples": {
+    "_register/plain": [
+     "(c) c_calls from the step's frame: ['list.extend']",
+     "(c) CALL of map after the interval closed",
+     "(d) result [<function _on_entry at 0x7f32016b7e20>, <function _on_entry at 0x7f32016b7e20>, <function _on_exit at 0x7f32016b7ec0>, <function _on_exit at 0x7f32016b7ec0>, <function _on_unwind at 0x7f32016b7f60>, 'styxx.protocol/b1e0bde58012'], expected ['<name>']"
+    ],
+    "_register/replaced": [
+     "(c) c_calls from the step's frame: ['list.extend']",
+     "(c) CALL of map after the interval closed",
+     "(d) result [<function _on_entry at 0x7f32016b7e20>, <function _on_entry at 0x7f32016b7e20>, <function _on_exit at 0x7f32016b7ec0>, <function _on_exit at 0x7f32016b7ec0>, <function _other_cb at 0x7f320139ede0>, 'styxx.protocol/b1e0bde58012'], expected [None, '<name>']"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K11": {
    "failed_cases": 12,
+   "examples": {
+    "_register/plain": [
+     "(b) 0 register_callback audit events, the case makes 5",
+     "(c) CALL of zip"
+    ],
+    "_register/replaced": [
+     "(b) 0 register_callback audit events, the case makes 5",
+     "(c) CALL of zip",
+     "(d) result ['styxx.protocol/a44a53de969e'], expected [None, '<name>']"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K13": {
    "failed_cases": 2,
+   "examples": {
+    "_register/plain_S": [
+     "(d) the global events are 0 afterwards, not PY_UNWIND"
+    ],
+    "_register/replaced_S": [
+     "(d) the global events are 0 afterwards, not PY_UNWIND"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K14": {
    "failed_cases": 1,
+   "examples": {
+    "_register/finalizer": [
+     "(b) audit events inside: ['object.__getattr__', 'object.__getattr__', 'object.__getattr__']",
+     "(b) finalizers: [(True, 0, 7), (True, 0, 8)] (each must run after the interval closed and see len(_LOST) + 2)"
+    ]
+   },
    "slots_ok": true,
    "gated": true,
    "detected": true
   },
   "K12": {
    "failed_cases": 0,
+   "examples": {},
    "slots_ok": true,
    "gated": false,
    "detected": false
   },
   "K12b": {
    "failed_cases": 0,
+   "examples": {},
    "slots_ok": true,
    "gated": false,
    "detected": false
   }
  },
- "G_ATOM": "FAIL",
- "seconds": 8.0
+ "G_ATOM": "PASS",
+ "seconds": 8.7
 }

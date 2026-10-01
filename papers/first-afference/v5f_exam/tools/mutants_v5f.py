@@ -97,8 +97,9 @@ M = {
             if not found:
                 out[name] = {"path": path""")]),
  "mut_cm_smoke": (["X117f"], [("                if smoke and not present:\n                    note = \"smoke run\"", "                if not present:\n                    note = \"smoke run\"")]),
- "mut_guard_no_alive": (["V72"], [('"guard": "free" if r.tid is None else ("held" if _alive(r) else "dead"),', '"guard": "free" if r.tid is None else "held",')]),
- "mut_guard_never_held": (["V72"], [('"guard": "free" if r.tid is None else ("held" if _alive(r) else "dead"),', '"guard": "free" if r.tid is None else "dead",')]),
+ # revision 13: the guard line carries the "cycle" value of M10's total walk; the weakened part is unchanged
+ "mut_guard_no_alive": (["V72"], [('"guard": "cycle" if n is not None else ("free" if r.tid is None else ("held" if _alive(r) else "dead")),', '"guard": "cycle" if n is not None else ("free" if r.tid is None else "held"),')]),
+ "mut_guard_never_held": (["V72"], [('"guard": "cycle" if n is not None else ("free" if r.tid is None else ("held" if _alive(r) else "dead")),', '"guard": "cycle" if n is not None else ("free" if r.tid is None else "dead"),')]),
  "mut_import_no_chain": (["X10c"], [('            f"{_TYPE_QUAL.__get__(type(e))}") from e\n    if not issubclass(type(mod), ModuleType):',
                                      '            f"{_TYPE_QUAL.__get__(type(e))}") from None\n    if not issubclass(type(mod), ModuleType):')]),
  "mut_getattr_no_chain": (["X10c"], [('                        f"({part!r}) raised {_TYPE_QUAL.__get__(type(e))}") from e',

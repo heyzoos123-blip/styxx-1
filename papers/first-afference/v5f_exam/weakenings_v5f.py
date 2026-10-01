@@ -549,6 +549,40 @@ row("A_open_audited_after_append", "revision 8 self-audit: an audited call in `_
 row("A_reload_incall_count", "revision 8 self-audit: the in-call count removed (reload shape)", "deletion", "X158e", "MONITOR_LOST",
     "differs", [(_REG_COUNT, "        (),\n")])
 
+# ---- revision 13 (GAP-54, GAP-61, GAP-62, GAP-64) ---------------------------------------------------------
+# The witnesses the Revision 13 section names for the rows their earlier witness did not see; the earlier
+# witness stays an exam case and is kept in the row's note.
+R13_WITNESS = {
+    "A_coh_no_file_skip": "X26g", "A_cache_callee_identity": "X24g", "A_alias_by_name": "V07b", "A_mint_eq": "V74",
+    "A_visible_deleted": "V36c", "A_publish_recheck": "X71d", "A_enter_claim": "X32e", "A_exit_claim": "V52b",
+    "M5_exit_claim_not_idempotent": "V52b", "A_atfork_handler": "V47b", "A_pid_passthrough": "V47c",
+    "A_unwind_on_recheck": "X146e", "A_detach_anchor_first": "X148b", "A_capture_outside": "X153b",
+    "A_ensure_no_reclaim": "X137k", "A_open_audited_after_append": "V71b", "M3_register_before_append": "X132b",
+    "A_binding_first_only": "X156c", "A_verified_widened": "X37c", "A_txn_shared_succ": "V52s",
+}
+for _e in CATALOG:
+    if _e["id"] in R13_WITNESS:
+        _old = _e["witness"]
+        _e["witness"] = R13_WITNESS[_e["id"]]
+        _e["spec_outcome"], _e["weakened_outcome"] = "as stated", "differs"
+        _e["note"] = (_e["note"] + "; " if _e["note"] else "") + f"revision 13: named witness {_e['witness']} (before: {_old})"
+row("A_capture_stale_read", "revision 13: revision 5's MF2 form of the capture rule (the event read in a statement of its "
+    "own before the one call, the capture gated on that read)", "order", "X153", "as stated", "differs",
+    [("    t, get_tool, get_events, set_events = _TOOL[0], _MON[0][0], _MON[0][1], _MON[0][2]\n    _CONSUME(_chain(\n        _map(_setitem",
+      "    t, get_tool, get_events, set_events = _TOOL[0], _MON[0][0], _MON[0][1], _MON[0][2]\n    was_clear = not (get_events(t) & PY_UNWIND)\n"
+      "    _CONSUME(_chain(\n        _map(_setitem"),
+     ("                      _map(_not, _map(_and, _map(get_events, (t,)), _PYU1))))))), _LOST_KEY, _TRUE),",
+      "                      (was_clear,)))))), _LOST_KEY, _TRUE),")],
+    note="revision 13: X153b kills it too")
+# GAP-62: one row per empty (family, rule region) cell, the generator's first non-TCE mutant there (and O12's
+# cell); the patches and the named witnesses are frozen in sm1_gap62_rows.json.
+_G62 = os.path.join(HERE, "sm1_gap62_rows.json")
+if os.path.exists(_G62):
+    for _r in json.load(open(_G62, encoding="utf-8")):
+        row(_r["id"], f"revision 13 (GAP-62): {_r['family']} in rule region {_r['rule_region']}: {_r['desc']} "
+            f"({_r['mutant']})", _r["family"], _r["witness"], "as stated", "differs",
+            [tuple(x) for x in _r["patches"]], note=_r.get("note", ""))
+
 # ---------------------------------------------------------------------------------------------------
 # SM1
 # ---------------------------------------------------------------------------------------------------
@@ -580,6 +614,8 @@ def run_case(py, impl, case, deps):
     if case in d["not_run"]:
         return "NOT_RUN"
     x = d["results"].get(case)
+    if x and x.get("timeout"):
+        return "TIMEOUT_WITNESS"                     # the witness's own bound expired after it started: a kill
     return "PASS" if x and x["ok"] and not x["leftover"] else "FAIL"
 
 

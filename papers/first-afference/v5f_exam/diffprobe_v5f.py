@@ -6,7 +6,10 @@ The corpus (corpus_v5f/, built by --build-corpus, hashed in manifest.json):
   exam/<id>.json     every exam case program: the runner's case <id>, run in its frozen placement;
   fuzz/<seed>.json   the fuzzer's program for each frozen seed (fuzz_v5f.py, N = 300);
   crash/<s>.<t>.json the crash sweep's points on ref_v5f.py, per scenario and faulted thread (a record);
-  the round 1-4 red-team repros are not in the corpus (SPEC_GAPS.md GAP-55).
+  repro/<round>_<name>.py  the round 1-4 red-team repros (protocol_v5_redteam/, prior work since revision 13,
+                     GAP-55), each rewritten by the exam author against the public API as `main(api)` (ReproAPI
+                     below); repro/NOT_APPLICABLE.json lists, with the reason, each repro file not rewritten
+                     (an API v5f removed or refuses by design, or exam tooling rather than a program).
 manifest.json gives each entry exactly one class, by the frozen rule in classify() (never by judgement):
   envelope: the ids the text lists; every exam case whose program (the case function and the runner
             functions it reaches by name) uses the id-3 fault tool, the id-5 injector or an instruction sweep,
@@ -298,8 +301,145 @@ def observe_exam(cid, impl):
                     "tools": tools}}
 
 
+class ReproAPI:
+    """What a rewritten repro (corpus_v5f/repro/*.py, `def main(api)`) sees: the implementation's public API, and
+    helpers that build committed preregs and fixture modules in the observation's own temp dir and reduce every
+    outcome to the normalizer's spec-fixed observables."""
+
+    def __init__(self, P):
+        self.P = P
+        self.coverage_trace, self.Experiment, self.GateSpecError = P.coverage_trace, P.Experiment, P.GateSpecError
+        self.work = v5f_tmp.workdir("v5f_repro_")
+        self.fxdir = os.path.join(self.work, "fx")
+        os.makedirs(self.fxdir)
+        sys.path.insert(0, self.fxdir)
+        self.n = 0
+
+    def spec(self, gates, sections=None, value=0.5, metric="m"):
+        g = {n: {"metric": metric, "op": ">=", "value": value, "exercises": list(t)} for n, t in gates.items()}
+        for n, sec in (sections or {}).items():
+            g[n]["section"] = sec
+        return {"gates": g, "outcomes": [{"when": {n: True for n in g}, "verdict": "PASS"}, {"when": {}, "verdict": "FAIL"}],
+                "smoke_verdict": "SMOKE"}
+
+    def prereg(self, body):
+        """Commit a prereg (a dict, or the gates block's text as given) in a fresh git repo; its path."""
+        import subprocess as sp
+        self.n += 1
+        d = os.path.join(self.work, f"repo{self.n}")
+        os.makedirs(d)
+        p = os.path.join(d, "PREREG_case.md")
+        text = body if isinstance(body, str) else json.dumps(body)
+        open(p, "w", encoding="utf-8").write("# case\n\n```gates\n" + text + "\n```\n")
+        git = ["git", "-c", "user.email=repro@local", "-c", "user.name=repro", "-c", "commit.gpgsign=false"]
+        for c in (["git", "init", "-q"], git + ["add", "-A"], git + ["commit", "-qm", "case"]):
+            sp.run(c, cwd=d, check=True, capture_output=True)
+        return p
+
+    def exp(self, gates, sections=None, value=0.5, metric="m"):
+        return self.Experiment(self.prereg(self.spec(gates, sections, value, metric)))
+
+    def write(self, name, source):
+        """Write fixture module `name` (dotted) into the observation's fixture dir without importing it."""
+        import importlib, textwrap
+        path = os.path.join(self.fxdir, *name.split(".")) + ".py"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        open(path, "w", encoding="utf-8").write(textwrap.dedent(source))
+        importlib.invalidate_caches()
+        sys.modules.pop(name, None)
+        return path
+
+    def fixture(self, name, source):
+        import importlib
+        self.write(name, source)
+        return importlib.import_module(name)
+
+    def score(self, exp, rec, m=1.0, **extra):
+        try:
+            return norm_verdict(exp.score({"m": m, "coverage_trace": rec, **extra}))
+        except BaseException as e:                     # noqa: BLE001
+            return norm_exc(e)
+
+    def metrics(self, exp, result):
+        try:
+            return norm_metrics(exp.check_metrics(result))
+        except BaseException as e:                     # noqa: BLE001
+            return norm_exc(e)
+
+    def record(self, cov):
+        try:
+            return norm_record(cov.record())
+        except BaseException as e:                     # noqa: BLE001
+            return norm_exc(e)
+
+    def attempt(self, fn, *a, **k):
+        try:
+            v = fn(*a, **k)
+        except BaseException as e:                     # noqa: BLE001
+            return norm_exc(e)
+        if isinstance(v, (int, float, str, bool, type(None))):
+            return {"returned": v}
+        return {"returned_type": type(v).__name__ if type(v).__module__ == "builtins" else "object"}
+
+    def trace(self, exp, *steps, m=1.0, keep=None):
+        """Make a tracer on exp, enter it, run each step (a callable given the tracer), exit, and score. A refusal
+        or an exception at construction, at enter, in a step or at exit is caught and recorded as observed; the
+        tracer is always exited. keep: a list to receive the tracer (for a later record())."""
+        out = {}
+        try:
+            cov = self.coverage_trace(exp)
+        except BaseException as e:                     # noqa: BLE001
+            return {"construct": norm_exc(e)}
+        if keep is not None:
+            keep.append(cov)
+        try:
+            cov.__enter__()
+        except BaseException as e:                     # noqa: BLE001
+            out["enter"] = norm_exc(e)
+            try:
+                cov.__exit__(None, None, None)
+            except BaseException as e2:                # noqa: BLE001
+                out["exit"] = norm_exc(e2)
+            return out
+        out["steps"] = [self.attempt(st, cov) for st in steps]
+        try:
+            cov.__exit__(None, None, None)
+        except BaseException as e:                     # noqa: BLE001
+            out["exit"] = norm_exc(e)
+        try:
+            rec = cov.record()
+        except BaseException as e:                     # noqa: BLE001
+            out["record"] = norm_exc(e)
+            return out
+        out["record"] = norm_record(rec)
+        out["score"] = self.score(exp, rec, m)
+        return out
+
+    def state(self):
+        st = dict(self.P._v5_state())
+        st.pop("pid", None)
+        return st
+
+
+def observe_repro(entry, impl):
+    import importlib.util, runpy
+    spec = importlib.util.spec_from_file_location("v5f_repro_impl", impl)
+    P = importlib.util.module_from_spec(spec)
+    sys.modules["v5f_repro_impl"] = P
+    spec.loader.exec_module(P)
+    api = ReproAPI(P)
+    g = runpy.run_path(os.path.join(CORPUS, entry), run_name="repro")
+    try:
+        obs = g["main"](api)
+    except BaseException as e:                         # noqa: BLE001
+        obs = {"main": norm_exc(e)}
+    return {"entry": entry, "repro": obs, "state_after": api.state()}
+
+
 def observe(entry, impl):
     kind, _, name = entry.partition("/")
+    if kind == "repro":
+        return observe_repro(entry, impl)
     if kind == "exam":
         return observe_exam(json.load(open(os.path.join(CORPUS, entry)))["case"], impl)
     if kind == "fuzz":

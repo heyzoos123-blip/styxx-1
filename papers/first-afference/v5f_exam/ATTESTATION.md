@@ -313,6 +313,13 @@ the corpus repros, controls #1-#4(a) on the v5e blob, and a fresh SM1 whose jour
   cp312/cp313 manylinux_2_27/2_28 x86_64; the installed `numpy-2.5.3.dist-info/RECORD` sha256 is `193dda78…` (3.12)
   and `9fa06065…` (3.13).
 
+### Interpreters
+Every run names its interpreter by absolute path: `/usr/bin/python3.12` (3.12.3), `/usr/bin/python3.13` (3.13.12),
+`/usr/bin/python3.10` (3.10.20), `/usr/bin/python3.11` (3.11.15). After the container restart of 2026-10-02 00:22 UTC,
+`PATH` resolves `python3.12` and `python3.13` to `/root/.local/bin/` builds of 3.12.11 and 3.13.7, which `ref_v5f.py`
+refuses (UNSUPPORTED_VERSION); no exam run uses them. The drivers (`weakenings_v5f.py`, `tools/with_load.py`) run
+under `python3` = 3.11.15 and start the exam interpreters by path.
+
 ### Runs (revision 13; the reference at sha256 prefix `1d0b06ee00195920`, the runner at `441a2308894823a7`)
 Every run below was made after the deps path held coverage 7.16.1. "load" is the 1-min load average at the start
 (from `tools/with_load.py` or `uptime`); runs marked *held* wait for the load gate (R13-14) and are added when made.

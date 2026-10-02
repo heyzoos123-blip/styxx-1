@@ -1,0 +1,89 @@
+{
+ "mode": "ref",
+ "python": "3.13.12",
+ "child": {
+  "writes_refused_at": 1,
+  "before_any_transaction": {
+   "anchors": 0,
+   "mints": [],
+   "global_events": 0,
+   "guard": "free",
+   "fixtures": {
+    "f": {
+     "is_original": false,
+     "equal": true,
+     "local_events": 0
+    },
+    "g": {
+     "is_original": true,
+     "equal": true,
+     "local_events": 0
+    }
+   }
+  },
+  "run_passthrough": 2,
+  "after_passthrough": {
+   "anchors": 0,
+   "mints": [],
+   "global_events": 0,
+   "guard": "free",
+   "fixtures": {
+    "f": {
+     "is_original": false,
+     "equal": true,
+     "local_events": 0
+    },
+    "g": {
+     "is_original": true,
+     "equal": true,
+     "local_events": 0
+    }
+   }
+  },
+  "probe_cycle": "ok",
+  "after_probe_cycle": {
+   "anchors": 0,
+   "mints": [],
+   "global_events": 0,
+   "guard": "free",
+   "fixtures": {
+    "f": {
+     "is_original": false,
+     "equal": true,
+     "local_events": 0
+    },
+    "g": {
+     "is_original": true,
+     "equal": true,
+     "local_events": 0
+    }
+   }
+  }
+ },
+ "parent_sections": {
+  "A": [
+   {
+    "fxm:f": 1
+   }
+  ]
+ },
+ "parent_problems": [],
+ "parent_state": {
+  "anchors": 0,
+  "mints": [],
+  "global_events": 0,
+  "guard": "free",
+  "fixtures": {
+   "f": {
+    "is_original": true,
+    "equal": true,
+    "local_events": 0
+   },
+   "g": {
+    "is_original": true,
+    "equal": true,
+    "local_events": 0
+   }
+  }
+ }
+}

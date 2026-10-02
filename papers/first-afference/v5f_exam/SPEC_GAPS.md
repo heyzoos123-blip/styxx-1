@@ -1020,3 +1020,30 @@ include a C3 (M1, M2, M7, and the at-fork rows if so) are decided again the same
 in the journal as history. Every other timing-sensitive run (the full runner, G_SIG, G_ATOM, control #3, G_COVER)
 is held until the 1-min and 5-min load averages are below 4 and carries a `load_average` record in its receipt
 (`tools/with_load.py`). The text's bounds are unchanged.
+
+**R13-15. `atfork_restores_first`: the named witness does not observe the rule.** SM1 classes this row (D1's
+"at-fork order: restores last", family order; weakened by moving step 6's `__code__` restores before steps 1-5)
+UNWITNESSED on both versions: `crash_sweep_v5f.py` on the patched reference is PASS in every scenario and both fork
+variants, twice. The exam author ran the shape C9 states, with a read added before the child's first transaction
+(`tools/r13_shapes/atfork_restores_first_c9.py`; outputs in `results_v5f/r13_shapes/`; both versions, one fresh
+process each): a trace on f with section A open forks; in the child an audit hook refuses the first `__code__`
+write, so the handler aborts there.
+- *Reference order:* the abort lands after steps 1-5, so right after the fork the child has `anchors` 0, `mints` `[]`,
+  `global_events` 0, and f's code is an equal copy with no local events; after a probe cycle, the same.
+- *Mutant order:* right after the fork the child has `anchors` 1, one mint (`fxm:f`, `local_events` 15) and
+  `global_events` 4096 (the PY_UNWIND callback keeps firing in the child). After the probe cycle: `anchors` 0,
+  `mints` `[]`, `global_events` 0, f restored. `run()` passes through (2) in both orders, and the parent's record is
+  its baseline in both.
+- *Reading.* C9's second clause reads `_v5_state()` "after the child's next transaction, a probe cycle". That
+  transaction's reconciliation (M3, revision 4's B1 clause `h.pid != pid`, `c.pid != pid`) prunes the inherited
+  openings, retires the inherited mints and clears the global PY_UNWIND, so it repairs exactly what the aborted
+  handler left. The M9 paragraph's statement that the revision-1 order "left the child with its anchors, its
+  registered mints and the global PY_UNWIND for its whole life" predates that clause: with it, the child keeps them
+  only until its first transaction. So the mutant is not equivalent (a `_v5_state()` read in the child before any
+  transaction sees it, and the inherited callbacks fire until then), and the text's witness cannot see it: C9 reads
+  too late. A C9 clause that reads `_v5_state()` in the child before any transaction (`anchors` 0, `mints` `[]`,
+  `global_events` 0 right after the fork) would witness the row; so would a case that forks inside a section with
+  an audit hook refusing the first `__code__` write and reads the child's state before any transaction. The other
+  fork row, `atfork_cached_pid`, is KILLED by C9's pass-through clause on both versions.
+- *Fix needed.* Add the pre-transaction read to C9 (or to a fork case), or file the row EQUIVALENT_BY_SPEC under
+  the frozen clauses; the exam author's reading is the former.

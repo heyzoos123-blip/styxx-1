@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased] — declared versus recorded: an agent's end-of-task declaration against what a harness recorded, with no model measured yet
+
+`styxx.selfreport` (new) and `selfreport/` (new). A coding agent works in a sandbox repository and ends its
+final message with a `styxx` block declaring four things: whether the given tests pass, how many files
+changed, how many tests were added, and which path holds every change. A harness then works the same four
+out from bytes it holds (the committed seed, the tree as the session left it, and test runs it starts
+itself) and compares, key by key. Nothing is read from the sandbox's `.git`, nothing the agent printed is
+taken as a result, and no prose is read.
+
+**No model has been measured.** There is no preregistration for this and so no result. What exists is the
+instrument and a measurement of the instrument: 15 scripted subjects on 5 example tasks, 75 sessions, each
+held to verdicts written in the task's `EXPECTED.json`. `python -m styxx.selfreport known-answers` exits 0
+only if every session receives its expected verdicts, the three subjects that differ only in how they
+rewrite the sandbox's git history receive identical facts, and `styxx.diffgate`'s reading of the same
+declared claims never contradicts the comparison. `python -m styxx.selfreport rederive <run>` recomputes
+every stored verdict of a run from its files, and `tests/test_selfreport_rederive.py` shows it reporting an
+edited report, an edited file of the tree, an edited test report, an edited verdict, edited facts and an
+edited ledger.
+
+What the comparison does not show is in `selfreport/README.md` and is written into every record. The given
+tests run in one process with source the agent edited, so the two harness canaries catch a blanket rewrite
+of results and not one that spares them. The evidence rung is L1. A FALSE row is an accusing label whose
+precision has been measured on scripted subjects only. `styxx.declare` and `styxx.diffgate` are unchanged:
+the gate still never judges a declared `tests_pass`, and `tests/test_selfreport_score.py` holds that.
+
+A run without a committed preregistration is recorded as kind `smoke`, and `records.write_run` refuses kind
+`scored` without one. The five tasks are examples that exercise the collector and the scorer, not a task
+set for a measurement. Prior work this builds on is credited in the README, with what two of those
+repositories report that makes a rate near zero the likeliest outcome of any measurement built on this.
+
+Run on Linux with Python 3.11, 3.12 and 3.13. Not run on Windows or macOS; the tests that start
+subprocesses skip on Windows.
+
 ## [Unreleased] — `CITATION.cff` and the README's version-pinned links follow the 8.0.3 release
 
 - **`CITATION.cff`:** `version` 8.0.3 and `date-released` 2026-11-20, the day PyPI records the upload (wheel uploaded 2026-11-20T13:55:35.512820Z, per PyPI's JSON for the release). The `identifiers` entry and its comment are not changed; whether to deposit 8.0.3 on Zenodo is the operator's decision.

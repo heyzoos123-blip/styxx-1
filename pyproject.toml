@@ -206,6 +206,9 @@ packages = [
     "styxx.fonts",
     "styxx._data",
     "styxx.harness",
+    # declared versus recorded: an agent's end-of-task declaration against what a harness recorded.
+    # The task set (selfreport/tasks) is not shipped in the wheel; it lives in a clone.
+    "styxx.selfreport",
     "styxx.prereg_ci",
 ]
 

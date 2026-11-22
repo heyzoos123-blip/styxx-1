@@ -208,3 +208,7 @@ papers/tests-pass-ci/** -text
 papers/real-convergence/artifact_2026_11_10/** -text
 papers/real-convergence/lex_tokens.json -text
 papers/real-convergence/reproduce.py -text
+
+# Declared versus recorded (styxx.selfreport): every task pins its seed, its prompt and the report contract by
+# sha256 over bytes, so a checkout that converts line endings must not touch them.
+selfreport/** -text

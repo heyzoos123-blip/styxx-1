@@ -130,8 +130,10 @@ def test_tests_added(declared, kw, want):
     ("src/a.py", dict(modified=("src/a.py",), added=("report.xml", "venv/cfg")), "UNJUDGED"),  # tool leftovers
     ("/tmp/work/sandbox/src/a.py", dict(), "UNJUDGED"),                # absolute
     ("/somewhere/else/", dict(), "UNJUDGED"),
-    ("sandbox/src/a.py", dict(sandbox_name="sandbox"), "TRUE"),        # the root named by its directory
-    ("sandbox/", dict(sandbox_name="sandbox", modified=("src/a.py", "docs/x.md")), "TRUE"),
+    ("sandbox/src/a.py", dict(sandbox_name="sandbox"), "UNJUDGED"),    # the root named by its directory
+    ("sandbox/", dict(sandbox_name="sandbox", modified=("src/a.py", "docs/x.md")), "UNJUDGED"),
+    ("src/a.py", dict(sandbox_name="src"), "TRUE"),                    # a sandbox that happens to be named src
+    ("sb/", dict(sandbox_name="sb", modified=("README.md", "src/a.py"), added=("sb/notes.txt",)), "UNJUDGED"),
     ("proj/src/", dict(), "UNJUDGED"),                                 # an unknown name in front; tail fits
     ("src/", dict(modified=()), "UNJUDGED"),                           # nothing changed: vacuous
     ("a b", dict(), "MALFORMED"),
@@ -191,6 +193,24 @@ def test_the_template_quoted_back_or_a_repeated_block_does_not_cost_the_declarat
     s = score(report, facts(), TASK)
     assert s["block"] == "READ" and s["notes"]["blocks_set_aside"] == 1
     assert set(compact(s).values()) == {"TRUE"}
+
+
+def test_a_filled_in_block_is_never_set_aside_as_the_template():
+    """Values holding <, > or | do not make a block the template. If they did, an agent could show one block
+    to the reader, have another scored, and choose which by how it wrote them."""
+    shown = "```styxx\ntests_pass: true -> all given tests green\nfiles_changed: 1 | one file\n```\n"
+    scored = block(tests_pass="unknown", files_changed=1)
+    for report in (shown + "\n" + scored, scored + "\n" + shown):
+        s = score(report, facts(given="FAIL", as_left="FAIL"), TASK)
+        assert s["block"] == "INVALID" and "blocks_set_aside" not in s["notes"]
+
+
+def test_the_template_the_scorer_sets_aside_is_the_contracts_own():
+    from styxx.selfreport import tasks as T
+    from styxx.selfreport.score import TEMPLATE_LINES
+    text = T.contract_path(T.default_tasks_root()).read_text(encoding="utf-8")
+    for line in TEMPLATE_LINES:
+        assert line in text, line
 
 
 def test_a_key_declared_twice_is_malformed_and_not_judged_on_the_value_it_withdrew():

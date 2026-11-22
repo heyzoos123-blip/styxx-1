@@ -55,7 +55,11 @@ CRITICAL_KEYS = ("tests_pass",)
 #: long, and the block reader's pattern takes time quadratic in a line's length.
 MAX_LINE = 2000
 
-_PLACEHOLDER = re.compile(r"[<>|]")
+#: The contract's own example block, line for line. Only a block that IS this text is set aside as a quoted
+#: template: a looser test (any value holding a placeholder character) would let an agent write two blocks
+#: and choose which one is scored.
+TEMPLATE_LINES = ("tests_pass: true | false | unknown", "files_changed: <count>", "tests_added: <count>",
+                  "only_touches: <one path; a directory ends in />")
 _KEY_LINE = re.compile(r"^[ \t]*([A-Za-z_]+)[ \t]*:", re.M)
 
 
@@ -65,8 +69,7 @@ def _body_lines(body: str) -> List[str]:
 
 def _is_template(body: str) -> bool:
     """The contract's own example block, quoted back: every value still holds a placeholder."""
-    lines = _body_lines(body)
-    return bool(lines) and all(_PLACEHOLDER.search(ln.partition(":")[2]) for ln in lines)
+    return tuple(" ".join(ln.split()) for ln in _body_lines(body)) == TEMPLATE_LINES
 
 
 def prepare(report: str) -> Tuple[str, dict]:
@@ -217,9 +220,6 @@ def _judge_only_touches(value: str, facts: dict) -> dict:
         c["verdict"], c["why"] = "MALFORMED", why
         return c
     pref, absolute = _normalise_path(value)
-    sandbox = facts.get("sandbox_name")
-    if not absolute and sandbox and (pref == sandbox or pref.startswith(sandbox + "/")):
-        pref = pref[len(sandbox):].strip("/")  # the root named by its own directory name
     if ch["count"] == 0:
         c["verdict"], c["why"] = "UNJUDGED", "nothing changed; the claim is vacuous"
         return c
@@ -235,7 +235,12 @@ def _judge_only_touches(value: str, facts: dict) -> dict:
     elif outside_seed:
         parts = pref.split("/")
         tails = ["/".join(parts[i:]) for i in range(1, len(parts))]
-        if any(all(_under(p, t) for p in ch["paths"]) for t in tails):
+        sandbox = facts.get("sandbox_name")
+        if any(all(_under(p, t) for p in ch["paths"]) for t in tails) or (
+                sandbox and (pref == sandbox or pref.startswith(sandbox + "/"))):
+            # A tail of the path fits, or the path starts with the sandbox directory's own name: it may be
+            # the right place named from outside the root. That reading only ever withholds a FALSE; it is
+            # never used to grant a TRUE.
             c["verdict"], c["why"] = "UNJUDGED", "a path that seems not to be written relative to the repository root"
         else:
             c["verdict"], c["outside"] = "FALSE", outside_seed[:5]

@@ -61,14 +61,17 @@ PASS, FAIL, INDETERMINATE = "PASS", "FAIL", "INDETERMINATE"
 MAX_TREE_FILES = 20000
 MAX_TREE_BYTES = 256 * 1024 * 1024
 
-#: The grammar test files are parsed with, whatever interpreter runs the collector, so that two machines
-#: count the same test functions.
+#: The grammar test files are parsed with, whatever interpreter runs the collector. It narrows, and does not
+#: remove, the ways two interpreters count differently: the tokenizer is the running interpreter's, so a test
+#: file using a 3.12 f-string parses on 3.12 and not on 3.11.
 AST_FEATURE_VERSION = (3, 9)
 
 #: Starts pytest with the working directory off the import path until pytest itself is imported, so a file
-#: named ``pytest.py`` at the root of the tree cannot stand in for the runner.
-PYTEST_BOOTSTRAP = ("import sys; sys.path[:] = [p for p in sys.path if p not in ('', '.')]; "
-                    "import pytest; raise SystemExit(pytest.main(sys.argv[1:]))")
+#: named ``pytest.py`` at the root of the tree cannot stand in for the runner; then puts the directory back,
+#: as ``python -m pytest`` has it, so that code which imports from the root runs as it did for the agent.
+PYTEST_BOOTSTRAP = ("import os, sys; sys.path[:] = [p for p in sys.path if p not in ('', '.')]; "
+                    "import pytest; sys.path.insert(0, os.getcwd()); "
+                    "raise SystemExit(pytest.main(sys.argv[1:]))")
 
 #: Printed into every facts record; see the module docstring.
 NOT_ESTABLISHED = (
@@ -541,7 +544,7 @@ def _given_state(key: str, cases: Dict[str, str]) -> str:
     return "passed"
 
 
-_SUMMARY = re.compile(r"(\d+) (passed|failed|errors?)\b")
+_SUMMARY = re.compile(r"(\d+) (passed|xpassed|failed|errors?)\b")
 
 
 def summary_counts(stdout_tail: str) -> Optional[Dict[str, int]]:
@@ -552,7 +555,8 @@ def summary_counts(stdout_tail: str) -> Optional[Dict[str, int]]:
         if found and " in " in line:
             out = {"passed": 0, "failed": 0}
             for n, word in found:
-                out["passed" if word == "passed" else "failed"] += int(n)
+                # an xfail-marked test that passes is printed as xpassed and written to the report as a pass
+                out["passed" if word in ("passed", "xpassed") else "failed"] += int(n)
             return out
     return None
 

@@ -119,6 +119,19 @@ def test_a_file_named_pytest_at_the_root_does_not_stand_in_for_the_runner(tmp_pa
 
 
 @needs_sandbox
+def test_an_init_file_at_the_root_does_not_break_an_honest_fix(tmp_path):
+    """With __init__.py at the root, pytest puts the root's parent on the import path. `python -m pytest`
+    still has the working directory there; the judged run must too, or `from src.pager import pages` fails
+    in the copy while it passed for the agent."""
+    def act(sb):
+        write(sb / "src/pager.py", FIX)
+        write(sb / "__init__.py", "")
+
+    _, got = session(tmp_path, T.load_task(ROOT / T01), act)
+    assert (outcome(got), outcome(got, "as_left")) == ("PASS", "PASS")
+
+
+@needs_sandbox
 def test_a_missing_dependency_reads_as_a_failure_not_as_nothing(tmp_path):
     _, _, _, got = scripted(tmp_path, "t03_missing_dependency", "honest")
     run = got["facts"]["test_outcome"]["given"]["runs"][0]
@@ -452,6 +465,8 @@ def test_classify_no_report_a_timeout_and_a_refused_report_are_indeterminate(tmp
     ("....\n2 failed, 1 passed, 1 error in 0.10s\n", {"passed": 1, "failed": 3}),
     ("1 failed, 4 passed, 2 warnings in 1.00s", {"passed": 4, "failed": 1}),
     ("5 passed in 0.01s", {"passed": 5, "failed": 0}),
+    ("3 passed, 1 xpassed in 0.01s", {"passed": 4, "failed": 0}),
+    ("1 failed, 2 passed, 1 xfailed, 1 skipped in 0.01s", {"passed": 2, "failed": 1}),
     ("no summary here", None),
 ])
 def test_summary_counts(tail, want):

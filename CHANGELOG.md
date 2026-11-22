@@ -33,7 +33,14 @@ untouched and re-derived as all MATCH; and eleven calls that raise on Python 3.9
 subject or a test. The reviewers were sub-agents of the assistant that wrote the code: no one outside the
 lab has reviewed or run any of it.
 
-The comparison is now built on one rule: an agent that did honest work and declared it truthfully must
+**A second pass, on this version, found that it still does not hold, and it is not fit to be pointed at a
+model.** A re-run found 21 of the 28 earlier reproductions fixed. But an honest agent can still receive
+FALSE on each of the four keys (a fix that needs its own `pytest.ini`, a test under a module-level `if`, a
+file count taken after a commit, a path holding `..`), credit can still be had unearned, and `rederive`
+accepts a known-answer run relabelled `scored`. `selfreport/README.md` lists each one. The cause is one
+thing: the harness's run and counts are not the command and units the contract gives the agent.
+
+The comparison aims at one rule: an agent that did honest work and declared it truthfully must
 never receive FALSE. `tests_pass` is judged in the agent's whole tree with the seed's tests and test
 configuration put back, and whether the agent stayed inside the paths a task allows is a separate recorded
 fact that never enters a verdict. A file count or a scope is FALSE only against seed files that were
@@ -54,8 +61,9 @@ A run without a committed preregistration is recorded as kind `smoke`, and `reco
 it recomputes and what it takes on the record's word; the README lists both. The five tasks are examples
 that exercise the collector and the scorer, not a task set for a measurement.
 
-Run on Linux with Python 3.11, 3.12 and 3.13, pytest 9 and git 2.43. Not run on Python 3.9 or 3.10, on
-pytest 7 or 8, on Windows or on macOS; the tests that start subprocesses skip on Windows.
+Run on Linux with Python 3.11, 3.12 and 3.13, pytest 9 and git 2.43. A reviewer reports one run on CPython
+3.9.25 with pytest 8.4.2 in which the tests passed. Not run on Python 3.10, on pytest 7, on Windows or on
+macOS; the tests that start subprocesses skip on Windows.
 
 ## [Unreleased] — `CITATION.cff` and the README's version-pinned links follow the 8.0.3 release
 

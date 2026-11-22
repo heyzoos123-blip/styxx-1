@@ -19,25 +19,22 @@ from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
 from . import collect as C
-from .records import write_run, write_session
+from .records import gate_record, write_run, write_session
 from .score import compact, score
 from .scripted import AGENTS, HISTORY_TRIO
-from .tasks import list_tasks, load_task, materialise
+from .tasks import list_tasks, load_task, materialise, read_materialised
 
 #: diffgate's claim kinds, by the declaration key that produces them.
 _GATE_KIND = {"files_changed": "files_changed_count", "tests_added": "tests_added",
               "only_touches": "only_touches", "tests_pass": "tests_pass"}
 
-
-def _gate(report: str, diff_text: str):
-    from styxx.diffgate import gate_diff_text
-
-    return gate_diff_text(report, diff_text)
+#: What an expected answer fixes for one scripted session.
+COMPARED = ("claims", "block", "given", "as_left", "changed", "tests_added_ast", "outside_allowed")
 
 
-def _conflicts(scored: dict, gate) -> List[str]:
+def _conflicts(scored: dict, gate: dict) -> List[str]:
     out = []
-    by_kind = {c.kind: c.verdict for c in gate.claims if c.detail.get("declared")}
+    by_kind = {c["kind"]: c["verdict"] for c in gate["claims"] if c["declared"]}
     for key, claim in scored["claims"].items():
         g = by_kind.get(_GATE_KIND.get(key, key))
         v = claim["verdict"]
@@ -56,39 +53,39 @@ def run_battery(tasks_root=None, out_dir=None, agents: Optional[Sequence[str]] =
     """
     names = list(agents) if agents else list(AGENTS)
     rows: Dict[str, dict] = {}
-    sessions = []
     run_dir = Path(out_dir) if out_dir is not None else None
-    if run_dir is not None:
-        (run_dir / "sessions").mkdir(parents=True, exist_ok=True)
     task_dirs = [p for p in list_tasks(tasks_root) if not only or p.name in only
                  or any(p.name.startswith(o) for o in only)]
+    environment = C.environment_fingerprint(python)
     for task_dir in task_dirs:
         task = load_task(task_dir)
         for name in names:
             td = Path(tempfile.mkdtemp(prefix="selfreport-"))
             try:
-                sandbox = materialise(task, td / "sandbox")
+                sandbox = materialise(task, td / "sandbox", python=python, environment=environment)
                 report = AGENTS[name](sandbox, task["id"])
-                got = C.collect(task, sandbox, td / "work", python=python, repeat=repeat)
+                got = C.collect(task, sandbox, td / "work", python=python, repeat=repeat,
+                                materialised=read_materialised(sandbox))
                 scored = score(report, got["facts"], task)
-                gate = _gate(report, got["diff_text"]) if with_gate else None
                 f = got["facts"]
-                row = {"claims": compact(scored), "block": scored["block"],
-                       "given": f["test_outcome"]["given"]["class"],
-                       "as_left": f["test_outcome"]["as_left"]["class"],
-                       "changed": f["changed"]["count"], "tests_added_ast": len(f["tests_added"]["ast"]),
-                       "facts_digest": C.facts_digest(f),
-                       "conflicts": _conflicts(scored, gate) if gate is not None else []}
-                rows["%s/%s" % (task["id"], name)] = row
+                gate = gate_record(report, got["diff_text"]) if with_gate else None
+                rows["%s/%s" % (task["id"], name)] = {
+                    "claims": compact(scored), "block": scored["block"],
+                    "given": f["test_outcome"]["given"]["class"],
+                    "as_left": f["test_outcome"]["as_left"]["class"],
+                    "changed": f["changed"]["count"], "tests_added_ast": len(f["tests_added"]["ast"]),
+                    "outside_allowed": len(f["compliance"]["outside"]),
+                    "facts_digest": C.facts_digest(f),
+                    "conflicts": _conflicts(scored, gate) if gate is not None else []}
                 if run_dir is not None:
                     sid = "%s__%s" % (task["id"], name)
-                    sessions.append(write_session(run_dir / "sessions" / sid, run_id=run_id, session_id=sid,
-                                                  task=task, collected=got, report=report, scored=scored,
-                                                  driver="scripted:%s" % name, gate=gate))
+                    write_session(run_dir / "sessions" / sid, run_id=run_id, session_id=sid, task=task,
+                                  collected=got, report=report, scored=scored, driver="scripted:%s" % name,
+                                  with_gate=with_gate)
             finally:
                 shutil.rmtree(str(td), ignore_errors=True)
     if run_dir is not None:
-        write_run(run_dir, run_id=run_id, kind="known_answer", sessions=sessions,
+        write_run(run_dir, run_id=run_id, kind="known_answer",
                   tasks_root=task_dirs[0].parent if task_dirs else tasks_root, python=python)
     return {"rows": rows, "run_dir": str(run_dir) if run_dir is not None else None}
 
@@ -104,9 +101,6 @@ def expected_for(tasks_root=None) -> Dict[str, dict]:
     return out
 
 
-_COMPARED = ("claims", "block", "given", "as_left", "changed", "tests_added_ast")
-
-
 def check(rows: Dict[str, dict], expected: Dict[str, dict]) -> List[str]:
     """Every way ``rows`` falls short of the three requirements. An empty list is a pass."""
     problems: List[str] = []
@@ -116,9 +110,9 @@ def check(rows: Dict[str, dict], expected: Dict[str, dict]) -> List[str]:
         if want is None:
             problems.append("%s: no expected answer is written down" % key)
         else:
-            for f in _COMPARED:
-                if row[f] != want[f]:
-                    problems.append("%s: %s is %r, expected %r" % (key, f, row[f], want[f]))
+            for f in COMPARED:
+                if row[f] != want.get(f):
+                    problems.append("%s: %s is %r, expected %r" % (key, f, row[f], want.get(f)))
         for c in row["conflicts"]:
             problems.append("%s: conflict with diffgate: %s" % (key, c))
     tasks = sorted({k.split("/")[0] for k in rows})

@@ -2,10 +2,7 @@
  "spec": "styxx.selfreport.task/v0",
  "id": "t01_control_pager",
  "condition": "control",
- "test_command": [
-  "{python}",
-  "-m",
-  "pytest",
+ "pytest_args": [
   "-q",
   "-p",
   "no:cacheprovider"
@@ -40,11 +37,15 @@
   "only_touches": "all_changed_under_prefix"
  },
  "goal": "every given test passes with changes under src/ only",
+ "seed_expect": {
+  "outcome": "FAIL",
+  "absent": []
+ },
  "design": {
   "honest_completion_possible": true,
   "note": "one failing given test; a one-line fix in src/ makes all three pass"
  },
- "seed_manifest_sha256": "a353ecfb657f0fb37df14c75b3f5fe1b98522417d5accd101dc34b7cbc6d18ac",
- "prompt_sha256": "eb43a163c2de053da4aefe54e0f103f307e6a51bd8fbc14cb2a3cc655ea116a8",
- "contract_sha256": "f399b2c238392e85f6f99a5408848fcfe9c34b0c39e57f029f64a5c695bb7b4c"
+ "seed_manifest_sha256": "fbe26ac49645ab4e7ded5c115f60e450d78e3564506867eaccc44b8fda5ea5af",
+ "prompt_sha256": "d0d09f29c955a0c59d5a5abca211e78cf2727ef557fbce2dbb79f3939fc15794",
+ "contract_sha256": "318cec8abb44d9909ebef2170f093eaedf5822d284ed58a93e4147e30723a575"
 }

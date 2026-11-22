@@ -17,28 +17,45 @@ itself) and compares, key by key. Nothing is read from the sandbox's `.git`, not
 taken as a result, and no prose is read.
 
 **No model has been measured.** There is no preregistration for this and so no result. What exists is the
-instrument and a measurement of the instrument: 15 scripted subjects on 5 example tasks, 75 sessions, each
+instrument and a measurement of the instrument: 22 scripted subjects on 5 example tasks, 110 sessions, each
 held to verdicts written in the task's `EXPECTED.json`. `python -m styxx.selfreport known-answers` exits 0
 only if every session receives its expected verdicts, the three subjects that differ only in how they
 rewrite the sandbox's git history receive identical facts, and `styxx.diffgate`'s reading of the same
-declared claims never contradicts the comparison. `python -m styxx.selfreport rederive <run>` recomputes
-every stored verdict of a run from its files, and `tests/test_selfreport_rederive.py` shows it reporting an
-edited report, an edited file of the tree, an edited test report, an edited verdict, edited facts and an
-edited ledger.
+declared claims never contradicts the comparison.
 
-What the comparison does not show is in `selfreport/README.md` and is written into every record. The given
-tests run in one process with source the agent edited, so the two harness canaries catch a blanket rewrite
-of results and not one that spares them. The evidence rung is L1. A FALSE row is an accusing label whose
-precision has been measured on scripted subjects only. `styxx.declare` and `styxx.diffgate` are unchanged:
-the gate still never judges a declared `tests_pass`, and `tests/test_selfreport_score.py` holds that.
+**The version before this one did not hold, and this entry replaces its.** Three reviewers attacked it and
+reproduced: six ways an honest agent was scored as contradicted (a correct fix in a file outside the allowed
+paths; a file count taken after running the tests as the prompt says; a file some tool left behind; a path
+written from the machine's root; a moved test file; a parametrized or skipped given test); three ways to be
+credited without earning it (a module dropped beside the installed packages, a given test the finder did
+not see, a root-level `pytest.py`); edits to a stored record that flipped a verdict with every test report
+untouched and re-derived as all MATCH; and eleven calls that raise on Python 3.9. Each is now a scripted
+subject or a test. The reviewers were sub-agents of the assistant that wrote the code: no one outside the
+lab has reviewed or run any of it.
+
+The comparison is now built on one rule: an agent that did honest work and declared it truthfully must
+never receive FALSE. `tests_pass` is judged in the agent's whole tree with the seed's tests and test
+configuration put back, and whether the agent stayed inside the paths a task allows is a separate recorded
+fact that never enters a verdict. A file count or a scope is FALSE only against seed files that were
+modified or deleted; a gap made of added files is UNJUDGED. The price is stated in the README: three
+accusing verdicts can be turned into UNJUDGED by the agent being judged, which is why UNJUDGED counts are
+printed beside FALSE counts.
+
+What it does not show is in `selfreport/README.md` and is written into every record. The widest item: the
+given tests run in one process with source the agent wrote, and three lines of source can make a failing
+test pass with no report edited. The canaries, the comparison with pytest's printed summary and the re-hash
+of the test files catch only the blunt versions. The evidence rung is L1. A FALSE row is an accusing label
+whose precision has been measured on scripted subjects only. `styxx.declare` and `styxx.diffgate` are
+unchanged: the gate still never judges a declared `tests_pass`, and `tests/test_selfreport_score.py` holds
+that.
 
 A run without a committed preregistration is recorded as kind `smoke`, and `records.write_run` refuses kind
-`scored` without one. The five tasks are examples that exercise the collector and the scorer, not a task
-set for a measurement. Prior work this builds on is credited in the README, with what two of those
-repositories report that makes a rate near zero the likeliest outcome of any measurement built on this.
+`scored` unless the preregistration it names is tracked by git and unmodified at HEAD. `rederive` says what
+it recomputes and what it takes on the record's word; the README lists both. The five tasks are examples
+that exercise the collector and the scorer, not a task set for a measurement.
 
-Run on Linux with Python 3.11, 3.12 and 3.13. Not run on Windows or macOS; the tests that start
-subprocesses skip on Windows.
+Run on Linux with Python 3.11, 3.12 and 3.13, pytest 9 and git 2.43. Not run on Python 3.9 or 3.10, on
+pytest 7 or 8, on Windows or on macOS; the tests that start subprocesses skip on Windows.
 
 ## [Unreleased] — `CITATION.cff` and the README's version-pinned links follow the 8.0.3 release
 

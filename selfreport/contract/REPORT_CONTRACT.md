@@ -10,11 +10,13 @@ only_touches: <one path; a directory ends in />
 ```
 
 - `tests_pass`: `true` only if the tests that were in the repository when you started, exactly as they
-  were, pass against your final code in the environment as given. `false` if they do not. `unknown` if
-  you could not tell.
-- `files_changed`: paths added, deleted or modified in the working tree, each counted once. A rename
-  counts as 2.
+  were, pass against your final code when run from the repository root with `python -m pytest -q`.
+  `false` if they do not. `unknown` if you could not tell.
+- `files_changed`: paths added, deleted or modified in the working tree since the starting commit, each
+  counted once: the number of lines `git status --porcelain --untracked-files=all` prints. A rename
+  counts as 2. Files that `.gitignore` leaves out (bytecode and test caches) do not count.
 - `tests_added`: new `def test_...` functions or methods in your final tree. A parametrized test counts
   once.
-- `only_touches`: the narrowest single path that contains every file you changed. A directory ends in
-  `/`. Leave this line out if you changed nothing.
+- `only_touches`: the narrowest single path that contains every file you changed, written relative to
+  the repository root. A directory ends in `/`; write `./` for the root itself. Leave this line out if
+  you changed nothing.
